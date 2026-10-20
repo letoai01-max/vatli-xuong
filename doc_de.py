@@ -9,7 +9,8 @@ Làm ĐÚNG như bản Apps Script, chỉ khác là không còn giới hạn 6 p
   5. Ghi nhịp chạy vào tab Agent (dòng "Xưởng đọc đề (Python)") để Meta / canh gác theo dõi.
 Hết hạn mức Gemini → dừng lượt, lượt sau làm tiếp. Lỗi chung → lượt chạy GitHub báo đỏ và GitHub tự email.
 
-Biến môi trường (GitHub Secrets): GOOGLE_CREDENTIALS (toàn bộ nội dung credentials.json), GEMINI_API_KEY.
+Biến môi trường (GitHub Secrets): GOOGLE_CREDENTIALS (toàn bộ nội dung credentials.json), GEMINI_API_KEY,
+GEMINI_API_KEY_TRA_PHI (không bắt buộc): dùng khi khoá miễn phí HẾT LƯỢT trong ngày, tối đa TOI_DA_LUOT_TRA_PHI lượt gọi/lượt chạy.
 """
 import base64, datetime as dt, io, json, os, re, shutil, subprocess, sys, tempfile, time, unicodedata
 
@@ -55,6 +56,8 @@ RE_CT_CU = re.compile(r"\b(" + "|".join([
     "momen quan tinh", "moment quan tinh", "momen dong luong", "cang be mat", "mao dan"]) + r")\b")
 
 BAT_DAU = time.time()
+TOI_DA_LUOT_TRA_PHI = int(os.environ.get("TOI_DA_LUOT_TRA_PHI", "20"))   # chặn chi phí mỗi lượt chạy
+TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0}
 
 
 class HetHanMuc(Exception):
@@ -130,7 +133,24 @@ def doc_cau_hinh(kho):
 
 
 def goi_gemini(payload, ds_model):
-    key = os.environ["GEMINI_API_KEY"]
+    """Dùng khoá miễn phí; khoá miễn phí hết lượt (mọi model báo 429) thì chuyển sang khoá trả phí (nếu có)
+    cho phần còn lại của lượt chạy, tối đa TOI_DA_LUOT_TRA_PHI lượt gọi."""
+    khoa_tp = os.environ.get("GEMINI_API_KEY_TRA_PHI", "").strip()
+    if not TRANG_THAI_KHOA["tra_phi"]:
+        try:
+            return _goi_gemini_mot_khoa(payload, ds_model, os.environ["GEMINI_API_KEY"])
+        except HetHanMuc:
+            if not khoa_tp:
+                raise
+            TRANG_THAI_KHOA["tra_phi"] = True
+            print("💳 Khoá miễn phí hết lượt trong ngày → chuyển sang khoá trả phí (tối đa %d lượt gọi)." % TOI_DA_LUOT_TRA_PHI)
+    if TRANG_THAI_KHOA["da_dung_tra_phi"] >= TOI_DA_LUOT_TRA_PHI:
+        raise HetHanMuc("HET_HAN_MUC – đã dùng đủ %d lượt khoá trả phí trong lượt chạy này" % TOI_DA_LUOT_TRA_PHI)
+    TRANG_THAI_KHOA["da_dung_tra_phi"] += 1
+    return _goi_gemini_mot_khoa(payload, ds_model, khoa_tp)
+
+
+def _goi_gemini_mot_khoa(payload, ds_model, key):
     ds_model, ds_loi, co_loi_khac = list(ds_model), [], False
     m = 0
     while m < len(ds_model) and m < 6:
@@ -417,7 +437,9 @@ def main():
     except HetHanMuc as e:
         het_han_muc = True
         print("⏸️ Hết hạn mức Gemini, lượt sau làm tiếp:", e)
-    tom_tat = "Lượt %s: %d file, %d câu mới%s." % (bay_gio(), so_file, so_cau, " – dừng vì hết hạn mức Gemini" if het_han_muc else "")
+    tom_tat = "Lượt %s: %d file, %d câu mới%s%s." % (bay_gio(), so_file, so_cau,
+        "; dùng khoá trả phí %d lượt" % TRANG_THAI_KHOA["da_dung_tra_phi"] if TRANG_THAI_KHOA["da_dung_tra_phi"] else "",
+        " – dừng vì hết hạn mức Gemini" if het_han_muc else "")
     print("📊 " + tom_tat)
     ghi_nhip(kho, True, tom_tat)
 
