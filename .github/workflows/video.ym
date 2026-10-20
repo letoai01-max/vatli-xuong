@@ -1,0 +1,40 @@
+# .github/workflows/video.yml – XƯỞNG DỰNG VIDEO BÀI GIẢNG
+# Được gọi từ Apps Script (VideoAgent.gs → vidGuiDung_) khi giáo viên bấm "Duyệt & dựng video".
+name: video
+on:
+  workflow_dispatch:
+    inputs:
+      ma:
+        description: "Mã video (cột Mã trong tab Video)"
+        required: true
+jobs:
+  dung:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Cài công cụ
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-noto-core > /dev/null
+          pip install -q -r requirements.txt
+      - name: Dựng video
+        env:
+          WEBAPP_URL: ${{ secrets.WEBAPP_URL }}
+          VIDEO_SECRET: ${{ secrets.VIDEO_SECRET }}
+        run: python render.py "${{ inputs.ma }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: video-${{ inputs.ma }}
+          path: out/
+          retention-days: 2
+      - name: Báo xong cho Apps Script
+        if: success()
+        run: curl -sSL --max-time 90 "${{ secrets.WEBAPP_URL }}?a=xong&m=${{ inputs.ma }}&run=${{ github.run_id }}&t=${{ secrets.VIDEO_SECRET }}" > /dev/null
+      - name: Báo lỗi cho Apps Script
+        if: failure()
+        run: curl -sSL --max-time 90 "${{ secrets.WEBAPP_URL }}?a=loi&m=${{ inputs.ma }}&run=${{ github.run_id }}&t=${{ secrets.VIDEO_SECRET }}" > /dev/null
