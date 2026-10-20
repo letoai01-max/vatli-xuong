@@ -1,9 +1,9 @@
 # .github/workflows/doc_de.yml – XƯỞNG ĐỌC ĐỀ (thay xuLyDeMotLuot của Kho chung)
-# Chạy mỗi đêm 0h và 3h giờ Việt Nam (17h, 20h UTC), hoặc bấm tay ở tab Actions → doc_de → Run workflow.
+# Chạy 22h và 5h giờ Việt Nam (15h, 22h UTC – ngoài khung 0h–4h của bản Apps Script cũ), hoặc bấm tay ở tab Actions → doc_de → Run workflow.
 name: doc_de
 on:
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "0 15 * * *"
     - cron: "0 22 * * *"
   workflow_dispatch:
     inputs:
