@@ -57,7 +57,17 @@ RE_CT_CU = re.compile(r"\b(" + "|".join([
 
 BAT_DAU = time.time()
 TOI_DA_LUOT_TRA_PHI = int(os.environ.get("TOI_DA_LUOT_TRA_PHI", "20"))   # chặn chi phí mỗi lượt chạy
-TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0}
+TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0, "het": set()}
+
+
+def ds_khoa_mien_phi():
+    """GEMINI_API_KEY, GEMINI_API_KEY_2 … GEMINI_API_KEY_5 (bỏ ô trống, bỏ khoá trùng)."""
+    ds = []
+    for ten in ["GEMINI_API_KEY"] + ["GEMINI_API_KEY_%d" % i for i in range(2, 6)]:
+        k = os.environ.get(ten, "").strip()
+        if k and k not in [x[1] for x in ds]:
+            ds.append((ten, k))
+    return ds
 
 
 class HetHanMuc(Exception):
@@ -137,13 +147,18 @@ def goi_gemini(payload, ds_model):
     cho phần còn lại của lượt chạy, tối đa TOI_DA_LUOT_TRA_PHI lượt gọi."""
     khoa_tp = os.environ.get("GEMINI_API_KEY_TRA_PHI", "").strip()
     if not TRANG_THAI_KHOA["tra_phi"]:
-        try:
-            return _goi_gemini_mot_khoa(payload, ds_model, os.environ["GEMINI_API_KEY"])
-        except HetHanMuc:
-            if not khoa_tp:
-                raise
-            TRANG_THAI_KHOA["tra_phi"] = True
-            print("💳 Khoá miễn phí hết lượt trong ngày → chuyển sang khoá trả phí (tối đa %d lượt gọi)." % TOI_DA_LUOT_TRA_PHI)
+        for ten, k in ds_khoa_mien_phi():
+            if ten in TRANG_THAI_KHOA["het"]:
+                continue
+            try:
+                return _goi_gemini_mot_khoa(payload, ds_model, k)
+            except HetHanMuc:
+                TRANG_THAI_KHOA["het"].add(ten)
+                print("⏭️ %s hết lượt trong ngày, thử khoá tiếp theo." % ten)
+        if not khoa_tp:
+            raise HetHanMuc("HET_HAN_MUC – mọi khoá miễn phí đã hết lượt: " + ", ".join(sorted(TRANG_THAI_KHOA["het"])))
+        TRANG_THAI_KHOA["tra_phi"] = True
+        print("💳 Mọi khoá miễn phí hết lượt → chuyển sang khoá trả phí (tối đa %d lượt gọi)." % TOI_DA_LUOT_TRA_PHI)
     if TRANG_THAI_KHOA["da_dung_tra_phi"] >= TOI_DA_LUOT_TRA_PHI:
         raise HetHanMuc("HET_HAN_MUC – đã dùng đủ %d lượt khoá trả phí trong lượt chạy này" % TOI_DA_LUOT_TRA_PHI)
     TRANG_THAI_KHOA["da_dung_tra_phi"] += 1
