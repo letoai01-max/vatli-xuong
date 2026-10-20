@@ -3,7 +3,7 @@
 name: doc_de
 on:
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "0 15 * * *"
     - cron: "0 22 * * *"
   workflow_dispatch:
     inputs:
@@ -27,7 +27,10 @@ jobs:
       - run: pip install -q -r requirements-docde.txt
       - name: Đọc đề tải về → ngân hàng câu hỏi
         env:
+          PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
+          TOI_DA_LUOT_TRA_PHI: "40"
           THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '100' }}
         run: python doc_de.py
