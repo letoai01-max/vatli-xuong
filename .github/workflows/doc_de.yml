@@ -1,0 +1,33 @@
+# .github/workflows/doc_de.yml – XƯỞNG ĐỌC ĐỀ (thay xuLyDeMotLuot của Kho chung)
+# Chạy mỗi đêm 0h và 3h giờ Việt Nam (17h, 20h UTC), hoặc bấm tay ở tab Actions → doc_de → Run workflow.
+name: doc_de
+on:
+  schedule:
+    - cron: "0 17 * * *"
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+    inputs:
+      phut:
+        description: "Số phút tối đa cho lượt này"
+        required: false
+        default: "100"
+concurrency:
+  group: doc_de
+  cancel-in-progress: false
+jobs:
+  doc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements-docde.txt
+      - name: Đọc đề tải về → ngân hàng câu hỏi
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '100' }}
+        run: python doc_de.py
