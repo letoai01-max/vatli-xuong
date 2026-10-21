@@ -31,7 +31,14 @@ def doc_ngay(s):
 def main():
     cred = service_account.Credentials.from_service_account_info(
         json.loads(os.environ["GOOGLE_CREDENTIALS"]), scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"])
-    kho = gspread.authorize(cred).open_by_key(ID_KHO_CHUNG)
+    print("1/3 Kết nối Google bằng tài khoản dịch vụ…", flush=True)
+    gc = gspread.authorize(cred)
+    try:
+        gc.set_timeout(60)          # mỗi lệnh gọi Google tối đa 60 giây, không treo cả lượt
+    except Exception:
+        pass
+    kho = gc.open_by_key(ID_KHO_CHUNG)
+    print("2/3 Đã mở Kho chung, đọc tab ThoiGianChay và Agent…", flush=True)
     bay = dt.datetime.now(TZ)
     van, ghi_chu, tot = [], [], []
 
@@ -86,6 +93,7 @@ def main():
     if ghi_chu:
         dong += ["## Ghi chú"] + ["- " + x for x in ghi_chu] + [""]
     dong += ["**Đang ổn:** " + " · ".join(tot)]
+    print("3/3 Đã đọc xong, lập báo cáo.", flush=True)
     bao_cao = "\n".join(dong)
     print(bao_cao)
     if os.environ.get("GITHUB_STEP_SUMMARY"):
