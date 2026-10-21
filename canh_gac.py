@@ -29,15 +29,19 @@ def doc_ngay(s):
 
 
 def main():
-    cred = service_account.Credentials.from_service_account_info(
-        json.loads(os.environ["GOOGLE_CREDENTIALS"]), scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"])
+    tt = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+    print("Tài khoản dịch vụ đang dùng:", tt.get("client_email"), flush=True)
+    cred = service_account.Credentials.from_service_account_info(tt, scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"])
     print("1/3 Kết nối Google bằng tài khoản dịch vụ…", flush=True)
     gc = gspread.authorize(cred)
     try:
         gc.set_timeout(60)          # mỗi lệnh gọi Google tối đa 60 giây, không treo cả lượt
     except Exception:
         pass
-    kho = gc.open_by_key(ID_KHO_CHUNG)
+    try:
+        kho = gc.open_by_key(ID_KHO_CHUNG)
+    except Exception as e:
+        sys.exit("Không mở được Kho chung (%s). Hãy CHIA SẺ Kho chung cho email %s (quyền Người chỉnh sửa)." % (type(e).__name__, tt.get("client_email")))
     print("2/3 Đã mở Kho chung, đọc tab ThoiGianChay và Agent…", flush=True)
     bay = dt.datetime.now(TZ)
     van, ghi_chu, tot = [], [], []
