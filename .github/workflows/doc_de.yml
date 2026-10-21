@@ -3,8 +3,8 @@
 name: doc_de
 on:
   schedule:
-    - cron: "0 15 * * *"
-    - cron: "0 22 * * *"
+    - cron: "17 15 * * *"
+    - cron: "17 22 * * *"
   workflow_dispatch:
     inputs:
       phut:
