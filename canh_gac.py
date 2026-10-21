@@ -13,7 +13,7 @@ import datetime as dt, json, os, re, sys
 import gspread
 from google.oauth2 import service_account
 
-ID_KHO_CHUNG = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
+ID_KHO_CHUNG = "1jHQfO3sUa778ikm8LgxnCyPdAi41-aP1"
 TZ = dt.timezone(dt.timedelta(hours=7))
 DU_PHONG_GIO = 3
 NGAY_CHAY_THEO_YEU_CAU = 7
