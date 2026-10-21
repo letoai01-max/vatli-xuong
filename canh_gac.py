@@ -1,5 +1,4 @@
-"""
-canh_gac.py – NGƯỜI CANH GÁC NGOÀI (GitHub Actions, độc lập hoàn toàn với Google Apps Script)
+# canh_gac.py – NGƯỜI CANH GÁC NGOÀI (GitHub Actions, độc lập hoàn toàn với Google Apps Script)
 
 Mỗi sáng 7h20 (giờ Việt Nam) chỉ ĐỌC Kho chung bằng tài khoản dịch vụ:
   1. Tab Agent: agent có "Chu kì tối đa (giờ)" mà quá hạn → báo; lỗi trong 2 ngày gần nhất → báo.
@@ -13,7 +12,7 @@ import datetime as dt, json, os, re, sys
 import gspread
 from google.oauth2 import service_account
 
-ID_KHO_CHUNG = "1jHQfO3sUa778ikm8LgxnCyPdAi41-aP1"
+ID_KHO_CHUNG = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
 TZ = dt.timezone(dt.timedelta(hours=7))
 DU_PHONG_GIO = 3
 NGAY_CHAY_THEO_YEU_CAU = 7
