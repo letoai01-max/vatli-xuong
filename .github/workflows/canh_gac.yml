@@ -17,6 +17,7 @@ jobs:
           cache: pip
       - run: pip install -q gspread google-auth
       - name: Kiểm tra nhịp chạy các agent
+        timeout-minutes: 5
         env:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
