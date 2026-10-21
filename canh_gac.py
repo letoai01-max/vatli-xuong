@@ -15,7 +15,6 @@ from google.oauth2 import service_account
 
 ID_KHO_CHUNG = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
 TZ = dt.timezone(dt.timedelta(hours=7))
-TRAN_PHUT, NGUONG = 90, 0.8
 DU_PHONG_GIO = 3
 NGAY_CHAY_THEO_YEU_CAU = 7
 NGAY_LOI_GAN_DAY = 2
@@ -36,20 +35,24 @@ def main():
     bay = dt.datetime.now(TZ)
     van, ghi_chu, tot = [], [], []
 
-    # ---- 1. Meta-agent còn sống: dòng TỔNG của hôm qua trong ThoiGianChay ----
+    # ---- 1. Meta-agent còn sống: dòng TỔNG của hôm qua; so với các ngày trước (không dùng trần cố định) ----
     try:
         tg = kho.worksheet("ThoiGianChay").get_all_values()[1:]
         hom_qua = (bay - dt.timedelta(days=1)).strftime("%d/%m/%Y")
-        tong = [r for r in tg if len(r) >= 7 and r[0] == hom_qua and r[1] == "TỔNG"]
-        if not tong:
+        so = lambda x: float(str(x).replace(",", ".") or 0)
+        tong = {r[0]: r for r in tg if len(r) >= 7 and r[1] == "TỔNG"}
+        if hom_qua not in tong:
             van.append("**Meta-agent không ghi thống kê ngày %s** (tab ThoiGianChay). Meta có thể đã ngừng, mất trigger "
                        "hoặc lỗi quyền script.processes – mở Meta-agent → Lượt thực thi, tìm TG_hangNgay." % hom_qua)
         else:
-            phut = float(str(tong[-1][4]).replace(",", ".") or 0)
-            if phut >= TRAN_PHUT * NGUONG:
-                van.append("Thời gian chạy trigger ngày %s: **%.1f/%d phút** – sát trần, các agent có thể bị dừng." % (hom_qua, phut, TRAN_PHUT))
-            else:
-                tot.append("trigger hôm qua %.1f/%d phút" % (phut, TRAN_PHUT))
+            phut, loi_tg = so(tong[hom_qua][4]), int(so(tong[hom_qua][6]))
+            truoc = [so(r[4]) for k, r in tong.items() if k != hom_qua][-7:]
+            tb = sorted(truoc)[len(truoc) // 2] if truoc else None
+            if tb and phut > tb * 1.5 and phut - tb > 60:
+                van.append("Thời gian chạy trigger ngày %s tăng đột biến: **%.0f phút** (các ngày trước khoảng %.0f phút)." % (hom_qua, phut, tb))
+            if loi_tg >= 20:
+                van.append("Ngày %s có **%d lượt chạy lỗi hoặc quá giờ** – xem tab ThoiGianChay, cột Lỗi." % (hom_qua, loi_tg))
+            tot.append("trigger hôm qua %.0f phút, %d lượt lỗi" % (phut, loi_tg))
     except gspread.WorksheetNotFound:
         ghi_chu.append("Chưa có tab ThoiGianChay (chưa cài ThoiGianChay.gs trong Meta).")
 
