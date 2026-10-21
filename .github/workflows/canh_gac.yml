@@ -1,0 +1,23 @@
+# .github/workflows/canh_gac.yml – NGƯỜI CANH GÁC NGOÀI
+# 7h20 sáng giờ Việt Nam (0h20 UTC). Có sự cố → lượt chạy đỏ → GitHub tự email cho chủ kho.
+name: canh_gac
+on:
+  schedule:
+    - cron: "20 0 * * *"
+  workflow_dispatch:
+jobs:
+  kiem_tra:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q gspread google-auth
+      - name: Kiểm tra nhịp chạy các agent
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: python canh_gac.py
