@@ -56,7 +56,7 @@ RE_CT_CU = re.compile(r"\b(" + "|".join([
     "momen quan tinh", "moment quan tinh", "momen dong luong", "cang be mat", "mao dan"]) + r")\b")
 
 BAT_DAU = time.time()
-TOI_DA_LUOT_TRA_PHI = int(os.environ.get("TOI_DA_LUOT_TRA_PHI", "20"))   # chặn chi phí mỗi lượt chạy
+TOI_DA_LUOT_TRA_PHI = int(os.environ.get("TOI_DA_LUOT_TRA_PHI", "20"))    # chặn chi phí mỗi lượt chạy
 TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0, "het": set()}
 
 
@@ -366,7 +366,7 @@ def xoa_cau_cua_file(kho, tab_nh, file_id):
     dong = [i + 1 for i, v in enumerate(ids) if i > 0 and v == file_id]
     if dong:
         kho.batch_update({"requests": [{"deleteDimension": {"range": {"sheetId": tab_nh.id, "dimension": "ROWS",
-                          "startIndex": d - 1, "endIndex": d}}} for d in sorted(dong, reverse=True)]})
+                              "startIndex": d - 1, "endIndex": d}}} for d in sorted(dong, reverse=True)]})
 
 
 def xu_ly_mot_file(kho, drive, tab_xl, tab_nh, viec, yccd, ds_model):
@@ -441,10 +441,12 @@ def main():
     print("Model:", ", ".join(ds_model))
     so_file = so_cau = 0
     da_lam, het_han_muc = set(), False
-  # [MỚI - Ý 4] Biến đếm giới hạn số file xử lý tối đa mỗi lượt chạy (chống timeout 6 phút)
+    
+    # [MỚI - Ý 4] Biến đếm giới hạn số file xử lý tối đa mỗi lượt chạy (chống timeout 6 phút)
     SO_FILE_TOI_DA_LUOT_NAY = 6
     so_file_da_xu_ly = 0
-   try:
+    
+    try:
         while con_thoi_gian(giay_du_tru=300):
             # [MỚI - Ý 4] Dừng vòng lặp khi đã xử lý đủ 6 file trong lượt này
             if so_file_da_xu_ly >= SO_FILE_TOI_DA_LUOT_NAY:
@@ -461,6 +463,7 @@ def main():
     except HetHanMuc as e:
         het_han_muc = True
         print("⏸️ Hết hạn mức Gemini, lượt sau làm tiếp:", e)
+        
     tom_tat = "Lượt %s: %d file, %d câu mới%s%s." % (bay_gio(), so_file, so_cau,
         "; dùng khoá trả phí %d lượt" % TRANG_THAI_KHOA["da_dung_tra_phi"] if TRANG_THAI_KHOA["da_dung_tra_phi"] else "",
         " – dừng vì hết hạn mức Gemini" if het_han_muc else "")
@@ -478,6 +481,8 @@ if __name__ == "__main__":
         except Exception:
             pass
         raise
+
+
 def ghi_ket_qua_python_vao_sheet(danh_sach_tim_kiem):
     """
     Dùng gspread sẵn có trong doc_de.py để ghi kết quả tìm kiếm 
@@ -502,7 +507,7 @@ def ghi_ket_qua_python_vao_sheet(danh_sach_tim_kiem):
                     item.get('chuDe', ''),
                     item.get('tieuDe', ''),
                     item.get('url', ''),
-                    str(datetime.now())
+                    str(dt.datetime.now())
                 ])
         print(f"[Xưởng Python] Đã đồng bộ {len(danh_sach_tim_kiem)} link vào tab PythonSearch thành công.")
     except Exception as e:
