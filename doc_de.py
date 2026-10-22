@@ -469,3 +469,32 @@ if __name__ == "__main__":
         except Exception:
             pass
         raise
+def ghi_ket_qua_python_vao_sheet(danh_sach_tim_kiem):
+    """
+    Dùng gspread sẵn có trong doc_de.py để ghi kết quả tìm kiếm 
+    thẳng vào tab 'PythonSearch' của file Download Agent (ID_BANG_DOWNLOAD).
+    """
+    try:
+        # Sử dụng credentials.json và ID_BANG_DOWNLOAD đã cấu hình ở dòng 24
+        gc = gspread.service_account(filename='credentials.json')
+        sh = gc.open_by_key(ID_BANG_DOWNLOAD)
+        
+        # Mở hoặc tự động tạo tab 'PythonSearch' nếu chưa có
+        try:
+            ws = sh.worksheet('PythonSearch')
+        except gspread.exceptions.WorksheetNotFound:
+            ws = sh.add_worksheet(title='PythonSearch', rows=100, cols=4)
+            ws.append_row(['Chủ đề', 'Tiêu đề', 'URL', 'Thời gian cập nhật'])
+            
+        # Ghi danh sách tìm kiếm được từ Python vào bảng
+        for item in danh_sach_tim_kiem:
+            if item.get('url'):
+                ws.append_row([
+                    item.get('chuDe', ''),
+                    item.get('tieuDe', ''),
+                    item.get('url', ''),
+                    str(datetime.now())
+                ])
+        print(f"[Xưởng Python] Đã đồng bộ {len(danh_sach_tim_kiem)} link vào tab PythonSearch thành công.")
+    except Exception as e:
+        print(f"[Xưởng Python] Lỗi ghi sheet: {e}")
