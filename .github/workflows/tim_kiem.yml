@@ -1,0 +1,27 @@
+# .github/workflows/tim_kiem.yml – XƯỞNG TÌM KIẾM TÀI LIỆU cho Download Agent
+# Nguồn tìm kiếm CHÍNH của Download Agent. Chạy 5h40 và 13h40 giờ Việt Nam (22h40, 6h40 UTC), trước các lượt 6h và 15h
+# của Download Agent; bấm tay: Actions → tim_kiem → Run workflow.
+name: tim_kiem
+on:
+  schedule:
+    - cron: "40 22 * * *"
+    - cron: "40 6 * * *"
+  workflow_dispatch:
+jobs:
+  tim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements-timkiem.txt
+      - name: Tìm sẵn tài liệu cho các chủ đề đang bật
+        timeout-minutes: 25
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
+        run: python tim_kiem.py
