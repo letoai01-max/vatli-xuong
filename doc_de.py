@@ -473,6 +473,7 @@ def main():
 
 if __name__ == "__main__":
     try:
+        ghi_ket_qua_python_vao_sheet(danh_sach_link)
         main()
     except Exception as loi:
         try:
