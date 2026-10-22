@@ -441,14 +441,23 @@ def main():
     print("Model:", ", ".join(ds_model))
     so_file = so_cau = 0
     da_lam, het_han_muc = set(), False
-    try:
+  # [MỚI - Ý 4] Biến đếm giới hạn số file xử lý tối đa mỗi lượt chạy (chống timeout 6 phút)
+    SO_FILE_TOI_DA_LUOT_NAY = 6
+    so_file_da_xu_ly = 0
+   try:
         while con_thoi_gian(giay_du_tru=300):
+            # [MỚI - Ý 4] Dừng vòng lặp khi đã xử lý đủ 6 file trong lượt này
+            if so_file_da_xu_ly >= SO_FILE_TOI_DA_LUOT_NAY:
+                print(f"🛑 Đã đạt giới hạn an toàn ({SO_FILE_TOI_DA_LUOT_NAY} file/lượt). Tạm dừng để nhường lượt sau.")
+                break
+                
             viec = lay_file_cho(tab_xl, da_lam)
             if not viec:
                 break
             da_lam.add(viec["id"])
             so_cau += xu_ly_mot_file(kho, drive, tab_xl, tab_nh, viec, yccd, ds_model)
             so_file += 1
+            so_file_da_xu_ly += 1  # [MỚI - Ý 4] Tăng biến đếm sau mỗi file thành công
     except HetHanMuc as e:
         het_han_muc = True
         print("⏸️ Hết hạn mức Gemini, lượt sau làm tiếp:", e)
