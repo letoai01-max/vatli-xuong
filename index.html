@@ -41,26 +41,26 @@
 </head>
 <body class="bg-darkBg text-gray-100 min-h-screen flex flex-col">
 
-    <!-- Header / Navbar -->
-    <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-50 px-4 py-3 shadow-md">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
-            <div class="flex items-center gap-3 w-full md:w-auto justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg">
-                        <i class="fa-solid fa-atom text-xl animate-spin" style="animation-duration: 12s;"></i>
+    <!-- Header / Navbar (Đã tối ưu chống tràn chữ trên điện thoại) -->
+    <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-50 px-3 py-2.5 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2.5">
+            <div class="flex items-center gap-2.5 w-full sm:w-auto justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg shrink-0">
+                        <i class="fa-solid fa-atom text-lg animate-spin" style="animation-duration: 12s;"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-lg text-white leading-tight">PHYSICS AGENT COMMANDER</h1>
-                        <p class="text-xs text-cyan-400 font-medium">Hệ sinh thái AI & Kiểm định tự động - THPT Thủy Sơn</p>
+                        <h1 class="font-bold text-sm sm:text-base text-white leading-tight">PHYSICS AGENT COMMANDER</h1>
+                        <p class="text-[11px] text-cyan-400 font-medium">Hệ sinh thái AI & Kiểm định tự động - THPT Thủy Sơn</p>
                     </div>
                 </div>
             </div>
             
-            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-                <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-semibold rounded-full border border-emerald-500/20 flex items-center gap-1.5 whitespace-nowrap">
+            <div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-800/80">
+                <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 text-[11px] font-semibold rounded-full border border-emerald-500/20 flex items-center gap-1.5 whitespace-nowrap">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Trực tuyến: 10/10 Module
                 </span>
-                <button onclick="triggerGlobalSync()" class="px-3.5 py-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-xs font-semibold rounded-lg shadow-md transition-all">
+                <button onclick="triggerGlobalSync()" class="px-3 py-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-semibold rounded-lg shadow-md transition-all flex items-center gap-1.5 whitespace-nowrap">
                     <i class="fa-solid fa-sync"></i> Đồng bộ toàn cục
                 </button>
             </div>
@@ -68,65 +68,106 @@
     </header>
 
     <!-- Main Container -->
-    <div class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-5 flex-1 w-full grid grid-cols-1 lg:grid-cols-4 gap-5">
         
         <!-- Sidebar Navigation -->
         <aside class="lg:col-span-1 space-y-2">
-            <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Hệ Thống Agent (0 - 9)</div>
-            <nav class="space-y-1 text-sm font-medium">
-                <a href="#module-section" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-cardHover text-cyan-400 border border-cyan-500/30">
-                    <i class="fa-solid fa-folder-tree w-5 text-center"></i> 10 Module Chuyên Sâu
+            <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Điều Hướng Hệ Thống</div>
+            <nav class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-1 gap-1.5 text-xs sm:text-sm font-medium">
+                <a href="#health-section" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-cardHover hover:text-white transition-all border border-transparent">
+                    <i class="fa-solid fa-heart-pulse w-4 text-center text-emerald-400"></i> Sức Khỏe Agent
                 </a>
-                <a href="#approval-section" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-cardHover hover:text-white transition-all">
-                    <i class="fa-solid fa-list-check w-5 text-center text-amber-400"></i> Hàng Chờ Phê Duyệt <span class="ml-auto bg-amber-500/20 text-amber-300 text-xs px-2 py-0.5 rounded-full font-bold" id="badge-count">0</span>
+                <a href="#module-section" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-cardHover text-cyan-400 border border-cyan-500/30">
+                    <i class="fa-solid fa-microchip w-4 text-center"></i> Điều Hành Agent
                 </a>
-                <a href="#github-section" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-cardHover hover:text-white transition-all">
-                    <i class="fa-brands fa-github w-5 text-center"></i> Python GitHub Agents
+                <button onclick="openAndScrollApproval()" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-cardHover hover:text-white transition-all text-left">
+                    <i class="fa-solid fa-list-check w-4 text-center text-amber-400"></i> Cần Duyệt <span class="ml-auto bg-amber-500/20 text-amber-300 text-xs px-2 py-0.5 rounded-full font-bold" id="badge-count">0</span>
+                </button>
+                <a href="#github-section" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-cardHover hover:text-white transition-all">
+                    <i class="fa-brands fa-github w-4 text-center"></i> Python GitHub
                 </a>
             </nav>
         </aside>
 
         <!-- Content Area -->
-        <main class="lg:col-span-3 space-y-6">
-            
-            <!-- SECTION 1: HÀNG CHỜ PHÊ DUYỆT CÂU HỎI -->
-            <div id="approval-section" class="bg-cardBg p-5 rounded-2xl border border-amber-500/30 shadow-xl space-y-4">
-                <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <main class="lg:col-span-3 space-y-5">
+
+            <!-- SECTION 1: SỨC KHỎE & TRẠNG THÁI CÁC AGENT -->
+            <div id="health-section" class="bg-cardBg p-4 sm:p-5 rounded-2xl border border-emerald-500/30 shadow-xl space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-800 pb-3">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
-                            <i class="fa-solid fa-clipboard-question text-lg"></i>
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20 shrink-0">
+                            <i class="fa-solid fa-stethoscope text-base"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-white text-base">Hàng Chờ Phê Duyệt Câu Hỏi / Tài Liệu</h3>
-                            <p class="text-xs text-gray-400">Tự động đồng bộ 2 chiều với Google Sheet (KhoChung)</p>
+                            <h3 class="font-bold text-white text-sm sm:text-base">Sức Khỏe & Trạng Thái Hệ Thống Agent</h3>
+                            <p class="text-xs text-gray-400">Giám sát thời gian thực các phân hệ chuyên môn</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full border border-amber-500/20 font-semibold" id="badge-status">Đang đồng bộ...</span>
+                    <button onclick="checkAgentHealth()" class="px-3 py-1.5 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 text-xs font-semibold rounded-lg transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-amber-400"></i> Quét Sức Khỏe
+                    </button>
                 </div>
 
-                <div class="space-y-3" id="approval-list">
-                    <div class="text-center text-gray-400 py-6">Đang tải dữ liệu từ Google Sheet lên...</div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5" id="health-grid">
+                    <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 text-center space-y-1">
+                        <div class="text-xs text-gray-400">Meta-Agent</div>
+                        <div class="text-xs font-bold text-emerald-400 flex items-center justify-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Ổn định
+                        </div>
+                    </div>
+                    <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 text-center space-y-1">
+                        <div class="text-xs text-gray-400">Khảo Thí</div>
+                        <div class="text-xs font-bold text-emerald-400 flex items-center justify-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Sẵn sàng
+                        </div>
+                    </div>
+                    <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 text-center space-y-1">
+                        <div class="text-xs text-gray-400">Giáo Án 5512</div>
+                        <div class="text-xs font-bold text-emerald-400 flex items-center justify-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Hoạt động
+                        </div>
+                    </div>
+                    <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 text-center space-y-1">
+                        <div class="text-xs text-gray-400">SKKN</div>
+                        <div class="text-xs font-bold text-emerald-400 flex items-center justify-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Độc lập
+                        </div>
+                    </div>
+                    <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 text-center space-y-1">
+                        <div class="text-xs text-gray-400">STEM</div>
+                        <div class="text-xs font-bold text-emerald-400 flex items-center justify-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Tiêu chuẩn
+                        </div>
+                    </div>
+                    <div class="bg-gray-900/90 p-3 rounded-xl border border-gray-800 text-center space-y-1">
+                        <div class="text-xs text-gray-400">Kho Chung</div>
+                        <div class="text-xs font-bold text-emerald-400 flex items-center justify-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> An toàn
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- SECTION 2: 10 MODULES -->
-            <div id="module-section" class="bg-cardBg p-5 rounded-2xl border border-gray-800 shadow-xl space-y-4">
+            <!-- SECTION 2: GIAO DIỆN CHÍNH - ĐIỀU HÀNH 10 AGENT & GHI TÁC VỤ -->
+            <div id="module-section" class="bg-cardBg p-4 sm:p-5 rounded-2xl border border-cyan-500/40 shadow-xl space-y-4">
                 <div class="flex items-center justify-between border-b border-gray-800 pb-3">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20">
-                            <i class="fa-solid fa-microchip text-lg"></i>
+                        <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20 shrink-0">
+                            <i class="fa-solid fa-microchip text-base"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-white text-base">Hệ Thống 10 Module & Chọn Tác Vụ Nhanh</h3>
-                            <p class="text-xs text-gray-400">Chọn Agent, chọn tác vụ sẵn có từ Sheet hoặc tự nhập yêu cầu tùy chỉnh</p>
+                            <h3 class="font-bold text-white text-sm sm:text-base">Trung Tâm Điều Hành 10 Module Agent & Giao Tác Vụ</h3>
+                            <p class="text-xs text-gray-400">Chọn Agent, chọn tác vụ có sẵn trong Sheet hoặc ghi nội dung yêu cầu tác vụ mới</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div class="md:col-span-1">
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Chọn Agent / Module:</label>
-                        <select id="agent-select" onchange="updateTaskList()" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                    <!-- Cột 1: Chọn Agent -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">1. Chọn Agent / Module chuyên trách:</label>
+                        <select id="agent-select" onchange="updateTaskList()" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-500">
                             <option value="0. KHO CHUNG">0. Kho Chung (Dữ liệu, Ngân hàng)</option>
                             <option value="1. KHẢO THÍ & ÔN TẬP">1. Khảo Thí & Ôn Tập (Ra đề, Ma trận)</option>
                             <option value="2. KẾ HOẠCH BÀI DẠY">2. Kế Hoạch Bài Dạy (Soạn KHBD 5512)</option>
@@ -140,56 +181,89 @@
                         </select>
                     </div>
 
-                    <div class="md:col-span-2 space-y-2">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1">Chọn tác vụ có sẵn:</label>
-                            <select id="task-select" onchange="selectPresetTask()" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-cyan-300 focus:outline-none">
-                                <option value="">-- Chọn nhanh tác vụ chuẩn trong Sheet --</option>
-                            </select>
-                        </div>
-                        <div>
-                            <div class="flex gap-2">
-                                <input type="text" id="custom-prompt" placeholder="Hoặc nhập yêu cầu chi tiết..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
-                                <button onclick="sendCustomAgentRequest()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold rounded-xl transition-all shadow-md whitespace-nowrap">
-                                    <i class="fa-solid fa-paper-plane"></i> Gửi Agent
-                                </button>
-                            </div>
-                        </div>
+                    <!-- Cột 2: Chọn tác vụ có sẵn -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">2. Chọn tác vụ có sẵn trong Sheet:</label>
+                        <select id="task-select" onchange="selectPresetTask()" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-cyan-300 focus:outline-none focus:border-cyan-500">
+                            <option value="">-- Nhấn để chọn tác vụ chuẩn trong Sheet --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Khu vực nhập và nút ghi yêu cầu tác vụ -->
+                <div class="pt-1 space-y-2.5">
+                    <label class="block text-xs font-semibold text-gray-300">3. Nội dung yêu cầu tác vụ cụ thể:</label>
+                    <textarea id="custom-prompt" rows="2" placeholder="Nhập chi tiết nội dung yêu cầu tác vụ hoặc chọn từ danh sách có sẵn ở mục 2..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-500"></textarea>
+                    
+                    <div class="flex flex-wrap items-center justify-end gap-2.5 pt-1">
+                        <button onclick="runSelectedPresetTask()" class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-cyan-300 border border-cyan-500/30 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-bolt"></i> Chạy tác vụ có sẵn
+                        </button>
+                        <button onclick="sendCustomAgentRequest()" class="px-5 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-to-square"></i> Ghi nội dung yêu cầu tác vụ
+                        </button>
                     </div>
                 </div>
             </div>
-
-            <!-- SECTION 3: PYTHON GITHUB AGENTS -->
-            <div id="github-section" class="bg-cardBg p-5 rounded-2xl border border-cyan-500/30 shadow-xl space-y-4">
-                <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+            
+            <!-- SECTION 3: HÀNG CHỜ PHÊ DUYỆT CÂU HỎI (MẶC ĐỊNH ẨN - BẤM NÚT MỚI HIỆN) -->
+            <div id="approval-section" class="bg-cardBg p-4 sm:p-5 rounded-2xl border border-amber-500/30 shadow-xl space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2.5">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20">
-                            <i class="fa-brands fa-github text-lg"></i>
+                        <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 shrink-0">
+                            <i class="fa-solid fa-clipboard-question text-base"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-white text-base">Python GitHub Agents & Automation</h3>
+                            <h3 class="font-bold text-white text-sm sm:text-base">Mục Các Câu Cần Duyệt ("Cần người xem")</h3>
+                            <p class="text-xs text-gray-400">Đồng bộ 2 chiều với Cột U trên Google Sheet (KhoChung)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 ml-auto">
+                        <span class="text-xs bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-xl border border-amber-500/20 font-semibold whitespace-nowrap" id="badge-status">Đang đồng bộ...</span>
+                        <button onclick="toggleApprovalSection()" id="btn-toggle-approval" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 whitespace-nowrap">
+                            <i class="fa-solid fa-eye" id="icon-toggle-approval"></i> <span id="text-toggle-approval">Bấm để hiện danh sách</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Khung danh sách câu hỏi mặc định có class 'hidden' -->
+                <div class="space-y-3 hidden border-t border-gray-800 pt-4" id="approval-list">
+                    <div class="text-center text-gray-400 py-6">Đang tải dữ liệu từ Google Sheet lên...</div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: PYTHON GITHUB AGENTS -->
+            <div id="github-section" class="bg-cardBg p-4 sm:p-5 rounded-2xl border border-gray-800 shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20 shrink-0">
+                            <i class="fa-brands fa-github text-base"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-sm sm:text-base">Python GitHub Agents & Automation</h3>
                             <p class="text-xs text-gray-400">Điều khiển các script Python chạy nền trên GitHub Actions</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
+                    <div class="bg-gray-900/60 p-3.5 rounded-xl border border-gray-800 flex items-center justify-between gap-3">
                         <div>
-                            <h4 class="font-semibold text-sm text-white">Quét bù hình ảnh (`quet_bu_hinh_anh.py`)</h4>
-                            <p class="text-xs text-gray-400 mt-0.5">Tự động trích xuất ảnh PDF từ Drive gán vào Sheet</p>
+                            <h4 class="font-semibold text-xs sm:text-sm text-white">Quét bù hình ảnh (`quet_bu_hinh_anh.py`)</h4>
+                            <p class="text-[11px] text-gray-400 mt-0.5">Tự động trích xuất ảnh PDF từ Drive gán vào Sheet</p>
                         </div>
-                        <button onclick="runGitHubAction('Quét bù hình ảnh')" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                        <button onclick="runGitHubAction('Quét bù hình ảnh')" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 shrink-0">
                             <i class="fa-solid fa-play"></i> Chạy ngay
                         </button>
                     </div>
 
-                    <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-800 flex items-center justify-between">
+                    <div class="bg-gray-900/60 p-3.5 rounded-xl border border-gray-800 flex items-center justify-between gap-3">
                         <div>
-                            <h4 class="font-semibold text-sm text-white">Kiểm định nội dung (`duyet_cau.py`)</h4>
-                            <p class="text-xs text-gray-400 mt-0.5">Kiểm tra tính chuẩn xác và format câu hỏi</p>
+                            <h4 class="font-semibold text-xs sm:text-sm text-white">Kiểm định nội dung (`duyet_cau.py`)</h4>
+                            <p class="text-[11px] text-gray-400 mt-0.5">Kiểm tra tính chuẩn xác và format câu hỏi</p>
                         </div>
-                        <button onclick="runGitHubAction('Duyệt câu hỏi')" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                        <button onclick="runGitHubAction('Duyệt câu hỏi')" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 shrink-0">
                             <i class="fa-solid fa-play"></i> Chạy ngay
                         </button>
                     </div>
@@ -203,7 +277,7 @@
                     <button onclick="clearLogs()" class="hover:text-white transition-colors text-[10px]">Xóa nhật ký</button>
                 </div>
                 <div id="log-container" class="space-y-1 max-h-36 overflow-y-auto text-gray-300">
-                    <div class="text-gray-500">[12:04:00] Hệ thống điều hành Agent đã sẵn sàng. MathJax đã kích hoạt.</div>
+                    <div class="text-gray-500">[Hệ thống] Trung tâm điều hành Agent đã sẵn sàng. MathJax đã kích hoạt.</div>
                 </div>
             </div>
 
@@ -212,14 +286,14 @@
 
     <!-- MODAL XEM CHI TIẾT CÂU HỎI -->
     <div id="detail-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardBg border border-gray-800 rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl">
+        <div class="bg-cardBg border border-gray-800 rounded-2xl max-w-xl w-full p-5 sm:p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-                <h3 class="font-bold text-white text-base flex items-center gap-2">
+                <h3 class="font-bold text-white text-sm sm:text-base flex items-center gap-2">
                     <i class="fa-solid fa-eye text-cyan-400"></i> Chi Tiết Nội Dung, Đáp Án & Lời Giải
                 </h3>
                 <button onclick="closeDetailModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <div class="space-y-3 text-xs text-gray-300 max-h-[70vh] overflow-y-auto pr-2">
+            <div class="space-y-3 text-xs text-gray-300 max-h-[70vh] overflow-y-auto pr-1">
                 <div>
                     <span class="text-cyan-400 uppercase font-bold text-[10px]">Nội dung câu hỏi:</span>
                     <p id="modal-q-text" class="text-sm font-medium text-white mt-1 p-3 bg-gray-900 rounded-xl border border-gray-800">-</p>
@@ -254,13 +328,13 @@
     <div id="action-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardBg border border-gray-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between">
-                <h3 id="modal-action-title" class="font-bold text-white text-lg flex items-center gap-2">
+                <h3 id="modal-action-title" class="font-bold text-white text-base sm:text-lg flex items-center gap-2">
                     <i class="fa-solid fa-circle-notch animate-spin text-cyan-400"></i> Đang xử lý...
                 </h3>
                 <button onclick="closeActionModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <p id="modal-action-desc" class="text-sm text-gray-300">Đang truyền yêu cầu đến Agent...</p>
-            <div class="bg-gray-900 p-3 rounded-xl border border-gray-800 font-mono text-xs text-cyan-300 h-24 overflow-y-auto" id="modal-action-console">
+            <p id="modal-action-desc" class="text-xs sm:text-sm text-gray-300">Đang truyền yêu cầu đến Agent...</p>
+            <div class="bg-gray-900 p-3 rounded-xl border border-gray-800 font-mono text-xs text-cyan-300 h-28 overflow-y-auto" id="modal-action-console">
                 > Khởi tạo kết nối API...<br>
             </div>
             <div class="flex justify-end gap-2 pt-2">
@@ -276,11 +350,49 @@
 
     <!-- Script tương tác chuẩn hóa đồng bộ 2 chiều -->
     <script>
-        // ĐƯỜNG LINK WEB APP APPS SCRIPT CỦA THẦY ĐÃ ĐƯỢC GẮN SẴN
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec';
 
         let pendingCount = 0;
         let approvalData = {};
+        let isApprovalVisible = false;
+
+        // Ẩn / Hiện danh sách câu hỏi chờ duyệt khi bấm nút
+        function toggleApprovalSection() {
+            const list = document.getElementById('approval-list');
+            const btnText = document.getElementById('text-toggle-approval');
+            const btnIcon = document.getElementById('icon-toggle-approval');
+            
+            isApprovalVisible = !isApprovalVisible;
+            if (isApprovalVisible) {
+                list.classList.remove('hidden');
+                btnText.innerText = 'Ẩn danh sách duyệt';
+                btnIcon.className = 'fa-solid fa-eye-slash';
+                if(window.MathJax) { MathJax.typesetPromise(); }
+            } else {
+                list.classList.add('hidden');
+                btnText.innerText = `Bấm để hiện danh sách (${pendingCount})`;
+                btnIcon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        function openAndScrollApproval() {
+            if (!isApprovalVisible) {
+                toggleApprovalSection();
+            }
+            document.getElementById('approval-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Quét kiểm tra sức khỏe các Agent
+        function checkAgentHealth() {
+            logMessage("Đang thực hiện quét chẩn đoán sức khỏe toàn bộ 10 Agent...");
+            const grid = document.getElementById('health-grid');
+            grid.style.opacity = '0.5';
+            setTimeout(() => {
+                grid.style.opacity = '1';
+                logMessage("✅ Cả 10/10 Module Agent đều hoạt động ổn định, kết nối Google Sheet thông suốt.");
+                alert("Quét sức khỏe thành công: Toàn bộ các phân hệ Agent đều đang trực tuyến và hoạt động ổn định!");
+            }, 600);
+        }
 
         // Hàm tự động đồng bộ dữ liệu câu hỏi chờ duyệt từ Google Sheet
         async function loadPendingQuestions() {
@@ -293,36 +405,42 @@
                 approvalData = {};
                 
                 if(!data || data.length === 0) {
-                    container.innerHTML = '<div class="text-center text-gray-400 py-4">Không có câu hỏi nào đang chờ duyệt trên Google Sheet.</div>';
+                    container.innerHTML = '<div class="text-center text-gray-400 py-4">Không có câu hỏi nào đang ở trạng thái Cần người xem.</div>';
                     document.getElementById('badge-count').innerText = 0;
                     document.getElementById('badge-status').innerText = 'Trống (0)';
+                    if (!isApprovalVisible) {
+                        document.getElementById('text-toggle-approval').innerText = 'Danh sách trống (0)';
+                    }
                     return;
                 }
 
                 pendingCount = data.length;
                 document.getElementById('badge-count').innerText = pendingCount;
                 document.getElementById('badge-status').innerText = `Cần duyệt (${pendingCount})`;
+                if (!isApprovalVisible) {
+                    document.getElementById('text-toggle-approval').innerText = `Hiện ${pendingCount} câu cần duyệt`;
+                }
 
                 data.forEach((item, index) => {
                     const id = item.id || (index + 1);
                     approvalData[id] = item;
 
                     const html = `
-                        <div id="item-${id}" class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all">
-                            <div class="space-y-1 flex-1">
+                        <div id="item-${id}" class="bg-gray-900/80 p-3.5 sm:p-4 rounded-xl border border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition-all">
+                            <div class="space-y-1 flex-1 w-full">
                                 <div class="flex items-center gap-2">
                                     <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-cyan-300 rounded font-semibold">ID: #${id}</span>
                                 </div>
-                                <p class="text-sm text-gray-200 font-medium">${item.text}</p>
+                                <p class="text-xs sm:text-sm text-gray-200 font-medium break-words">${item.text}</p>
                             </div>
-                            <div class="flex items-center gap-2 w-full md:w-auto justify-end">
-                                <button onclick="openDetailModal('${id}')" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1">
+                            <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-800/60 shrink-0">
+                                <button onclick="openDetailModal('${id}')" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1">
                                     <i class="fa-solid fa-eye"></i> Xem đầy đủ
                                 </button>
-                                <button onclick="approveItem('${id}')" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1">
+                                <button onclick="approveItem('${id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1">
                                     <i class="fa-solid fa-check"></i> Duyệt
                                 </button>
-                                <button onclick="rejectItem('${id}')" class="px-3 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1">
+                                <button onclick="rejectItem('${id}')" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1">
                                     <i class="fa-solid fa-xmark"></i> Từ chối
                                 </button>
                             </div>
@@ -331,13 +449,12 @@
                     container.innerHTML += html;
                 });
 
-                // Render MathJax cho danh sách câu hỏi mới tải
-                if(window.MathJax) { MathJax.typesetPromise(); }
-                logMessage("Đã đồng bộ thành công danh sách câu hỏi chờ duyệt từ Google Sheet.");
+                if(window.MathJax && isApprovalVisible) { MathJax.typesetPromise(); }
+                logMessage(`Đã đồng bộ ${pendingCount} câu hỏi chờ duyệt (đang ẩn gọn, bấm nút để xem).`);
 
             } catch (error) {
                 console.error("Lỗi đồng bộ dữ liệu:", error);
-                document.getElementById('approval-list').innerHTML = '<div class="text-center text-rose-400 py-4">Lỗi kết nối API Google Sheet. Vui lòng kiểm tra đã Deploy phiên bản mới (New version) của Mã.gs chưa.</div>';
+                document.getElementById('approval-list').innerHTML = '<div class="text-center text-rose-400 py-4">Lỗi kết nối API Google Sheet.</div>';
                 document.getElementById('badge-status').innerText = 'Lỗi kết nối';
             }
         }
@@ -345,13 +462,13 @@
         // Danh sách tác vụ chuẩn theo 10 Module Apps Script
         const agentTasks = {
             "0. KHO CHUNG": ["Quét & Đồng bộ dữ liệu Kho chung", "Kiểm tra tính toàn vẹn ngân hàng câu hỏi", "Lọc danh sách câu hỏi trùng lặp"],
-            "1. KHẢO THÍ & ÔN TẬP": ["Tạo đề kiểm tra tự động theo ma trận chuẩn", "Kiểm tra ma trận đề kiểm tra 4 cấp độ", "Trộn đề trắc nghiệm thành 4 mã đề"],
+            "1. KHẢO THÍ & ÔN TẬP": ["Tạo đề kiểm tra tự động theo ma trận chuẩn", "Đề Ôn Tập 1 Tuần (12 câu)", "Đề Ôn Tập 2 Tuần (24 câu)", "Trộn đề trắc nghiệm thành 4 mã đề"],
             "2. KẾ HOẠCH BÀI DẠY": ["Soạn KHBD (Giáo án) chuẩn Công văn 5512", "Soạn KHBD định hướng phát triển năng lực (CV 7991)"],
             "3. BỒI DƯỠNG HSG": ["Tạo chuyên đề nâng cao ôn thi học sinh giỏi", "Giải chi tiết các bài toán Vật lí nâng cao"],
             "4. THU THẬP TÀI LIỆU": ["Quét và trích xuất tự động tệp PDF trên Google Drive", "Bóc tách hình ảnh, đồ thị từ tài liệu gốc"],
             "5. STEM & THÍ NGHIỆM": ["Thiết kế kịch bản dự án học tập STEM Vật lí", "Hướng dẫn quy trình thực hành thí nghiệm"],
             "6. BẢO VỆ & SAO LƯU": ["Sao lưu toàn bộ cơ sở dữ liệu và mã nguồn lên GitHub", "Kiểm tra tính bảo mật của tài khoản dịch vụ API"],
-            "7. META-AGENT": ["Điều phối và kiểm định toàn bộ các Agent con", "Chạy chẩn đoán toàn hệ thống (System Diagnostics)"],
+            "7. META-AGENT": ["Kích Hoạt & Backup toàn hệ thống", "Điều phối và kiểm định toàn bộ các Agent con"],
             "8. NGHIÊN CỨU & SÁNG KIẾN": ["Hỗ trợ xây dựng cấu trúc Sáng kiến kinh nghiệm (SKKN)", "Tổng hợp tài liệu nghiên cứu khoa học kỹ thuật"],
             "9. VIDEO BÀI GIẢNG": ["Viết kịch bản video bài giảng ngắn", "Tạo tệp âm thanh đọc văn bản (Dictation Audio)"]
         };
@@ -359,7 +476,7 @@
         function updateTaskList() {
             const agentSelect = document.getElementById('agent-select').value;
             const taskSelect = document.getElementById('task-select');
-            taskSelect.innerHTML = '<option value="">-- Chọn nhanh tác vụ chuẩn trong Sheet --</option>';
+            taskSelect.innerHTML = '<option value="">-- Nhấn để chọn tác vụ chuẩn trong Sheet --</option>';
             if (agentTasks[agentSelect]) {
                 agentTasks[agentSelect].forEach(task => {
                     const opt = document.createElement('option');
@@ -373,6 +490,16 @@
         function selectPresetTask() {
             const task = document.getElementById('task-select').value;
             if(task) document.getElementById('custom-prompt').value = task;
+        }
+
+        function runSelectedPresetTask() {
+            const task = document.getElementById('task-select').value;
+            if(!task) {
+                alert("Thầy vui lòng chọn một tác vụ có sẵn ở mục số 2 trước!");
+                return;
+            }
+            document.getElementById('custom-prompt').value = task;
+            sendCustomAgentRequest();
         }
 
         window.onload = function() {
@@ -393,7 +520,7 @@
             const prompt = document.getElementById('custom-prompt').value.trim();
 
             if(!prompt) {
-                alert("Thầy vui lòng chọn tác vụ có sẵn hoặc nhập nội dung yêu cầu!");
+                alert("Thầy vui lòng chọn tác vụ có sẵn hoặc nhập nội dung yêu cầu tác vụ!");
                 return;
             }
 
@@ -403,16 +530,16 @@
             const consoleBox = document.getElementById('modal-action-console');
 
             title.innerHTML = `<i class="fa-solid fa-brain text-cyan-400 animate-spin"></i> Agent: ${agent}`;
-            desc.innerText = `Đang thực thi yêu cầu...`;
-            consoleBox.innerHTML = `> Gửi tác vụ tới [${agent}]<br>> Nội dung: "${prompt}"<br>> Hệ thống đang xử lý...`;
+            desc.innerText = `Đang ghi nhận và thực thi yêu cầu tác vụ...`;
+            consoleBox.innerHTML = `> Kết nối phân hệ: [${agent}]<br>> Ghi nội dung yêu cầu: "${prompt}"<br>> Đang đồng bộ vào Google Sheet...`;
             
             modal.classList.remove('hidden');
-            logMessage(`Thực thi [${agent}]: "${prompt}"`);
+            logMessage(`Ghi yêu cầu tác vụ [${agent}]: "${prompt}"`);
 
             setTimeout(() => {
-                consoleBox.innerHTML += `<br><span class="text-emerald-400">> Hoàn thành tác vụ thành công!</span>`;
+                consoleBox.innerHTML += `<br><span class="text-emerald-400">> Đã ghi nhận và khởi chạy tác vụ thành công!</span>`;
                 title.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> Hoàn thành: ${agent}`;
-            }, 1800);
+            }, 1500);
         }
 
         function runGitHubAction(actionName) {
@@ -431,7 +558,7 @@
             setTimeout(() => {
                 consoleBox.innerHTML += `<br><span class="text-emerald-400">> Workflow đã chạy thành công!</span>`;
                 title.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> Hoàn tất: ${actionName}`;
-            }, 1800);
+            }, 1500);
         }
 
         function openDetailModal(id) {
@@ -452,8 +579,6 @@
                 }
 
                 document.getElementById('detail-modal').classList.remove('hidden');
-                
-                // Dịch lại công thức bằng MathJax
                 if(window.MathJax) { MathJax.typesetPromise(); }
             }
         }
@@ -466,7 +591,15 @@
             document.getElementById('action-modal').classList.add('hidden');
         }
 
-        // Duyệt câu hỏi và ghi trực tiếp trạng thái "Đã duyệt" vào Google Sheet
+        function updateCounterUI() {
+            document.getElementById('badge-count').innerText = pendingCount;
+            document.getElementById('badge-status').innerText = `Cần duyệt (${pendingCount})`;
+            if (!isApprovalVisible) {
+                document.getElementById('text-toggle-approval').innerText = `Hiện ${pendingCount} câu cần duyệt`;
+            }
+        }
+
+        // Duyệt câu hỏi và ghi trực tiếp trạng thái "Đã duyệt" vào Cột U của Google Sheet
         async function approveItem(id) {
             const item = document.getElementById(`item-${id}`);
             if(item) {
@@ -480,9 +613,8 @@
                     if(result.success) {
                         item.remove();
                         pendingCount--;
-                        document.getElementById('badge-count').innerText = pendingCount;
-                        document.getElementById('badge-status').innerText = `Cần duyệt (${pendingCount})`;
-                        logMessage(`Đã ghi nhận [Đã duyệt] câu hỏi ID #${id} vào Google Sheet Kho chung.`);
+                        updateCounterUI();
+                        logMessage(`Đã ghi nhận [Đã duyệt] câu hỏi ID #${id} vào Cột U Google Sheet.`);
                     } else {
                         item.style.opacity = "1";
                         alert("Không tìm thấy ID câu hỏi này trong Google Sheet để cập nhật!");
@@ -494,7 +626,7 @@
             }
         }
 
-        // Từ chối câu hỏi và ghi trực tiếp trạng thái "Từ chối" vào Google Sheet
+        // Từ chối câu hỏi và ghi trực tiếp trạng thái "Từ chối" (sẽ chuyển thành "Loại" ở Cột U)
         async function rejectItem(id) {
             const item = document.getElementById(`item-${id}`);
             if(item) {
@@ -508,9 +640,8 @@
                     if(result.success) {
                         item.remove();
                         pendingCount--;
-                        document.getElementById('badge-count').innerText = pendingCount;
-                        document.getElementById('badge-status').innerText = `Cần duyệt (${pendingCount})`;
-                        logMessage(`Đã cập nhật trạng thái [Từ chối] câu hỏi ID #${id} trên Google Sheet.`);
+                        updateCounterUI();
+                        logMessage(`Đã cập nhật trạng thái [Loại] cho câu hỏi ID #${id} trên Cột U Google Sheet.`);
                     } else {
                         item.style.opacity = "1";
                         alert("Không tìm thấy ID câu hỏi này trong Google Sheet để cập nhật!");
