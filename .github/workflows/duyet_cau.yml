@@ -1,0 +1,37 @@
+# .github/workflows/duyet_cau.yml – XƯỞNG DUYỆT CÂU 5 TẦNG (thay duyetCauTuDong của Kho chung)
+# 23h47 và 3h47 giờ Việt Nam (16h47, 20h47 UTC) – sau lượt đọc đề 22h17; bấm tay: Actions → duyet_cau → Run workflow.
+name: duyet_cau
+on:
+  schedule:
+    - cron: "47 16 * * *"
+    - cron: "47 20 * * *"
+  workflow_dispatch:
+    inputs:
+      phut:
+        description: "Số phút tối đa cho lượt này"
+        required: false
+        default: "150"
+concurrency:
+  group: duyet_cau
+  cancel-in-progress: false
+jobs:
+  duyet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements-duyet.txt
+      - name: Duyệt câu 5 tầng
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
+          THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '150' }}
+        run: python duyet_cau.py
