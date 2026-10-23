@@ -28,7 +28,6 @@ def quet_va_cap_nhat_anh_cu(sheet_id, folder_anh_goc):
     data = worksheet.get_all_records()
     print(f"Đã tải {len(data)} câu hỏi từ ngân hàng.")
 
-    # Lấy danh sách tất cả các file ảnh có sẵn trong thư mục
     if not os.path.exists(folder_anh_goc):
         print(f"⚠️ Không tìm thấy thư mục ảnh gốc: {folder_anh_goc}")
         return
@@ -39,25 +38,18 @@ def quet_va_cap_nhat_anh_cu(sheet_id, folder_anh_goc):
     anh_idx = 0
     thay_doi_count = 0
 
-    # Duyệt qua từng dòng câu hỏi trong Sheet
-    for index, row in enumerate(data, start=2): # Dòng 2 do có tiêu đề ở dòng 1
+    for index, row in enumerate(data, start=2):
         noi_dung = str(row.get("Nội dung", ""))
         ghi_chu = str(row.get("Ghi chú", ""))
         
-        # Kiểm tra nếu câu hỏi có mô tả hình ảnh nhưng chưa được gán ảnh
         has_hinh_placeholder = bool(re.search(r"\[(Hình|Đồ thị|Mạch điện|Sơ đồ)", noi_dung, re.IGNORECASE))
         
         if has_hinh_placeholder and anh_idx < len(danh_sach_anh):
             ten_anh = danh_sach_anh[anh_idx]
-            duong_dan_anh = os.path.join(folder_anh_goc, ten_anh)
             
-            # Cập nhật thông tin vào cột Ghi chú hoặc đánh dấu cần xem
             moi_ghi_chu = f"{ghi_chu} | [Đã gắn ảnh bù: {ten_anh}]".strip(" |")
             
-            # Cập nhật trực tiếp vào Google Sheet (Giả sử cột 'Ghi chú' hoặc cột đánh dấu)
-            # Thầy có thể điều chỉnh tên cột cho khớp với cấu trúc Sheet của mình
             try:
-                # Tìm số thứ tự cột 'Ghi chú' hoặc thêm trực tiếp
                 cell_list = worksheet.findall("Ghi chú")
                 if cell_list:
                     col_num = cell_list[0].col
@@ -71,7 +63,6 @@ def quet_va_cap_nhat_anh_cu(sheet_id, folder_anh_goc):
     print(f"🎉 Hoàn thành quét bù! Đã cập nhật thành công hình ảnh cho {thay_doi_count} câu hỏi cũ.")
 
 if __name__ == "__main__":
-    # ID của Google Sheet Kho chung (lấy từ đường link Sheet của thầy)
     SHEET_ID = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
     THU_MUC_ANH_GOC = "./extracted_images"
 
