@@ -1,0 +1,237 @@
+"""
+de_cuong.py – XƯỞNG SOẠN ĐỀ CƯƠNG ÔN TẬP (Python, GitHub Actions) – bước 1–5 của DeCuongOnTap.gs.
+
+Apps Script (DeCuongOnTap.gs) dựng sẵn lời nhắc và ghi "gói việc" goi_<mã>.json; xưởng:
+  1. Đọc gói, gọi Gemini lần lượt 5 bước (lí thuyết · câu Phần I–II · câu Phần III–IV · đáp án · rà soát),
+     thay {{CAU_HOI}}, {{RS_TL}} bằng kết quả bước trước. Model đọc từ tab CauHinh của Kho chung (như Meta).
+  2. KIỂM TRA SỐ BẰNG SYMPY: ở bước đáp án, Gemini ghi thêm biểu thức tính từng đáp số; xưởng tự tính lại bằng
+     sympy, so với đáp số đã ghi (sai lệch > 2% là sai) và đưa bảng kết quả vào mục D (rà soát) của bản giáo viên.
+  3. CỔNG CHẤT LƯỢNG (cong_chat_luong.py) trước bước rà soát: model KHÁC, không xem đáp án, giải lại MỌI câu bằng code;
+     câu lệch / nhiều phương án đúng / sai luật được đưa cho bước rà soát tự sửa, và "Báo cáo kiểm định" vào mục D.
+  4. Ghi kết quả vào ket_qua_<mã>.json; Apps Script tự nhận và tạo Docs, Word, Form.
+Biến môi trường: GOOGLE_CREDENTIALS, GEMINI_API_KEY_TRA_PHI (nếu có, ưu tiên) hoặc GEMINI_API_KEY, GOI_ID, KQ_ID.
+"""
+import datetime as dt, io, json, math, os, re, sys, time
+
+import gspread
+import requests
+import sympy
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
+
+ID_KHO_CHUNG = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
+MODEL_MAC_DINH, MODEL_DU_PHONG_MAC_DINH = "gemini-3.8-flash", ["gemini-3.5-flash-lite"]
+SAI_SO_CHO_PHEP = 0.02
+TZ = dt.timezone(dt.timedelta(hours=7))
+
+LUAT_KIEM_TRA_SO = (
+    "\n\nCUỐI CÙNG, thêm đúng một mục \"## KIỂM TRA SỐ\" gồm MỘT khối ```json``` là mảng, mỗi phần tử cho một đáp số có tính toán "
+    "(bỏ qua câu chỉ chọn lí thuyết): {\"cau\": \"III.2\", \"bieuThuc\": \"sqrt(2*20/9.8)\", \"dapSo\": 2.02, \"donVi\": \"s\"}. "
+    "bieuThuc chỉ gồm số và + - * / ** ( ), sqrt, sin, cos, tan, asin, acos, atan, exp, log, pi, deg(...) để đổi độ sang rad; "
+    "không dùng biến chữ; dapSo là số đúng như đã ghi trong đáp án (dấu chấm thập phân).")
+
+
+class HetHanMuc(Exception):
+    pass
+
+
+def ket_noi():
+    tt = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+    cred = service_account.Credentials.from_service_account_info(
+        tt, scopes=["https://www.googleapis.com/auth/spreadsheets.readonly", "https://www.googleapis.com/auth/drive"])
+    return gspread.authorize(cred), build("drive", "v3", credentials=cred, cache_discovery=False)
+
+
+def doc_tep(drive, fid):
+    buf, tai = io.BytesIO(), None
+    tai = MediaIoBaseDownload(buf, drive.files().get_media(fileId=fid))
+    xong = False
+    while not xong:
+        _, xong = tai.next_chunk()
+    return json.loads(buf.getvalue().decode("utf-8") or "{}")
+
+
+def ghi_tep(drive, fid, du_lieu):
+    media = MediaIoBaseUpload(io.BytesIO(json.dumps(du_lieu, ensure_ascii=False).encode("utf-8")), mimetype="text/plain")
+    drive.files().update(fileId=fid, media_body=media).execute()
+
+
+def ds_model(gc):
+    try:
+        v = gc.open_by_key(ID_KHO_CHUNG).worksheet("CauHinh").get_all_values()[1:]
+        cfg = {str(r[0]).strip(): str(r[1]).strip() for r in v if r and str(r[0]).strip()}
+    except Exception as e:
+        print("Không đọc được CauHinh, dùng model mặc định:", e)
+        cfg = {}
+    chinh = cfg.get("MODEL_CHINH") or MODEL_MAC_DINH
+    du_phong = [m for m in re.split(r"[,;\s]+", cfg.get("MODEL_DU_PHONG", "")) if m] or MODEL_DU_PHONG_MAC_DINH
+    return [chinh] + [m for m in du_phong if m != chinh]
+
+
+def goi_gemini(he, nguoi, co_code, cac_model):
+    key = os.environ.get("GEMINI_API_KEY_TRA_PHI") or os.environ["GEMINI_API_KEY"]
+    cac_model, loi, khac_quota = list(cac_model), [], False
+    for model in cac_model[:6]:
+        payload = {"systemInstruction": {"parts": [{"text": he}]},
+                   "contents": [{"role": "user", "parts": [{"text": nguoi}]}],
+                   "generationConfig": {"temperature": 0.4, "maxOutputTokens": 16384,
+                                        "thinkingConfig": {"thinkingBudget": 0} if model.startswith("gemini-2.") else {"thinkingLevel": "low"}}}
+        if co_code:
+            payload["tools"] = [{"code_execution": {}}]
+        lan = 0
+        while lan < 3:
+            try:
+                r = requests.post("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent" % model,
+                                  headers={"x-goog-api-key": key, "Content-Type": "application/json"}, data=json.dumps(payload), timeout=600)
+            except requests.RequestException as e:
+                loi.append("%s: %s" % (model, str(e)[:100])); khac_quota = True
+                break
+            if r.status_code == 200:
+                cand = (r.json().get("candidates") or [{}])[0]
+                text = "".join(p.get("text", "") for p in (cand.get("content") or {}).get("parts", []))
+                if text.strip():
+                    return text, model
+                loi.append("%s: phản hồi rỗng (%s)" % (model, cand.get("finishReason"))); khac_quota = True
+                break
+            try:
+                msg = (r.json().get("error") or {}).get("message", r.text)[:200]
+            except ValueError:
+                msg = r.text[:200]
+            if r.status_code != 429:
+                khac_quota = True
+            if r.status_code == 400 and "thinking" in msg.lower() and "thinkingConfig" in payload["generationConfig"]:
+                del payload["generationConfig"]["thinkingConfig"]; continue
+            if r.status_code in (500, 502, 503, 504) and lan < 2:
+                time.sleep((lan + 1) * 10); lan += 1; continue
+            loi.append("%s lỗi %d: %s" % (model, r.status_code, msg))
+            break
+    if not khac_quota:
+        raise HetHanMuc("HET_HAN_MUC – " + " | ".join(loi))
+    raise RuntimeError(" | ".join(loi) or "Không gọi được Gemini")
+
+
+# ---------------- KIỂM TRA SỐ BẰNG SYMPY ----------------
+_X = sympy.Symbol("x")
+CHO_PHEP = {"sqrt": sympy.sqrt, "sin": sympy.sin, "cos": sympy.cos, "tan": sympy.tan, "asin": sympy.asin, "acos": sympy.acos,
+            "atan": sympy.atan, "exp": sympy.exp, "log": sympy.log, "ln": sympy.log, "pi": sympy.pi, "e": sympy.E,
+            "deg": sympy.Lambda(_X, _X * sympy.pi / 180)}
+
+
+def tinh(bieu_thuc):
+    s = str(bieu_thuc).replace("^", "**").replace("×", "*").replace("·", "*").replace(",", ".")
+    if re.search(r"[A-Za-z_]", re.sub(r"\b(sqrt|sin|cos|tan|asin|acos|atan|exp|log|ln|pi|deg|e)\b", "", s)):
+        raise ValueError("có biến chữ")
+    if len(s) > 300:
+        raise ValueError("biểu thức quá dài")
+    return float(sympy.sympify(s, locals=CHO_PHEP, rational=False).evalf())
+
+
+def tach_kiem_tra_so(md):
+    """Tách mục ## KIỂM TRA SỐ khỏi đáp án; trả về (đáp án đã bỏ mục, danh sách mục kiểm tra)."""
+    m = re.search(r"^#{1,4}\s*KIỂM TRA SỐ.*$", md, re.M)
+    if not m:
+        return md, []
+    phan = md[m.end():]
+    j = re.search(r"```(?:json)?\s*(\[.*?\])\s*```", phan, re.S) or re.search(r"(\[\s*\{.*\}\s*\])", phan, re.S)
+    ds = []
+    if j:
+        try:
+            ds = [x for x in json.loads(j.group(1)) if isinstance(x, dict)]
+        except ValueError:
+            ds = []
+    return md[:m.start()].rstrip(), ds
+
+
+def bang_kiem_tra_so(ds):
+    if not ds:
+        return "", 0, 0
+    dong = ["### Kiểm tra lại đáp số bằng code (sympy)", "",
+            "| Câu | Biểu thức | Đáp số đã ghi | Code tính lại | Kết quả |", "|---|---|---|---|---|"]
+    sai = dem = 0
+    for x in ds[:80]:
+        cau, bt, dv = str(x.get("cau", "")), str(x.get("bieuThuc", "")), str(x.get("donVi", "") or "")
+        try:
+            ghi = float(str(x.get("dapSo")).replace(",", "."))
+            gt = tinh(bt)
+            lech = abs(gt - ghi) / max(abs(ghi), 1e-12) if ghi != 0 else abs(gt)
+            dung = lech <= SAI_SO_CHO_PHEP
+            dem += 1
+            if not dung:
+                sai += 1
+            kq = "✔ khớp" if dung else "✘ LỆCH %.1f%% – cần xem lại" % (lech * 100)
+            dong.append("| %s | `%s` | %s %s | %.4g | %s |" % (cau, bt.replace("|", "/"), ghi, dv, gt, kq))
+        except Exception as e:
+            dong.append("| %s | `%s` | %s | – | không tính được (%s) |" % (cau, bt.replace("|", "/"), x.get("dapSo"), str(e)[:40]))
+    dong.append("")
+    dong.append("Đã tính lại %d đáp số: %d khớp, %d lệch quá %d%%." % (dem, dem - sai, sai, int(SAI_SO_CHO_PHEP * 100)))
+    return "\n".join(dong), dem, sai
+
+
+def main():
+    gc, drive = ket_noi()
+    goi_id, kq_id = os.environ["GOI_ID"], os.environ["KQ_ID"]
+    goi = doc_tep(drive, goi_id)
+    cac_model = ds_model(gc)
+    print("Đề cương %s – lớp %s – %s; model: %s" % (goi.get("ma"), goi.get("khoi"), goi.get("ki"), ", ".join(cac_model)))
+    ra, model_dung, kiem, cong, model_soan = {}, "", "", None, ""
+    ghi_tep(drive, kq_id, {"trangThai": "DANG_LAM", "luc": dt.datetime.now(TZ).isoformat()})
+    try:
+        for b in goi["buoc"]:
+            if not b:
+                continue
+            so = str(b["so"])
+            nguoi = b["nguoi"]
+            if "{{CAU_HOI}}" in nguoi:
+                nguoi = nguoi.replace("{{CAU_HOI}}", (ra.get("2", "") + "\n\n" + ra.get("3", ""))[:60000])
+            if "{{RS_TL}}" in nguoi:
+                nguoi = nguoi.replace("{{RS_TL}}", "\n\n".join(ra.get(k, "") for k in ("2", "3", "4"))[:120000])
+            if b.get("kiemTraSo"):
+                nguoi += LUAT_KIEM_TRA_SO
+            if so == "5" and ra.get("4"):
+                bang_chung = ""
+                try:
+                    import cong_chat_luong as CCL
+                    t1 = time.time()
+                    bc, cong, bang_chung = CCL.kiem_dinh(goi_gemini, ra.get("2", "") + "\n\n" + ra.get("3", ""), ra["4"],
+                                                         cac_model, model_soan)
+                    ra["_cong"] = bc
+                    print("🛡️ Cổng chất lượng: %d/%d câu đạt (%.0f giây)" % (cong.get("dat", 0), cong.get("tong", 0), time.time() - t1))
+                except Exception as e:
+                    ra["_cong"] = "### Báo cáo kiểm định (cổng chất lượng)\n\nLượt này chưa chạy được cổng chất lượng: %s\n" % str(e)[:200]
+                    print("⚠️ Cổng chất lượng lỗi (bỏ qua):", str(e)[:200])
+                if bang_chung:
+                    nguoi += ("\n\nBẰNG CHỨNG TỪ CỔNG CHẤT LƯỢNG (một model khác giải độc lập bằng code, KHÔNG xem đáp án). "
+                              "Máy cũng có thể sai: với MỖI câu dưới đây hãy giải lại thật cẩn thận; nếu đáp án hoặc câu hỏi sai thì ghi "
+                              "vào bảng sai sót và viết lại đúng ở mục 4; câu nhiều phương án đúng thì sửa phương án nhiễu:\n" + bang_chung)
+            t0 = time.time()
+            text, model_dung = goi_gemini(b["he"], nguoi, b.get("coCode"), cac_model)
+            if b.get("kiemTraSo"):
+                text, ds = tach_kiem_tra_so(text)
+                bang, dem, sai = bang_kiem_tra_so(ds)
+                ra["_bang"], ra["_sai"] = bang, sai
+                kiem = "%d đáp số, %d lệch" % (dem, sai) if dem else "không có đáp số tính toán"
+            ra[so] = text
+            if so in ("2", "3") and not model_soan:
+                model_soan = model_dung
+            print("✅ Bước %s xong (%.0f giây, %d kí tự)" % (so, time.time() - t0, len(text)))
+        # đưa bảng kiểm tra số vào mục rà soát; cộng số chỗ lệch vào "SỐ CHỖ CẦN SỬA"
+        if ra.get("_bang"):
+            rs, sai = ra.get("5", ""), ra.get("_sai", 0)
+            m = re.search(r"SỐ CHỖ CẦN SỬA:\s*(\d+)", rs)
+            if m and sai:
+                rs = rs[:m.start(1)] + str(int(m.group(1)) + sai) + rs[m.end(1):]
+            ra["5"] = rs.rstrip() + "\n\n" + ra["_bang"]
+        if ra.get("_cong"):
+            ra["5"] = ra.get("5", "").rstrip() + "\n\n" + ra["_cong"]
+        ghi_tep(drive, kq_id, {"trangThai": "XONG", "model": model_dung, "kiemTraSo": kiem, "congChatLuong": cong,
+                               "buoc": {k: v for k, v in ra.items() if not k.startswith("_")},
+                               "luc": dt.datetime.now(TZ).isoformat()})
+        print("📦 Đã ghi kết quả. Apps Script sẽ tạo Docs, Word, Form trong vài phút.")
+    except Exception as e:
+        ghi_tep(drive, kq_id, {"trangThai": "LOI", "loi": str(e)[:500], "luc": dt.datetime.now(TZ).isoformat()})
+        raise
+
+
+if __name__ == "__main__":
+    main()
