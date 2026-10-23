@@ -98,7 +98,7 @@
                         </div>
                         <div>
                             <h3 class="font-bold text-white text-base">Hàng Chờ Phê Duyệt Câu Hỏi / Tài Liệu</h3>
-                            <p class="text-xs text-gray-400">Tự động đồng bộ từ Google Sheet (KhoChung)</p>
+                            <p class="text-xs text-gray-400">Tự động đồng bộ 2 chiều với Google Sheet (KhoChung)</p>
                         </div>
                     </div>
                     <span class="text-xs bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full border border-amber-500/20 font-semibold" id="badge-status">Đang đồng bộ...</span>
@@ -203,7 +203,7 @@
                     <button onclick="clearLogs()" class="hover:text-white transition-colors text-[10px]">Xóa nhật ký</button>
                 </div>
                 <div id="log-container" class="space-y-1 max-h-36 overflow-y-auto text-gray-300">
-                    <div class="text-gray-500">[11:19:00] Hệ thống điều hành Agent đã sẵn sàng. MathJax đã kích hoạt.</div>
+                    <div class="text-gray-500">[12:04:00] Hệ thống điều hành Agent đã sẵn sàng. MathJax đã kích hoạt.</div>
                 </div>
             </div>
 
@@ -274,18 +274,18 @@
         <p>Hệ sinh thái Quản lý Vật lí THPT Thủy Sơn - Lê Trọng Toại &copy; 2026</p>
     </footer>
 
-    <!-- Script tương tác chuẩn hóa -->
+    <!-- Script tương tác chuẩn hóa đồng bộ 2 chiều -->
     <script>
+        // ĐƯỜNG LINK WEB APP APPS SCRIPT CỦA THẦY ĐÃ ĐƯỢC GẮN SẴN
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec';
+
         let pendingCount = 0;
         let approvalData = {};
 
-        // Hàm tự động đồng bộ dữ liệu từ tệp API.gs trên Google Apps Script
+        // Hàm tự động đồng bộ dữ liệu câu hỏi chờ duyệt từ Google Sheet
         async function loadPendingQuestions() {
             try {
-                // THẦY THAY ĐƯỜNG LINK DƯỚI ĐÂY BẰNG URL WEB APP THỰC TẾ KHI DEPLOY API.GS
-                const webAppUrl = 'https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec';
-                
-                const response = await fetch(webAppUrl);
+                const response = await fetch(`${WEB_APP_URL}?action=getQuestions`);
                 const data = await response.json();
                 
                 const container = document.getElementById('approval-list');
@@ -308,7 +308,7 @@
                     approvalData[id] = item;
 
                     const html = `
-                        <div id="item-${id}" class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div id="item-${id}" class="bg-gray-900/80 p-4 rounded-xl border border-gray-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all">
                             <div class="space-y-1 flex-1">
                                 <div class="flex items-center gap-2">
                                     <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-cyan-300 rounded font-semibold">ID: #${id}</span>
@@ -337,7 +337,7 @@
 
             } catch (error) {
                 console.error("Lỗi đồng bộ dữ liệu:", error);
-                document.getElementById('approval-list').innerHTML = '<div class="text-center text-rose-400 py-4">Lỗi kết nối API Google Sheet. Vui lòng kiểm tra lại URL Web App.</div>';
+                document.getElementById('approval-list').innerHTML = '<div class="text-center text-rose-400 py-4">Lỗi kết nối API Google Sheet. Vui lòng kiểm tra đã Deploy phiên bản mới (New version) của Mã.gs chưa.</div>';
                 document.getElementById('badge-status').innerText = 'Lỗi kết nối';
             }
         }
@@ -466,31 +466,65 @@
             document.getElementById('action-modal').classList.add('hidden');
         }
 
-        function approveItem(id) {
+        // Duyệt câu hỏi và ghi trực tiếp trạng thái "Đã duyệt" vào Google Sheet
+        async function approveItem(id) {
             const item = document.getElementById(`item-${id}`);
             if(item) {
-                item.remove();
-                pendingCount--;
-                document.getElementById('badge-count').innerText = pendingCount;
-                document.getElementById('badge-status').innerText = `Cần duyệt (${pendingCount})`;
-                logMessage(`Đã PHÊ DUYỆT câu hỏi ID #${id} đưa vào Kho chung.`);
+                item.style.opacity = "0.5";
+                logMessage(`Đang gửi lệnh PHÊ DUYỆT câu hỏi ID #${id} về Kho chung...`);
+                
+                try {
+                    const res = await fetch(`${WEB_APP_URL}?action=updateStatus&id=${encodeURIComponent(id)}&status=${encodeURIComponent('Đã duyệt')}`);
+                    const result = await res.json();
+                    
+                    if(result.success) {
+                        item.remove();
+                        pendingCount--;
+                        document.getElementById('badge-count').innerText = pendingCount;
+                        document.getElementById('badge-status').innerText = `Cần duyệt (${pendingCount})`;
+                        logMessage(`Đã ghi nhận [Đã duyệt] câu hỏi ID #${id} vào Google Sheet Kho chung.`);
+                    } else {
+                        item.style.opacity = "1";
+                        alert("Không tìm thấy ID câu hỏi này trong Google Sheet để cập nhật!");
+                    }
+                } catch (err) {
+                    item.style.opacity = "1";
+                    logMessage(`Lỗi kết nối khi duyệt câu hỏi ID #${id}.`);
+                }
             }
         }
 
-        function rejectItem(id) {
+        // Từ chối câu hỏi và ghi trực tiếp trạng thái "Từ chối" vào Google Sheet
+        async function rejectItem(id) {
             const item = document.getElementById(`item-${id}`);
             if(item) {
-                item.remove();
-                pendingCount--;
-                document.getElementById('badge-count').innerText = pendingCount;
-                document.getElementById('badge-status').innerText = `Cần duyệt (${pendingCount})`;
-                logMessage(`Đã TỪ CHỐI câu hỏi ID #${id}.`);
+                item.style.opacity = "0.5";
+                logMessage(`Đang gửi lệnh TỪ CHỐI câu hỏi ID #${id} về Kho chung...`);
+                
+                try {
+                    const res = await fetch(`${WEB_APP_URL}?action=updateStatus&id=${encodeURIComponent(id)}&status=${encodeURIComponent('Từ chối')}`);
+                    const result = await res.json();
+                    
+                    if(result.success) {
+                        item.remove();
+                        pendingCount--;
+                        document.getElementById('badge-count').innerText = pendingCount;
+                        document.getElementById('badge-status').innerText = `Cần duyệt (${pendingCount})`;
+                        logMessage(`Đã cập nhật trạng thái [Từ chối] câu hỏi ID #${id} trên Google Sheet.`);
+                    } else {
+                        item.style.opacity = "1";
+                        alert("Không tìm thấy ID câu hỏi này trong Google Sheet để cập nhật!");
+                    }
+                } catch (err) {
+                    item.style.opacity = "1";
+                    logMessage(`Lỗi kết nối khi từ chối câu hỏi ID #${id}.`);
+                }
             }
         }
 
         function triggerGlobalSync() {
-            logMessage("Đã thực hiện đồng bộ toàn cục cho toàn bộ hệ sinh thái.");
-            alert("Đã gửi tín hiệu đồng bộ toàn cục thành công!");
+            logMessage("Đang tải lại dữ liệu mới nhất từ Google Sheet...");
+            loadPendingQuestions();
         }
 
         function clearLogs() {
