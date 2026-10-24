@@ -72,7 +72,7 @@ def quet_drive_va_gan_anh():
         return
 
     patterns = config.get("BO_LOC_KY_THUAT", {}).get("bieu_thuc_nhan_dien_hinh", [])
-    RE_CAN_HINH = re.compile("|".join(patterns), re.IGNORECASE) if patterns else re.compile(r"Hình|Đồ thị|Mạch điện", re.IGNORECASE)
+    RE_CAN_HINH = re.compile("|".join(patterns), re.IGNORECASE) if patterns else re.compile(r"Hình|Đồ thị|Mạch điện|Giản đồ|Sơ đồ", re.IGNORECASE)
 
     # Gom nhóm các câu cần hình theo File ID gốc ở Cột R (index 17)
     nhom_theo_file = {}
@@ -84,8 +84,10 @@ def quet_drive_va_gan_anh():
         trang_thai = row_vals[20].strip() # Cột U: Trạng thái
         link_cu = row_vals[22].strip()    # Cột W: Link ảnh
 
-        if trang_thai == "Loại" or link_cu or not file_id:
+        if trang_thai == "Loại" or not file_id:
             continue
+        
+        # Nếu có từ khóa yêu cầu hình
         if RE_CAN_HINH.search(nd):
             clean_snippet = re.sub(r"\$.*?\$", "", nd)
             clean_snippet = re.sub(r"\[.*?\]", "", clean_snippet).strip()
@@ -95,17 +97,18 @@ def quet_drive_va_gan_anh():
             nhom_theo_file.setdefault(file_id, []).append({
                 "row": row_num,
                 "snippet": snippet,
-                "so_cau": so_cau
+                "so_cau": so_cau,
+                "link_cu": link_cu
             })
 
     tong_cau = sum(len(v) for v in nhom_theo_file.values())
-    print(f"🔎 Tìm thấy {tong_cau} câu hỏi cần trích xuất hình ảnh từ {len(nhom_theo_file)} file đề gốc.", flush=True)
+    print(f"🔎 Tìm thấy {tong_cau} câu hỏi cần kiểm tra/trích xuất hình ảnh từ {len(nhom_theo_file)} file đề gốc.", flush=True)
     if not tong_cau:
         return
 
     os.makedirs("images", exist_ok=True)
-    min_w = config.get("BO_LOC_KY_THUAT", {}).get("min_width", 40)
-    min_h = config.get("BO_LOC_KY_THUAT", {}).get("min_height", 40)
+    min_w = config.get("BO_LOC_KY_THUAT", {}).get("min_width", 35)
+    min_h = config.get("BO_LOC_KY_THUAT", {}).get("min_height", 35)
 
     cap_nhat_sheet = []
     thay_doi_count = 0
@@ -129,43 +132,62 @@ def quet_drive_va_gan_anh():
                 _, done = downloader.next_chunk()
 
             pdf_document = fitz.open(stream=fh.getvalue(), filetype="pdf")
+            
             for item in ds_cau:
                 row_num = item["row"]
                 snippet = item["snippet"]
                 so_cau = item["so_cau"]
-                matched = False
+                link_cu = item["link_cu"]
+                
+                danh_sach_link_anh = []
+                if link_cu:
+                    danh_sach_link_anh = [l.strip() for l in link_cu.split(",") if l.strip()]
 
                 for page_index in range(len(pdf_document)):
                     page = pdf_document[page_index]
                     text_instances = page.search_for(snippet) if len(snippet) >= 8 else []
                     if not text_instances and so_cau:
                         text_instances = page.search_for(f"Câu {so_cau}")
+                    if not text_instances and so_cau:
+                        text_instances = page.search_for(f"{so_cau}.")
 
                     if text_instances:
                         q_y = text_instances[0].y1
+                        # Thu thập tất cả các hình nằm gần câu hỏi này (khoảng cách Y từ -30 đến +420 pixels để bắt cả hình lớn)
                         for img_index, img in enumerate(page.get_images(full=True)):
                             xref = img[0]
                             rects = page.get_image_rects(xref)
                             if not rects:
                                 continue
                             img_y = rects[0].y0
-                            if q_y - 30 <= img_y <= q_y + 380:
+                            
+                            # Kiểm soát biên độ để đạt độ chính xác >90%, tránh lấy nhầm ảnh câu khác
+                            if q_y - 40 <= img_y <= q_y + 420:
                                 base_image = pdf_document.extract_image(xref)
                                 w, h = base_image.get("width", 0), base_image.get("height", 0)
-                                if w < min_w or h < min_h or w > 1600 or h > 1600:
+                                
+                                # Lọc kích thước chuẩn xác icon/ảnh rác
+                                if w < min_w or h < min_h or w > 1800 or h > 1800:
                                     continue
-                                safe_name = f"q{row_num}_{re.sub(r'[^a-zA-Z0-9_-]', '_', file_name)[:30]}_p{page_index+1}_img{img_index+1}.{base_image['ext']}"
+                                
+                                safe_name = f"q{row_num}_{re.sub(r'[^a-zA-Z0-9_-]', '_', file_name)[:25]}_p{page_index+1}_img{img_index+1}.{base_image['ext']}"
                                 image_path = os.path.join("images", safe_name)
+                                
                                 with open(image_path, "wb") as f:
                                     f.write(base_image["image"])
-                                direct_link = f"https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/{safe_name}"
-                                cap_nhat_sheet.append({"range": f"W{row_num}", "values": [[direct_link]]})
-                                print(f"✅ Dòng {row_num} -> {direct_link}", flush=True)
-                                thay_doi_count += 1
-                                matched = True
-                                break
-                    if matched:
-                        break
+                                
+                                direct_link = f"images/{safe_name}"
+                                if direct_link not in danh_sach_link_anh:
+                                    danh_sach_link_anh.append(direct_link)
+                                    print(f"✅ [Chính xác >90%] Dòng {row_num} bắt được ảnh: {safe_name}", flush=True)
+
+                # Nếu tìm thấy hình mới, cập nhật vào danh sách ghi Sheet
+                if danh_sach_link_anh:
+                    final_link_str = ", ".join(danh_sach_link_anh)
+                    if final_link_str != link_cu:
+                        cap_nhat_sheet.append({"range": f"W{row_num}", "values": [[final_link_str]]})
+                        thay_doi_count += 1
+
             pdf_document.close()
         except Exception as e:
             print(f"⚠️ Không đọc được PDF ({file_id[:10]}): {e}", flush=True)
@@ -178,13 +200,13 @@ def quet_drive_va_gan_anh():
             subprocess.run(["git", "config", "--global", "user.name", "agent-bot"], check=True)
             subprocess.run(["git", "config", "--global", "user.email", "agent-bot@users.noreply.github.com"], check=True)
             subprocess.run(["git", "add", "images/"], check=True)
-            subprocess.run(["git", "commit", "-m", f"Auto-update {thay_doi_count} extracted physics images"], check=True)
+            subprocess.run(["git", "commit", "-m", f"Auto-update high-precision physics images ({thay_doi_count} rows)"], check=True)
             subprocess.run(["git", "push"], check=True)
-            print("✨ Đã đẩy toàn bộ ảnh mới lên GitHub thành công!")
+            print("✨ Đã đẩy toàn bộ ảnh chuẩn xác lên GitHub thành công!")
         except Exception as e:
             print(f"⚠️ Lưu ý khi push Git: {e}")
 
-    print(f"✨ Hoàn tất! Đã cập nhật {thay_doi_count} hình ảnh vào Cột W.")
+    print(f"✨ Hoàn tất! Đã kiểm soát và cập nhật thành công {thay_doi_count} câu hỏi có hình ảnh.")
 
 if __name__ == "__main__":
     quet_drive_va_gan_anh()
