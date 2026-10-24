@@ -22,18 +22,23 @@ if raw_cred:
     try:
         if not raw_cred.startswith("{"):
             raw_cred = base64.b64decode(raw_cred).decode("utf-8")
-        tt = json.loads(raw_cred)
+        tt = json.loads(raw_cred, strict=False)
         if "private_key" in tt:
             tt["private_key"] = tt["private_key"].replace("\\n", "\n")
-        os.environ["GOOGLE_CREDENTIALS"] = json.dumps(tt)
-    except Exception:
-        pass
+        clean_json = json.dumps(tt, ensure_ascii=False)
+        os.environ["GOOGLE_CREDENTIALS"] = clean_json
+        # Ghi file credentials.json tạm để tương thích ngược với mọi script
+        cred_path = os.path.join(THU_MUC_GOC, "credentials.json")
+        with open(cred_path, "w", encoding="utf-8") as f:
+            f.write(clean_json)
+    except Exception as e:
+        print(f"⚠️ [Trung tâm]: Lỗi chuẩn hóa GOOGLE_CREDENTIALS: {e}")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         ten_tep = os.path.basename(sys.argv[1])
         muc_tieu = os.path.join(THU_MUC_GOC, ten_tep)
-        print(f"🚀 [Trung tâm]: Đang chạy file -> {ten_tep}")
+        print(f"🚀 [Trung tâm]: Đang chạy file -> {ten_tep}", flush=True)
         sys.argv = [muc_tieu] + sys.argv[2:]
         runpy.run_path(muc_tieu, run_name="__main__")
     else:
