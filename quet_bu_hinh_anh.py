@@ -25,11 +25,9 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-# Trỏ trực tiếp tới tệp Trung tâm điều phối động
 TRUNG_TAM_CONFIG = "trung_tam_dieu_phoi.json"
 
 def doc_trung_tam_config():
-    """Các agent con gọi hàm này để lấy toàn bộ thông tin động từ trung tâm"""
     if os.path.isfile(TRUNG_TAM_CONFIG):
         try:
             with open(TRUNG_TAM_CONFIG, "r", encoding="utf-8") as f:
@@ -39,14 +37,11 @@ def doc_trung_tam_config():
     return {}
 
 def dieu_phoi_api(config):
-    """Trung tâm tự động điều phối chọn Key API tối ưu dựa theo thiết lập"""
     api_keys_uu_tien = config.get("HE_THONG_API", {}).get("uu_tien_su_dung", ["GEMINI_API_KEY"])
     for env_name in api_keys_uu_tien:
         val = os.environ.get(env_name, "").strip()
         if val.startswith("AIza"):
-            print(f"🤖 [Trung tâm điều phối]: Đã chọn và kích hoạt Key từ biến môi trường: {env_name}")
             return val
-    print("⚠️ [Trung tâm điều phối]: Không tìm thấy Key API ưu tiên, chạy chế độ mặc định.")
     return ""
 
 def chuan_hoa_private_key(pk: str) -> str:
@@ -101,16 +96,15 @@ def authenticate():
     return creds
 
 def quet_drive_va_gan_anh():
-    # Nạp cấu hình từ trung tâm điều phối
     config = doc_trung_tam_config()
-    active_key = dieu_phoi_api(config)
+    dieu_phoi_api(config)
     
     sheet_cfg = config.get("SHEET_CONFIG", {})
     sheet_id = sheet_cfg.get("SHEET_ID")
     drive_folder_id = sheet_cfg.get("DRIVE_FOLDER_ID") or os.environ.get("DRIVE_FOLDER_ID")
     tab_keywords = sheet_cfg.get("tab_chap_nhan", ["nganhang"])
 
-    print("Đang xác thực tài khoản Google Drive & Sheets từ Trung tâm điều phối...")
+    print("Đang xác thực tài khoản Google Drive & Sheets...")
     creds = authenticate()
     gc = gspread.authorize(creds)
     drive_service = build("drive", "v3", credentials=creds, cache_discovery=False)
@@ -126,32 +120,36 @@ def quet_drive_va_gan_anh():
     if not worksheet:
         worksheet = sheet.get_worksheet(0)
 
-    print(f"Đã kết nối thành công tới tab: '{worksheet.title}'")
+    print(f"Đã kết nối tab: '{worksheet.title}'")
 
     all_values = worksheet.get_all_values()
     if len(all_values) < 2:
         print("Bảng tính chưa có dữ liệu câu hỏi.")
         return
 
-    # Cố định vị trí cột Link Ảnh nằm ở cột W (cột số 23)
+    # Cố định cột Link Ảnh ở cột W (cột 23)
     link_anh_col_idx = 23
-
     giao_dien = config.get("GIAO_DIEN_COT", {})
     noi_dung_idx = giao_dien.get("cot_noi_dung_index", 2) - 1
 
     patterns = config.get("BO_LOC_KY_THUAT", {}).get("bieu_thuc_nhan_dien_hinh", [])
     RE_CAN_HINH = re.compile("|".join(patterns), re.IGNORECASE) if patterns else re.compile(r"Hình", re.IGNORECASE)
 
-    dong_can_hinh = []
+    # Lọc các dòng câu hỏi cần gắn hình
+    cau_hoi_can_xu_ly = []
     for row_num, row_vals in enumerate(all_values[1:], start=2):
         nd = row_vals[noi_dung_idx] if noi_dung_idx < len(row_vals) else ""
         link_cu = row_vals[link_anh_col_idx - 1].strip() if (link_anh_col_idx - 1) < len(row_vals) else ""
         if not link_cu and RE_CAN_HINH.search(nd):
-            dong_can_hinh.append(row_num)
+            # Lấy một đoạn từ khóa đặc trưng của câu hỏi để dò trên PDF (lấy tối đa 30 ký tự đầu tiên sạch sẽ)
+            clean_snippet = re.sub(r'\$.*?\$', '', nd).strip()
+            clean_snippet = re.sub(r'\[.*?\]', '', clean_snippet).strip()
+            snippet = clean_snippet[:30]
+            cau_hoi_can_xu_ly.append({"row": row_num, "content": nd, "snippet": snippet})
 
-    print(f"🔎 Tìm thấy {len(dong_can_hinh)} câu hỏi cần gắn hình ảnh.")
-    if not dong_can_hinh:
-        print("⚠️ Không có câu hỏi nào khớp dấu hiệu cần hình ảnh! Kết thúc sớm.")
+    print(f"🔎 Tìm thấy {len(cau_hoi_can_xu_ly)} câu hỏi cần tìm hình ảnh theo tọa độ nội dung.")
+    if not cau_hoi_can_xu_ly:
+        print("⚠️ Không có câu hỏi nào khớp dấu hiệu cần hình ảnh!")
         return
 
     os.makedirs("./temp_images", exist_ok=True)
@@ -169,8 +167,11 @@ def quet_drive_va_gan_anh():
     files = results.get("files", [])
     print(f"Tìm thấy {len(files)} file PDF trên Google Drive.")
 
-    danh_sach_anh = []
+    # Tải và xử lý từng file PDF dựa trên định vị không gian (Layout Spatial Matching)
+    thay_doi_count = 0
     for file in files:
+        if not cau_hoi_can_xu_ly:
+            break
         file_id = file["id"]
         file_name = file["name"]
         parent_id = drive_folder_id or ((file.get("parents") or [None])[0])
@@ -184,63 +185,100 @@ def quet_drive_va_gan_anh():
 
             fh.seek(0)
             pdf_document = fitz.open(stream=fh.read(), filetype="pdf")
-            for page_index in range(len(pdf_document)):
-                # Bỏ qua 2 trang đầu tiên (trang bìa, quy chế, cấu trúc ma trận)
-                if page_index < 2:
+            
+            # Duyệt qua từng câu hỏi còn lại để tìm kiếm chính xác vị trí của nó trong file PDF này
+            remain_questions = []
+            for item in cau_hoi_can_xu_ly:
+                matched = False
+                snippet = item["snippet"]
+                row_num = item["row"]
+
+                if len(snippet) < 5:
+                    remain_questions.append(item)
                     continue
 
-                page = pdf_document[page_index]
-                for img_index, img in enumerate(page.get_images(full=True)):
-                    base_image = pdf_document.extract_image(img[0])
-                    w = base_image.get("width", 100)
-                    h = base_image.get("height", 100)
+                for page_index in range(len(pdf_document)):
+                    page = pdf_document[page_index]
+                    text_instances = page.search_for(snippet)
                     
-                    # Lọc bỏ ảnh quá nhỏ hoặc ảnh quá lớn (chụp nguyên trang văn bản)
-                    if w < min_w or h < min_h or w > 1200 or h > 1500:
-                        continue
+                    if text_instances:
+                        # Tìm thấy đoạn văn bản câu hỏi trên trang này, lấy tọa độ Y của dòng chữ câu hỏi
+                        q_rect = text_instances[0]
+                        q_y = q_rect.y1 # Vệ tinh đáy của dòng chữ câu hỏi
 
-                    image_path = os.path.join("./temp_images", f"{re.sub(r'[\\/*?:\"<>|]', '_', file_name)}_p{page_index+1}_img{img_index+1}.{base_image['ext']}")
-                    with open(image_path, "wb") as f:
-                        f.write(base_image["image"])
-                    danh_sach_anh.append((image_path, parent_id))
+                        # Quét các hình ảnh có trên trang này để tìm hình nằm NGAY DƯỚI hoặc CẠNH câu hỏi
+                        page_images = page.get_images(full=True)
+                        best_img_path = None
+                        
+                        for img_index, img in enumerate(page_images):
+                            xref = img[0]
+                            # Lấy tọa độ hình ảnh trên trang
+                            rects = page.get_image_rects(xref)
+                            if not rects:
+                                continue
+                            img_rect = rects[0]
+                            img_y = img_rect.y0 # Vị trí đỉnh của hình ảnh
+
+                            # ƯU TIÊN: Hình ảnh phải nằm phía dưới câu hỏi (img_y >= q_y) và cách không quá 350 pixel
+                            if q_y <= img_y <= q_y + 350:
+                                base_image = pdf_document.extract_image(xref)
+                                w = base_image.get("width", 100)
+                                h = base_image.get("height", 100)
+                                
+                                # Lọc bỏ ảnh quá nhỏ hoặc ảnh chụp nguyên trang văn bản khổ lớn
+                                if w < min_w or h < min_h or w > 1200 or h > 1500:
+                                    continue
+
+                                image_path = os.path.join("./temp_images", f"q{row_num}_{re.sub(r'[\\/*?:\"<>|]', '_', file_name)}_p{page_index+1}_img{img_index+1}.{base_image['ext']}")
+                                with open(image_path, "wb") as f:
+                                    f.write(base_image["image"])
+                                best_img_path = image_path
+                                break # Đã tìm thấy hình chuẩn ngay dưới câu hỏi này
+
+                        if best_img_path:
+                            # Tiến hành upload lên Drive và gán link vào đúng dòng
+                            try:
+                                file_metadata = {"name": os.path.basename(best_img_path)}
+                                if parent_id:
+                                    file_metadata["parents"] = [parent_id]
+
+                                uploaded = drive_service.files().create(
+                                    body=file_metadata, 
+                                    media_body=MediaFileUpload(best_img_path, mimetype=mimetypes.guess_type(best_img_path)[0] or "image/png", resumable=True),
+                                    fields="id", supportsAllDrives=True
+                                ).execute()
+                                cloud_file_id = uploaded.get("id")
+
+                                try:
+                                    drive_service.permissions().create(
+                                        fileId=cloud_file_id, body={"type": "anyone", "role": "reader"}, supportsAllDrives=True
+                                    ).execute()
+                                except Exception:
+                                    pass
+
+                                direct_link = f"https://lh3.googleusercontent.com/d/{cloud_file_id}"
+                                worksheet.update_cell(row_num, link_anh_col_idx, direct_link)
+                                print(f"✅ [Khớp tọa độ] Gán link dòng {row_num} -> {direct_link}")
+                                thay_doi_count += 1
+                                matched = True
+                                break
+                            except Exception as e:
+                                print(f"❌ Lỗi upload ảnh dòng {row_num}: {e}")
+                                matched = True
+                                break
+
+                    if matched:
+                        break
+
+                if not matched:
+                    remain_questions.append(item)
+
+            cau_hoi_can_xu_ly = remain_questions
             pdf_document.close()
         except Exception as e:
-            print(f"Lỗi đọc file {file_name}: {e}")
+            print(f"Lỗi đọc file PDF {file_name}: {e}")
 
-        if len(danh_sach_anh) >= len(dong_can_hinh):
-            break
-
-    thay_doi_count = 0
-    for anh_idx, row_num in enumerate(dong_can_hinh):
-        if anh_idx >= len(danh_sach_anh):
-            break
-        local_img_path, target_folder_id = danh_sach_anh[anh_idx]
-        try:
-            file_metadata = {"name": os.path.basename(local_img_path)}
-            if target_folder_id:
-                file_metadata["parents"] = [target_folder_id]
-
-            uploaded = drive_service.files().create(
-                body=file_metadata, media_body=MediaFileUpload(local_img_path, mimetype=mimetypes.guess_type(local_img_path)[0] or "image/png", resumable=True),
-                fields="id", supportsAllDrives=True
-            ).execute()
-            cloud_file_id = uploaded.get("id")
-
-            try:
-                drive_service.permissions().create(
-                    fileId=cloud_file_id, body={"type": "anyone", "role": "reader"}, supportsAllDrives=True
-                ).execute()
-            except Exception:
-                pass
-
-            direct_link = f"https://lh3.googleusercontent.com/d/{cloud_file_id}"
-            worksheet.update_cell(row_num, link_anh_col_idx, direct_link)
-            print(f"✅ Gán link dòng {row_num} -> {direct_link}")
-            thay_doi_count += 1
-        except Exception as e:
-            print(f"❌ Lỗi upload dòng {row_num}: {e}")
-
-    print(f"✨ Hoàn tất! Đã cập nhật {thay_doi_count} câu hỏi dựa theo trung tâm cấu hình.")
+    print(f"✨ Hoàn tất! Đã ghép nối và cập nhật chính xác {thay_doi_count} hình ảnh vào bảng.")
 
 if __name__ == "__main__":
     quet_drive_va_gan_anh()
