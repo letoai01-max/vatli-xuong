@@ -1,21 +1,38 @@
-# Cấu hình GitHub Actions chạy script quét bù hình ảnh
-name: run-image-scanner
+name: de_cuong
 
 on:
   workflow_dispatch:
+    inputs:
+      ma:
+        description: "Mã đề cương"
+        required: false
+        default: "TEST"
+      goi:
+        description: "ID tệp gói việc"
+        required: false
+        default: ""
+      ket_qua:
+        description: "ID tệp kết quả"
+        required: false
+        default: ""
 
 jobs:
-  run:
+  soan:
     runs-on: ubuntu-latest
+    timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -q -r requirements.txt
+      - run: pip install -q -r requirements-decuong.txt
       
       - name: Chạy script quet bu hinh anh tu Google Drive
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
+          GOI_ID: ${{ inputs.goi }}
+          KQ_ID: ${{ inputs.ket_qua }}
         run: python quet_bu_hinh_anh.py
