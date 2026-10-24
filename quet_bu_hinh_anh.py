@@ -1,6 +1,8 @@
 import os
 import re
 import io
+import json
+import base64
 import gspread
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
@@ -12,23 +14,49 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-def authenticate(credentials_path="credentials.json"):
-    creds = Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
+def tao_file_credentials_tu_env():
+    """Tự động tạo tệp credentials.json từ biến môi trường GOOGLE_CREDENTIALS (hỗ trợ cả JSON thô và Base64)"""
+    raw_cred = os.environ.get("GOOGLE_CREDENTIALS", "").strip()
+    if not raw_cred:
+        raise ValueError("Biến môi trường GOOGLE_CREDENTIALS chưa được cấu hình trên GitHub Secrets!")
+    
+    try:
+        # Thử parse JSON trực tiếp
+        tt = json.loads(raw_cred)
+    except Exception:
+        try:
+            # Nếu lỗi, thử giải mã từ Base64
+            decoded = base64.b64decode(raw_cred).decode("utf-8")
+            tt = json.loads(decoded)
+        except Exception as e:
+            raise ValueError("GOOGLE_CREDENTIALS không đúng định dạng JSON hoặc Base64 hợp lệ: " + str(e))
+            
+    if "private_key" in tt:
+        tt["private_key"] = tt["private_key"].replace("\\n", "\n")
+        
+    cred_path = "credentials.json"
+    with open(cred_path, "w", encoding="utf-8") as f:
+        json.dump(tt, f, ensure_ascii=False)
+    return cred_path
+
+def authenticate():
+    cred_path = tao_file_credentials_tu_env()
+    creds = Credentials.from_service_account_file(cred_path, scopes=SCOPES)
     return creds
 
-def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None, credentials_path="credentials.json"):
+def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
     print("Đang xác thực tài khoản Google Drive & Sheets...")
-    creds = authenticate(credentials_path)
+    creds = authenticate()
     gc = gspread.authorize(creds)
     drive_service = build('drive', 'v3', credentials=creds)
     
-    # Mở bảng tính bằng URL hoặc Key, tự động quét tìm tab chứa câu hỏi
+    # Mở bảng tính bằng URL hoặc Key
     try:
         sheet = gc.open_by_key(sheet_id)
     except Exception:
         sheet = gc.open_by_url(f"https://docs.google.com/spreadsheets/d/{sheet_id}/edit")
         
-    # Tự động chọn worksheet có chứa dữ liệu ngân hàng câu hỏi mà không phụ thuộc cứng tên tab
+    # Tự động chọn worksheet có chứa dữ liệu ngân hàng câu hỏi
     worksheet = None
     for ws in sheet.worksheets():
         ws_title_lower = ws.title.lower()
@@ -37,7 +65,7 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None, credentials_path="cred
             break
     
     if not worksheet:
-        worksheet = sheet.get_worksheet(0) # Mặc định lấy tab đầu tiên nếu không khớp tên
+        worksheet = sheet.get_worksheet(0)
         
     print(f"Đã kết nối thành công tới tab: '{worksheet.title}'")
     data = worksheet.get_all_records()
