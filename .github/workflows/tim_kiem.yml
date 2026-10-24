@@ -27,4 +27,4 @@ jobs:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
-        run: python tim_kiem.py
+        run: python trung_tam.py tim_kiem.py
