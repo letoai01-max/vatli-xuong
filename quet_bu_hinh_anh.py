@@ -25,34 +25,29 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-# Nhận diện cả ký hiệu [Hình...] lẫn câu chữ thông thường trong đề thi Vật lí
-RE_CAN_HINH = re.compile(
-    r"(\[\s*(Hình|Đồ thị|Mạch điện|Sơ đồ|H\.)[^\]]*\]"
-    r"|\[\[DO_THI"
-    r"|như\s+hình\s*(vẽ|bên|dưới|\d+)?"
-    r"|hình\s+vẽ\s*(bên|dưới)?"
-    r"|(đồ\s+thị|mạch\s+điện|sơ\s+đồ)\s+(như\s+)?hình"
-    r"|\bHình\s+\d+)",
-    re.IGNORECASE
-)
+# Trỏ trực tiếp tới tệp Trung tâm điều phối động
+TRUNG_TAM_CONFIG = "trung_tam_dieu_phoi.json"
 
-
-def doc_cau_hinh():
-    """Tự động đọc cấu hình động từ tệp config.json bên ngoài để tách biệt hoàn toàn khỏi logic code"""
-    config_path = "config.json"
-    if os.path.isfile(config_path):
+def doc_trung_tam_config():
+    """Các agent con gọi hàm này để lấy toàn bộ thông tin động từ trung tâm"""
+    if os.path.isfile(TRUNG_TAM_CONFIG):
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(TRUNG_TAM_CONFIG, "r", encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
-            print(f"⚠️ Lỗi đọc tệp config.json, dùng giá trị mặc định: {e}")
-            
-    # Giá trị dự phòng nếu chưa tạo config.json
-    return {
-        "SHEET_ID": "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc",
-        "DRIVE_FOLDER_ID": None
-    }
+            print(f"⚠️ Không đọc được {TRUNG_TAM_CONFIG}: {e}")
+    return {}
 
+def dieu_phoi_api(config):
+    """Trung tâm tự động điều phối chọn Key API tối ưu dựa theo thiết lập"""
+    api_keys_uu_tien = config.get("HE_THONG_API", {}).get("uu_tien_su_dung", ["GEMINI_API_KEY"])
+    for env_name in api_keys_uu_tien:
+        val = os.environ.get(env_name, "").strip()
+        if val.startswith("AIza"):
+            print(f"🤖 [Trung tâm điều phối]: Đã chọn và kích hoạt Key từ biến môi trường: {env_name}")
+            return val
+    print("⚠️ [Trung tâm điều phối]: Không tìm thấy Key API ưu tiên, chạy chế độ mặc định.")
+    return ""
 
 def chuan_hoa_private_key(pk: str) -> str:
     pk = pk.strip().strip('"').strip("'").replace("\r\n", "\n").replace("\\n", "\n")
@@ -62,7 +57,6 @@ def chuan_hoa_private_key(pk: str) -> str:
         lines = [body[i:i + 64] for i in range(0, len(body), 64)]
         return "-----BEGIN PRIVATE KEY-----\n" + "\n".join(lines) + "\n-----END PRIVATE KEY-----\n"
     return pk
-
 
 def doc_thong_tin_credentials():
     raw_cred = (
@@ -97,23 +91,26 @@ def doc_thong_tin_credentials():
 
     return tt
 
-
 def authenticate():
     tt = doc_thong_tin_credentials()
-    key_id = str(tt.get("private_key_id", ""))[:12]
-    email = tt.get("client_email", "")
-    print(f"-> Đang dùng Service Account: {email} (Key ID: {key_id}...)")
-
     creds = Credentials.from_service_account_info(tt, scopes=SCOPES)
     try:
         creds.refresh(google.auth.transport.requests.Request())
     except RefreshError as e:
-        raise RuntimeError(f"Lỗi xác thực JWT với Key ID '{key_id}...': {e}") from e
+        raise RuntimeError(f"Lỗi xác thực JWT: {e}") from e
     return creds
 
+def quet_drive_va_gan_anh():
+    # Nạp cấu hình từ trung tâm điều phối
+    config = doc_trung_tam_config()
+    active_key = dieu_phoi_api(config)
+    
+    sheet_cfg = config.get("SHEET_CONFIG", {})
+    sheet_id = sheet_cfg.get("SHEET_ID")
+    drive_folder_id = sheet_cfg.get("DRIVE_FOLDER_ID") or os.environ.get("DRIVE_FOLDER_ID")
+    tab_keywords = sheet_cfg.get("tab_chap_nhan", ["nganhang"])
 
-def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
-    print("Đang xác thực tài khoản Google Drive & Sheets...")
+    print("Đang xác thực tài khoản Google Drive & Sheets từ Trung tâm điều phối...")
     creds = authenticate()
     gc = gspread.authorize(creds)
     drive_service = build("drive", "v3", credentials=creds, cache_discovery=False)
@@ -123,7 +120,7 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
     worksheet = None
     for ws in sheet.worksheets():
         ws_title_lower = ws.title.lower()
-        if any(k in ws_title_lower for k in ("nganhang", "khochung", "cauhoid", "câu hỏi")):
+        if any(k in ws_title_lower for k in tab_keywords):
             worksheet = ws
             break
     if not worksheet:
@@ -137,67 +134,49 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
         return
 
     header_row = all_values[0]
-    print(f"Các cột trong bảng: {header_row}")
+    giao_dien = config.get("GIAO_DIEN_COT", {})
+    noi_dung_idx = giao_dien.get("cot_noi_dung_index", 2) - 1
+    link_anh_col_idx = giao_dien.get("cot_link_anh_index")
 
-    noi_dung_idx = None
-    phuong_an_idx = None
-    link_anh_col_idx = None
-
-    for idx, title in enumerate(header_row):
-        t_low = str(title).strip().lower()
-        if t_low in ("nội dung", "noi dung", "câu hỏi", "cau hoi") or "nội dung" in t_low:
-            noi_dung_idx = idx
-        elif "phương án" in t_low or "phuong an" in t_low:
-            phuong_an_idx = idx
-        elif "link ảnh" in t_low or "link anh" in t_low:
-            link_anh_col_idx = idx + 1
-
-    if noi_dung_idx is None:
-        noi_dung_idx = 2
-        print(f"⚠️ Không tìm thấy tên cột 'Nội dung', dùng mặc định cột số {noi_dung_idx + 1}")
-
-    if not link_anh_col_idx:
+    if not link_anh_col_idx or link_anh_col_idx > len(header_row) + 1:
         link_anh_col_idx = len(header_row) + 1
         worksheet.update_cell(1, link_anh_col_idx, "Link Ảnh")
+
+    patterns = config.get("BO_LOC_KY_THUAT", {}).get("bieu_thuc_nhan_dien_hinh", [])
+    RE_CAN_HINH = re.compile("|".join(patterns), re.IGNORECASE) if patterns else re.compile(r"Hình", re.IGNORECASE)
 
     dong_can_hinh = []
     for row_num, row_vals in enumerate(all_values[1:], start=2):
         nd = row_vals[noi_dung_idx] if noi_dung_idx < len(row_vals) else ""
-        pa = row_vals[phuong_an_idx] if (phuong_an_idx is not None and phuong_an_idx < len(row_vals)) else ""
         link_cu = row_vals[link_anh_col_idx - 1].strip() if (link_anh_col_idx - 1) < len(row_vals) else ""
-        if not link_cu and RE_CAN_HINH.search(f"{nd} {pa}"):
+        if not link_cu and RE_CAN_HINH.search(nd):
             dong_can_hinh.append(row_num)
 
-    print(f"🔎 Tìm thấy {len(dong_can_hinh)} câu hỏi cần gắn hình ảnh (ở các dòng: {dong_can_hinh[:20]}...)")
+    print(f"🔎 Tìm thấy {len(dong_can_hinh)} câu hỏi cần gắn hình ảnh.")
     if not dong_can_hinh:
         print("⚠️ Không có câu hỏi nào khớp dấu hiệu cần hình ảnh! Kết thúc sớm.")
         return
 
     os.makedirs("./temp_images", exist_ok=True)
+    min_w = config.get("BO_LOC_KY_THUAT", {}).get("min_width", 40)
+    min_h = config.get("BO_LOC_KY_THUAT", {}).get("min_height", 40)
 
     query = "mimeType = 'application/pdf' and trashed = false"
     if drive_folder_id:
         query += f" and '{drive_folder_id}' in parents"
 
-    print("Đang quét các tệp PDF trên Google Drive...")
     results = drive_service.files().list(
-        q=query,
-        pageSize=100,
-        fields="files(id, name, parents)",
-        includeItemsFromAllDrives=True,
-        supportsAllDrives=True
+        q=query, pageSize=100, fields="files(id, name, parents)",
+        includeItemsFromAllDrives=True, supportsAllDrives=True
     ).execute()
     files = results.get("files", [])
     print(f"Tìm thấy {len(files)} file PDF trên Google Drive.")
 
     danh_sach_anh = []
-
     for file in files:
         file_id = file["id"]
         file_name = file["name"]
         parent_id = drive_folder_id or ((file.get("parents") or [None])[0])
-        print(f"-> Đang xử lý tài liệu: {file_name}")
-
         try:
             request = drive_service.files().get_media(fileId=file_id, supportsAllDrives=True)
             fh = io.BytesIO()
@@ -210,76 +189,52 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
             pdf_document = fitz.open(stream=fh.read(), filetype="pdf")
             for page_index in range(len(pdf_document)):
                 page = pdf_document[page_index]
-                image_list = page.get_images(full=True)
-                for img_index, img in enumerate(image_list):
-                    xref = img[0]
-                    base_image = pdf_document.extract_image(xref)
-                    if base_image.get("width", 100) < 40 or base_image.get("height", 100) < 40:
+                for img_index, img in enumerate(page.get_images(full=True)):
+                    base_image = pdf_document.extract_image(img[0])
+                    if base_image.get("width", 100) < min_w or base_image.get("height", 100) < min_h:
                         continue
-                    image_bytes = base_image["image"]
-                    image_ext = base_image["ext"]
-
-                    safe_name = re.sub(r'[\\/*?:"<>|]', "_", file_name)
-                    image_name = f"{safe_name}_p{page_index+1}_img{img_index+1}.{image_ext}"
-                    image_path = os.path.join("./temp_images", image_name)
-                    with open(image_path, "wb") as img_file:
-                        img_file.write(image_bytes)
+                    image_path = os.path.join("./temp_images", f"{re.sub(r'[\\/*?:\"<>|]', '_', file_name)}_p{page_index+1}_img{img_index+1}.{base_image['ext']}")
+                    with open(image_path, "wb") as f:
+                        f.write(base_image["image"])
                     danh_sach_anh.append((image_path, parent_id))
             pdf_document.close()
         except Exception as e:
-            print(f"Lỗi khi đọc file {file_name}: {e}")
+            print(f"Lỗi đọc file {file_name}: {e}")
 
         if len(danh_sach_anh) >= len(dong_can_hinh):
             break
-
-    print(f"🎉 Đã trích xuất tổng cộng {len(danh_sach_anh)} hình ảnh hợp lệ.")
 
     thay_doi_count = 0
     for anh_idx, row_num in enumerate(dong_can_hinh):
         if anh_idx >= len(danh_sach_anh):
             break
         local_img_path, target_folder_id = danh_sach_anh[anh_idx]
-        img_file_name = os.path.basename(local_img_path)
-        mime_type = mimetypes.guess_type(local_img_path)[0] or "image/png"
-
         try:
-            file_metadata = {"name": img_file_name}
+            file_metadata = {"name": os.path.basename(local_img_path)}
             if target_folder_id:
                 file_metadata["parents"] = [target_folder_id]
 
-            media = MediaFileUpload(local_img_path, mimetype=mime_type, resumable=True)
-            uploaded_file = drive_service.files().create(
-                body=file_metadata,
-                media_body=media,
-                fields="id",
-                supportsAllDrives=True
+            uploaded = drive_service.files().create(
+                body=file_metadata, media_body=MediaFileUpload(local_img_path, mimetype=mimetypes.guess_type(local_img_path)[0] or "image/png", resumable=True),
+                fields="id", supportsAllDrives=True
             ).execute()
-
-            cloud_file_id = uploaded_file.get("id")
+            cloud_file_id = uploaded.get("id")
 
             try:
                 drive_service.permissions().create(
-                    fileId=cloud_file_id,
-                    body={"type": "anyone", "role": "reader"},
-                    supportsAllDrives=True
+                    fileId=cloud_file_id, body={"type": "anyone", "role": "reader"}, supportsAllDrives=True
                 ).execute()
             except Exception:
                 pass
 
-            direct_img_link = f"https://lh3.googleusercontent.com/d/{cloud_file_id}"
-            worksheet.update_cell(row_num, link_anh_col_idx, direct_img_link)
-            print(f"✅ Đã upload và gán link ảnh cho dòng {row_num} -> {direct_img_link}")
+            direct_link = f"https://lh3.googleusercontent.com/d/{cloud_file_id}"
+            worksheet.update_cell(row_num, link_anh_col_idx, direct_link)
+            print(f"✅ Gán link dòng {row_num} -> {direct_link}")
             thay_doi_count += 1
         except Exception as e:
-            print(f"❌ Lỗi xử lý/upload ảnh dòng {row_num}: {e}")
+            print(f"❌ Lỗi upload dòng {row_num}: {e}")
 
-    print(f"✨ Hoàn tất quét bù! Đã cập nhật thành công hình ảnh cho {thay_doi_count} câu hỏi.")
-
+    print(f"✨ Hoàn tất! Đã cập nhật {thay_doi_count} câu hỏi dựa theo trung tâm cấu hình.")
 
 if __name__ == "__main__":
-    # Nạp cấu hình linh hoạt từ tệp config.json động
-    config = doc_cau_hinh()
-    SHEET_ID = config.get("SHEET_ID")
-    DRIVE_FOLDER_ID = os.environ.get("DRIVE_FOLDER_ID") or config.get("DRIVE_FOLDER_ID")
-
-    quet_drive_va_gan_anh(SHEET_ID, DRIVE_FOLDER_ID)
+    quet_drive_va_gan_anh()
