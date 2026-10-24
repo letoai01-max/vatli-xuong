@@ -1,0 +1,35 @@
+{
+  "METADATA": {
+    "ten_trung_tam": "Trung tâm điều phối tự động Xưởng Vật lí",
+    "mo_ta": "Nơi quản lý toàn bộ tham số động, phân bổ API và ánh xạ giao diện"
+  },
+  "HE_THONG_API": {
+    "uu_tien_su_dung": ["GEMINI_API_KEY_TRA_PHI", "GEMINI_API_KEY"],
+    "che_do_fallback": true
+  },
+  "SHEET_CONFIG": {
+    "SHEET_ID": "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc",
+    "DRIVE_FOLDER_ID": null,
+    "tab_chap_nhan": ["nganhang", "khochung", "cauhoid", "câu hỏi"]
+  },
+  "GIAO_DIEN_COT": {
+    "cot_noi_dung_index": 2,
+    "cot_link_anh_index": null,
+    "tu_khoa_nhan_dien_cot": {
+      "noi_dung": ["nội dung", "noi dung", "câu hỏi", "cau hoi", "đề bài"],
+      "link_anh": ["link ảnh", "link anh", "hình ảnh"]
+    }
+  },
+  "BO_LOC_KY_THUAT": {
+    "min_width": 40,
+    "min_height": 40,
+    "bieu_thuc_nhan_dien_hinh": [
+      "\\[\\s*(Hình|Đồ thị|Mạch điện|Sơ đồ|H\\.)[^\\]]*\\]",
+      "\\[\\[DO_THI",
+      "như\\s+hình\\s*(vẽ|bên|dưới|\\d+)?",
+      "hình\\s+vẽ\\s*(bên|dưới)?",
+      "(đồ\\s+thị|mạch\\s+điện|sơ\\s+đồ)\\s+(như\\s+)?hình",
+      "\\bHình\\s+\\d+"
+    ]
+  }
+}
