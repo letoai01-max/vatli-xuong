@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHYSICS AGENT COMMANDER - THPT Thủy Sơn</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- MathJax cho hiển thị công thức Vật lí -->
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
@@ -43,7 +40,7 @@
                 <span class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Trực tuyến: 10/10 Agent
                 </span>
-                <button onclick="alert('Đã đồng bộ toàn bộ dữ liệu hệ thống!')" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20">
+                <button onclick="taiCauHoiCanDuyet(false)" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20">
                     <i class="fa-solid fa-rotate"></i> Đồng bộ toàn bộ
                 </button>
             </div>
@@ -63,7 +60,7 @@
                     </a>
                     <a href="#can-duyet-section" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800/60 transition text-sm font-medium justify-between">
                         <span class="flex items-center gap-3"><i class="fa-solid fa-clipboard-check text-amber-400"></i> Câu Cần Duyệt</span>
-                        <span id="badge-count" class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">485</span>
+                        <span id="badge-count" class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">...</span>
                     </a>
                     <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800/60 transition text-sm font-medium">
                         <i class="fa-brands fa-python text-blue-400"></i> Python GitHub
@@ -83,106 +80,19 @@
                             </h2>
                             <p class="text-xs text-slate-400">Đồng bộ trực tiếp với tab Agent trong Google Sheet Kho chung</p>
                         </div>
-                        <button class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-400 text-xs font-semibold transition border border-slate-700">
-                            <i class="fa-solid fa-bolt"></i> Quét Sức Khỏe 10 Agent
-                        </button>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
-                        <div class="agent-card rounded-lg p-3">
-                            <div class="text-[10px] text-slate-400 font-mono">#0</div>
-                            <div class="text-xs font-bold text-white truncate mt-1">0. Kho Chung</div>
-                            <div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> An toàn</div>
-                        </div>
-                        <div class="agent-card rounded-lg p-3">
-                            <div class="text-[10px] text-slate-400 font-mono">#1</div>
-                            <div class="text-xs font-bold text-white truncate mt-1">1. Khảo Thí & Ôn Tập</div>
-                            <div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div>
-                        </div>
-                        <div class="agent-card rounded-lg p-3">
-                            <div class="text-[10px] text-slate-400 font-mono">#2</div>
-                            <div class="text-xs font-bold text-white truncate mt-1">2. Kế Hoạch Bài Dạy</div>
-                            <div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Hoạt động</div>
-                        </div>
-                        <div class="agent-card rounded-lg p-3">
-                            <div class="text-[10px] text-slate-400 font-mono">#3</div>
-                            <div class="text-xs font-bold text-white truncate mt-1">3. Bồi Dưỡng HSG</div>
-                            <div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div>
-                        </div>
-                        <div class="agent-card rounded-lg p-3">
-                            <div class="text-[10px] text-slate-400 font-mono">#4</div>
-                            <div class="text-xs font-bold text-white truncate mt-1">4. Thu Thập Tài Liệu</div>
-                            <div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Trực tuyến</div>
-                        </div>
-                        <div class="agent-card rounded-lg p-3">
-                            <div class="text-[10px] text-slate-400 font-mono">#5</div>
-                            <div class="text-xs font-bold text-white truncate mt-1">5. STEM & Thí Nghiệm</div>
-                            <div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Tiêu chuẩn</div>
-                        </div>
-                        <div class="agent-card rounded-lg p-3">
-                            <div class="text-[10px] text-slate-400 font-mono">#6</div>
-                            <div class="text-xs font-bold text-white truncate mt-1">6. Bảo Vệ & Sao Lưu</div>
-                            <div class="text-[11px] text-indigo-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Đã bảo vệ</div>
-                        </div>
-                        <div class="agent-card rounded-lg p-3">
-                            <div class="text-[10px] text-slate-400 font-mono">#7</div>
-                            <div class="text-xs font-bold text-white truncate mt-1">7. Meta-Agent</div>
-                            <div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Ôn định</div>
-                        </div>
-                        <div class="agent-card rounded-lg p-3">
-                            <div class="text-[10px] text-slate-400 font-mono">#8</div>
-                            <div class="text-xs font-bold text-white truncate mt-1">8. Nghiên Cứu & SKKN</div>
-                            <div class="text-[11px] text-purple-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Độc lập</div>
-                        </div>
-                        <div class="agent-card rounded-lg p-3">
-                            <div class="text-[10px] text-slate-400 font-mono">#9</div>
-                            <div class="text-xs font-bold text-white truncate mt-1">9. Video Bài Giảng</div>
-                            <div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TRUNG TÂM ĐIỀU HÀNH -->
-                <div class="glass-panel rounded-xl p-5 space-y-4">
-                    <div>
-                        <h2 class="text-base font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-gears text-sky-400"></i> Trung Tâm Điều Hành 10 Module Agent & Giao Tác Vụ
-                        </h2>
-                        <p class="text-xs text-slate-400">Chọn Agent, chọn tác vụ có sẵn trong Sheet hoặc ghi yêu cầu mới</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-semibold text-slate-300">1. Chọn Agent / Module chuyên trách:</label>
-                            <select class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
-                                <option>0. Kho Chung (Dữ liệu, Ngân hàng)</option>
-                                <option>1. Khảo Thí & Ôn Tập</option>
-                                <option>2. Kế Hoạch Bài Dạy</option>
-                                <option>3. Bồi Dưỡng HSG</option>
-                            </select>
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-semibold text-slate-300">2. Chọn tác vụ có sẵn trong Sheet:</label>
-                            <select class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
-                                <option>— Nhấn để chọn tác vụ chuẩn trong Sheet —</option>
-                                <option>Quét bù hình ảnh từ PDF</option>
-                                <option>Kiểm định định dạng câu hỏi</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-semibold text-slate-300">3. Nội dung yêu cầu tác vụ cụ thể:</label>
-                        <textarea rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-500" placeholder="Nhập chi tiết nội dung yêu cầu tác vụ hoặc chọn từ danh sách có sẵn ở mục 2..."></textarea>
-                    </div>
-
-                    <div class="flex justify-end gap-3 pt-2">
-                        <button class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20">
-                            <i class="fa-solid fa-play"></i> Chọn & Chạy tác vụ có sẵn
-                        </button>
-                        <button class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition border border-slate-700 flex items-center gap-2">
-                            <i class="fa-solid fa-paper-plane"></i> Ghi nội dung yêu cầu tác vụ
-                        </button>
+                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#0</div><div class="text-xs font-bold text-white truncate mt-1">0. Kho Chung</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> An toàn</div></div>
+                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#1</div><div class="text-xs font-bold text-white truncate mt-1">1. Khảo Thí & Ôn Tập</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
+                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#2</div><div class="text-xs font-bold text-white truncate mt-1">2. Kế Hoạch Bài Dạy</div><div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Hoạt động</div></div>
+                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#3</div><div class="text-xs font-bold text-white truncate mt-1">3. Bồi Dưỡng HSG</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
+                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#4</div><div class="text-xs font-bold text-white truncate mt-1">4. Thu Thập Tài Liệu</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Trực tuyến</div></div>
+                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#5</div><div class="text-xs font-bold text-white truncate mt-1">5. STEM & Thí Nghiệm</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Tiêu chuẩn</div></div>
+                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#6</div><div class="text-xs font-bold text-white truncate mt-1">6. Bảo Vệ & Sao Lưu</div><div class="text-[11px] text-indigo-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Đã bảo vệ</div></div>
+                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#7</div><div class="text-xs font-bold text-white truncate mt-1">7. Meta-Agent</div><div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Ổn định</div></div>
+                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#8</div><div class="text-xs font-bold text-white truncate mt-1">8. Nghiên Cứu & SKKN</div><div class="text-[11px] text-purple-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Độc lập</div></div>
+                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#9</div><div class="text-xs font-bold text-white truncate mt-1">9. Video Bài Giảng</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
                     </div>
                 </div>
 
@@ -191,56 +101,23 @@
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
                         <div>
                             <h2 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Mục Các Câu Cần Duyệt ("Cần người xem" - Tab NganHangCauHoi)
+                                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Ngân Hàng Câu Hỏi & Các Câu Cần Duyệt (Tab NganHangCauHoi)
                             </h2>
-                            <p class="text-xs text-slate-400">Hiển thị trực tiếp Hình vẽ / Đồ thị ngay dưới đề bài, bổ sung Đáp án (Cột I) & Lời giải/THÍCH (Cột J)</p>
+                            <p class="text-xs text-slate-400">Hiển thị trực tiếp Hình vẽ / Đồ thị (Cột W), Đáp án (Cột I), Lời giải/HDC (Cột J) & Báo cáo 5 tầng (Cột T)</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold transition border border-slate-700">
-                                Cần duyệt (485)
+                            <button onclick="taiCauHoiCanDuyet(true)" class="px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
+                                <i class="fa-solid fa-filter"></i> Chỉ hiện câu Cần duyệt
                             </button>
-                            <button onclick="taiCauHoiCanDuyett()" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
-                                <i class="fa-solid fa-eye"></i> Hiện 485 câu cần duyệt
+                            <button onclick="taiCauHoiCanDuyet(false)" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-400 text-xs font-semibold transition border border-slate-700 cursor-pointer">
+                                <i class="fa-solid fa-list"></i> Hiện toàn bộ ngân hàng
                             </button>
                         </div>
                     </div>
 
-                    <!-- DANH SÁCH CÂU HỎI HIỂN THỊ ĐỒ HỌA & ẢNH CỘT W -->
                     <div id="danh-sach-cau-hoi" class="space-y-4 pt-2">
                         <div class="text-center py-8 text-slate-500 text-xs">
-                            Nhấn nút <span class="text-amber-400 font-bold">"Hiện 485 câu cần duyệt"</span> ở góc trên để tải danh sách câu hỏi kèm hình minh họa từ Cột W.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PYTHON GITHUB AGENTS & AUTOMATION -->
-                <div class="glass-panel rounded-xl p-5 space-y-4">
-                    <div>
-                        <h2 class="text-base font-bold text-white flex items-center gap-2">
-                            <i class="fa-brands fa-python text-blue-400"></i> Python GitHub Agents & Automation
-                        </h2>
-                        <p class="text-xs text-slate-400">Điều khiển các script Python chạy nền trên GitHub Actions</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex justify-between items-center">
-                            <div>
-                                <h3 class="text-xs font-bold text-white">Quét bù hình ảnh (quet_bu_hinh_anh.py)</h3>
-                                <p class="text-[11px] text-slate-400 mt-0.5">Tự động cắt ảnh đồ thị từ file PDF gốc ở Cột Q gán vào câu hỏi có "Hình: ..."</p>
-                            </div>
-                            <button onclick="alert('Đã kích hoạt workflow quét bù hình ảnh trên GitHub!')" class="px-3.5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-md shadow-sky-600/20 shrink-0">
-                                <i class="fa-solid fa-play"></i> Chạy ngay
-                            </button>
-                        </div>
-
-                        <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex justify-between items-center">
-                            <div>
-                                <h3 class="text-xs font-bold text-white">Kiểm định nội dung (duyet_cau.py)</h3>
-                                <p class="text-[11px] text-slate-400 mt-0.5">Kiểm tra tính chuẩn xác và format của hỏi</p>
-                            </div>
-                            <button onclick="alert('Đã kích hoạt workflow kiểm định nội dung trên GitHub!')" class="px-3.5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-md shadow-sky-600/20 shrink-0">
-                                <i class="fa-solid fa-play"></i> Chạy ngay
-                            </button>
+                            Nhấn nút <span class="text-amber-400 font-bold">"Chỉ hiện câu Cần duyệt"</span> để tải danh sách câu hỏi từ <code>questions.json</code>.
                         </div>
                     </div>
                 </div>
@@ -252,7 +129,7 @@
                         <button onclick="document.getElementById('terminal-log').innerHTML=''" class="hover:text-white transition">Xóa nhật ký</button>
                     </div>
                     <div id="terminal-log" class="space-y-1 pt-1 text-slate-300">
-                        <div>[17:40:37] Giao diện Physics Agent Commander đã sẵn sàng. MathJax đã kích hoạt.</div>
+                        <div>Giao diện Physics Agent Commander đã sẵn sàng. MathJax đã kích hoạt.</div>
                     </div>
                 </div>
 
@@ -260,163 +137,89 @@
         </div>
     </div>
 
-    <!-- SCRIPT XỬ LÝ SỰ KIỆN TẢI VÀ RENDER CÂU HỎI KÈM ẢNH TỪ CỘT W -->
     <script>
-        async function taiCauHoiCanDuyett() {
+        async function taiCauHoiCanDuyet(chiCanDuyet = true) {
             const container = document.getElementById('danh-sach-cau-hoi');
-            container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu và liên kết ảnh từ Cột W...</div>`;
-            
+            const badge = document.getElementById('badge-count');
+            container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu từ questions.json...</div>`;
+
+            let data = [];
             try {
-                let response = await fetch('questions.json');
-                if (!response.ok) {
-                    throw new Error("Chưa tìm thấy tệp questions.json trên kho. Thầy hãy chạy script Python trên GitHub Actions để xuất file trước!");
-                }
-                let data = await response.json();
-
-                if (!data || data.length === 0) {
-                    container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Danh sách câu hỏi trống.</div>`;
-                    return;
-                }
-
-                container.innerHTML = '';
-                data.forEach((item, index) => {
-                    let card = document.createElement('div');
-                    card.className = "bg-slate-900/80 border border-slate-800 rounded-xl p-4 space-y-3";
-                    
-                    let html = `
-                        <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-800/80 pb-2">
-                            <span class="font-bold text-sky-400">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}]</span>
-                            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-semibold">${item.trang_thai || 'Cần duyệt'}</span>
-                        </div>
-                        <div class="text-xs text-white leading-relaxed">
-                            <strong>Nội dung:</strong> ${item.noi_dung}
-                        </div>
-                    `;
-
-                    // TỰ ĐỘNG HIỆN ẢNH NẾU CỘT W CÓ LINK
-                    if (item.link_anh && item.link_anh.startsWith('http')) {
-                        html += `
-                            <div class="my-3 p-2 bg-slate-950 border border-slate-800 rounded-lg text-center">
-                                <div class="text-[10px] text-sky-400 mb-1 font-semibold"><i class="fa-solid fa-image mr-1"></i> HÌNH VẼ / ĐỒ THỊ MINH HỌA TRỰC TIẾP (Cột W):</div>
-                                <img src="${item.link_anh}" alt="Hình minh họa câu ${index + 1}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tai+duoc+anh';">
-                            </div>
-                        `;
-                    }
-
-                    if (item.phuong_an) {
-                        html += `<div class="text-xs text-slate-300 bg-slate-950/40 p-2.5 rounded-lg border border-slate-800/50"><strong>Phương án:</strong><br>${item.phuong_an}</div>`;
-                    }
-
-                    if (item.dap_an) {
-                        html += `<div class="text-xs text-emerald-400"><strong>Đáp án chuẩn:</strong> ${item.dap_an}</div>`;
-                    }
-
-                    card.innerHTML = html;
-                    container.appendChild(card);
-                });
-
-                // Kích hoạt lại MathJax để render công thức vật lí
-                if (window.MathJax) {
-                    MathJax.typesetPromise();
-                }
-
-                const log = document.getElementById('terminal-log');
-                if(log) {
-                    log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã tải thành công ${data.length} câu hỏi kèm hình ảnh từ Cột W lên giao diện.</div>`;
-                }
-
-            } catch (err) {
-                container.innerHTML = `<div class="text-center py-6 text-rose-400 text-xs">${err.message}</div>`;
-            }
-        }
-    </script>
-
-</body>
-</html>
-<!-- SCRIPT XỬ LÝ SỰ KIỆN TẢI VÀ RENDER CÂU HỎI KÈM ẢNH TỪ CỘT W -->
-    <script>
-        async function taiCauHoiCanDuyett() {
-            const container = document.getElementById('danh-sach-cau-hoi');
-            container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu và liên kết ảnh từ Cột W...</div>`;
-            
-            // Dữ liệu hiển thị trực tiếp để giao diện chạy mượt mà ngay lập tức
-            let data = [
-                {
-                    ma_cau: "C-1zNZYNau-022",
-                    noi_dung: "Hình bên là các đường đẳng nhiệt của một lượng khí lí tưởng, ở các trạng thái A, B, C nhiệt độ của khí này tương ứng là $T_A$, $T_B$, $T_C$. Hệ thức nào sau đây đúng?",
-                    phuong_an: "A. $T_A = T_B > T_C$<br>B. $T_A < T_B = T_C$<br>C. $T_A > T_B > T_C$<br>D. $T_A = T_B < T_C$",
-                    dap_an: "A",
-                    trang_thai: "cần người xem",
-                    link_anh: "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q483_De_Kiem_Tra.pdf_p1_img1.png"
-                },
-                {
-                    ma_cau: "C-1zNZYNau-023",
-                    noi_dung: "Đồ thị biểu diễn sự biến đổi của một lượng khí lí tưởng qua các quá trình. Áp suất $p$ tính theo kPa, thể tích $V$ tính bằng lít.",
-                    phuong_an: "A. Quá trình (1)-(2) là đẳng áp.<br>B. Quá trình (2)-(3) là đẳng nhiệt.",
-                    dap_an: "C",
-                    trang_thai: "cần người xem",
-                    link_anh: "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q484_De_Kiem_Tra.pdf_p2_img1.png"
-                }
-            ];
-
-            // Cố gắng đọc file JSON từ GitHub nếu có
-            try {
-                let response = await fetch('questions.json');
+                const response = await fetch('questions.json?t=' + Date.now());
                 if (response.ok) {
-                    let jsonData = await response.json();
-                    if (jsonData && jsonData.length > 0) {
-                        data = jsonData;
-                    }
+                    data = await response.json();
                 }
             } catch (err) {
-                console.log("Dùng dữ liệu tích hợp sẵn.");
+                console.warn("Chưa đọc được questions.json:", err);
+            }
+
+            const dsCanDuyet = data.filter(item => {
+                const tt = (item.trang_thai || '').toLowerCase();
+                return tt.includes('cần người xem') || tt.includes('chưa duyệt');
+            });
+            badge.textContent = dsCanDuyet.length || data.length;
+
+            const dsHienThi = (chiCanDuyet && dsCanDuyet.length > 0) ? dsCanDuyet : data.slice(0, 100);
+
+            if (!dsHienThi || dsHienThi.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Chưa có câu hỏi trong questions.json. Thầy hãy chạy workflow <b>Xuat De va Du Lieu Python</b> trên GitHub Actions!</div>`;
+                return;
             }
 
             container.innerHTML = '';
-            data.forEach((item, index) => {
-                let card = document.createElement('div');
+            dsHienThi.forEach((item, index) => {
+                const card = document.createElement('div');
                 card.className = "bg-slate-900/80 border border-slate-800 rounded-xl p-4 space-y-3";
-                
+
+                const phuongAnHtml = (item.phuong_an || '').replace(/\n/g, '<br>');
                 let html = `
-                    <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-800/80 pb-2">
-                        <span class="font-bold text-sky-400">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}]</span>
-                        <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-semibold">${item.trang_thai || 'Cần duyệt'}</span>
+                    <div class="flex flex-wrap justify-between items-center gap-2 text-xs text-slate-400 border-b border-slate-800/80 pb-2">
+                        <span class="font-bold text-sky-400">Câu ${index + 1} [${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} ${item.dang ? '· ' + item.dang : ''}</span>
+                        <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-semibold">${item.trang_thai || 'Chưa duyệt'}</span>
                     </div>
                     <div class="text-xs text-white leading-relaxed">
                         <strong>Nội dung:</strong> ${item.noi_dung}
                     </div>
                 `;
 
-                // TỰ ĐỘNG HIỆN ẢNH NẾU CỘT W CÓ LINK
                 if (item.link_anh && item.link_anh.startsWith('http')) {
                     html += `
                         <div class="my-3 p-2 bg-slate-950 border border-slate-800 rounded-lg text-center">
-                            <div class="text-[10px] text-sky-400 mb-1 font-semibold"><i class="fa-solid fa-image mr-1"></i> HÌNH VẼ / ĐỒ THỊ MINH HỌA TRỰC TIẾP (Cột W):</div>
-                            <img src="${item.link_anh}" alt="Hình minh họa câu ${index + 1}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tai+duoc+anh';">
+                            <div class="text-[10px] text-sky-400 mb-1 font-semibold"><i class="fa-solid fa-image mr-1"></i> HÌNH VẼ / ĐỒ THỊ MINH HỌA (Cột W):</div>
+                            <img src="${item.link_anh}" alt="Hình minh họa ${item.ma_cau}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1">
                         </div>
                     `;
                 }
 
-                if (item.phuong_an) {
-                    html += `<div class="text-xs text-slate-300 bg-slate-950/40 p-2.5 rounded-lg border border-slate-800/50"><strong>Phương án:</strong><br>${item.phuong_an}</div>`;
+                if (phuongAnHtml) {
+                    html += `<div class="text-xs text-slate-300 bg-slate-950/40 p-2.5 rounded-lg border border-slate-800/50"><strong>Phương án:</strong><br>${phuongAnHtml}</div>`;
                 }
 
                 if (item.dap_an) {
-                    html += `<div class="text-xs text-emerald-400"><strong>Đáp án chuẩn:</strong> ${item.dap_an}</div>`;
+                    html += `<div class="text-xs text-emerald-400"><strong>Đáp án (Cột I):</strong> ${item.dap_an}</div>`;
+                }
+
+                if (item.loi_giai) {
+                    html += `<div class="text-xs text-sky-300 bg-sky-950/20 p-2 rounded border border-sky-800/30"><strong>Lời giải / HDC (Cột J):</strong> ${item.loi_giai}</div>`;
+                }
+
+                if (item.kiem_tra) {
+                    html += `<div class="text-[11px] text-amber-300/90 font-mono"><strong>Kiểm định 5 tầng (Cột T):</strong> ${item.kiem_tra}</div>`;
                 }
 
                 card.innerHTML = html;
                 container.appendChild(card);
             });
 
-            // Kích hoạt lại MathJax để render công thức vật lí
             if (window.MathJax) {
                 MathJax.typesetPromise();
             }
 
             const log = document.getElementById('terminal-log');
-            if(log) {
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã hiển thị thành công danh sách câu hỏi kèm hình ảnh từ Cột W.</div>`;
+            if (log) {
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã hiển thị ${dsHienThi.length} câu hỏi (Tổng cần duyệt: ${dsCanDuyet.length}).</div>`;
             }
         }
     </script>
+</body>
+</html>
