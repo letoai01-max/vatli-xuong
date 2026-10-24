@@ -20,19 +20,28 @@ if os.path.isfile(CONFIG_FILE):
 raw_cred = os.environ.get("GOOGLE_CREDENTIALS", "").strip()
 if raw_cred:
     try:
+        # Thử giải mã nếu là Base64, nếu không phải thì coi như chuỗi JSON thuần
         if not raw_cred.startswith("{"):
-            raw_cred = base64.b64decode(raw_cred).decode("utf-8")
+            try:
+                decoded_bytes = base64.b64decode(raw_cred + "==") # Thêm padding phòng hờ
+                raw_cred = decoded_bytes.decode("utf-8")
+            except Exception:
+                pass
+        
         tt = json.loads(raw_cred, strict=False)
         if "private_key" in tt:
             tt["private_key"] = tt["private_key"].replace("\\n", "\n")
+        
         clean_json = json.dumps(tt, ensure_ascii=False)
         os.environ["GOOGLE_CREDENTIALS"] = clean_json
-        # Ghi file credentials.json tạm để tương thích ngược với mọi script
+        
+        # Ghi tệp credentials.json tạm thời để các thư viện Google gọi trực tiếp an toàn
         cred_path = os.path.join(THU_MUC_GOC, "credentials.json")
         with open(cred_path, "w", encoding="utf-8") as f:
             f.write(clean_json)
+        print("✅ [Trung tâm]: Đã chuẩn hóa và khởi tạo credentials.json thành công.")
     except Exception as e:
-        print(f"⚠️ [Trung tâm]: Lỗi chuẩn hóa GOOGLE_CREDENTIALS: {e}")
+        print(f"⚠️ [Trung tâm]: Lỗi xử lý GOOGLE_CREDENTIALS: {e}")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
