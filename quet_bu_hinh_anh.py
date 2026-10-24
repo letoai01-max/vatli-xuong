@@ -188,11 +188,20 @@ def quet_drive_va_gan_anh():
             fh.seek(0)
             pdf_document = fitz.open(stream=fh.read(), filetype="pdf")
             for page_index in range(len(pdf_document)):
+                # Bỏ qua 2 trang đầu tiên (trang bìa, quy chế, cấu trúc ma trận)
+                if page_index < 2:
+                    continue
+
                 page = pdf_document[page_index]
                 for img_index, img in enumerate(page.get_images(full=True)):
                     base_image = pdf_document.extract_image(img[0])
-                    if base_image.get("width", 100) < min_w or base_image.get("height", 100) < min_h:
+                    w = base_image.get("width", 100)
+                    h = base_image.get("height", 100)
+                    
+                    # Lọc bỏ ảnh quá nhỏ hoặc ảnh quá lớn (chụp nguyên trang văn bản)
+                    if w < min_w or h < min_h or w > 1200 or h > 1500:
                         continue
+
                     image_path = os.path.join("./temp_images", f"{re.sub(r'[\\/*?:\"<>|]', '_', file_name)}_p{page_index+1}_img{img_index+1}.{base_image['ext']}")
                     with open(image_path, "wb") as f:
                         f.write(base_image["image"])
