@@ -1,38 +1,19 @@
-import os
 import json
 import gspread
 from google.oauth2.service_account import Credentials
 
-# --- 1. XÁC THỰC AN TOÀN TỪ GITHUB SECRETS HOẶC FILE ---
+# --- 1. KẾT NỐI VÀ LẤY DỮ LIỆU TỪ GOOGLE SHEET ---
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
-# Lấy thông tin từ biến môi trường GitHub Secrets (GOOGLE_CREDENTIALS hoặc GCP_SA_KEY)
-raw_cred = os.environ.get("GOOGLE_CREDENTIALS") or os.environ.get("GCP_SA_KEY")
-
-if raw_cred:
-    # Nếu chạy trên GitHub Actions qua Secret
-    try:
-        tt = json.loads(raw_cred)
-    except Exception:
-        import base64
-        decoded = base64.b64decode(raw_cred).decode("utf-8")
-        tt = json.loads(decoded)
-    
-    if "private_key" in tt:
-        tt["private_key"] = tt["private_key"].replace("\\n", "\n")
-    creds = Credentials.from_service_account_info(tt, scopes=SCOPES)
-else:
-    # Nếu chạy ở máy cá nhân có sẵn tệp credentials.json
-    creds = Credentials.from_service_account_file('credentials.json', scopes=SCOPES)
-
+# Đọc trực tiếp từ tệp credentials.json vừa được workflow sinh ra tự động
+creds = Credentials.from_service_account_file('credentials.json', scopes=SCOPES)
 client = gspread.authorize(creds)
 
-# --- 2. MỞ GOOGLE SHEET VÀ LẤY DỮ LIỆU ---
 SPREADSHEET_ID = '1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc'
 sheet = client.open_by_key(SPREADSHEET_ID).worksheet("NganHangCauHoi")
 all_values = sheet.get_all_values()
 
-# --- 3. XỬ LÝ VÀ TRÍCH XUẤT DỮ LIỆU (CÓ BỘ LỌC CHẶT CHẼ DÒNG RÁC) ---
+# --- 2. XỬ LÝ VÀ TRÍCH XUẤT DỮ LIỆU (CÓ BỘ LỌC CHẶT CHẼ DÒNG RÁC) ---
 danh_sach_json = []
 
 for row in all_values:
@@ -64,7 +45,7 @@ for row in all_values:
             "link_anh": link_anh
         })
 
-# --- 4. GHI KẾT QUẢ THÀNH TỆP questions.json ---
+# --- 3. GHI KẾT QUẢ THÀNH TỆP questions.json ---
 with open("questions.json", "w", encoding="utf-8") as f:
     json.dump(danh_sach_json, f, ensure_ascii=False, indent=2)
 
