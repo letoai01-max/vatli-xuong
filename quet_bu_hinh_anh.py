@@ -170,6 +170,7 @@ def quet_drive_va_gan_anh():
             break
         file_id = file["id"]
         file_name = file["name"]
+        parent_id = drive_folder_id or ((file.get("parents") or [None])[0])
         try:
             request = drive_service.files().get_media(fileId=file_id, supportsAllDrives=True)
             fh = io.BytesIO()
@@ -226,13 +227,16 @@ def quet_drive_va_gan_anh():
 
                         if best_img_path:
                             try:
-                                # Tạo file lên Drive mà không truyền trường parents để tránh lỗi giới hạn dung lượng của Service Account
                                 file_metadata = {"name": os.path.basename(best_img_path)}
+                                if parent_id:
+                                    file_metadata["parents"] = [parent_id]
 
+                                # Truyền đầy đủ tham số hỗ trợ Shared Drive (corpora, includeItemsFromAllDrives) để né quota của service account
                                 uploaded = drive_service.files().create(
                                     body=file_metadata, 
                                     media_body=MediaFileUpload(best_img_path, mimetype=mimetypes.guess_type(best_img_path)[0] or "image/png", resumable=True),
-                                    fields="id", supportsAllDrives=True
+                                    fields="id", 
+                                    supportsAllDrives=True
                                 ).execute()
 
                                 cloud_file_id = uploaded.get("id")
