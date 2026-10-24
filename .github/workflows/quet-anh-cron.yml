@@ -1,7 +1,12 @@
 name: Quet bu hinh anh tu Google Drive
 
 on:
+  schedule:
+    - cron: "0 2 * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 concurrency:
   group: quet_bu_hinh_anh
@@ -18,18 +23,15 @@ jobs:
       - name: Cài đặt môi trường Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.11"
           cache: pip
 
       - name: Cài đặt các thư viện phụ trợ
-        run: |
-          pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -q -r requirements.txt; fi
-          if [ -f requirements-docde.txt ]; then pip install -q -r requirements-docde.txt; fi
-          pip install -q gspread google-api-python-client google-auth requests pymupdf pillow
+        run: pip install -q -r requirements.txt
 
-      - name: Chay script que bu hinh anh tu Google Drive
+      - name: Chạy script quét bù hình ảnh từ Google Drive
         env:
+          PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
