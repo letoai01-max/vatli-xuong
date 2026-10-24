@@ -21,4 +21,4 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-        run: python canh_gac.py
+        run: python trung_tam.py canh_gac.py
