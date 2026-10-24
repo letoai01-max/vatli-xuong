@@ -37,6 +37,23 @@ RE_CAN_HINH = re.compile(
 )
 
 
+def doc_cau_hinh():
+    """Tự động đọc cấu hình động từ tệp config.json bên ngoài để tách biệt hoàn toàn khỏi logic code"""
+    config_path = "config.json"
+    if os.path.isfile(config_path):
+        try:
+            with open(config_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"⚠️ Lỗi đọc tệp config.json, dùng giá trị mặc định: {e}")
+            
+    # Giá trị dự phòng nếu chưa tạo config.json
+    return {
+        "SHEET_ID": "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc",
+        "DRIVE_FOLDER_ID": None
+    }
+
+
 def chuan_hoa_private_key(pk: str) -> str:
     pk = pk.strip().strip('"').strip("'").replace("\r\n", "\n").replace("\\n", "\n")
     m = re.search(r"-----BEGIN PRIVATE KEY-----(.*?)-----END PRIVATE KEY-----", pk, re.S)
@@ -114,7 +131,6 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
 
     print(f"Đã kết nối thành công tới tab: '{worksheet.title}'")
 
-    # Đọc toàn bộ bảng dưới dạng danh sách 2 chiều để tránh lệch tên cột
     all_values = worksheet.get_all_values()
     if len(all_values) < 2:
         print("Bảng tính chưa có dữ liệu câu hỏi.")
@@ -123,10 +139,9 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
     header_row = all_values[0]
     print(f"Các cột trong bảng: {header_row}")
 
-    # Tìm vị trí cột Nội dung, Phương án và cột Link Ảnh (tính từ 0)
     noi_dung_idx = None
     phuong_an_idx = None
-    link_anh_col_idx = None  # tính từ 1 cho gspread update_cell
+    link_anh_col_idx = None
 
     for idx, title in enumerate(header_row):
         t_low = str(title).strip().lower()
@@ -138,7 +153,6 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
             link_anh_col_idx = idx + 1
 
     if noi_dung_idx is None:
-        # Dự phòng: cột C (index 2) thường là cột Nội dung trong NganHangCauHoi
         noi_dung_idx = 2
         print(f"⚠️ Không tìm thấy tên cột 'Nội dung', dùng mặc định cột số {noi_dung_idx + 1}")
 
@@ -146,7 +160,6 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
         link_anh_col_idx = len(header_row) + 1
         worksheet.update_cell(1, link_anh_col_idx, "Link Ảnh")
 
-    # Lọc trước các dòng câu hỏi cần hình ảnh (chưa có Link Ảnh)
     dong_can_hinh = []
     for row_num, row_vals in enumerate(all_values[1:], start=2):
         nd = row_vals[noi_dung_idx] if noi_dung_idx < len(row_vals) else ""
@@ -177,8 +190,7 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
     files = results.get("files", [])
     print(f"Tìm thấy {len(files)} file PDF trên Google Drive.")
 
-    # Lưu kèm thư mục cha của PDF để upload ảnh vào đúng thư mục đó (tránh lỗi 0GB quota của Service Account)
-    danh_sach_anh = []  # mỗi phần tử: (local_path, parent_folder_id)
+    danh_sach_anh = []
 
     for file in files:
         file_id = file["id"]
@@ -202,7 +214,6 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
                 for img_index, img in enumerate(image_list):
                     xref = img[0]
                     base_image = pdf_document.extract_image(xref)
-                    # Bỏ qua các ảnh rác/icon quá nhỏ (< 40x40 px)
                     if base_image.get("width", 100) < 40 or base_image.get("height", 100) < 40:
                         continue
                     image_bytes = base_image["image"]
@@ -218,7 +229,6 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
         except Exception as e:
             print(f"Lỗi khi đọc file {file_name}: {e}")
 
-        # Nếu đã gom đủ số ảnh cho số câu hỏi cần hình thì dừng quét PDF để tiết kiệm thời gian
         if len(danh_sach_anh) >= len(dong_can_hinh):
             break
 
@@ -267,7 +277,9 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
 
 
 if __name__ == "__main__":
-    SHEET_ID = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
-    DRIVE_FOLDER_ID = os.environ.get("DRIVE_FOLDER_ID") or None
+    # Nạp cấu hình linh hoạt từ tệp config.json động
+    config = doc_cau_hinh()
+    SHEET_ID = config.get("SHEET_ID")
+    DRIVE_FOLDER_ID = os.environ.get("DRIVE_FOLDER_ID") or config.get("DRIVE_FOLDER_ID")
 
     quet_drive_va_gan_anh(SHEET_ID, DRIVE_FOLDER_ID)
