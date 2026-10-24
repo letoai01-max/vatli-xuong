@@ -1,6 +1,0 @@
-python-docx>=0.8.11
-Pillow>=9.0.0
-gspread>=5.10.0
-google-auth>=2.16.0
-google-api-python-client>=2.0.0
-PyMuPDF>=1.22.0
