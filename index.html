@@ -180,7 +180,7 @@
                             <option value="0. KHO CHUNG">0. Kho Chung (Dữ liệu, Ngân hàng)</option>
                             <option value="1. KHẢO THÍ & ÔN TẬP">1. Khảo Thí & Ôn Tập (Ra đề, Ma trận)</option>
                             <option value="2. KẾ HOẠCH BÀI DẠY">2. Kế Hoạch Bài Dạy (Soạn KHBD 5512)</option>
-                            <option value="3. BỒI DƯỠNG HSG">3. Bồi DƯỠNG HSG (Chuyên đề nâng cao)</option>
+                            <option value="3. BỒI DƯỠNG HSG">3. Bồi Dưỡng HSG (Chuyên đề nâng cao)</option>
                             <option value="4. THU THẬP TÀI LIỆU">4. Thu Thập Tài Liệu (Quét PDF, Drive)</option>
                             <option value="5. STEM & THÍ NGHIỆM">5. STEM & Thí Nghiệm (Dự án thực hành)</option>
                             <option value="6. BẢO VỆ & SAO LƯU">6. Bảo Vệ & Sao Lưu (Backup, GitHub)</option>
@@ -213,7 +213,7 @@
                 </div>
             </div>
             
-            <!-- SECTION 3: HÀNG CHỜ PHÊ DUYỆT (CÓ BỔ SUNG Ô NHẬP ĐÁP ÁN & HƯỚNG DẪN TRỰC TIẾP) -->
+            <!-- SECTION 3: HÀNG CHỜ PHÊ DUYỆT (CÓ ĐỒ THỊ VÀ Ô NHẬP ĐÁP ÁN/HƯỚNG DẪN) -->
             <div id="approval-section" class="bg-cardBg p-4 sm:p-5 rounded-2xl border border-amber-500/30 shadow-xl space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-2.5">
                     <div class="flex items-center gap-3">
@@ -222,7 +222,7 @@
                         </div>
                         <div>
                             <h3 class="font-bold text-white text-sm sm:text-base">Mục Các Câu Cần Duyệt & Bổ Sung Đáp Án</h3>
-                            <p class="text-xs text-gray-400">Xem nội dung, nhập/sửa Đáp án, Hướng dẫn rồi bấm Duyệt/Từ chối để cập nhật vào Sheet</p>
+                            <p class="text-xs text-gray-400">Xem nội dung, đồ thị, nhập/sửa Đáp án, Hướng dẫn rồi bấm Duyệt/Từ chối để cập nhật vào Sheet</p>
                         </div>
                     </div>
                     
@@ -365,7 +365,6 @@
             }, 600);
         }
 
-        // Tải danh sách và render các ô nhập Đáp án, Hướng dẫn trực tiếp trên giao diện
         async function loadPendingQuestions() {
             try {
                 const response = await fetch(`${WEB_APP_URL}?action=getQuestions`);
@@ -425,6 +424,15 @@
                                 <div class="text-sm sm:text-base text-white font-medium bg-gray-950/70 p-3.5 rounded-xl border border-gray-800/80 leading-relaxed break-words">${item.text}</div>
                             </div>
 
+                            <!-- Hình ảnh đồ thị minh họa (nếu có) -->
+                            ${item.imgUrl ? `
+                            <div class="space-y-1">
+                                <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide">Hình vẽ / Đồ thị minh họa:</div>
+                                <div class="bg-gray-950 p-2 rounded-xl border border-gray-800 text-center">
+                                    <img src="${item.imgUrl}" alt="Đồ thị minh họa" class="max-h-56 mx-auto rounded border border-gray-700 object-contain">
+                                </div>
+                            </div>` : ''}
+
                             <!-- Phương án lựa chọn (nếu có) -->
                             ${item.options ? `
                             <div class="space-y-1">
@@ -438,13 +446,13 @@
                                     <label class="text-[11px] font-bold text-emerald-400 uppercase tracking-wide flex items-center gap-1">
                                         <i class="fa-solid fa-key"></i> Bổ sung / Sửa Đáp án:
                                     </label>
-                                    <input type="text" id="input-answer-${id}" value="${item.answer}" placeholder="Nhập đáp án (VD: A, B, C, D hoặc kết quả)..." class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-emerald-300 font-semibold focus:outline-none focus:border-emerald-500">
+                                    <input type="text" id="input-answer-${id}" value="${item.answer}" placeholder="Nhập đáp án (VD: A, B, C, D)..." class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-emerald-300 font-semibold focus:outline-none focus:border-emerald-500">
                                 </div>
                                 <div class="space-y-1">
                                     <label class="text-[11px] font-bold text-purple-400 uppercase tracking-wide flex items-center gap-1">
                                         <i class="fa-solid fa-pen-nib"></i> Bổ sung / Sửa Hướng dẫn giải:
                                     </label>
-                                    <input type="text" id="input-solution-${id}" value="${item.solution}" placeholder="Nhập lời giải hoặc hướng dẫn chi tiết..." class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-purple-200 focus:outline-none focus:border-purple-500">
+                                    <textarea id="input-solution-${id}" rows="2" placeholder="Nhập lời giải hoặc hướng dẫn chi tiết..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-xs sm:text-sm text-purple-200 focus:outline-none focus:border-purple-500 leading-relaxed">${item.solution}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -453,7 +461,7 @@
                 });
 
                 if(window.MathJax && isApprovalVisible) { MathJax.typesetPromise(); }
-                logMessage(`Đã tải xong ${pendingCount} câu hỏi cần duyệt kèm khung bổ sung đáp án.`);
+                logMessage(`Đã tải xong ${pendingCount} câu hỏi cần duyệt kèm khung đồ thị và bổ sung đáp án.`);
 
             } catch (error) {
                 console.error("Lỗi đồng bộ dữ liệu:", error);
@@ -464,7 +472,7 @@
 
         const agentTasks = {
             "0. KHO CHUNG": ["Quét & Đồng bộ dữ liệu Kho chung", "Kiểm tra tính toàn vẹn ngân hàng câu hỏi", "Lọc danh sách câu hỏi trùng lặp"],
-            "1. KHẢO THÍ & ÔN TẬP": ["Tạo đề kiểm tra tự động theo ma trận chuẩn", "Đề Ôન Tập 1 Tuần (12 câu)", "Đề Ôn Tập 2 Tuần (24 câu)", "Trộn đề trắc nghiệm thành 4 mã đề"],
+            "1. KHẢO THÍ & ÔN TẬP": ["Tạo đề kiểm tra tự động theo ma trận chuẩn", "Đề Ôn Tập 1 Tuần (12 câu)", "Đề Ôn Tập 2 Tuần (24 câu)", "Trộn đề trắc nghiệm thành 4 mã đề"],
             "2. KẾ HOẠCH BÀI DẠY": ["Soạn KHBD (Giáo án) chuẩn Công văn 5512", "Soạn KHBD định hướng phát triển năng lực (CV 7991)"],
             "3. BỒI DƯỠNG HSG": ["Tạo chuyên đề nâng cao ôn thi học sinh giỏi", "Giải chi tiết các bài toán Vật lí nâng cao"],
             "4. THU THẬP TÀI LIỆU": ["Quét và trích xuất tự động tệp PDF trên Google Drive", "Bóc tách hình ảnh, đồ thị từ tài liệu gốc"],
@@ -575,7 +583,6 @@
             }
         }
 
-        // DUYỆT CÂU HỎI KÈM GỬI LÊN GOOGLE SHEET CÁC NỘI DUNG ĐÁP ÁN & HƯỚNG DẪN MÀ THẦY VỪA BỔ SUNG
         async function approveItem(id) {
             const item = document.getElementById(`item-${id}`);
             const answerVal = document.getElementById(`input-answer-${id}`).value;
@@ -606,7 +613,6 @@
             }
         }
 
-        // TỪ CHỐI (LOẠI) CÂU HỎI
         async function rejectItem(id) {
             const item = document.getElementById(`item-${id}`);
             if(item) {
