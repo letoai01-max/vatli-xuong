@@ -1,22 +1,22 @@
 import gspread
 from google.oauth2.service_account import Credentials
 
-# --- BƯỚC 1: KẾT NỐI VÀ LẤY DỮ LIỆU TỪ GOOGLE SHEET ---
+# --- 1. KẾT NỐI VÀ LẤY DỮ LIỆU TỪ GOOGLE SHEET (BẮT BUỘC PHẢI CÓ ĐOẠN NÀY) ---
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
-# Thiết lập xác thực Google Sheets API (Sử dụng thông tin xác thực sẵn có trong môi trường của Thầy)
-# creds = Credentials.from_service_account_file('credentials.json', scopes=SCOPES)
-# client = gspread.authorize(creds)
+# Thiết lập xác thực thông qua file credentials.json (hoặc secret key đã cấu hình trên GitHub)
+creds = Credentials.from_service_account_file('credentials.json', scopes=SCOPES)
+client = gspread.authorize(creds)
 
 # Mở Google Sheet theo ID của Kho chung Vật lí và chọn đúng tab chứa câu hỏi (NganHangCauHoi)
 SPREADSHEET_ID = '1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc'
-# sheet = client.open_by_key(SPREADSHEET_ID).worksheet("NganHangCauHoi")
+sheet = client.open_by_key(SPREADSHEET_ID).worksheet("NganHangCauHoi")
 
-# Lấy toàn bộ dữ liệu gán vào biến all_values để tránh lỗi NameError
-# all_values = sheet.get_all_values()
+# Lấy toàn bộ dữ liệu gán vào biến all_values để triệt tiêu hoàn toàn lỗi not defined
+all_values = sheet.get_all_values()
 
 
-# --- BƯỚC 2: XỬ LÝ VÀ TRÍCH XUẤT DỮ LIỆU ---
+# --- 2. XỬ LÝ VÀ TRÍCH XUẤT DỮ LIỆU ---
 danh_sach_json = []
 
 # Duyệt qua từng dòng trong bảng tính
