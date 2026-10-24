@@ -1,10 +1,22 @@
-# 1. Khai báo hoặc tải dữ liệu vào biến all_values (Ví dụ minh họa lấy từ Google Sheets qua gspread hoặc API)
-# (Thầy thay thế đoạn kết nối thực tế mà Thầy đang dùng trong project vào đây)
-# all_values = sheet.get_all_values() 
+import gspread
+from google.oauth2.service_account import Credentials
+
+# 1. Cấu hình kết nối Google Sheets (Thầy thay thế thông tin xác thực nếu dùng phương pháp khác)
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+# Nếu Thầy dùng tệp JSON service account hoặc biến môi trường, hãy trỏ phù hợp:
+# credentials = Credentials.from_service_account_file('credentials.json', scopes=SCOPES)
+# gc = gspread.authorize(credentials)
+
+# Mở Google Sheet theo Link hoặc Key của Thầy
+SPREADSHEET_ID = '1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc'
+# sheet = gc.open_by_key(SPREADSHEET_ID).worksheet("NganHangCauHoi") # Trỏ đúng tab chứa ngân hàng câu hỏi
+# all_values = sheet.get_all_values()
+
+# (Nếu Thầy đang dùng phương thức đọc file Excel/CSV cục bộ, Thầy thay thế đoạn trên bằng lệnh đọc file tương ứng vào biến all_values)
 
 danh_sach_json = []
 
-# 2. Duyệt qua từng dòng trong bảng tính
+# 2. Duyệt qua từng dòng trong bảng tính để trích xuất dữ liệu
 for row in all_values:
     # Lấy giá trị chính xác theo đúng vị trí các cột trên Google Sheet
     ma_cau = row[0].strip() if len(row) > 0 else ""       # Cột A: Mã câu
