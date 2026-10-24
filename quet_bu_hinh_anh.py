@@ -127,7 +127,6 @@ def quet_drive_va_gan_anh():
         print("Bảng tính chưa có dữ liệu câu hỏi.")
         return
 
-    # Cố định cột Link Ảnh ở cột W (cột 23)
     link_anh_col_idx = 23
     giao_dien = config.get("GIAO_DIEN_COT", {})
     noi_dung_idx = giao_dien.get("cot_noi_dung_index", 2) - 1
@@ -135,13 +134,11 @@ def quet_drive_va_gan_anh():
     patterns = config.get("BO_LOC_KY_THUAT", {}).get("bieu_thuc_nhan_dien_hinh", [])
     RE_CAN_HINH = re.compile("|".join(patterns), re.IGNORECASE) if patterns else re.compile(r"Hình", re.IGNORECASE)
 
-    # Lọc các dòng câu hỏi cần gắn hình
     cau_hoi_can_xu_ly = []
     for row_num, row_vals in enumerate(all_values[1:], start=2):
         nd = row_vals[noi_dung_idx] if noi_dung_idx < len(row_vals) else ""
         link_cu = row_vals[link_anh_col_idx - 1].strip() if (link_anh_col_idx - 1) < len(row_vals) else ""
         if not link_cu and RE_CAN_HINH.search(nd):
-            # Lấy một đoạn từ khóa đặc trưng của câu hỏi để dò trên PDF (lấy tối đa 30 ký tự đầu tiên sạch sẽ)
             clean_snippet = re.sub(r'\$.*?\$', '', nd).strip()
             clean_snippet = re.sub(r'\[.*?\]', '', clean_snippet).strip()
             snippet = clean_snippet[:30]
@@ -167,7 +164,6 @@ def quet_drive_va_gan_anh():
     files = results.get("files", [])
     print(f"Tìm thấy {len(files)} file PDF trên Google Drive.")
 
-    # Tải và xử lý từng file PDF dựa trên định vị không gian (Layout Spatial Matching)
     thay_doi_count = 0
     for file in files:
         if not cau_hoi_can_xu_ly:
@@ -186,7 +182,6 @@ def quet_drive_va_gan_anh():
             fh.seek(0)
             pdf_document = fitz.open(stream=fh.read(), filetype="pdf")
             
-            # Duyệt qua từng câu hỏi còn lại để tìm kiếm chính xác vị trí của nó trong file PDF này
             remain_questions = []
             for item in cau_hoi_can_xu_ly:
                 matched = False
@@ -202,30 +197,25 @@ def quet_drive_va_gan_anh():
                     text_instances = page.search_for(snippet)
                     
                     if text_instances:
-                        # Tìm thấy đoạn văn bản câu hỏi trên trang này, lấy tọa độ Y của dòng chữ câu hỏi
                         q_rect = text_instances[0]
-                        q_y = q_rect.y1 # Vệ tinh đáy của dòng chữ câu hỏi
+                        q_y = q_rect.y1
 
-                        # Quét các hình ảnh có trên trang này để tìm hình nằm NGAY DƯỚI hoặc CẠNH câu hỏi
                         page_images = page.get_images(full=True)
                         best_img_path = None
                         
                         for img_index, img in enumerate(page_images):
                             xref = img[0]
-                            # Lấy tọa độ hình ảnh trên trang
                             rects = page.get_image_rects(xref)
                             if not rects:
                                 continue
                             img_rect = rects[0]
-                            img_y = img_rect.y0 # Vị trí đỉnh của hình ảnh
+                            img_y = img_rect.y0
 
-                            # ƯU TIÊN: Hình ảnh phải nằm phía dưới câu hỏi (img_y >= q_y) và cách không quá 350 pixel
                             if q_y <= img_y <= q_y + 350:
                                 base_image = pdf_document.extract_image(xref)
                                 w = base_image.get("width", 100)
                                 h = base_image.get("height", 100)
                                 
-                                # Lọc bỏ ảnh quá nhỏ hoặc ảnh chụp nguyên trang văn bản khổ lớn
                                 if w < min_w or h < min_h or w > 1200 or h > 1500:
                                     continue
 
@@ -233,10 +223,9 @@ def quet_drive_va_gan_anh():
                                 with open(image_path, "wb") as f:
                                     f.write(base_image["image"])
                                 best_img_path = image_path
-                                break # Đã tìm thấy hình chuẩn ngay dưới câu hỏi này
+                                break
 
                         if best_img_path:
-                            # Tiến hành upload lên Drive và gán link vào đúng dòng
                             try:
                                 file_metadata = {"name": os.path.basename(best_img_path)}
                                 if parent_id:
@@ -247,6 +236,7 @@ def quet_drive_va_gan_anh():
                                     media_body=MediaFileUpload(best_img_path, mimetype=mimetypes.guess_type(best_img_path)[0] or "image/png", resumable=True),
                                     fields="id", supportsAllDrives=True
                                 ).execute()
+
                                 cloud_file_id = uploaded.get("id")
 
                                 try:
