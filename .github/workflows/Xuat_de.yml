@@ -1,7 +1,7 @@
 name: Xuat De va Du Lieu Python
 
 on:
-  workflow_dispatch: # Cho phép bấm nút chạy thủ công trên tab Actions của GitHub
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -23,16 +23,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install gspread google-auth requests python-docx
 
+      # 👇 BƯỚC KHẮC PHỤC DỨT ĐIỂM: Tự tạo lại credentials.json từ GitHub Secrets 👇
+      - name: Tạo tệp credentials.json an toàn
+        run: |
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+
       - name: Run xuat_de.py
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-          SHEET_ID: ${{ secrets.SHEET_ID }}
         run: |
           python xuat_de.py
 
-      - name: Commit and push generated files (questions.json, DeThi.docx, images)
+      - name: Commit and push generated files (questions.json)
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "🤖 Tự động cập nhật questions.json và DeThi.docx từ GitHub Actions"
+          commit_message: "🤖 Tự động cập nhật questions.json từ GitHub Actions"
           branch: main
-```[cite: 18]
