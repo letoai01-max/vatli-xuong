@@ -17,17 +17,6 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-TRUNG_TAM_CONFIG = "trung_tam_dieu_phoi.json"
-
-def doc_trung_tam_config():
-    if os.path.isfile(TRUNG_TAM_CONFIG):
-        try:
-            with open(TRUNG_TAM_CONFIG, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception as e:
-            print(f"⚠️ Không đọc được {TRUNG_TAM_CONFIG}: {e}")
-    return {}
-
 def doc_thong_tin_credentials():
     raw_cred = (
         os.environ.get("GOOGLE_CREDENTIALS")
@@ -41,14 +30,14 @@ def doc_thong_tin_credentials():
             raw_cred = f.read().strip()
 
     if not raw_cred:
-        for file_name in ("credentials.json", "service_account.json", "agent-vat-li-89f2bcd49721.json"):
+        for file_name in ("credentials.json", "service_account.json"):
             if os.path.isfile(file_name):
                 with open(file_name, "r", encoding="utf-8") as f:
                     raw_cred = f.read().strip()
                 break
 
     if not raw_cred:
-        raise ValueError("Biến môi trường GOOGLE_CREDENTIALS đang trống!")
+        raise ValueError("Biến môi trường hoặc tệp thông tin xác thực Google Sheets đang trống!")
 
     try:
         tt = json.loads(raw_cred, strict=False)
@@ -65,44 +54,40 @@ def authenticate():
     try:
         creds.refresh(google.auth.transport.requests.Request())
     except RefreshError as e:
-        raise RuntimeError(f"Lỗi xác thực JWT: {e}") from e
+        raise RuntimeError(f"Lỗi xác thực JWT Google: {e}") from e
     return creds
 
 def xuat_du_lieu_va_de_thi():
-    config = doc_trung_tam_config()
+    sheet_id = os.environ.get("SHEET_ID", "ĐIỀN_ID_GOOGLE_SHEET_CỦA_THẦY_VÀO_ĐÂY_HỌC_HOẶC_DÙNG_CONFIG")
     
-    sheet_cfg = config.get("SHEET_CONFIG", {})
-    sheet_id = sheet_cfg.get("SHEET_ID")
-    tab_keywords = sheet_cfg.get("tab_chap_nhan", ["nganhang"])
+    # Nếu dùng file cấu hình chung, có thể đọc ID từ đây
+    if os.path.isfile("trung_tam_dieu_phoi.json"):
+        try:
+            with open("trung_tam_dieu_phoi.json", "r", encoding="utf-8") as f:
+                cfg = json.load(f)
+                sheet_id = cfg.get("SHEET_CONFIG", {}).get("SHEET_ID", sheet_id)
+        except:
+            pass
 
-    print("Đang xác thực Google Sheets...")
+    print("Đang kết nối tới Google Sheets...")
     creds = authenticate()
     gc = gspread.authorize(creds)
 
-    sheet = gc.open_by_url(sheet_id) if sheet_id.startswith("http") else gc.open_by_key(sheet_id)
+    sheet = gc.open_by_url(sheet_id) if str(sheet_id).startswith("http") else gc.open_by_key(sheet_id)
+    worksheet = sheet.get_worksheet(0) # Lấy tab đầu tiên hoặc tab ngân hàng câu hỏi
 
-    worksheet = None
-    for ws in sheet.worksheets():
-        ws_title_lower = ws.title.lower()
-        if any(k in ws_title_lower for k in tab_keywords):
-            worksheet = ws
-            break
-    if not worksheet:
-        worksheet = sheet.get_worksheet(0)
-
-    print(f"Đã kết nối tab: '{worksheet.title}'")
+    print(f"Đã kết nối thành công tab: '{worksheet.title}'")
     all_values = worksheet.get_all_values()
     if len(all_values) < 2:
         print("Bảng tính chưa có dữ liệu.")
         return
 
-    # 1. Tự động xuất file questions.json cho trang web hiển thị kèm ảnh cột W
     danh_sach_json = []
     for row in all_values[1:]:
         ma_cau = row[0] if len(row) > 0 else ""
-        noi_dung = row[1] if len(row) > 1 else "" # Cột G
-        phuong_an = row[7] if len(row) > 7 else "" # Cột H
-        dap_an = row[8] if len(row) > 8 else "" # Cột I
+        noi_dung = row[1] if len(row) > 1 else ""     # Cột G (hoặc nội dung)
+        phuong_an = row[7] if len(row) > 7 else ""  # Cột H
+        dap_an = row[8] if len(row) > 8 else ""     # Cột I
         trang_thai = row[20] if len(row) > 20 else "" # Cột U
         link_anh = row[22].strip() if len(row) > 22 else "" # Cột W
         
@@ -116,25 +101,25 @@ def xuat_du_lieu_va_de_thi():
                 "link_anh": link_anh
             })
 
+    # 1. Xuất file questions.json cho web
     with open("questions.json", "w", encoding="utf-8") as f:
         json.dump(danh_sach_json, f, ensure_ascii=False, indent=4)
-    print("✨ Đã xuất thành công tệp 'questions.json' cho web!")
+    print("✨ Đã xuất thành công tệp 'questions.json'!")
 
-    # 2. Tự động xuất tệp Word (DeThi.docx) từ cột W
+    # 2. Xuất file Word DeThi.docx
     doc = Document()
     doc.add_heading("ĐỀ KIỂM TRA VẬT LÍ", level=1)
 
     for idx, item in enumerate(danh_sach_json, start=1):
         doc.add_paragraph(f"Câu {idx} [{item['ma_cau']}]: {item['noi_dung']}")
         
-        # Tải và chèn ảnh từ cột W nếu có
         if item["link_anh"].startswith("http"):
             try:
                 res = requests.get(item["link_anh"])
                 if res.status_code == 200:
                     doc.add_picture(io.BytesIO(res.content), width=Inches(3.5))
             except Exception as e:
-                print(f"Không tải được ảnh câu {idx}: {e}")
+                print(f"Không chèn được ảnh câu {idx}: {e}")
                 
         if item["phuong_an"]:
             doc.add_paragraph(f"Phương án: {item['phuong_an']}")
