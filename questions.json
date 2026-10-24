@@ -1,0 +1,210 @@
+[
+    {
+        "ma_cau": "10",
+        "noi_dung": "Tổng số tiết",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "Từ chối",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "10",
+        "noi_dung": "Số bài kiểm tra định kì",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "10",
+        "noi_dung": "Số tiết: Chủ đề 1: Mở đầu",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "10",
+        "noi_dung": "Số tiết: Chủ đề 2: Động học",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "10",
+        "noi_dung": "Số tiết: Chủ đề 3: Động lực học",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "10",
+        "noi_dung": "Số tiết: Chủ đề 4: Công, năng lượng, công suất",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "10",
+        "noi_dung": "Số tiết: Chủ đề 5: Động lượng",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "10",
+        "noi_dung": "Số tiết: Chủ đề 6: Chuyển động tròn",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "10",
+        "noi_dung": "Số tiết: Chủ đề 7: Biến dạng của vật rắn. Áp suất chất lỏng",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "10",
+        "noi_dung": "Số tiết: Đánh giá định kì",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "10",
+        "noi_dung": "Tiết chưa gắn chủ đề",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "11",
+        "noi_dung": "Tổng số tiết",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "11",
+        "noi_dung": "Số bài kiểm tra định kì",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "11",
+        "noi_dung": "Số tiết: Chương 1: Dao động",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "11",
+        "noi_dung": "Số tiết: Chương 2: Sóng",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "11",
+        "noi_dung": "Số tiết: Chương 3: Điện trường",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "11",
+        "noi_dung": "Số tiết: Chương 4: Dòng điện. Mạch điện",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "11",
+        "noi_dung": "Số tiết: Đánh giá định kì",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "11",
+        "noi_dung": "Tiết chưa gắn chủ đề",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "12",
+        "noi_dung": "Tổng số tiết",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "12",
+        "noi_dung": "Số bài kiểm tra định kì",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "12",
+        "noi_dung": "Số tiết: Chương I: Vật lí nhiệt",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "12",
+        "noi_dung": "Số tiết: Chương II: Khí lí tưởng",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "12",
+        "noi_dung": "Số tiết: Chương III: Từ trường",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "12",
+        "noi_dung": "Số tiết: Chương IV: Vật lí hạt nhân",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    },
+    {
+        "ma_cau": "12",
+        "noi_dung": "Số tiết: Đánh giá định kì",
+        "phuong_an": "",
+        "dap_an": "",
+        "trang_thai": "",
+        "link_anh": ""
+    }
+]
