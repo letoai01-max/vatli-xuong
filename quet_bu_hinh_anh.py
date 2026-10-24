@@ -4,13 +4,20 @@ import io
 import json
 import base64
 import mimetypes
+import warnings
+
+# Ẩn các cảnh báo phiên bản phụ không cần thiết
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import gspread
+import google.auth.transport.requests
+from google.auth.exceptions import RefreshError
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 
 try:
-    import pymupdf as fitz  # Chuẩn mới của PyMuPDF, không còn cảnh báo deprecated
+    import pymupdf as fitz
 except ImportError:
     import fitz
 
@@ -20,8 +27,19 @@ SCOPES = [
 ]
 
 
+def chuan_hoa_private_key(pk: str) -> str:
+    """Làm sạch chuỗi RSA private key nếu bị lỗi định dạng khi dán vào GitHub Secrets."""
+    pk = pk.strip().strip('"').strip("'").replace("\r\n", "\n").replace("\\n", "\n")
+    m = re.search(r"-----BEGIN PRIVATE KEY-----(.*?)-----END PRIVATE KEY-----", pk, re.S)
+    if m:
+        body = re.sub(r"\s+", "", m.group(1))
+        lines = [body[i:i + 64] for i in range(0, len(body), 64)]
+        return "-----BEGIN PRIVATE KEY-----\n" + "\n".join(lines) + "\n-----END PRIVATE KEY-----\n"
+    return pk
+
+
 def doc_thong_tin_credentials():
-    """Đọc thông tin Service Account từ biến môi trường GOOGLE_CREDENTIALS hoặc tệp JSON có sẵn."""
+    """Đọc thông tin Service Account từ biến môi trường GOOGLE_CREDENTIALS."""
     raw_cred = (
         os.environ.get("GOOGLE_CREDENTIALS")
         or os.environ.get("GCP_SA_KEY")
@@ -29,14 +47,12 @@ def doc_thong_tin_credentials():
         or ""
     ).strip()
 
-    # Nếu truyền đường dẫn tệp vào biến môi trường
     if raw_cred and os.path.isfile(raw_cred):
         with open(raw_cred, "r", encoding="utf-8") as f:
             raw_cred = f.read().strip()
 
-    # Dự phòng: nếu biến môi trường trống, tự tìm tệp JSON của Service Account trong thư mục hiện tại
     if not raw_cred:
-        for file_name in ("agent-vat-li-89f2bcd49721.json", "credentials.json", "service_account.json"):
+        for file_name in ("credentials.json", "service_account.json", "agent-vat-li-89f2bcd49721.json"):
             if os.path.isfile(file_name):
                 with open(file_name, "r", encoding="utf-8") as f:
                     raw_cred = f.read().strip()
@@ -45,28 +61,43 @@ def doc_thong_tin_credentials():
     if not raw_cred:
         raise ValueError(
             "Biến môi trường GOOGLE_CREDENTIALS đang trống! "
-            "Hãy kiểm tra: (1) Đã tạo Secret tên GOOGLE_CREDENTIALS trong Settings -> Secrets and variables -> Actions, "
-            "và (2) Trong file .yml ở bước chạy script đã có dòng env: GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}"
+            "Hãy cấu hình trong Settings -> Secrets and variables -> Actions."
         )
 
     try:
-        tt = json.loads(raw_cred)
+        tt = json.loads(raw_cred, strict=False)
     except Exception:
         try:
             decoded = base64.b64decode(raw_cred).decode("utf-8")
-            tt = json.loads(decoded)
+            tt = json.loads(decoded, strict=False)
         except Exception as e:
-            raise ValueError("GOOGLE_CREDENTIALS không đúng định dạng JSON hoặc Base64 hợp lệ: " + str(e))
+            raise ValueError("GOOGLE_CREDENTIALS không đúng định dạng JSON hợp lệ: " + str(e))
 
     if "private_key" in tt:
-        tt["private_key"] = tt["private_key"].replace("\\n", "\n")
+        tt["private_key"] = chuan_hoa_private_key(tt["private_key"])
 
     return tt
 
 
 def authenticate():
     tt = doc_thong_tin_credentials()
-    return Credentials.from_service_account_info(tt, scopes=SCOPES)
+    key_id = str(tt.get("private_key_id", ""))[:12]
+    email = tt.get("client_email", "")
+    print(f"-> Đang dùng Service Account: {email} (Key ID: {key_id}...)")
+
+    creds = Credentials.from_service_account_info(tt, scopes=SCOPES)
+    try:
+        creds.refresh(google.auth.transport.requests.Request())
+    except RefreshError as e:
+        raise RuntimeError(
+            f"\n❌ LỖI XÁC THỰC GOOGLE (Invalid JWT Signature) với Key ID '{key_id}...':\n"
+            f"Nguyên nhân: Khóa JSON này đã bị Google vô hiệu hóa (do bị lộ công khai) hoặc bị hỏng khi copy.\n"
+            f"Cách khắc phục:\n"
+            f"  1. Vào https://console.cloud.google.com/iam-admin/serviceaccounts?project=agent-vat-li\n"
+            f"  2. Chọn '{email}' -> tab KEYS -> ADD KEY -> Create new key (JSON).\n"
+            f"  3. Copy toàn bộ nội dung file JSON mới dán đè vào GitHub Secret 'GOOGLE_CREDENTIALS' (tuyệt đối không đẩy file JSON lên kho chứa hay gửi lên mạng)."
+        ) from e
+    return creds
 
 
 def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
@@ -75,11 +106,11 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
     gc = gspread.authorize(creds)
     drive_service = build("drive", "v3", credentials=creds, cache_discovery=False)
 
-    # Mở bảng tính bằng Key hoặc URL
-    try:
+    # Mở bảng tính
+    if sheet_id.startswith("http"):
+        sheet = gc.open_by_url(sheet_id)
+    else:
         sheet = gc.open_by_key(sheet_id)
-    except Exception:
-        sheet = gc.open_by_url(f"https://docs.google.com/spreadsheets/d/{sheet_id}/edit")
 
     # Tự động chọn worksheet có chứa dữ liệu ngân hàng câu hỏi
     worksheet = None
@@ -196,7 +227,6 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None):
 
                 cloud_file_id = uploaded_file.get("id")
 
-                # Cấp quyền đọc công khai để hiển thị ảnh trực tiếp qua link lh3
                 try:
                     drive_service.permissions().create(
                         fileId=cloud_file_id,
