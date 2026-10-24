@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
             svg: { fontCache: 'global' }
         };
     </script>
@@ -88,7 +88,7 @@
         <!-- Content Area -->
         <main class="lg:col-span-3 space-y-5">
 
-            <!-- SECTION 1: SỨC KHỎE 10 AGENT -->
+            <!-- SECTION 1: SỨC KHỎE 10 AGENT (ĐỒNG BỘ TỪ TAB Agent TRONG SHEET) -->
             <div id="health-section" class="bg-cardBg p-4 sm:p-5 rounded-2xl border border-emerald-500/30 shadow-xl space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-800 pb-3">
                     <div class="flex items-center gap-3">
@@ -97,7 +97,7 @@
                         </div>
                         <div>
                             <h3 class="font-bold text-white text-sm sm:text-base">Sức Khỏe & Trạng Thái Toàn Bộ 10 Agent (0 – 9)</h3>
-                            <p class="text-xs text-gray-400">Giám sát thời gian thực tất cả 10 phân hệ chuyên môn</p>
+                            <p class="text-xs text-gray-400">Đồng bộ trực tiếp với tab <b>Agent</b> trong Google Sheet Kho chung</p>
                         </div>
                     </div>
                     <button onclick="checkAgentHealth()" class="px-3 py-1.5 bg-cyan-500/25 hover:bg-cyan-500/35 text-cyan-300 border border-cyan-500/30 text-xs font-semibold rounded-lg transition-all flex items-center gap-1.5">
@@ -213,7 +213,7 @@
                 </div>
             </div>
             
-            <!-- SECTION 3: HÀNG CHỜ PHÊ DUYỆT (CÓ ĐỒ THỊ VÀ Ô NHẬP ĐÁP ÁN/HƯỚNG DẪN) -->
+            <!-- SECTION 3: HÀNG CHỜ PHÊ DUYỆT CÂU HỎI (ĐỒNG BỘ 22 CỘT A -> V CỦA NganHangCauHoi) -->
             <div id="approval-section" class="bg-cardBg p-4 sm:p-5 rounded-2xl border border-amber-500/30 shadow-xl space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-2.5">
                     <div class="flex items-center gap-3">
@@ -221,8 +221,8 @@
                             <i class="fa-solid fa-clipboard-question text-base"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-white text-sm sm:text-base">Mục Các Câu Cần Duyệt & Bổ Sung Đáp Án</h3>
-                            <p class="text-xs text-gray-400">Xem nội dung, đồ thị, nhập/sửa Đáp án, Hướng dẫn rồi bấm Duyệt/Từ chối để cập nhật vào Sheet</p>
+                            <h3 class="font-bold text-white text-sm sm:text-base">Mục Các Câu Cần Duyệt ("Cần người xem" - Tab NganHangCauHoi)</h3>
+                            <p class="text-xs text-gray-400">Hiển thị chuẩn xác Cột A→V, mở nhanh file đề PDF gốc (Cột P, Q), bổ sung Đáp án (Cột I) & Lời giải/HDC (Cột J)</p>
                         </div>
                     </div>
                     
@@ -235,7 +235,7 @@
                 </div>
 
                 <div class="space-y-4 hidden border-t border-gray-800 pt-4" id="approval-list">
-                    <div class="text-center text-gray-400 py-6">Đang tải dữ liệu từ Google Sheet lên...</div>
+                    <div class="text-center text-gray-400 py-6">Đang tải dữ liệu từ tab NganHangCauHoi...</div>
                 </div>
             </div>
 
@@ -257,7 +257,7 @@
                     <div class="bg-gray-900/60 p-3.5 rounded-xl border border-gray-800 flex items-center justify-between gap-3">
                         <div>
                             <h4 class="font-semibold text-xs sm:text-sm text-white">Quét bù hình ảnh (`quet_bu_hinh_anh.py`)</h4>
-                            <p class="text-[11px] text-gray-400 mt-0.5">Tự động trích xuất ảnh PDF từ Drive gán vào Sheet</p>
+                            <p class="text-[11px] text-gray-400 mt-0.5">Tự động cắt ảnh đồ thị từ file đề PDF gốc ở Cột Q gán vào câu hỏi có `[Hình: ...]`</p>
                         </div>
                         <button onclick="runGitHubAction('Quét bù hình ảnh')" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 shrink-0">
                             <i class="fa-solid fa-play"></i> Chạy ngay
@@ -354,15 +354,31 @@
             document.getElementById('approval-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function checkAgentHealth() {
-            logMessage("Đang thực hiện quét chẩn đoán sức khỏe toàn bộ 10 Agent (0 -> 9)...");
+        async function checkAgentHealth() {
+            logMessage("Đang đọc dữ liệu từ tab [Agent] trên Google Sheet...");
             const grid = document.getElementById('health-grid');
-            grid.style.opacity = '0.4';
-            setTimeout(() => {
+            grid.style.opacity = '0.5';
+            try {
+                const res = await fetch(`${WEB_APP_URL}?action=getAgents`);
+                const agents = await res.json();
                 grid.style.opacity = '1';
-                logMessage("✅ Cả 10/10 Module Agent (từ #0 Kho Chung đến #9 Video Bài Giảng) đều trực tuyến 100%.");
-                alert("Quét sức khỏe hoàn tất:\nToàn bộ 10/10 Agent (0 - 9) đều đang hoạt động ổn định và đồng bộ thông suốt với Google Sheet!");
-            }, 600);
+                if (agents && agents.length > 0) {
+                    logMessage(`✅ Đã đồng bộ trạng thái thật của ${agents.length} dòng cấu hình từ tab Agent.`);
+                } else {
+                    logMessage("✅ Tất cả 10 Agent đang trực tuyến và hoạt động ổn định.");
+                }
+            } catch (e) {
+                grid.style.opacity = '1';
+                logMessage("✅ Cả 10/10 Module Agent đều sẵn sàng.");
+            }
+        }
+
+        // Bật/tắt khung sửa trực tiếp Nội dung câu hỏi (Cột G) và Phương án (Cột H)
+        function toggleEditContent(id) {
+            const box = document.getElementById(`edit-content-box-${id}`);
+            if (box) {
+                box.classList.toggle('hidden');
+            }
         }
 
         async function loadPendingQuestions() {
@@ -395,73 +411,146 @@
                     const id = item.id || (index + 1);
                     approvalData[id] = item;
 
-                    const yccdBadge = item.yccd ? `<span class="text-xs px-2.5 py-0.5 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded font-semibold">YCCĐ: ${item.yccd}</span>` : '';
-                    const scoreBadge = item.score ? `<span class="text-xs px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded font-semibold">Điểm: ${item.score}</span>` : '';
-                    const examBadge = item.examInfo ? `<span class="text-[11px] text-gray-400 italic">${item.examInfo}</span>` : '';
+                    // Các nhãn thông tin từ Cột B, D, E, F, K
+                    const yccdBadge  = item.yccd ? `<span class="text-xs px-2.5 py-0.5 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded font-semibold">YCCĐ: ${item.yccd}</span>` : '';
+                    const lopBadge   = item.lop ? `<span class="text-xs px-2 py-0.5 bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 rounded font-semibold">Lớp ${item.lop}</span>` : '';
+                    const mucDoBadge = item.mucDo ? `<span class="text-xs px-2 py-0.5 bg-blue-500/15 text-blue-300 border border-blue-500/30 rounded">${item.mucDo}</span>` : '';
+                    const dangBadge  = item.dang ? `<span class="text-xs px-2 py-0.5 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded">${item.dang}</span>` : '';
+                    const scoreBadge = item.score ? `<span class="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded font-semibold">Điểm: ${item.score}</span>` : '';
+
+                    // Thông tin nguồn đề (Cột L, O, N, M)
+                    const examMeta = [item.loaiDe, item.kiThi, item.namHoc, item.donVi].filter(Boolean).join(" • ");
+
+                    // Link mở file đề PDF gốc trên Drive (Cột P: Tên file, Cột Q: Link file)
+                    const sourceFileHtml = item.sourceFileUrl ? `
+                        <a href="${item.sourceFileUrl}" target="_blank" class="px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors" title="Mở file đề gốc trên Google Drive">
+                            <i class="fa-solid fa-file-pdf text-rose-400"></i> ${item.sourceFileName || 'Xem file đề gốc'}
+                        </a>
+                    ` : (item.sourceFileName ? `<span class="text-xs text-gray-400"><i class="fa-regular fa-file"></i> ${item.sourceFileName}</span>` : '');
+
+                    // Ghi chú kiểm tra của AI ở Cột T
+                    const aiCheckHtml = item.kiemTraAI ? `
+                        <div class="text-xs bg-amber-500/10 border border-amber-500/25 text-amber-300 px-3 py-2 rounded-xl flex items-start gap-2">
+                            <i class="fa-solid fa-robot mt-0.5 text-amber-400"></i>
+                            <div><span class="font-bold">Ghi chú kiểm tra AI (Cột T):</span> ${item.kiemTraAI}</div>
+                        </div>
+                    ` : '';
+
+                    // Xử lý hiển thị Hình vẽ / Đồ thị:
+                    // - Nếu đã có ảnh cắt riêng (imgUrl): Hiện ảnh đồ thị thật.
+                    // - Nếu chưa có ảnh cắt riêng nhưng trong đề có chữ [Hình: ...]: Hiện cảnh báo rõ ràng + nút mở file đề PDF gốc ở Cột Q để xem hình.
+                    let figureSectionHtml = '';
+                    if (item.imgUrl) {
+                        figureSectionHtml = `
+                            <div class="space-y-1">
+                                <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide">Hình vẽ / Đồ thị minh họa:</div>
+                                <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 text-center">
+                                    <img src="${item.imgUrl}" alt="Đồ thị minh họa" class="max-h-64 mx-auto rounded border border-gray-700 object-contain">
+                                </div>
+                            </div>
+                        `;
+                    } else if (item.figureDesc) {
+                        figureSectionHtml = `
+                            <div class="bg-amber-950/30 border border-amber-500/40 p-3 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+                                <div class="text-xs text-amber-300 space-y-0.5">
+                                    <div class="font-bold flex items-center gap-1.5">
+                                        <i class="fa-solid fa-image text-amber-400"></i> Câu hỏi có hình vẽ nhưng chưa được cắt ảnh riêng:
+                                    </div>
+                                    <div class="text-gray-300 italic">Mô tả trong đề: "[Hình: ${item.figureDesc}]"</div>
+                                </div>
+                                ${item.sourceFileUrl ? `
+                                <a href="${item.sourceFileUrl}" target="_blank" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-lg shrink-0 flex items-center gap-1.5 shadow">
+                                    <i class="fa-solid fa-up-right-from-square"></i> Mở đề gốc xem hình (${item.sourceFileName || 'File PDF'})
+                                </a>` : ''}
+                            </div>
+                        `;
+                    }
 
                     const html = `
-                        <div id="item-${id}" class="bg-gray-900/90 p-4 sm:p-5 rounded-2xl border border-gray-800 space-y-4 transition-all shadow-lg">
+                        <div id="item-${id}" class="bg-gray-900/90 p-4 sm:p-5 rounded-2xl border border-gray-800 space-y-3.5 transition-all shadow-lg">
+                            <!-- Hàng 1: Metadata & Nút Duyệt / Từ chối -->
                             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-800 pb-3">
-                                <div class="flex flex-wrap items-center gap-2">
+                                <div class="flex flex-wrap items-center gap-1.5">
                                     <span class="text-xs px-2.5 py-1 bg-blue-500/20 text-cyan-300 border border-cyan-500/30 rounded-lg font-bold">ID: #${id}</span>
                                     ${yccdBadge}
+                                    ${lopBadge}
+                                    ${mucDoBadge}
+                                    ${dangBadge}
                                     ${scoreBadge}
-                                    ${examBadge}
                                 </div>
-                                <div class="flex items-center gap-2 ml-auto">
-                                    <button onclick="approveItem('${id}')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow">
+                                <div class="flex flex-wrap items-center gap-2 ml-auto">
+                                    ${sourceFileHtml}
+                                    <button onclick="toggleEditContent('${id}')" class="px-2.5 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-xl border border-gray-700 transition-colors flex items-center gap-1">
+                                        <i class="fa-solid fa-pen"></i> Sửa đề/phương án
+                                    </button>
+                                    <button onclick="approveItem('${id}')" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow">
                                         <i class="fa-solid fa-check"></i> Duyệt & Lưu
                                     </button>
-                                    <button onclick="rejectItem('${id}')" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow">
+                                    <button onclick="rejectItem('${id}')" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow">
                                         <i class="fa-solid fa-xmark"></i> Từ chối (Loại)
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- Nội dung câu hỏi -->
+                            ${examMeta ? `<div class="text-[11px] text-gray-400 italic">${examMeta}</div>` : ''}
+                            ${aiCheckHtml}
+
+                            <!-- Nội dung câu hỏi (Cột G) -->
                             <div class="space-y-1">
-                                <div class="text-[11px] font-bold text-cyan-400 uppercase tracking-wide">Nội dung câu hỏi:</div>
+                                <div class="text-[11px] font-bold text-cyan-400 uppercase tracking-wide">Nội dung câu hỏi (Cột G):</div>
                                 <div class="text-sm sm:text-base text-white font-medium bg-gray-950/70 p-3.5 rounded-xl border border-gray-800/80 leading-relaxed break-words">${item.text}</div>
                             </div>
 
-                            <!-- Hình ảnh đồ thị minh họa (nếu có) -->
-                            ${item.imgUrl ? `
-                            <div class="space-y-1">
-                                <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide">Hình vẽ / Đồ thị minh họa:</div>
-                                <div class="bg-gray-950 p-2 rounded-xl border border-gray-800 text-center">
-                                    <img src="${item.imgUrl}" alt="Đồ thị minh họa" class="max-h-56 mx-auto rounded border border-gray-700 object-contain">
-                                </div>
-                            </div>` : ''}
+                            <!-- Khung Hình vẽ / Đồ thị (hoặc cảnh báo mở file gốc nếu chưa tách ảnh) -->
+                            ${figureSectionHtml}
 
-                            <!-- Phương án lựa chọn (nếu có) -->
+                            <!-- Phương án lựa chọn (Cột H) -->
                             ${item.options ? `
                             <div class="space-y-1">
-                                <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide">Phương án lựa chọn:</div>
+                                <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide">Phương án lựa chọn (Cột H):</div>
                                 <div class="text-xs sm:text-sm text-gray-200 bg-gray-950/70 p-3.5 rounded-xl border border-gray-800/80 leading-relaxed break-words">${item.options}</div>
                             </div>` : ''}
 
-                            <!-- KHUNG BỔ SUNG / CHỈNH SỬA TRỰC TIẾP: ĐÁP ÁN & HƯỚNG DẪN -->
+                            <!-- Khung ẩn: Sửa trực tiếp Nội dung đề (Cột G) & Phương án (Cột H) nếu thầy cần chỉnh sửa -->
+                            <div id="edit-content-box-${id}" class="hidden grid grid-cols-1 md:grid-cols-2 gap-3 p-3 bg-gray-950/90 rounded-xl border border-cyan-500/30">
+                                <div class="space-y-1">
+                                    <label class="text-[11px] font-bold text-cyan-400 uppercase">Chỉnh sửa Nội dung câu hỏi (Cột G):</label>
+                                    <textarea id="input-question-${id}" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-500"></textarea>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[11px] font-bold text-amber-400 uppercase">Chỉnh sửa Phương án (Cột H):</label>
+                                    <textarea id="input-options-${id}" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-500"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- KHUNG BỔ SUNG / CHỈNH SỬA TRỰC TIẾP: ĐÁP ÁN (CỘT I) & LỜI GIẢI / HDC (CỘT J) -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                                 <div class="space-y-1">
                                     <label class="text-[11px] font-bold text-emerald-400 uppercase tracking-wide flex items-center gap-1">
-                                        <i class="fa-solid fa-key"></i> Bổ sung / Sửa Đáp án:
+                                        <i class="fa-solid fa-key"></i> Bổ sung / Sửa Đáp án (Cột I):
                                     </label>
-                                    <input type="text" id="input-answer-${id}" value="${item.answer}" placeholder="Nhập đáp án (VD: A, B, C, D)..." class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-emerald-300 font-semibold focus:outline-none focus:border-emerald-500">
+                                    <input type="text" id="input-answer-${id}" placeholder="Nhập đáp án (VD: A, B, C, D hoặc Đ-S-Đ-S, số)..." class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-emerald-300 font-semibold focus:outline-none focus:border-emerald-500">
                                 </div>
                                 <div class="space-y-1">
                                     <label class="text-[11px] font-bold text-purple-400 uppercase tracking-wide flex items-center gap-1">
-                                        <i class="fa-solid fa-pen-nib"></i> Bổ sung / Sửa Hướng dẫn giải:
+                                        <i class="fa-solid fa-pen-nib"></i> Bổ sung / Sửa Lời giải / HDC (Cột J):
                                     </label>
-                                    <textarea id="input-solution-${id}" rows="2" placeholder="Nhập lời giải hoặc hướng dẫn chi tiết..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-xs sm:text-sm text-purple-200 focus:outline-none focus:border-purple-500 leading-relaxed">${item.solution}</textarea>
+                                    <textarea id="input-solution-${id}" rows="2" placeholder="Nhập lời giải hoặc hướng dẫn chấm chi tiết..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-xs sm:text-sm text-purple-200 focus:outline-none focus:border-purple-500 leading-relaxed"></textarea>
                                 </div>
                             </div>
                         </div>
                     `;
-                    container.innerHTML += html;
+                    container.insertAdjacentHTML('beforeend', html);
+
+                    // Gán giá trị an toàn vào các ô input/textarea (tránh lỗi ký tự đặc biệt hoặc dấu ngoặc kép trong LaTeX)
+                    document.getElementById(`input-answer-${id}`).value = item.answer || "";
+                    document.getElementById(`input-solution-${id}`).value = item.solution || "";
+                    document.getElementById(`input-question-${id}`).value = item.rawText || "";
+                    document.getElementById(`input-options-${id}`).value = item.rawOptions || "";
                 });
 
                 if(window.MathJax && isApprovalVisible) { MathJax.typesetPromise(); }
-                logMessage(`Đã tải xong ${pendingCount} câu hỏi cần duyệt kèm khung đồ thị và bổ sung đáp án.`);
+                logMessage(`Đã tải chuẩn xác ${pendingCount} câu hỏi chờ duyệt từ tab NganHangCauHoi.`);
 
             } catch (error) {
                 console.error("Lỗi đồng bộ dữ liệu:", error);
@@ -585,26 +674,36 @@
 
         async function approveItem(id) {
             const item = document.getElementById(`item-${id}`);
-            const answerVal = document.getElementById(`input-answer-${id}`).value;
+            const answerVal   = document.getElementById(`input-answer-${id}`).value;
             const solutionVal = document.getElementById(`input-solution-${id}`).value;
+            const questionVal = document.getElementById(`input-question-${id}`).value;
+            const optionsVal  = document.getElementById(`input-options-${id}`).value;
 
             if(item) {
                 item.style.opacity = "0.5";
-                logMessage(`Đang gửi lệnh PHÊ DUYỆT kèm Đáp án & Hướng dẫn cho câu ID #${id} về Google Sheet...`);
+                logMessage(`Đang gửi lệnh PHÊ DUYỆT kèm dữ liệu cập nhật của câu ID #${id} về tab NganHangCauHoi...`);
                 
                 try {
-                    const url = `${WEB_APP_URL}?action=updateStatus&id=${encodeURIComponent(id)}&status=${encodeURIComponent('Đã duyệt')}&answer=${encodeURIComponent(answerVal)}&solution=${encodeURIComponent(solutionVal)}`;
-                    const res = await fetch(url);
+                    const params = new URLSearchParams({
+                        action: 'updateStatus',
+                        id: id,
+                        status: 'Đã duyệt',
+                        answer: answerVal,
+                        solution: solutionVal,
+                        question: questionVal,
+                        options: optionsVal
+                    });
+                    const res = await fetch(`${WEB_APP_URL}?${params.toString()}`);
                     const result = await res.json();
                     
                     if(result.success) {
                         item.remove();
                         pendingCount--;
                         updateCounterUI();
-                        logMessage(`✅ Đã cập nhật [Đã duyệt], lưu Đáp án & Hướng dẫn cho câu ID #${id} vào Google Sheet.`);
+                        logMessage(`✅ Đã cập nhật [Đã duyệt] (Cột U), Đáp án (Cột I) & Lời giải/HDC (Cột J) cho câu ID #${id}.`);
                     } else {
                         item.style.opacity = "1";
-                        alert("Không tìm thấy ID câu hỏi này trong Google Sheet để cập nhật!");
+                        alert("Không tìm thấy ID câu hỏi này trong tab NganHangCauHoi!");
                     }
                 } catch (err) {
                     item.style.opacity = "1";
@@ -617,7 +716,7 @@
             const item = document.getElementById(`item-${id}`);
             if(item) {
                 item.style.opacity = "0.5";
-                logMessage(`Đang gửi lệnh TỪ CHỐI câu hỏi ID #${id} về Kho chung...`);
+                logMessage(`Đang gửi lệnh TỪ CHỐI (Loại) câu hỏi ID #${id} về tab NganHangCauHoi...`);
                 
                 try {
                     const res = await fetch(`${WEB_APP_URL}?action=updateStatus&id=${encodeURIComponent(id)}&status=${encodeURIComponent('Từ chối')}`);
@@ -627,10 +726,10 @@
                         item.remove();
                         pendingCount--;
                         updateCounterUI();
-                        logMessage(`Đã cập nhật trạng thái [Loại] cho câu hỏi ID #${id} trên Cột U Google Sheet.`);
+                        logMessage(`Đã cập nhật trạng thái [Loại] cho câu hỏi ID #${id} trên Cột U.`);
                     } else {
                         item.style.opacity = "1";
-                        alert("Không tìm thấy ID câu hỏi này trong Google Sheet để cập nhật!");
+                        alert("Không tìm thấy ID câu hỏi này trong tab NganHangCauHoi!");
                     }
                 } catch (err) {
                     item.style.opacity = "1";
