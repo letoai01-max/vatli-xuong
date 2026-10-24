@@ -35,4 +35,4 @@ jobs:
           GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
           GOI_ID: ${{ inputs.goi }}
           KQ_ID: ${{ inputs.ket_qua }}
-        run: python tang_3_trung_tam/trung_tam.py tên_file_python.py
+        run: python trung_tam.py de_cuong.py
