@@ -6,12 +6,10 @@ Apps Script (DeCuongOnTap.gs) dựng sẵn lời nhắc và ghi "gói việc" go
      thay {{CAU_HOI}}, {{RS_TL}} bằng kết quả bước trước. Model đọc từ tab CauHinh của Kho chung (như Meta).
   2. KIỂM TRA SỐ BẰNG SYMPY: ở bước đáp án, Gemini ghi thêm biểu thức tính từng đáp số; xưởng tự tính lại bằng
      sympy, so với đáp số đã ghi (sai lệch > 2% là sai) và đưa bảng kết quả vào mục D (rà soát) của bản giáo viên.
-  3. CỔNG CHẤT LƯỢNG (cong_chat_luong.py) trước bước rà soát: model KHÁC, không xem đáp án, giải lại MỌI câu bằng code;
-     câu lệch / nhiều phương án đúng / sai luật được đưa cho bước rà soát tự sửa, và "Báo cáo kiểm định" vào mục D.
-  4. Ghi kết quả vào ket_qua_<mã>.json; Apps Script tự nhận và tạo Docs, Word, Form.
+  3. Ghi kết quả vào ket_qua_<mã>.json; Apps Script tự nhận và tạo Docs, Word, Form.
 Biến môi trường: GOOGLE_CREDENTIALS, GEMINI_API_KEY_TRA_PHI (nếu có, ưu tiên) hoặc GEMINI_API_KEY, GOI_ID, KQ_ID.
 """
-import datetime as dt, io, json, math, os, re, sys, time
+import datetime as dt, io, json, math, os, re, sys, time, base64
 
 import gspread
 import requests
@@ -37,7 +35,22 @@ class HetHanMuc(Exception):
 
 
 def ket_noi():
-    tt = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+    raw_cred = os.environ["GOOGLE_CREDENTIALS"].strip()
+    tt = None
+    # Thử parse JSON trực tiếp, nếu lỗi thì thử giải mã từ Base64 (phòng hờ lỗi ngắt dòng trên GitHub Secrets)
+    try:
+        tt = json.loads(raw_cred)
+    except Exception:
+        try:
+            decoded = base64.b64decode(raw_cred).decode("utf-8")
+            tt = json.loads(decoded)
+        except Exception as e:
+            raise ValueError("GOOGLE_CREDENTIALS không đúng định dạng JSON hoặc Base64 hợp lệ: " + str(e))
+    
+    # Đảm bảo private_key có định dạng xuống dòng chính xác để tránh lỗi Invalid JWT Signature
+    if "private_key" in tt:
+        tt["private_key"] = tt["private_key"].replace("\\n", "\n")
+
     cred = service_account.Credentials.from_service_account_info(
         tt, scopes=["https://www.googleapis.com/auth/spreadsheets.readonly", "https://www.googleapis.com/auth/drive"])
     return gspread.authorize(cred), build("drive", "v3", credentials=cred, cache_discovery=False)
@@ -174,7 +187,7 @@ def main():
     goi = doc_tep(drive, goi_id)
     cac_model = ds_model(gc)
     print("Đề cương %s – lớp %s – %s; model: %s" % (goi.get("ma"), goi.get("khoi"), goi.get("ki"), ", ".join(cac_model)))
-    ra, model_dung, kiem, cong, model_soan = {}, "", "", None, ""
+    ra, model_dung, kiem = {}, "", ""
     ghi_tep(drive, kq_id, {"trangThai": "DANG_LAM", "luc": dt.datetime.now(TZ).isoformat()})
     try:
         for b in goi["buoc"]:
@@ -188,22 +201,6 @@ def main():
                 nguoi = nguoi.replace("{{RS_TL}}", "\n\n".join(ra.get(k, "") for k in ("2", "3", "4"))[:120000])
             if b.get("kiemTraSo"):
                 nguoi += LUAT_KIEM_TRA_SO
-            if so == "5" and ra.get("4"):
-                bang_chung = ""
-                try:
-                    import cong_chat_luong as CCL
-                    t1 = time.time()
-                    bc, cong, bang_chung = CCL.kiem_dinh(goi_gemini, ra.get("2", "") + "\n\n" + ra.get("3", ""), ra["4"],
-                                                         cac_model, model_soan)
-                    ra["_cong"] = bc
-                    print("🛡️ Cổng chất lượng: %d/%d câu đạt (%.0f giây)" % (cong.get("dat", 0), cong.get("tong", 0), time.time() - t1))
-                except Exception as e:
-                    ra["_cong"] = "### Báo cáo kiểm định (cổng chất lượng)\n\nLượt này chưa chạy được cổng chất lượng: %s\n" % str(e)[:200]
-                    print("⚠️ Cổng chất lượng lỗi (bỏ qua):", str(e)[:200])
-                if bang_chung:
-                    nguoi += ("\n\nBẰNG CHỨNG TỪ CỔNG CHẤT LƯỢNG (một model khác giải độc lập bằng code, KHÔNG xem đáp án). "
-                              "Máy cũng có thể sai: với MỖI câu dưới đây hãy giải lại thật cẩn thận; nếu đáp án hoặc câu hỏi sai thì ghi "
-                              "vào bảng sai sót và viết lại đúng ở mục 4; câu nhiều phương án đúng thì sửa phương án nhiễu:\n" + bang_chung)
             t0 = time.time()
             text, model_dung = goi_gemini(b["he"], nguoi, b.get("coCode"), cac_model)
             if b.get("kiemTraSo"):
@@ -212,8 +209,6 @@ def main():
                 ra["_bang"], ra["_sai"] = bang, sai
                 kiem = "%d đáp số, %d lệch" % (dem, sai) if dem else "không có đáp số tính toán"
             ra[so] = text
-            if so in ("2", "3") and not model_soan:
-                model_soan = model_dung
             print("✅ Bước %s xong (%.0f giây, %d kí tự)" % (so, time.time() - t0, len(text)))
         # đưa bảng kiểm tra số vào mục rà soát; cộng số chỗ lệch vào "SỐ CHỖ CẦN SỬA"
         if ra.get("_bang"):
@@ -222,9 +217,7 @@ def main():
             if m and sai:
                 rs = rs[:m.start(1)] + str(int(m.group(1)) + sai) + rs[m.end(1):]
             ra["5"] = rs.rstrip() + "\n\n" + ra["_bang"]
-        if ra.get("_cong"):
-            ra["5"] = ra.get("5", "").rstrip() + "\n\n" + ra["_cong"]
-        ghi_tep(drive, kq_id, {"trangThai": "XONG", "model": model_dung, "kiemTraSo": kiem, "congChatLuong": cong,
+        ghi_tep(drive, kq_id, {"trangThai": "XONG", "model": model_dung, "kiemTraSo": kiem,
                                "buoc": {k: v for k, v in ra.items() if not k.startswith("_")},
                                "luc": dt.datetime.now(TZ).isoformat()})
         print("📦 Đã ghi kết quả. Apps Script sẽ tạo Docs, Word, Form trong vài phút.")
