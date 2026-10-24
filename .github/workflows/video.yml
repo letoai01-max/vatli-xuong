@@ -26,7 +26,7 @@ jobs:
         env:
           WEBAPP_URL: ${{ secrets.WEBAPP_URL }}
           VIDEO_SECRET: ${{ secrets.VIDEO_SECRET }}
-        run: python render.py "${{ inputs.ma }}"
+       run: python trung_tam.py render.py "${{ inputs.ma }}"
       - uses: actions/upload-artifact@v4
         with:
           name: video-${{ inputs.ma }}
