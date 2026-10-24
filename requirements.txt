@@ -1,5 +1,15 @@
+gspread>=6.0
+google-api-python-client>=2.100
+google-auth>=2.23
+oauth2client
+google-generativeai
+requests>=2.31
+PyMuPDF>=1.22.0
+Pillow>=10.0.0
+python-docx>=0.8.11
+sympy>=1.12
+pint>=0.23
+ddgs>=9.0
 edge-tts>=6.1
 matplotlib>=3.8
 numpy>=1.26
-pillow>=10
-requests>=2.31
