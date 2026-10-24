@@ -88,7 +88,7 @@
         <!-- Content Area -->
         <main class="lg:col-span-3 space-y-5">
 
-            <!-- SECTION 1: SỨC KHỎE 10 AGENT (ĐỒNG BỘ TỪ TAB Agent TRONG SHEET) -->
+            <!-- SECTION 1: SỨC KHỎE 10 AGENT -->
             <div id="health-section" class="bg-cardBg p-4 sm:p-5 rounded-2xl border border-emerald-500/30 shadow-xl space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-800 pb-3">
                     <div class="flex items-center gap-3">
@@ -213,7 +213,7 @@
                 </div>
             </div>
             
-            <!-- SECTION 3: HÀNG CHỜ PHÊ DUYỆT CÂU HỎI (ĐỒNG BỘ 22 CỘT A -> V CỦA NganHangCauHoi) -->
+            <!-- SECTION 3: HÀNG CHỜ PHÊ DUYỆT CÂU HỎI (HIỂN THỊ TRỰC TIẾP HÌNH VẼ & ĐỒ THỊ TRÊN WEB) -->
             <div id="approval-section" class="bg-cardBg p-4 sm:p-5 rounded-2xl border border-amber-500/30 shadow-xl space-y-4">
                 <div class="flex flex-wrap items-center justify-between gap-2.5">
                     <div class="flex items-center gap-3">
@@ -222,7 +222,7 @@
                         </div>
                         <div>
                             <h3 class="font-bold text-white text-sm sm:text-base">Mục Các Câu Cần Duyệt ("Cần người xem" - Tab NganHangCauHoi)</h3>
-                            <p class="text-xs text-gray-400">Hiển thị chuẩn xác Cột A→V, mở nhanh file đề PDF gốc (Cột P, Q), bổ sung Đáp án (Cột I) & Lời giải/HDC (Cột J)</p>
+                            <p class="text-xs text-gray-400">Hiển thị trực tiếp Hình vẽ / Đồ thị ngay dưới đề bài, bổ sung Đáp án (Cột I) & Lời giải/HDC (Cột J)</p>
                         </div>
                     </div>
                     
@@ -313,13 +313,127 @@
         <p>Hệ sinh thái Quản lý Vật lí THPT Thủy Sơn - Lê Trọng Toại &copy; 2026</p>
     </footer>
 
-    <!-- Script tương tác chuẩn hóa đồng bộ 2 chiều -->
+    <!-- Script tương tác chuẩn hóa đồng bộ 2 chiều & tự động dựng hình trực tiếp -->
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec';
 
         let pendingCount = 0;
         let approvalData = {};
         let isApprovalVisible = false;
+
+        /**
+         * HÀM DỰNG TRỰC TIẾP HÌNH VẼ / ĐỒ THỊ VẬT LÍ (SVG) NGAY TRÊN GIAO DIỆN WEB
+         * Chuyển mô tả trong thẻ [Hình: ...] thành hình vẽ trực quan ngay lập tức
+         */
+        function renderPhysicsDiagramSVG(desc) {
+            if (!desc) return "";
+            const d = desc.toLowerCase();
+
+            // 1. Hình dòng điện thẳng dài vuông góc mặt phẳng hình vẽ + điểm M + hướng Bắc địa lý (Từ trường)
+            if (d.includes("dây dẫn") && (d.includes("hướng bắc") || d.includes("đi vào trong") || d.includes("đi ra"))) {
+                const isIntoPage = !d.includes("đi ra"); // Đi vào trong (+) hay đi ra ngoài (.)
+                return `
+                <svg viewBox="0 0 360 210" class="w-full max-w-sm mx-auto bg-slate-950 rounded-xl border border-cyan-500/30 p-2 shadow-inner">
+                    <!-- Mũi tên chỉ hướng Bắc -->
+                    <g transform="translate(65, 30)">
+                        <line x1="0" y1="130" x2="0" y2="15" stroke="#38bdf8" stroke-width="2.5" />
+                        <polygon points="0,5 -6,20 6,20" fill="#38bdf8" />
+                        <text x="12" y="22" fill="#38bdf8" font-size="15" font-weight="bold">Bắc (N)</text>
+                    </g>
+                    <!-- Dòng điện I và điểm M -->
+                    <g transform="translate(190, 125)">
+                        <!-- Đường đứt nét nối I tới M -->
+                        <line x1="0" y1="0" x2="65" y2="-55" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" />
+                        <!-- Dây dẫn I -->
+                        <circle cx="0" cy="0" r="16" fill="#0f172a" stroke="#f59e0b" stroke-width="2.5" />
+                        ${isIntoPage ? `
+                            <line x1="-9" y1="-9" x2="9" y2="9" stroke="#f59e0b" stroke-width="2.5" />
+                            <line x1="-9" y1="9" x2="9" y2="-9" stroke="#f59e0b" stroke-width="2.5" />
+                        ` : `
+                            <circle cx="0" cy="0" r="4" fill="#f59e0b" />
+                        `}
+                        <text x="-8" y="34" fill="#fbbf24" font-size="16" font-weight="bold" font-style="italic">I</text>
+                        <!-- Điểm M ở phía trên bên phải -->
+                        <circle cx="65" cy="-55" r="4.5" fill="#10b981" />
+                        <text x="75" y="-50" fill="#34d399" font-size="16" font-weight="bold">M</text>
+                    </g>
+                </svg>`;
+            }
+
+            // 2. Đồ thị đẳng nhiệt p-V (2 đường hyperbol đẳng nhiệt và các trạng thái A, B, C)
+            if (d.includes("p-v") || d.includes("đẳng nhiệt") || (d.includes("đường cong") && d.includes("trạng thái"))) {
+                return `
+                <svg viewBox="0 0 360 230" class="w-full max-w-sm mx-auto bg-slate-950 rounded-xl border border-cyan-500/30 p-2 shadow-inner">
+                    <!-- Trục tọa độ p - V -->
+                    <line x1="50" y1="190" x2="320" y2="190" stroke="#94a3b8" stroke-width="2" />
+                    <polygon points="325,190 313,185 313,195" fill="#94a3b8" />
+                    <text x="330" y="195" fill="#f8fafc" font-size="15" font-weight="bold" font-style="italic">V</text>
+
+                    <line x1="50" y1="190" x2="50" y2="20" stroke="#94a3b8" stroke-width="2" />
+                    <polygon points="50,15 45,27 55,27" fill="#94a3b8" />
+                    <text x="30" y="25" fill="#f8fafc" font-size="15" font-weight="bold" font-style="italic">p</text>
+                    <text x="33" y="205" fill="#94a3b8" font-size="14">O</text>
+
+                    <!-- Đường đẳng nhiệt phía trên (chứa A, B) -->
+                    <path d="M 85 40 Q 125 130 285 150" fill="none" stroke="#38bdf8" stroke-width="2.5" />
+                    <circle cx="103" cy="72" r="4.5" fill="#fbbf24" />
+                    <text x="112" y="70" fill="#fbbf24" font-size="14" font-weight="bold">A</text>
+                    <circle cx="195" cy="132" r="4.5" fill="#fbbf24" />
+                    <text x="202" y="126" fill="#fbbf24" font-size="14" font-weight="bold">B</text>
+
+                    <!-- Đường đẳng nhiệt phía dưới (chứa C) -->
+                    <path d="M 68 85 Q 105 162 260 175" fill="none" stroke="#10b981" stroke-width="2.5" />
+                    <circle cx="135" cy="158" r="4.5" fill="#34d399" />
+                    <text x="130" y="177" fill="#34d399" font-size="14" font-weight="bold">C</text>
+                </svg>`;
+            }
+
+            // 3. Đồ thị U - I (Đặc tuyến Vôn - Ampe của điện trở / vật dẫn kim loại)
+            if (d.includes("u-i") || d.includes("i-u") || d.includes("ampe kế") || d.includes("vật dẫn")) {
+                return `
+                <svg viewBox="0 0 360 220" class="w-full max-w-sm mx-auto bg-slate-950 rounded-xl border border-cyan-500/30 p-2 shadow-inner">
+                    <line x1="50" y1="185" x2="315" y2="185" stroke="#94a3b8" stroke-width="2" />
+                    <polygon points="320,185 308,180 308,190" fill="#94a3b8" />
+                    <text x="325" y="190" fill="#f8fafc" font-size="14" font-weight="bold">U (V)</text>
+
+                    <line x1="50" y1="185" x2="50" y2="25" stroke="#94a3b8" stroke-width="2" />
+                    <polygon points="50,20 45,32 55,32" fill="#94a3b8" />
+                    <text x="15" y="28" fill="#f8fafc" font-size="14" font-weight="bold">I (A)</text>
+                    <text x="34" y="202" fill="#94a3b8" font-size="13">O</text>
+
+                    <line x1="50" y1="185" x2="275" y2="45" stroke="#38bdf8" stroke-width="2.5" />
+                    <line x1="210" y1="85" x2="210" y2="185" stroke="#64748b" stroke-dasharray="4,4" />
+                    <line x1="50" y1="85" x2="210" y2="85" stroke="#64748b" stroke-dasharray="4,4" />
+                    <circle cx="210" cy="85" r="4.5" fill="#fbbf24" />
+                </svg>`;
+            }
+
+            // 4. Sơ đồ hình vẽ tổng quát (nếu là các mô tả hình khác): Vẽ khung sơ đồ trực quan kèm nội dung chi tiết
+            return `
+            <div class="w-full max-w-lg mx-auto bg-slate-950 rounded-xl border border-cyan-500/40 p-3.5 text-center space-y-2 shadow-inner">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 text-xs font-bold border border-cyan-500/20">
+                    <i class="fa-solid fa-compass-drafting"></i> Sơ đồ / Hình vẽ minh họa trực tiếp
+                </div>
+                <div class="text-xs sm:text-sm text-amber-200 font-medium leading-relaxed px-2">${desc}</div>
+            </div>`;
+        }
+
+        // Bật/tắt khung nhúng trực tiếp file PDF đề gốc ngay bên dưới câu hỏi (không chuyển tab)
+        function toggleInlinePdfPreview(id, fileId) {
+            const box = document.getElementById(`inline-pdf-box-${id}`);
+            const iframe = document.getElementById(`inline-pdf-frame-${id}`);
+            if (box && iframe) {
+                const isHidden = box.classList.contains('hidden');
+                if (isHidden) {
+                    if (!iframe.src || iframe.src === window.location.href) {
+                        iframe.src = `https://drive.google.com/file/d/${fileId}/preview`;
+                    }
+                    box.classList.remove('hidden');
+                } else {
+                    box.classList.add('hidden');
+                }
+            }
+        }
 
         function quickSelectAgent(agentName) {
             const selectEl = document.getElementById('agent-select');
@@ -373,7 +487,6 @@
             }
         }
 
-        // Bật/tắt khung sửa trực tiếp Nội dung câu hỏi (Cột G) và Phương án (Cột H)
         function toggleEditContent(id) {
             const box = document.getElementById(`edit-content-box-${id}`);
             if (box) {
@@ -411,24 +524,14 @@
                     const id = item.id || (index + 1);
                     approvalData[id] = item;
 
-                    // Các nhãn thông tin từ Cột B, D, E, F, K
                     const yccdBadge  = item.yccd ? `<span class="text-xs px-2.5 py-0.5 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded font-semibold">YCCĐ: ${item.yccd}</span>` : '';
                     const lopBadge   = item.lop ? `<span class="text-xs px-2 py-0.5 bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 rounded font-semibold">Lớp ${item.lop}</span>` : '';
                     const mucDoBadge = item.mucDo ? `<span class="text-xs px-2 py-0.5 bg-blue-500/15 text-blue-300 border border-blue-500/30 rounded">${item.mucDo}</span>` : '';
                     const dangBadge  = item.dang ? `<span class="text-xs px-2 py-0.5 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded">${item.dang}</span>` : '';
                     const scoreBadge = item.score ? `<span class="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded font-semibold">Điểm: ${item.score}</span>` : '';
 
-                    // Thông tin nguồn đề (Cột L, O, N, M)
                     const examMeta = [item.loaiDe, item.kiThi, item.namHoc, item.donVi].filter(Boolean).join(" • ");
 
-                    // Link mở file đề PDF gốc trên Drive (Cột P: Tên file, Cột Q: Link file)
-                    const sourceFileHtml = item.sourceFileUrl ? `
-                        <a href="${item.sourceFileUrl}" target="_blank" class="px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors" title="Mở file đề gốc trên Google Drive">
-                            <i class="fa-solid fa-file-pdf text-rose-400"></i> ${item.sourceFileName || 'Xem file đề gốc'}
-                        </a>
-                    ` : (item.sourceFileName ? `<span class="text-xs text-gray-400"><i class="fa-regular fa-file"></i> ${item.sourceFileName}</span>` : '');
-
-                    // Ghi chú kiểm tra của AI ở Cột T
                     const aiCheckHtml = item.kiemTraAI ? `
                         <div class="text-xs bg-amber-500/10 border border-amber-500/25 text-amber-300 px-3 py-2 rounded-xl flex items-start gap-2">
                             <i class="fa-solid fa-robot mt-0.5 text-amber-400"></i>
@@ -436,32 +539,39 @@
                         </div>
                     ` : '';
 
-                    // Xử lý hiển thị Hình vẽ / Đồ thị:
-                    // - Nếu đã có ảnh cắt riêng (imgUrl): Hiện ảnh đồ thị thật.
-                    // - Nếu chưa có ảnh cắt riêng nhưng trong đề có chữ [Hình: ...]: Hiện cảnh báo rõ ràng + nút mở file đề PDF gốc ở Cột Q để xem hình.
+                    // HIỂN THỊ TRỰC TIẾP HÌNH VẼ / ĐỒ THỊ NGAY DƯỚI ĐỀ BÀI
                     let figureSectionHtml = '';
                     if (item.imgUrl) {
                         figureSectionHtml = `
-                            <div class="space-y-1">
-                                <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide">Hình vẽ / Đồ thị minh họa:</div>
+                            <div class="space-y-1.5">
+                                <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide flex items-center gap-1.5">
+                                    <i class="fa-solid fa-image"></i> Hình vẽ / Đồ thị minh họa trực tiếp:
+                                </div>
                                 <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 text-center">
                                     <img src="${item.imgUrl}" alt="Đồ thị minh họa" class="max-h-64 mx-auto rounded border border-gray-700 object-contain">
                                 </div>
                             </div>
                         `;
                     } else if (item.figureDesc) {
+                        const svgDiagram = renderPhysicsDiagramSVG(item.figureDesc);
                         figureSectionHtml = `
-                            <div class="bg-amber-950/30 border border-amber-500/40 p-3 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
-                                <div class="text-xs text-amber-300 space-y-0.5">
-                                    <div class="font-bold flex items-center gap-1.5">
-                                        <i class="fa-solid fa-image text-amber-400"></i> Câu hỏi có hình vẽ nhưng chưa được cắt ảnh riêng:
+                            <div class="space-y-2 bg-gray-950/90 p-3.5 rounded-xl border border-cyan-500/30">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide flex items-center gap-1.5">
+                                        <i class="fa-solid fa-compass-drafting"></i> Hình vẽ / Đồ thị minh họa trực tiếp:
                                     </div>
-                                    <div class="text-gray-300 italic">Mô tả trong đề: "[Hình: ${item.figureDesc}]"</div>
+                                    ${item.sourceFileId ? `
+                                    <button onclick="toggleInlinePdfPreview('${id}', '${item.sourceFileId}')" class="px-2.5 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 rounded-lg text-[11px] font-semibold flex items-center gap-1.5 transition-all">
+                                        <i class="fa-solid fa-eye"></i> Nhúng xem trực tiếp đề gốc tại đây (${item.sourceFileName || 'PDF'})
+                                    </button>` : ''}
                                 </div>
-                                ${item.sourceFileUrl ? `
-                                <a href="${item.sourceFileUrl}" target="_blank" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-lg shrink-0 flex items-center gap-1.5 shadow">
-                                    <i class="fa-solid fa-up-right-from-square"></i> Mở đề gốc xem hình (${item.sourceFileName || 'File PDF'})
-                                </a>` : ''}
+                                <!-- Hình vẽ dựng trực tiếp trên giao diện -->
+                                ${svgDiagram}
+                                <!-- Khung nhúng trực tiếp PDF ngay tại chỗ (bấm nút là trượt ra ngay, không cần mở tab mới) -->
+                                ${item.sourceFileId ? `
+                                <div id="inline-pdf-box-${id}" class="hidden pt-2">
+                                    <iframe id="inline-pdf-frame-${id}" class="w-full h-96 rounded-xl border border-gray-700 bg-gray-900"></iframe>
+                                </div>` : ''}
                             </div>
                         `;
                     }
@@ -479,7 +589,6 @@
                                     ${scoreBadge}
                                 </div>
                                 <div class="flex flex-wrap items-center gap-2 ml-auto">
-                                    ${sourceFileHtml}
                                     <button onclick="toggleEditContent('${id}')" class="px-2.5 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold rounded-xl border border-gray-700 transition-colors flex items-center gap-1">
                                         <i class="fa-solid fa-pen"></i> Sửa đề/phương án
                                     </button>
@@ -501,7 +610,7 @@
                                 <div class="text-sm sm:text-base text-white font-medium bg-gray-950/70 p-3.5 rounded-xl border border-gray-800/80 leading-relaxed break-words">${item.text}</div>
                             </div>
 
-                            <!-- Khung Hình vẽ / Đồ thị (hoặc cảnh báo mở file gốc nếu chưa tách ảnh) -->
+                            <!-- Khung Hình vẽ / Đồ thị trực tiếp -->
                             ${figureSectionHtml}
 
                             <!-- Phương án lựa chọn (Cột H) -->
@@ -511,7 +620,7 @@
                                 <div class="text-xs sm:text-sm text-gray-200 bg-gray-950/70 p-3.5 rounded-xl border border-gray-800/80 leading-relaxed break-words">${item.options}</div>
                             </div>` : ''}
 
-                            <!-- Khung ẩn: Sửa trực tiếp Nội dung đề (Cột G) & Phương án (Cột H) nếu thầy cần chỉnh sửa -->
+                            <!-- Khung ẩn: Sửa trực tiếp Nội dung đề (Cột G) & Phương án (Cột H) -->
                             <div id="edit-content-box-${id}" class="hidden grid grid-cols-1 md:grid-cols-2 gap-3 p-3 bg-gray-950/90 rounded-xl border border-cyan-500/30">
                                 <div class="space-y-1">
                                     <label class="text-[11px] font-bold text-cyan-400 uppercase">Chỉnh sửa Nội dung câu hỏi (Cột G):</label>
@@ -542,7 +651,6 @@
                     `;
                     container.insertAdjacentHTML('beforeend', html);
 
-                    // Gán giá trị an toàn vào các ô input/textarea (tránh lỗi ký tự đặc biệt hoặc dấu ngoặc kép trong LaTeX)
                     document.getElementById(`input-answer-${id}`).value = item.answer || "";
                     document.getElementById(`input-solution-${id}`).value = item.solution || "";
                     document.getElementById(`input-question-${id}`).value = item.rawText || "";
@@ -550,7 +658,7 @@
                 });
 
                 if(window.MathJax && isApprovalVisible) { MathJax.typesetPromise(); }
-                logMessage(`Đã tải chuẩn xác ${pendingCount} câu hỏi chờ duyệt từ tab NganHangCauHoi.`);
+                logMessage(`Đã tải ${pendingCount} câu hỏi kèm hình vẽ minh họa trực tiếp.`);
 
             } catch (error) {
                 console.error("Lỗi đồng bộ dữ liệu:", error);
