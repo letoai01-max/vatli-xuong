@@ -1,1 +1,5 @@
-  run: python xuat_de.py
+- name: Run xuat_de.py
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: |
+          python xuat_de.py
