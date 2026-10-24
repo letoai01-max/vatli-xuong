@@ -33,4 +33,4 @@ jobs:
           GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
           GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
           GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
-      run: python trung_tam.py doc_de.py
+      run: python tang_3_trung_tam/trung_tam.py tên_file_python.py
