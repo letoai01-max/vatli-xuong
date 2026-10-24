@@ -1,6 +1,10 @@
+# 1. Khai báo hoặc tải dữ liệu vào biến all_values (Ví dụ minh họa lấy từ Google Sheets qua gspread hoặc API)
+# (Thầy thay thế đoạn kết nối thực tế mà Thầy đang dùng trong project vào đây)
+# all_values = sheet.get_all_values() 
+
 danh_sach_json = []
 
-# Duyệt qua từng dòng trong bảng tính
+# 2. Duyệt qua từng dòng trong bảng tính
 for row in all_values:
     # Lấy giá trị chính xác theo đúng vị trí các cột trên Google Sheet
     ma_cau = row[0].strip() if len(row) > 0 else ""       # Cột A: Mã câu
@@ -12,7 +16,7 @@ for row in all_values:
     
     # BỘ LỌC CHUẨN XÁC: 
     # 1. Mã câu phải bắt đầu bằng 'C-'
-    # 2. Nội dung bắt buộc phải tồn tại và có độ dài hợp lệ (loại bỏ dòng trống hoặc tiêu đề)
+    # 2. Nội dung bắt buộc phải tồn tại và có độ dài hợp lệ
     if ma_cau.startswith("C-") and len(noi_dung) > 5:
         danh_sach_json.append({
             "ma_cau": ma_cau,
