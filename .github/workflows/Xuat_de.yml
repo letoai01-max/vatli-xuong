@@ -1,31 +1,39 @@
-# .github/workflows/Xuat_de.yml – XUẤT questions.json cho trang điều khiển (index.html)
-# 6h giờ Việt Nam (23h UTC) mỗi ngày, hoặc bấm tay.
-# SỬA 24/10: bỏ kích hoạt theo mỗi lần push (chạy thừa, lỗi đỏ liên tục); cấp quyền ghi kho;
-#            chỉ commit questions.json (xuat_de.py không tạo DeThi.docx).
 name: Xuat De va Du Lieu Python
+
 on:
-  schedule:
-    - cron: "0 23 * * *"
   workflow_dispatch:
+  schedule:
+    - cron: "30 23 * * *"
+
 permissions:
   contents: write
+
 jobs:
-  xuat:
+  run-python-script:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -q gspread google-auth
-      - name: Xuất questions.json
+
+      - name: Install dependencies
+        run: pip install -q -r requirements.txt
+
+      - name: Run xuat_de.py
         env:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
         run: python trung_tam.py xuat_de.py
-      - uses: stefanzweifel/git-auto-commit-action@v5
+
+      - name: Commit and push generated files (questions.json, DeThi.docx)
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🤖 Cập nhật questions.json"
-          file_pattern: questions.json
+          commit_message: "🤖 Tự động cập nhật questions.json và DeThi.docx từ Kho chung"
+          branch: main
+          file_pattern: "questions.json DeThi.docx"
