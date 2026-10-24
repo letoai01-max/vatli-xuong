@@ -133,14 +133,11 @@ def quet_drive_va_gan_anh():
         print("Bảng tính chưa có dữ liệu câu hỏi.")
         return
 
-    header_row = all_values[0]
+    # Cố định vị trí cột Link Ảnh nằm ở cột W (cột số 23)
+    link_anh_col_idx = 23
+
     giao_dien = config.get("GIAO_DIEN_COT", {})
     noi_dung_idx = giao_dien.get("cot_noi_dung_index", 2) - 1
-    link_anh_col_idx = giao_dien.get("cot_link_anh_index")
-
-    if not link_anh_col_idx or link_anh_col_idx > len(header_row) + 1:
-        link_anh_col_idx = len(header_row) + 1
-        worksheet.update_cell(1, link_anh_col_idx, "Link Ảnh")
 
     patterns = config.get("BO_LOC_KY_THUAT", {}).get("bieu_thuc_nhan_dien_hinh", [])
     RE_CAN_HINH = re.compile("|".join(patterns), re.IGNORECASE) if patterns else re.compile(r"Hình", re.IGNORECASE)
