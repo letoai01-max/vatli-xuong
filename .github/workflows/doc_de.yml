@@ -1,5 +1,3 @@
-# .github/workflows/doc_de.yml – XƯỞNG ĐỌC ĐỀ (thay xuLyDeMotLuot của Kho chung)
-# Chạy 22h và 5h giờ Việt Nam (15h, 22h UTC – ngoài khung 0h–4h của bản Apps Script cũ), hoặc bấm tay ở tab Actions → doc_de → Run workflow.
 name: doc_de
 on:
   schedule:
@@ -24,7 +22,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -q -r requirements-docde.txt
+      - run: pip install -q -r requirements.txt
       - name: Đọc đề tải về → ngân hàng câu hỏi
         env:
           PYTHONUNBUFFERED: "1"
@@ -33,4 +31,5 @@ jobs:
           GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
           GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
           GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
-      run: python trung_tam.py doc_de.py
+          THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '100' }}
+        run: python trung_tam.py doc_de.py
