@@ -1,5 +1,3 @@
-# .github/workflows/video.yml – XƯỞNG DỰNG VIDEO BÀI GIẢNG
-# Được gọi từ Apps Script (VideoAgent.gs → vidGuiDung_) khi giáo viên bấm "Duyệt & dựng video".
 name: video
 on:
   workflow_dispatch:
@@ -26,7 +24,7 @@ jobs:
         env:
           WEBAPP_URL: ${{ secrets.WEBAPP_URL }}
           VIDEO_SECRET: ${{ secrets.VIDEO_SECRET }}
-       run: python trung_tam.py render.py "${{ inputs.ma }}"
+        run: python trung_tam.py render.py "${{ inputs.ma }}"
       - uses: actions/upload-artifact@v4
         with:
           name: video-${{ inputs.ma }}
