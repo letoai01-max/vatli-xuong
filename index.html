@@ -22,9 +22,6 @@
         .glow-blue { box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
         .agent-card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(51, 65, 85, 0.6); transition: all 0.2s ease; }
         .agent-card:hover { border-color: rgba(56, 189, 248, 0.5); transform: translateY(-2px); }
-        custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
-        custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-6">
@@ -202,7 +199,7 @@
                             <button class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold transition border border-slate-700">
                                 Cần duyệt (485)
                             </button>
-                            <button onclick="taiCauHoiCanDuyet()" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20">
+                            <button onclick="taiCauHoiCanDuyett()" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
                                 <i class="fa-solid fa-eye"></i> Hiện 485 câu cần duyệt
                             </button>
                         </div>
@@ -255,8 +252,7 @@
                         <button onclick="document.getElementById('terminal-log').innerHTML=''" class="hover:text-white transition">Xóa nhật ký</button>
                     </div>
                     <div id="terminal-log" class="space-y-1 pt-1 text-slate-300">
-                        <div>[17:40:37] Đã tải 485 câu hỏi kèm hình vẽ minh họa trực tiếp.</div>
-                        <div>[Hệ thống] Trung tâm điều hành 10 Agent đã sẵn sàng. MathJax đã kích hoạt.</div>
+                        <div>[17:40:37] Giao diện Physics Agent Commander đã sẵn sàng. MathJax đã kích hoạt.</div>
                     </div>
                 </div>
 
@@ -264,39 +260,22 @@
         </div>
     </div>
 
-    <!-- SCRIPT TẢI VÀ RENDER CÂU HỎI KÈM ẢNH TỪ CỘT W -->
+    <!-- SCRIPT XỬ LÝ SỰ KIỆN TẢI VÀ RENDER CÂU HỎI KÈM ẢNH TỪ CỘT W -->
     <script>
         async function taiCauHoiCanDuyett() {
             const container = document.getElementById('danh-sach-cau-hoi');
             container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu và liên kết ảnh từ Cột W...</div>`;
             
             try {
-                // Thay thế bằng file JSON xuất từ Google Sheet hoặc fetch trực tiếp
-                let response = await fetch('questions.json').catch(() => null);
-                let data = [];
+                let response = await fetch('questions.json');
+                if (!response.ok) {
+                    throw new Error("Chưa tìm thấy tệp questions.json trên kho. Thầy hãy chạy script Python trên GitHub Actions để xuất file trước!");
+                }
+                let data = await response.json();
 
-                if (response && response.ok) {
-                    data = await response.json();
-                } else {
-                    // Dữ liệu mẫu minh họa chuẩn xác cho hệ thống vật lí của thầy
-                    data = [
-                        {
-                            ma_cau: "C-1zNZYNau-022",
-                            noi_dung: "Hình bên là các đường đẳng nhiệt của một lượng khí lí tưởng, ở các trạng thái A, B, C nhiệt độ của khí này tương ứng là $T_A$, $T_B$, $T_C$. Hệ thức nào sau đây đúng? [Hình: Đồ thị p-V với các trạng thái A, B trên đường cong phía trên và C trên đường cong phía dưới]",
-                            phuong_an: "A. T_A = T_B > T_C<br>B. T_A < T_B = T_C<br>C. T_A > T_B > T_C<br>D. T_A = T_B < T_C",
-                            dap_an: "A",
-                            trang_thai: "cần người xem",
-                            link_anh: "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q483_De_Kiem_Tra.pdf_p1_img1.png"
-                        },
-                        {
-                            ma_cau: "C-1zNZYNau-023",
-                            noi_dung: "Đồ thị biểu diễn sự biến đổi của một lượng khí lí tưởng qua các quá trình. Áp suất $p$ được tính theo đơn vị kPa và thể tích $V$ tính bằng lít.",
-                            phuong_an: "A. Quá trình (1)-(2) là đẳng áp.<br>B. Quá trình (2)-(3) là đẳng nhiệt.",
-                            dap_an: "C",
-                            trang_thai: "cần người xem",
-                            link_anh: "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q484_De_Kiem_Tra.pdf_p2_img1.png"
-                        }
-                    ];
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Danh sách câu hỏi trống.</div>`;
+                    return;
                 }
 
                 container.innerHTML = '';
@@ -319,7 +298,7 @@
                         html += `
                             <div class="my-3 p-2 bg-slate-950 border border-slate-800 rounded-lg text-center">
                                 <div class="text-[10px] text-sky-400 mb-1 font-semibold"><i class="fa-solid fa-image mr-1"></i> HÌNH VẼ / ĐỒ THỊ MINH HỌA TRỰC TIẾP (Cột W):</div>
-                                <img src="${item.link_anh}" alt="Hình minh họa câu ${index + 1}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tai+duoc+anh+tu+GitHub';">
+                                <img src="${item.link_anh}" alt="Hình minh họa câu ${index + 1}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tai+duoc+anh';">
                             </div>
                         `;
                     }
@@ -341,12 +320,13 @@
                     MathJax.typesetPromise();
                 }
 
-                // Cập nhật log
                 const log = document.getElementById('terminal-log');
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã render thành công ${data.length} câu hỏi kèm hình ảnh từ Cột W lên giao diện.</div>`;
+                if(log) {
+                    log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã tải thành công ${data.length} câu hỏi kèm hình ảnh từ Cột W lên giao diện.</div>`;
+                }
 
             } catch (err) {
-                container.innerHTML = `<div class="text-center py-6 text-rose-400 text-xs">Lỗi tải dữ liệu: ${err.message}</div>`;
+                container.innerHTML = `<div class="text-center py-6 text-rose-400 text-xs">${err.message}</div>`;
             }
         }
     </script>
