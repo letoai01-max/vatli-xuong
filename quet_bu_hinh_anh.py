@@ -3,7 +3,7 @@ import re
 import io
 import json
 import base64
-import mimetypes
+import subprocess
 import warnings
 
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -12,8 +12,6 @@ import gspread
 import google.auth.transport.requests
 from google.auth.exceptions import RefreshError
 from google.oauth2.service_account import Credentials
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 
 try:
     import pymupdf as fitz
@@ -35,23 +33,6 @@ def doc_trung_tam_config():
         except Exception as e:
             print(f"⚠️ Không đọc được {TRUNG_TAM_CONFIG}: {e}")
     return {}
-
-def dieu_phoi_api(config):
-    api_keys_uu_tien = config.get("HE_THONG_API", {}).get("uu_tien_su_dung", ["GEMINI_API_KEY"])
-    for env_name in api_keys_uu_tien:
-        val = os.environ.get(env_name, "").strip()
-        if val.startswith("AIza"):
-            return val
-    return ""
-
-def chuan_hoa_private_key(pk: str) -> str:
-    pk = pk.strip().strip('"').strip("'").replace("\r\n", "\n").replace("\\n", "\n")
-    m = re.search(r"-----BEGIN PRIVATE KEY-----(.*?)-----END PRIVATE KEY-----", pk, re.S)
-    if m:
-        body = re.sub(r"\s+", "", m.group(1))
-        lines = [body[i:i + 64] for i in range(0, len(body), 64)]
-        return "-----BEGIN PRIVATE KEY-----\n" + "\n".join(lines) + "\n-----END PRIVATE KEY-----\n"
-    return pk
 
 def doc_thong_tin_credentials():
     raw_cred = (
@@ -81,9 +62,6 @@ def doc_thong_tin_credentials():
         decoded = base64.b64decode(raw_cred).decode("utf-8")
         tt = json.loads(decoded, strict=False)
 
-    if "private_key" in tt:
-        tt["private_key"] = chuan_hoa_private_key(tt["private_key"])
-
     return tt
 
 def authenticate():
@@ -97,17 +75,14 @@ def authenticate():
 
 def quet_drive_va_gan_anh():
     config = doc_trung_tam_config()
-    dieu_phoi_api(config)
     
     sheet_cfg = config.get("SHEET_CONFIG", {})
     sheet_id = sheet_cfg.get("SHEET_ID")
-    drive_folder_id = sheet_cfg.get("DRIVE_FOLDER_ID") or os.environ.get("DRIVE_FOLDER_ID")
     tab_keywords = sheet_cfg.get("tab_chap_nhan", ["nganhang"])
 
-    print("Đang xác thực tài khoản Google Drive & Sheets...")
+    print("Đang xác thực Google Sheets...")
     creds = authenticate()
     gc = gspread.authorize(creds)
-    drive_service = build("drive", "v3", credentials=creds, cache_discovery=False)
 
     sheet = gc.open_by_url(sheet_id) if sheet_id.startswith("http") else gc.open_by_key(sheet_id)
 
@@ -149,9 +124,12 @@ def quet_drive_va_gan_anh():
         print("⚠️ Không có câu hỏi nào khớp dấu hiệu cần hình ảnh!")
         return
 
-    os.makedirs("./temp_images", exist_ok=True)
-    min_w = config.get("BO_LOC_KY_THUAT", {}).get("min_width", 40)
-    min_h = config.get("BO_LOC_KY_THUAT", {}).get("min_height", 40)
+    from googleapiclient.discovery import build
+    from googleapiclient.http import MediaIoBaseDownload
+    import io
+
+    drive_service = build("drive", "v3", credentials=creds, cache_discovery=False)
+    drive_folder_id = sheet_cfg.get("DRIVE_FOLDER_ID") or os.environ.get("DRIVE_FOLDER_ID")
 
     query = "mimeType = 'application/pdf' and trashed = false"
     if drive_folder_id:
@@ -164,13 +142,16 @@ def quet_drive_va_gan_anh():
     files = results.get("files", [])
     print(f"Tìm thấy {len(files)} file PDF trên Google Drive.")
 
+    os.makedirs("images", exist_ok=True)
+    min_w = config.get("BO_LOC_KY_THUAT", {}).get("min_width", 40)
+    min_h = config.get("BO_LOC_KY_THUAT", {}).get("min_height", 40)
+
     thay_doi_count = 0
     for file in files:
         if not cau_hoi_can_xu_ly:
             break
         file_id = file["id"]
         file_name = file["name"]
-        parent_id = drive_folder_id or ((file.get("parents") or [None])[0])
         try:
             request = drive_service.files().get_media(fileId=file_id, supportsAllDrives=True)
             fh = io.BytesIO()
@@ -201,7 +182,7 @@ def quet_drive_va_gan_anh():
                         q_y = q_rect.y1
 
                         page_images = page.get_images(full=True)
-                        best_img_path = None
+                        best_img_filename = None
                         
                         for img_index, img in enumerate(page_images):
                             xref = img[0]
@@ -219,45 +200,20 @@ def quet_drive_va_gan_anh():
                                 if w < min_w or h < min_h or w > 1200 or h > 1500:
                                     continue
 
-                                image_path = os.path.join("./temp_images", f"q{row_num}_{re.sub(r'[\\/*?:\"<>|]', '_', file_name)}_p{page_index+1}_img{img_index+1}.{base_image['ext']}")
+                                safe_name = f"q{row_num}_{re.sub(r'[\\/*?:\"<>| ]', '_', file_name)}_p{page_index+1}_img{img_index+1}.{base_image['ext']}"
+                                image_path = os.path.join("images", safe_name)
                                 with open(image_path, "wb") as f:
                                     f.write(base_image["image"])
-                                best_img_path = image_path
+                                best_img_filename = safe_name
                                 break
 
-                        if best_img_path:
-                            try:
-                                file_metadata = {"name": os.path.basename(best_img_path)}
-                                if parent_id:
-                                    file_metadata["parents"] = [parent_id]
-
-                                # Truyền đầy đủ tham số hỗ trợ Shared Drive (corpora, includeItemsFromAllDrives) để né quota của service account
-                                uploaded = drive_service.files().create(
-                                    body=file_metadata, 
-                                    media_body=MediaFileUpload(best_img_path, mimetype=mimetypes.guess_type(best_img_path)[0] or "image/png", resumable=True),
-                                    fields="id", 
-                                    supportsAllDrives=True
-                                ).execute()
-
-                                cloud_file_id = uploaded.get("id")
-
-                                try:
-                                    drive_service.permissions().create(
-                                        fileId=cloud_file_id, body={"type": "anyone", "role": "reader"}, supportsAllDrives=True
-                                    ).execute()
-                                except Exception:
-                                    pass
-
-                                direct_link = f"https://lh3.googleusercontent.com/d/{cloud_file_id}"
-                                worksheet.update_cell(row_num, link_anh_col_idx, direct_link)
-                                print(f"✅ [Khớp tọa độ] Gán link dòng {row_num} -> {direct_link}")
-                                thay_doi_count += 1
-                                matched = True
-                                break
-                            except Exception as e:
-                                print(f"❌ Lỗi upload ảnh dòng {row_num}: {e}")
-                                matched = True
-                                break
+                        if best_img_filename:
+                            direct_link = f"https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/{best_img_filename}"
+                            worksheet.update_cell(row_num, link_anh_col_idx, direct_link)
+                            print(f"✅ [GitHub Storage] Gán link dòng {row_num} -> {direct_link}")
+                            thay_doi_count += 1
+                            matched = True
+                            break
 
                     if matched:
                         break
@@ -270,7 +226,19 @@ def quet_drive_va_gan_anh():
         except Exception as e:
             print(f"Lỗi đọc file PDF {file_name}: {e}")
 
-    print(f"✨ Hoàn tất! Đã ghép nối và cập nhật chính xác {thay_doi_count} hình ảnh vào bảng.")
+    if thay_doi_count > 0:
+        try:
+            print("Đang đồng bộ và đẩy hình ảnh lên kho GitHub...")
+            subprocess.run(["git", "config", "--global", "user.name", "agent-bot"], check=True)
+            subprocess.run(["git", "config", "--global", "user.email", "agent-bot@users.noreply.github.com"], check=True)
+            subprocess.run(["git", "add", "images/"], check=True)
+            subprocess.run(["git", "commit", "-m", f"Auto-update extracted physics question images ({thay_doi_count} images)"], check=True)
+            subprocess.run(["git", "push"], check=True)
+            print("✨ Đã đẩy ảnh lên GitHub thành công tuyệt đối!")
+        except Exception as e:
+            print(f"⚠️ Lưu ý khi push Git: {e}")
+
+    print(f"✨ Hoàn tất! Đã cập nhật chính xác {thay_doi_count} hình ảnh vào bảng.")
 
 if __name__ == "__main__":
     quet_drive_va_gan_anh()
