@@ -4,7 +4,7 @@ import io
 import gspread
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseDownload
+from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
 import fitz  # PyMuPDF để trích xuất ảnh trực tiếp từ PDF trên mây
 
 SCOPES = [
@@ -37,7 +37,7 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None, credentials_path="cred
     print("Đang quét các tệp PDF trên Google Drive...")
     results = drive_service.files().list(q=query, pageSize=100, fields="files(id, name)").execute()
     files = results.get('files', [])
-    print(f"Tìm thấy {len(files)} file PDF trên Google Drive của thầy.")
+    print(f"Tìm thấy {len(files)} file PDF trên Google Drive.")
 
     danh_sach_anh = []
     
@@ -76,36 +76,62 @@ def quet_drive_va_gan_anh(sheet_id, drive_folder_id=None, credentials_path="cred
 
     print(f"🎉 Đã trích xuất tổng cộng {len(danh_sach_anh)} hình ảnh từ toàn bộ tài liệu trên Drive.")
 
-    # Khớp nối hình ảnh với các câu hỏi cũ cần gắn bù trong Google Sheet
+    # Khớp nối hình ảnh, upload lên Drive và gán link trực tiếp vào cột "Link Ảnh"
     anh_idx = 0
     thay_doi_count = 0
+    
+    # Lấy tiêu đề cột để xác định đúng vị trí cột "Link Ảnh"
+    header_row = worksheet.row_values(1)
+    link_anh_col_idx = None
+    for idx, title in enumerate(header_row, start=1):
+        if "link ảnh" in str(title).strip().lower():
+            link_anh_col_idx = idx
+            break
+            
+    if not link_anh_col_idx:
+        print("⚠️ Không tìm thấy cột 'Link Ảnh' trên Sheet. Đang tự động thêm vào cột cuối...")
+        link_anh_col_idx = len(header_row) + 1
+        worksheet.update_cell(1, link_anh_col_idx, "Link Ảnh")
+
     for index, row in enumerate(data, start=2):
         noi_dung = str(row.get("Nội dung", ""))
-        ghi_chu = str(row.get("Ghi chú", ""))
         
-        has_hinh_placeholder = bool(re.search(r"\[(Hình|Đồ thị|Mạch điện|Sơ đồ)", noi_dung, re.IGNORECASE))
+        # Biểu thức chính quy chuẩn xác tìm thẻ [Hình: ...], [Đồ thị: ...], v.v.
+        has_hinh_placeholder = bool(re.search(r"\[(Hình|Đồ thị|Mạch điện|Sơ đồ)[^\]]*\]", noi_dung, re.IGNORECASE))
         
         if has_hinh_placeholder and anh_idx < len(danh_sach_anh):
-            ten_anh = os.path.basename(danh_sach_anh[anh_idx])
-            moi_ghi_chu = f"{ghi_chu} | [Drive: {ten_anh}]".strip(" |")
+            local_img_path = danh_sach_anh[anh_idx]
+            img_file_name = os.path.basename(local_img_path)
             
             try:
-                cell_list = worksheet.findall("Ghi chú")
-                if cell_list:
-                    col_num = cell_list[0].col
-                    worksheet.update_cell(index, col_num, moi_ghi_chu)
-                    print(f"Gán thành công ảnh cho dòng {index} -> {ten_anh}")
-                    thay_doi_count += 1
-                    anh_idx += 1
+                # Upload ảnh đã cắt lên Google Drive
+                file_metadata = {
+                    'name': img_file_name,
+                    'parents': [drive_folder_id] if drive_folder_id else []
+                }
+                media = MediaFileUpload(local_img_path, mimetype='image/png', resumable=True)
+                uploaded_file = drive_service.files().create(
+                    body=file_metadata, 
+                    media_body=media, 
+                    fields='id'
+                ).execute()
+                
+                cloud_file_id = uploaded_file.get('id')
+                # Tạo link ảnh trực tiếp dạng nhúng để web hiển thị mượt mà
+                direct_img_link = f"https://lh3.googleusercontent.com/d/{cloud_file_id}"
+                
+                # Cập nhật link vào đúng cột "Link Ảnh" của dòng tương ứng
+                worksheet.update_cell(index, link_anh_col_idx, direct_img_link)
+                print(f"✅ Đã upload và gán link ảnh cho dòng {index} -> {direct_img_link}")
+                thay_doi_count += 1
+                anh_idx += 1
             except Exception as e:
-                print(f"Lỗi cập nhật dòng {index}: {e}")
+                print(f"❌ Lỗi xử lý/upload ảnh dòng {index}: {e}")
 
-    print(f"✨ Hoàn tất quét bù! Đã cập nhật thành công hình ảnh cho {thay_doi_count} câu hỏi cũ từ Google Drive.")
+    print(f"✨ Hoàn tất quét bù! Đã cập nhật thành công hình ảnh cho {thay_doi_count} câu hỏi từ Google Drive.")
 
 if __name__ == "__main__":
     SHEET_ID = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
-    # Nếu thầy muốn quét toàn bộ Drive, cứ để trống (None). 
-    # Nếu chỉ muốn quét một thư mục cụ thể trên Drive, thầy dán ID của thư mục đó vào trong dấu ngoặc kép.
     DRIVE_FOLDER_ID = None 
     
     quet_drive_va_gan_anh(SHEET_ID, DRIVE_FOLDER_ID)
