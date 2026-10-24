@@ -1,5 +1,3 @@
-# .github/workflows/duyet_cau.yml – XƯỞNG DUYỆT CÂU 5 TẦNG (thay duyetCauTuDong của Kho chung)
-# 23h47 và 3h47 giờ Việt Nam (16h47, 20h47 UTC) – sau lượt đọc đề 22h17; bấm tay: Actions → duyet_cau → Run workflow.
 name: duyet_cau
 on:
   schedule:
@@ -24,7 +22,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -q -r requirements-duyet.txt
+      - run: pip install -q -r requirements.txt
       - name: Duyệt câu 5 tầng
         env:
           PYTHONUNBUFFERED: "1"
