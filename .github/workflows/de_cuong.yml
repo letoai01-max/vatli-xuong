@@ -1,37 +1,21 @@
-# .github/workflows/de_cuong.yml – XƯỞNG SOẠN ĐỀ CƯƠNG (bước 1–5 của DeCuongOnTap.gs)
-# Apps Script tự gọi khi có đề cương CHỜ XỬ LÝ; không có lịch chạy định kì.
-name: de_cuong
+# Cấu hình GitHub Actions chạy script quét bù hình ảnh
+name: run-image-scanner
+
 on:
   workflow_dispatch:
-    inputs:
-      ma:
-        description: "Mã đề cương"
-        required: true
-      goi:
-        description: "ID tệp gói việc (goi_<mã>.json)"
-        required: true
-      ket_qua:
-        description: "ID tệp kết quả (ket_qua_<mã>.json)"
-        required: true
-concurrency:
-  group: de_cuong-${{ inputs.ma }}
-  cancel-in-progress: false
+
 jobs:
-  soan:
+  run:
     runs-on: ubuntu-latest
-    timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -q -r requirements-decuong.txt
-      - name: Soạn đề cương bước 1–5 + kiểm tra đáp số bằng sympy
+      - run: pip install -q -r requirements.txt
+      
+      - name: Chạy script quet bu hinh anh tu Google Drive
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
-          GOI_ID: ${{ inputs.goi }}
-          KQ_ID: ${{ inputs.ket_qua }}
-        run: python de_cuong.py
+        run: python quet_bu_hinh_anh.py
