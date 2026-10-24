@@ -1,22 +1,31 @@
 {
   "METADATA": {
     "ten_trung_tam": "Trung tâm điều phối tự động Xưởng Vật lí",
-    "mo_ta": "Nơi quản lý toàn bộ tham số động, phân bổ API và ánh xạ giao diện"
+    "mo_ta": "Quản lý thông số động, điều phối API và tự sửa lỗi giao diện cột"
   },
   "HE_THONG_API": {
-    "uu_tien_su_dung": ["GEMINI_API_KEY_TRA_PHI", "GEMINI_API_KEY"],
+    "uu_tien_su_dung": [
+      "GEMINI_API_KEY_TRA_PHI",
+      "GEMINI_API_KEY",
+      "GEMINI_API_KEY_2",
+      "GEMINI_API_KEY_3"
+    ],
+    "toi_da_luot_tra_phi": 40,
     "che_do_fallback": true
   },
   "SHEET_CONFIG": {
     "SHEET_ID": "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc",
+    "ID_BANG_DOWNLOAD": "1gL1q0LnOR4Ylr7ae-n-a20GBbo5nPkidrdEOnCZttio",
     "DRIVE_FOLDER_ID": null,
     "tab_chap_nhan": ["nganhang", "khochung", "cauhoid", "câu hỏi"]
   },
   "GIAO_DIEN_COT": {
-    "cot_noi_dung_index": 2,
+    "cot_noi_dung_index": 7,
+    "cot_phuong_an_index": 8,
     "cot_link_anh_index": null,
     "tu_khoa_nhan_dien_cot": {
       "noi_dung": ["nội dung", "noi dung", "câu hỏi", "cau hoi", "đề bài"],
+      "phuong_an": ["phương án", "phuong an"],
       "link_anh": ["link ảnh", "link anh", "hình ảnh"]
     }
   },
@@ -31,5 +40,13 @@
       "(đồ\\s+thị|mạch\\s+điện|sơ\\s+đồ)\\s+(như\\s+)?hình",
       "\\bHình\\s+\\d+"
     ]
+  },
+  "DINH_DANG_NGHI_DINH_30": {
+    "font_chu": "Times New Roman",
+    "co_chu_noi_dung": 13,
+    "le_tren_cm": 2.0,
+    "le_duoi_cm": 2.0,
+    "le_trai_cm": 3.0,
+    "le_phai_cm": 1.5
   }
 }
