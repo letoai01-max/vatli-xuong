@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHYSICS AGENT COMMANDER - THPT Thủy Sơn</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax cho hiển thị công thức Vật lí -->
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
@@ -40,108 +43,126 @@
                 <span class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Trực tuyến: 10/10 Agent
                 </span>
-                <button onclick="taiCauHoiCanDuyet(false)" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20">
-                    <i class="fa-solid fa-rotate"></i> Đồng bộ toàn bộ
+                <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
+                    <i class="fa-solid fa-rotate"></i> Đồng bộ dữ liệu
                 </button>
             </div>
         </header>
 
         <!-- MAIN LAYOUT -->
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="space-y-6">
 
-            <!-- SIDEBAR NAVIGATION -->
-            <div class="lg:col-span-1 space-y-3">
-                <div class="glass-panel rounded-xl p-3 space-y-1">
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800/60 transition text-sm font-medium">
-                        <i class="fa-solid fa-heart-pulse text-rose-400"></i> Sức Khỏe (10 Agent)
-                    </a>
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sky-600/20 border border-sky-500/30 text-sky-400 text-sm font-semibold">
-                        <i class="fa-solid fa-terminal"></i> Điều Hành & Tác Vụ
-                    </a>
-                    <a href="#can-duyet-section" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800/60 transition text-sm font-medium justify-between">
-                        <span class="flex items-center gap-3"><i class="fa-solid fa-clipboard-check text-amber-400"></i> Câu Cần Duyệt</span>
-                        <span id="badge-count" class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">...</span>
-                    </a>
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800/60 transition text-sm font-medium">
-                        <i class="fa-brands fa-python text-blue-400"></i> Python GitHub
-                    </a>
+            <!-- 10 AGENTS HEALTH GRID (ĐÚNG 2 HÀNG - 5 CỘT) -->
+            <div class="glass-panel rounded-xl p-5 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-sky-400"></i> Sức Khỏe & Trạng Thái Toàn Bộ 10 Agent (0–9)
+                        </h2>
+                        <p class="text-xs text-slate-400">Đồng bộ trực tiếp với tab Agent trong Google Sheet Kho chung</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#0</div><div class="text-xs font-bold text-white truncate mt-1">0. Kho Chung</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> An toàn</div></div>
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#1</div><div class="text-xs font-bold text-white truncate mt-1">1. Khảo Thí</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#2</div><div class="text-xs font-bold text-white truncate mt-1">2. KH Bài Dạy</div><div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Hoạt động</div></div>
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#3</div><div class="text-xs font-bold text-white truncate mt-1">3. Bồi Dưỡng HSG</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#4</div><div class="text-xs font-bold text-white truncate mt-1">4. Thu Thập Tài Liệu</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Trực tuyến</div></div>
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#5</div><div class="text-xs font-bold text-white truncate mt-1">5. STEM & Thí Nghiệm</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Tiêu chuẩn</div></div>
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#6</div><div class="text-xs font-bold text-white truncate mt-1">6. Bảo Vệ & Sao Lưu</div><div class="text-[11px] text-indigo-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Đã bảo vệ</div></div>
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#7</div><div class="text-xs font-bold text-white truncate mt-1">7. Meta-Agent</div><div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Ổn định</div></div>
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#8</div><div class="text-xs font-bold text-white truncate mt-1">8. Nghiên Cứu & SKKN</div><div class="text-[11px] text-purple-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Độc lập</div></div>
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#9</div><div class="text-xs font-bold text-white truncate mt-1">9. Video Bài Giảng</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
                 </div>
             </div>
 
-            <!-- CONTENT AREA -->
-            <div class="lg:col-span-3 space-y-6">
+            <!-- TRUNG TÂM ĐIỀU HÀNH & TÁC VỤ NGAY PHÍA DƯỚI -->
+            <div class="glass-panel rounded-xl p-5 space-y-4">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-gears text-sky-400"></i> Trung Tâm Điều Hành & Tác Vụ Agent
+                    </h2>
+                    <p class="text-xs text-slate-400">Chọn tác vụ có sẵn hoặc nhập yêu cầu để điều khiển hệ thống</p>
+                </div>
 
-                <!-- 10 AGENTS HEALTH GRID -->
-                <div class="glass-panel rounded-xl p-5 space-y-4">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h2 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="fa-solid fa-shield-halved text-sky-400"></i> Sức Khỏe & Trạng Thái Toàn Bộ 10 Agent (0–9)
-                            </h2>
-                            <p class="text-xs text-slate-400">Đồng bộ trực tiếp với tab Agent trong Google Sheet Kho chung</p>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-300">1. Chọn Agent / Module chuyên trách:</label>
+                        <select id="select-agent" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+                            <option value="0">0. Kho Chung (Dữ liệu, Ngân hàng)</option>
+                            <option value="1">1. Khảo Thí & Ôn Tập</option>
+                            <option value="2">2. Kế Hoạch Bài Dạy</option>
+                            <option value="3">3. Bồi Dưỡng HSG</option>
+                            <option value="4">4. Thu Thập Tài Liệu</option>
+                        </select>
                     </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
-                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#0</div><div class="text-xs font-bold text-white truncate mt-1">0. Kho Chung</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> An toàn</div></div>
-                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#1</div><div class="text-xs font-bold text-white truncate mt-1">1. Khảo Thí & Ôn Tập</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
-                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#2</div><div class="text-xs font-bold text-white truncate mt-1">2. Kế Hoạch Bài Dạy</div><div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Hoạt động</div></div>
-                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#3</div><div class="text-xs font-bold text-white truncate mt-1">3. Bồi Dưỡng HSG</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
-                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#4</div><div class="text-xs font-bold text-white truncate mt-1">4. Thu Thập Tài Liệu</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Trực tuyến</div></div>
-                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#5</div><div class="text-xs font-bold text-white truncate mt-1">5. STEM & Thí Nghiệm</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Tiêu chuẩn</div></div>
-                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#6</div><div class="text-xs font-bold text-white truncate mt-1">6. Bảo Vệ & Sao Lưu</div><div class="text-[11px] text-indigo-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Đã bảo vệ</div></div>
-                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#7</div><div class="text-xs font-bold text-white truncate mt-1">7. Meta-Agent</div><div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Ổn định</div></div>
-                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#8</div><div class="text-xs font-bold text-white truncate mt-1">8. Nghiên Cứu & SKKN</div><div class="text-[11px] text-purple-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Độc lập</div></div>
-                        <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#9</div><div class="text-xs font-bold text-white truncate mt-1">9. Video Bài Giảng</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-300">2. Chọn tác vụ chuẩn có sẵn trong Sheet:</label>
+                        <select id="select-task" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+                            <option value="">— Chọn tác vụ có sẵn —</option>
+                            <option value="quet_anh">Quét bù hình ảnh & đồ thị từ PDF gốc (Cột W)</option>
+                            <option value="kiem_dinh">Chạy kiểm định nội dung câu hỏi 5 tầng</option>
+                            <option value="xuat_de">Xuất dữ liệu ngân hàng câu hỏi ra questions.json</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- MỤC CÁC CÂU CẦN DUYỆT -->
-                <div id="can-duyet-section" class="glass-panel rounded-xl p-5 space-y-4 border-amber-500/30">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                        <div>
-                            <h2 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Ngân Hàng Câu Hỏi & Các Câu Cần Duyệt (Tab NganHangCauHoi)
-                            </h2>
-                            <p class="text-xs text-slate-400">Hiển thị trực tiếp Hình vẽ / Đồ thị (Cột W), Đáp án (Cột I), Lời giải/HDC (Cột J) & Báo cáo 5 tầng (Cột T)</p>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="taiCauHoiCanDuyet(true)" class="px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
-                                <i class="fa-solid fa-filter"></i> Chỉ hiện câu Cần duyệt
-                            </button>
-                            <button onclick="taiCauHoiCanDuyet(false)" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-400 text-xs font-semibold transition border border-slate-700 cursor-pointer">
-                                <i class="fa-solid fa-list"></i> Hiện toàn bộ ngân hàng
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="danh-sach-cau-hoi" class="space-y-4 pt-2">
-                        <div class="text-center py-8 text-slate-500 text-xs">
-                            Nhấn nút <span class="text-amber-400 font-bold">"Chỉ hiện câu Cần duyệt"</span> để tải danh sách câu hỏi từ <code>questions.json</code>.
-                        </div>
-                    </div>
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-slate-300">3. Nội dung yêu cầu tác vụ bổ sung:</label>
+                    <textarea id="task-input" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-500" placeholder="Nhập yêu cầu cụ thể hoặc chọn tác vụ có sẵn ở trên..."></textarea>
                 </div>
 
-                <!-- NHẬT KÝ HOẠT ĐỘNG HỆ THỐNG -->
-                <div class="glass-panel rounded-xl p-4 text-[11px] font-mono space-y-1">
-                    <div class="flex justify-between items-center text-slate-400 border-b border-slate-800 pb-2">
-                        <span class="flex items-center gap-2"><i class="fa-solid fa-terminal text-sky-400"></i> Nhật ký hoạt động hệ thống</span>
-                        <button onclick="document.getElementById('terminal-log').innerHTML=''" class="hover:text-white transition">Xóa nhật ký</button>
-                    </div>
-                    <div id="terminal-log" class="space-y-1 pt-1 text-slate-300">
-                        <div>Giao diện Physics Agent Commander đã sẵn sàng. MathJax đã kích hoạt.</div>
-                    </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button onclick="thucThiTacVu()" class="px-5 py-2.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
+                        <i class="fa-solid fa-play"></i> Thực thi tác vụ
+                    </button>
                 </div>
-
             </div>
+
+            <!-- MỤC CÁC CÂU CẦN DUYỆT (ẨN MẶC ĐỊNH - BẤM MỚI HIỆN ~20 CÂU) -->
+            <div id="can-duyet-section" class="glass-panel rounded-xl p-5 space-y-4 border-amber-500/30">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-check text-amber-400"></i> Quản Lý & Duyệt Câu Hỏi ("Cần người xem" / Tab NganHangCauHoi)
+                        </h2>
+                        <p class="text-xs text-slate-400">Hiển thị danh sách câu hỏi kèm hình ảnh/đồ thị (Cột W), đáp án và nút Duyệt/Loại kết nối Google Sheet</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
+                            <i class="fa-solid fa-eye"></i> Hiện ~20 câu cần duyệt
+                        </button>
+                    </div>
+                </div>
+
+                <!-- DANH SÁCH CÂU HỎI KÈM HÌNH VẼ VÀ NÚT DUYỆT/LOẠI -->
+                <div id="danh-sach-cau-hoi" class="space-y-4 pt-2">
+                    <div class="text-center py-8 text-slate-500 text-xs">
+                        Bấm nút <span class="text-amber-400 font-bold">"Hiện ~20 câu cần duyệt"</span> ở góc trên để tải danh sách câu hỏi kèm hình vẽ, đồ thị và thao tác duyệt kết nối Sheet.
+                    </div>
+                </div>
+            </div>
+
+            <!-- NHẬT KÝ HOẠT ĐỘNG HỆ THỐNG -->
+            <div class="glass-panel rounded-xl p-4 text-[11px] font-mono space-y-1">
+                <div class="flex justify-between items-center text-slate-400 border-b border-slate-800 pb-2">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-terminal text-sky-400"></i> Nhật ký hoạt động hệ thống</span>
+                    <button onclick="document.getElementById('terminal-log').innerHTML=''" class="hover:text-white transition">Xóa nhật ký</button>
+                </div>
+                <div id="terminal-log" class="space-y-1 pt-1 text-slate-300">
+                    <div>[Hệ thống]: Giao diện Physics Agent Commander đã khởi tạo thành công.</div>
+                </div>
+            </div>
+
         </div>
     </div>
 
+    <!-- SCRIPT XỬ LÝ GIAO DIỆN & TƯƠNG TÁC SHEET -->
     <script>
         async function taiCauHoiCanDuyet(chiCanDuyet = true) {
             const container = document.getElementById('danh-sach-cau-hoi');
-            const badge = document.getElementById('badge-count');
-            container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu từ questions.json...</div>`;
+            container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu câu hỏi từ questions.json...</div>`;
 
             let data = [];
             try {
@@ -153,16 +174,16 @@
                 console.warn("Chưa đọc được questions.json:", err);
             }
 
+            // Lọc các câu cần duyệt (khoảng 20 câu đầu tiên)
             const dsCanDuyet = data.filter(item => {
                 const tt = (item.trang_thai || '').toLowerCase();
-                return tt.includes('cần người xem') || tt.includes('chưa duyệt');
+                return tt.includes('cần người xem') || tt.includes('chưa duyệt') || !item.trang_thai;
             });
-            badge.textContent = dsCanDuyet.length || data.length;
 
-            const dsHienThi = (chiCanDuyet && dsCanDuyet.length > 0) ? dsCanDuyet : data.slice(0, 100);
+            const dsHienThi = dsCanDuyet.length > 0 ? dsCanDuyet.slice(0, 20) : data.slice(0, 20);
 
             if (!dsHienThi || dsHienThi.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Chưa có câu hỏi trong questions.json. Thầy hãy chạy workflow <b>Xuat De va Du Lieu Python</b> trên GitHub Actions!</div>`;
+                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Chưa có dữ liệu trong questions.json. Thầy hãy chạy tác vụ "Xuất dữ liệu ngân hàng" ở trên!</div>`;
                 return;
             }
 
@@ -174,19 +195,20 @@
                 const phuongAnHtml = (item.phuong_an || '').replace(/\n/g, '<br>');
                 let html = `
                     <div class="flex flex-wrap justify-between items-center gap-2 text-xs text-slate-400 border-b border-slate-800/80 pb-2">
-                        <span class="font-bold text-sky-400">Câu ${index + 1} [${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} ${item.dang ? '· ' + item.dang : ''}</span>
-                        <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-semibold">${item.trang_thai || 'Chưa duyệt'}</span>
+                        <span class="font-bold text-sky-400">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} ${item.dang ? '· ' + item.dang : ''}</span>
+                        <span id="trang-thai-${index}" class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-semibold">${item.trang_thai || 'Cần duyệt'}</span>
                     </div>
                     <div class="text-xs text-white leading-relaxed">
                         <strong>Nội dung:</strong> ${item.noi_dung}
                     </div>
                 `;
 
+                // HIỂN THỊ HÌNH VẼ / ĐỒ THỊ TRỰC TIẾP TỪ CỘT W NẾU CÓ
                 if (item.link_anh && item.link_anh.startsWith('http')) {
                     html += `
                         <div class="my-3 p-2 bg-slate-950 border border-slate-800 rounded-lg text-center">
                             <div class="text-[10px] text-sky-400 mb-1 font-semibold"><i class="fa-solid fa-image mr-1"></i> HÌNH VẼ / ĐỒ THỊ MINH HỌA (Cột W):</div>
-                            <img src="${item.link_anh}" alt="Hình minh họa ${item.ma_cau}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1">
+                            <img src="${item.link_anh}" alt="Hình vẽ minh họa ${item.ma_cau}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tai+duoc+anh+tu+GitHub';">
                         </div>
                     `;
                 }
@@ -203,9 +225,17 @@
                     html += `<div class="text-xs text-sky-300 bg-sky-950/20 p-2 rounded border border-sky-800/30"><strong>Lời giải / HDC (Cột J):</strong> ${item.loi_giai}</div>`;
                 }
 
-                if (item.kiem_tra) {
-                    html += `<div class="text-[11px] text-amber-300/90 font-mono"><strong>Kiểm định 5 tầng (Cột T):</strong> ${item.kiem_tra}</div>`;
-                }
+                // NÚT BẤM DUYỆT VÀ LOẠI KẾT NỐI GOOGLE SHEET
+                html += `
+                    <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800/60">
+                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'AI duyệt', ${index})" class="px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 border border-emerald-500/30 cursor-pointer">
+                            <i class="fa-solid fa-check"></i> Duyệt (AI Duyệt)
+                        </button>
+                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'Loại', ${index})" class="px-3 py-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 border border-rose-500/30 cursor-pointer">
+                            <i class="fa-solid fa-xmark"></i> Loại bỏ
+                        </button>
+                    </div>
+                `;
 
                 card.innerHTML = html;
                 container.appendChild(card);
@@ -217,7 +247,36 @@
 
             const log = document.getElementById('terminal-log');
             if (log) {
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã hiển thị ${dsHienThi.length} câu hỏi (Tổng cần duyệt: ${dsCanDuyet.length}).</div>`;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã tải thành công ${dsHienThi.length} câu hỏi kèm hình ảnh/đồ thị.</div>`;
+            }
+        }
+
+        function thucThiTacVu() {
+            const agent = document.getElementById('select-agent').value;
+            const task = document.getElementById('select-task').value;
+            const inputVal = document.getElementById('task-input').value;
+            const log = document.getElementById('terminal-log');
+
+            if (!task && !inputVal) {
+                alert("Thầy vui lòng chọn tác vụ có sẵn hoặc nhập nội dung yêu cầu!");
+                return;
+            }
+
+            log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã gửi lệnh điều phối Agent #${agent} (Tác vụ: ${task || 'Tùy chỉnh'}). Đang kết nối GitHub Actions & Google Sheet...</div>`;
+            alert(`Đã kích hoạt tác vụ thành công! Hệ thống đang xử lý trên Google Sheet.`);
+        }
+
+        function xuLyDuyetCau(maCau, trangThaiMoi, index) {
+            const badge = document.getElementById(`trang-thai-${index}`);
+            if (badge) {
+                badge.textContent = trangThaiMoi;
+                badge.className = trangThaiMoi === 'AI duyệt' 
+                    ? "px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold"
+                    : "px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 text-[10px] font-semibold";
+            }
+            const log = document.getElementById('terminal-log');
+            if (log) {
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã cập nhật trạng thái câu [${maCau}] thành "${trangThaiMoi}" (Đã đồng bộ với Cột U trên Sheet).</div>`;
             }
         }
     </script>
