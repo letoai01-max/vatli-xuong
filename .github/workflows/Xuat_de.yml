@@ -1,39 +1,31 @@
+# .github/workflows/Xuat_de.yml – XUẤT questions.json cho trang điều khiển (index.html)
+# 6h giờ Việt Nam (23h UTC) mỗi ngày, hoặc bấm tay.
+# SỬA 24/10: bỏ kích hoạt theo mỗi lần push (chạy thừa, lỗi đỏ liên tục); cấp quyền ghi kho;
+#            chỉ commit questions.json (xuat_de.py không tạo DeThi.docx).
 name: Xuat De va Du Lieu Python
-
 on:
+  schedule:
+    - cron: "0 23 * * *"
   workflow_dispatch:
-  push:
-    branches:
-      - main
-
+permissions:
+  contents: write
 jobs:
-  run-python-script:
+  xuat:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install gspread google-auth requests python-docx
-
-      # 👇 BƯỚC KHẮC PHỤC DỨT ĐIỂM: Tự tạo lại credentials.json từ GitHub Secrets 👇
-      - name: Tạo tệp credentials.json an toàn
-        run: |
-          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
-
-      - name: Run xuat_de.py
-        run: |
-          python xuat_de.py
-
-      - name: Commit and push generated files (questions.json)
-        uses: stefanzweifel/git-auto-commit-action@v4
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q gspread google-auth
+      - name: Xuất questions.json
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: python trung_tam.py xuat_de.py
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🤖 Tự động cập nhật questions.json từ GitHub Actions"
-          branch: main
+          commit_message: "🤖 Cập nhật questions.json"
+          file_pattern: questions.json
