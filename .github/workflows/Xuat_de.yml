@@ -1,7 +1,7 @@
 name: Xuat De va Du Lieu Python
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Cho phép bấm nút chạy thủ công trên tab Actions của GitHub
   push:
     branches:
       - main
@@ -26,11 +26,13 @@ jobs:
       - name: Run xuat_de.py
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
         run: |
           python xuat_de.py
 
-      - name: Commit and push generated files (questions.json)
+      - name: Commit and push generated files (questions.json, DeThi.docx, images)
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "🤖 Tự động cập nhật questions.json từ GitHub Actions"
+          commit_message: "🤖 Tự động cập nhật questions.json và DeThi.docx từ GitHub Actions"
           branch: main
+```[cite: 18]
