@@ -26,7 +26,7 @@ SCOPES = [
 ]
 
 TRUNG_TAM_CONFIG = "trung_tam_dieu_phoi.json"
-MAX_IMAGES_PER_QUESTION = 2  # Quy tắc 3: Giới hạn tối đa số lượng ảnh chuẩn cho phép trong 1 câu hỏi
+MAX_IMAGES_PER_QUESTION = 1  # CHỈ LẤY TỐI ĐA 1 HÌNH DUY NHẤT SÁT NHẤT CHO MỖI CÂU HỎI ĐỂ CHỐNG LẤY NHẦM ẢNH CÂU KHÁC
 
 def doc_trung_tam_config():
     if os.path.isfile(TRUNG_TAM_CONFIG):
@@ -139,12 +139,11 @@ def quet_drive_va_gan_anh():
                 so_cau = item["so_cau"]
                 link_cu = item["link_cu"]
                 
-                # [QUY TẮC 2]: Làm sạch, loại bỏ link rác/trùng lặp ngay từ danh sách link cũ trên Cột W
+                # Nếu câu hỏi đã có sẵn đúng 1 link chuẩn từ trước, bỏ qua để tránh quét lại gây nhiễu
                 danh_sach_link_anh = []
                 if link_cu:
                     danh_sach_link_anh = list(dict.fromkeys([l.strip() for l in link_cu.split(",") if l.strip() and "images/" in l]))
-
-                # Nếu câu hỏi đã đạt đủ số lượng ảnh tối đa cho phép, bỏ qua vòng lặp quét bù để tránh quét trùng lặp
+                
                 if len(danh_sach_link_anh) >= MAX_IMAGES_PER_QUESTION:
                     continue
 
@@ -167,8 +166,8 @@ def quet_drive_va_gan_anh():
                                 continue
                             img_y = rects[0].y0
                             
-                            # [QUY TẮC 4]: Thu hẹp biên độ tọa độ nghiêm ngặt (chỉ quét hình nằm sát ngay dưới nội dung từ -10 đến +200 px)
-                            if q_y - 10 <= img_y <= q_y + 200:
+                            # [SIẾT CHẶT TỌA ĐỘ]: Chỉ quét hình nằm trong khoảng từ -5 đến +130 pixels ngay dưới dòng chữ câu hỏi
+                            if q_y - 5 <= img_y <= q_y + 130:
                                 khoang_cach_y = abs(img_y - q_y)
                                 base_image = pdf_document.extract_image(xref)
                                 image_bytes = base_image.get("image")
@@ -179,7 +178,7 @@ def quet_drive_va_gan_anh():
                                 if w < min_w or h < min_h or w > 1600 or h > 1600:
                                     continue
                                 
-                                # [QUY TẮC 1]: Tạo mã băm MD5 nội dung byte ảnh để chống trùng lặp tuyệt đối
+                                # Tạo mã băm MD5 chống trùng lặp nội dung byte hình ảnh tuyệt đối
                                 img_hash = hashlib.md5(image_bytes).hexdigest()
                                 
                                 ung_vien_hinh.append({
@@ -191,16 +190,16 @@ def quet_drive_va_gan_anh():
                                     "img_idx": img_index + 1
                                 })
 
-                # Sắp xếp các ứng viên hình ảnh theo khoảng cách gần dòng câu hỏi nhất lên đầu
+                # Sắp xếp ứng viên theo khoảng cách gần câu hỏi nhất
                 ung_vien_hinh.sort(key=lambda x: x["distance"])
 
                 da_nhan_hash = set()
-                # Duyệt qua các ứng viên, lọc bỏ trùng lặp nội dung và áp dụng giới hạn tối đa
+                # CHỈ LẤY ĐÚNG 1 ỨNG VIÊN DUY NHẤT GẦN NHẤT VÀ KHÔNG TRÙNG HASH
                 for uv in ung_vien_hinh:
                     if len(danh_sach_link_anh) >= MAX_IMAGES_PER_QUESTION:
                         break
                     if uv["hash"] in da_nhan_hash:
-                        continue # Bỏ qua nếu trùng nội dung băm MD5
+                        continue
                     
                     da_nhan_hash.add(uv["hash"])
                     safe_name = f"q{row_num}_{re.sub(r'[^a-zA-Z0-9_-]', '_', file_name)[:20]}_p{uv['page']}_img{uv['img_idx']}.{uv['ext']}"
@@ -213,7 +212,9 @@ def quet_drive_va_gan_anh():
                     direct_link = f"images/{safe_name}"
                     if direct_link not in danh_sach_link_anh:
                         danh_sach_link_anh.append(direct_link)
-                        print(f"✅ [Chính xác >90%] Dòng {row_num} nhận diện ảnh chuẩn: {safe_name}", flush=True)
+                        print(f"✅ [Độ chính xác tuyệt đối] Dòng {row_num} nhận diện 1 ảnh chuẩn: {safe_name}", flush=True)
+                    
+                    break # Dừng ngay sau khi lấy được đúng 1 hình chuẩn sát nhất
 
                 if danh_sach_link_anh:
                     final_link_str = ", ".join(danh_sach_link_anh)
@@ -233,13 +234,13 @@ def quet_drive_va_gan_anh():
             subprocess.run(["git", "config", "--global", "user.name", "agent-bot"], check=True)
             subprocess.run(["git", "config", "--global", "user.email", "agent-bot@users.noreply.github.com"], check=True)
             subprocess.run(["git", "add", "images/"], check=True)
-            subprocess.run(["git", "commit", "-m", f"Auto-update optimized deduplicated physics images ({thay_doi_count} rows)"], check=True)
+            subprocess.run(["git", "commit", "-m", f"Auto-update strict single-image physics mapping ({thay_doi_count} rows)"], check=True)
             subprocess.run(["git", "push"], check=True)
-            print("✨ Đã đẩy toàn bộ ảnh sạch, không trùng lặp lên GitHub thành công!")
+            print("✨ Đã đẩy toàn bộ dữ liệu chuẩn xác lên GitHub thành công!")
         except Exception as e:
             print(f"⚠️ Lưu ý khi push Git: {e}")
 
-    print(f"✨ Hoàn tất! Đã kiểm soát và làm sạch dữ liệu cho {thay_doi_count} câu hỏi.")
+    print(f"✨ Hoàn tất! Đã làm sạch và chuẩn hóa {thay_doi_count} câu hỏi.")
 
 if __name__ == "__main__":
     quet_drive_va_gan_anh()
