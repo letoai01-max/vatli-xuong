@@ -117,7 +117,7 @@
                 </div>
             </div>
 
-            <!-- MỤC CÁC CÂU CẦN DUYỆT (GIAO DIỆN CHUẨN MẪU) -->
+            <!-- MỤC CÁC CÂU CẦN DUYỆT -->
             <div id="can-duyet-section" class="glass-panel rounded-xl p-5 space-y-4 border-amber-500/30">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
                     <div>
@@ -133,7 +133,7 @@
                     </div>
                 </div>
 
-                <!-- DANH SÁCH CÂU HỎI KÈM HÌNH VẼ VÀ TƯƠNG TÁC ĐÁP ÁN -->
+                <!-- DANH SÁCH CÂU HỎI -->
                 <div id="danh-sach-cau-hoi" class="space-y-4 pt-2">
                     <div class="text-center py-8 text-slate-500 text-xs">
                         Bấm nút <span class="text-amber-400 font-bold">"Hiện ~20 câu cần duyệt"</span> ở góc trên để tải danh sách câu hỏi.
@@ -375,10 +375,10 @@
                 // Nút duyệt / loại bỏ nằm ở góc phải dưới
                 html += `
                     <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-800/80">
-                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'Loại', ${index})" class="px-4 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-semibold transition flex items-center gap-2 border border-rose-500/30 cursor-pointer">
+                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'Loại', this)" class="px-4 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-semibold transition flex items-center gap-2 border border-rose-500/30 cursor-pointer">
                             <i class="fa-solid fa-xmark"></i> Loại bỏ
                         </button>
-                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'AI duyệt', ${index})" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer">
+                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'AI duyệt', this)" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer">
                             <i class="fa-solid fa-check"></i> Duyệt (AI Duyệt)
                         </button>
                     </div>
@@ -413,17 +413,21 @@
             alert(`Đã kích hoạt tác vụ chuyên sâu cho Agent thành công!`);
         }
 
-        function xuLyDuyetCau(maCau, trangThaiMoi, index) {
-            const badge = document.getElementById(`trang-thai-${index}`);
-            if (badge) {
-                badge.textContent = trangThaiMoi;
-                badge.className = trangThaiMoi === 'AI duyệt' 
-                    ? "px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20"
-                    : "px-3 py-1 rounded-lg bg-rose-500/10 text-rose-400 text-xs font-semibold border border-rose-500/20";
+        function xuLyDuyetCau(maCau, trangThaiMoi, buttonElement) {
+            // Tìm và xóa card câu hỏi hiện tại ngay khi bấm nút duyệt hoặc loại bỏ
+            const card = buttonElement.closest('.bg-slate-900');
+            if (card) {
+                card.style.transition = "all 0.3s ease";
+                card.style.opacity = "0";
+                card.style.transform = "translateY(-10px)";
+                setTimeout(() => {
+                    card.remove();
+                }, 300);
             }
+
             const log = document.getElementById('terminal-log');
             if (log) {
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã cập nhật trạng thái câu [${maCau}] thành "${trangThaiMoi}".</div>`;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã cập nhật trạng thái câu [${maCau}] thành "${trangThaiMoi}" và ẩn khỏi danh sách.</div>`;
             }
         }
     </script>
