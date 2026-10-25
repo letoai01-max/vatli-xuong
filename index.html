@@ -66,7 +66,7 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                     <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#0</div><div class="text-xs font-bold text-white truncate mt-1">0. Kho Chung</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> An toàn</div></div>
                     <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#1</div><div class="text-xs font-bold text-white truncate mt-1">1. Khảo Thí</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#2</div><div class="text-xs font-bold text-white truncate mt-1">2. KH Bài Dạy</div><div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Hoạt động</div></div>
+                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#2</div><div class="text-xs font-bold text-white truncate mt-1">2. Kế Hoạch Bài Dạy</div><div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Hoạt động</div></div>
                     <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#3</div><div class="text-xs font-bold text-white truncate mt-1">3. Bồi Dưỡng HSG</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
                     <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#4</div><div class="text-xs font-bold text-white truncate mt-1">4. Thu Thập Tài Liệu</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Trực tuyến</div></div>
                     <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#5</div><div class="text-xs font-bold text-white truncate mt-1">5. STEM & Thí Nghiệm</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Tiêu chuẩn</div></div>
@@ -83,7 +83,7 @@
                     <h2 class="text-base font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-gears text-sky-400"></i> Trung Tâm Điều Hành & Tác Vụ Agent
                     </h2>
-                    <p class="text-xs text-slate-400">Chọn tác vụ có sẵn hoặc nhập yêu cầu để điều khiển hệ thống</p>
+                    <p class="text-xs text-slate-400">Chọn tác vụ chuyên sâu theo từng Agent hoặc nhập yêu cầu để điều khiển hệ thống</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -92,7 +92,7 @@
                         <select id="select-agent" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
                             <option value="0">0. Kho Chung (Dữ liệu, Ngân hàng)</option>
                             <option value="1">1. Khảo Thí & Ôn Tập</option>
-                            <option value="2">2. Kế Hoạch Bài Dạy</option>
+                            <option value="2">2. Kế Hoạch Bài Dạy (CV 5512)</option>
                             <option value="3">3. Bồi Dưỡng HSG</option>
                             <option value="4">4. Thu Thập Tài Liệu</option>
                         </select>
@@ -100,10 +100,7 @@
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold text-slate-300">2. Chọn tác vụ chuẩn có sẵn trong Sheet:</label>
                         <select id="select-task" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
-                            <option value="">— Chọn tác vụ có sẵn —</option>
-                            <option value="quet_anh">Quét bù hình ảnh & đồ thị từ PDF gốc (Cột W)</option>
-                            <option value="kiem_dinh">Chạy kiểm định nội dung câu hỏi 5 tầng</option>
-                            <option value="xuat_de">Xuất dữ liệu ngân hàng câu hỏi ra questions.json</option>
+                            <option value="">— Chọn tác vụ chuyên sâu —</option>
                         </select>
                     </div>
                 </div>
@@ -160,6 +157,57 @@
 
     <!-- SCRIPT XỬ LÝ GIAO DIỆN & TƯƠNG TÁC SHEET -->
     <script>
+        // ĐỊNH NGHĨA DANH SÁCH TÁC VỤ CHUYÊN SUỐNG RIÊNG CHO TỪNG AGENT
+        const danhSachTacVuTheoAgent = {
+            "0": [ // 0. Kho Chung
+                { value: "quet_anh", label: "Quét bù hình ảnh & đồ thị từ PDF gốc (Cột W)" },
+                { value: "kiem_dinh", label: "Chạy kiểm định nội dung câu hỏi 5 tầng" },
+                { value: "xuat_de", label: "Xuất dữ liệu ngân hàng câu hỏi ra questions.json" }
+            ],
+            "1": [ // 1. Khảo Thí & Ôn Tập
+                { value: "tao_de_kiem_tra", label: "Tạo đề kiểm tra 15p / 45p theo ma trận chuẩn" },
+                { value: "tron_de_thi", label: "Trộn mã đề thi trắc nghiệm (Xáo trộn câu hỏi & đáp án)" },
+                { value: "thong_ke_diem", label: "Phân tích thống kê phổ điểm và độ khó câu hỏi" }
+            ],
+            "2": [ // 2. Kế Hoạch Bài Dạy (Theo CV 5512)
+                { value: "soan_giao_an_5512", label: "Soạn kế hoạch bài dạy (giáo án) chuẩn CV 5512" },
+                { value: "thiet_ke_hoat_dong", label: "Thiết kế chuỗi hoạt động học (Khởi động, Luyện tập...)" },
+                { value: "phieu_hoc_tap", label: "Tạo phiếu học tập & hệ thống câu hỏi thảo luận" }
+            ],
+            "3": [ // 3. Bồi Dưỡng HSG
+                { value: "chuyen_de_nang_cao", label: "Biên soạn chuyên đề Vật lí nâng cao (Thi học sinh giỏi)" },
+                { value: "giai_chi_tiet_hsg", label: "Giải chi tiết bài toán Vật lí chuyên sâu / Olympic" },
+                { value: "nguon_suy_luan_hsg", label: "Tuyển chọn hệ thống bài tập phân loại điểm 9-10" }
+            ],
+            "4": [ // 4. Thu Thập Tài Liệu
+                { value: "tai_tai_lieu_drive", label: "Đồng bộ và phân loại tài liệu mới từ Google Drive" },
+                { value: "chuan_hoa_van_ban", label: "Chuẩn hóa định dạng văn bản theo Nghị định 30" },
+                { value: "quet_metadata", label: "Quét và cập nhật metadata tệp nguồn vào Google Sheet" }
+            ]
+        };
+
+        // TỰ ĐỘNG CẬP NHẬT TÁC VỤ KHI THẦY ĐỔI AGENT
+        document.getElementById('select-agent').addEventListener('change', function() {
+            const agentId = this.value;
+            const taskSelect = document.getElementById('select-task');
+            
+            taskSelect.innerHTML = '<option value="">— Chọn tác vụ chuyên sâu —</option>';
+            
+            if (danhSachTacVuTheoAgent[agentId]) {
+                danhSachTacVuTheoAgent[agentId].forEach(task => {
+                    const opt = document.createElement('option');
+                    opt.value = task.value;
+                    opt.textContent = task.label;
+                    taskSelect.appendChild(opt);
+                });
+            }
+        });
+
+        // Kích hoạt chạy ngay khi tải trang để load đúng tác vụ của Agent đầu tiên
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('select-agent').dispatchEvent(new Event('change'));
+        });
+
         async function taiCauHoiCanDuyet(chiCanDuyet = true) {
             const container = document.getElementById('danh-sach-cau-hoi');
             container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu câu hỏi từ questions.json...</div>`;
@@ -174,7 +222,6 @@
                 console.warn("Chưa đọc được questions.json:", err);
             }
 
-            // Lọc các câu cần duyệt (khoảng 20 câu đầu tiên)
             const dsCanDuyet = data.filter(item => {
                 const tt = (item.trang_thai || '').toLowerCase();
                 return tt.includes('cần người xem') || tt.includes('chưa duyệt') || !item.trang_thai;
@@ -183,7 +230,7 @@
             const dsHienThi = dsCanDuyet.length > 0 ? dsCanDuyet.slice(0, 20) : data.slice(0, 20);
 
             if (!dsHienThi || dsHienThi.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Chưa có dữ liệu trong questions.json. Thầy hãy chạy tác vụ "Xuất dữ liệu ngân hàng" ở trên!</div>`;
+                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Chưa có dữ liệu trong questions.json. Thầy hãy chạy tác vụ xuất dữ liệu ở trên!</div>`;
                 return;
             }
 
@@ -203,13 +250,12 @@
                     </div>
                 `;
 
-                // HIỂN THỊ HÌNH VẼ / ĐỒ THỊ MINH HỌA CHUẨN XÁC (TỐI ĐA 1 HÌNH DUY NHẤT, KHÔNG TRÙNG LẶP)
                 if (item.link_anh && item.link_anh.trim() !== '') {
                     let rawLinks = item.link_anh.split(/[,;\s]+/).map(l => l.trim()).filter(l => l.length > 0 && l.includes('images/'));
                     let uniqueLinks = [...new Set(rawLinks)];
                     
                     if (uniqueLinks.length > 0) {
-                        let imgUrl = uniqueLinks[0]; // Lấy đúng hình chuẩn duy nhất
+                        let imgUrl = uniqueLinks[0];
                         if (!imgUrl.startsWith('http')) {
                             imgUrl = imgUrl.startsWith('images/') ? imgUrl : 'images/' + imgUrl;
                         } else {
@@ -238,7 +284,6 @@
                     html += `<div class="text-xs text-sky-300 bg-sky-950/20 p-2 rounded border border-sky-800/30"><strong>Lời giải / HDC (Cột J):</strong> ${item.loi_giai}</div>`;
                 }
 
-                // NÚT BẤM DUYỆT VÀ LOẠI KẾT NỐI GOOGLE SHEET
                 html += `
                     <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800/60">
                         <button onclick="xuLyDuyetCau('${item.ma_cau}', 'AI duyệt', ${index})" class="px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 border border-emerald-500/30 cursor-pointer">
@@ -271,12 +316,12 @@
             const log = document.getElementById('terminal-log');
 
             if (!task && !inputVal) {
-                alert("Thầy vui lòng chọn tác vụ có sẵn hoặc nhập nội dung yêu cầu!");
+                alert("Thầy vui lòng chọn tác vụ chuyên sâu hoặc nhập nội dung yêu cầu!");
                 return;
             }
 
-            log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã gửi lệnh điều phối Agent #${agent} (Tác vụ: ${task || 'Tùy chỉnh'}). Đang kết nối GitHub Actions & Google Sheet...</div>`;
-            alert(`Đã kích hoạt tác vụ thành công! Hệ thống đang xử lý trên Google Sheet.`);
+            log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã gửi lệnh điều phối Agent #${agent} (Tác vụ: ${task || 'Tùy chỉnh'}). Hệ thống đang thực thi...</div>`;
+            alert(`Đã kích hoạt tác vụ chuyên sâu cho Agent thành công!`);
         }
 
         function xuLyDuyetCau(maCau, trangThaiMoi, index) {
