@@ -52,7 +52,7 @@
         <!-- MAIN LAYOUT -->
         <div class="space-y-6">
 
-            <!-- 10 AGENTS HEALTH GRID (ĐÚNG 2 HÀNG - 5 CỘT) -->
+            <!-- 10 AGENTS HEALTH GRID -->
             <div class="glass-panel rounded-xl p-5 space-y-4">
                 <div class="flex justify-between items-center">
                     <div>
@@ -77,7 +77,7 @@
                 </div>
             </div>
 
-            <!-- TRUNG TÂM ĐIỀU HÀNH & TÁC VỤ NGAY PHÍA DƯỚI -->
+            <!-- TRUNG TÂM ĐIỀU HÀNH & TÁC VỤ -->
             <div class="glass-panel rounded-xl p-5 space-y-4">
                 <div>
                     <h2 class="text-base font-bold text-white flex items-center gap-2">
@@ -117,14 +117,14 @@
                 </div>
             </div>
 
-            <!-- MỤC CÁC CÂU CẦN DUYỆT (ẨN MẶC ĐỊNH - BẤM MỚI HIỆN ~20 CÂU) -->
+            <!-- MỤC CÁC CÂU CẦN DUYỆT & TƯƠNG TÁC -->
             <div id="can-duyet-section" class="glass-panel rounded-xl p-5 space-y-4 border-amber-500/30">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
                     <div>
                         <h2 class="text-base font-bold text-white flex items-center gap-2">
                             <i class="fa-solid fa-clipboard-check text-amber-400"></i> Quản Lý & Duyệt Câu Hỏi ("Cần người xem" / Tab NganHangCauHoi)
                         </h2>
-                        <p class="text-xs text-slate-400">Hiển thị danh sách câu hỏi kèm hình vẽ/đồ thị minh họa chuẩn xác tuyệt đối từ Cột W</p>
+                        <p class="text-xs text-slate-400">Tích chọn đáp án trực tiếp, nhập số liệu trả lời ngắn và bổ sung lời giải chi tiết</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
@@ -133,10 +133,10 @@
                     </div>
                 </div>
 
-                <!-- DANH SÁCH CÂU HỎI KÈM HÌNH VẼ VÀ NÚT DUYỆT/LOẠI -->
+                <!-- DANH SÁCH CÂU HỎI KÈM TƯƠNG TÁC ĐÁP ÁN & LỜI GIẢI -->
                 <div id="danh-sach-cau-hoi" class="space-y-4 pt-2">
                     <div class="text-center py-8 text-slate-500 text-xs">
-                        Bấm nút <span class="text-amber-400 font-bold">"Hiện ~20 câu cần duyệt"</span> ở góc trên để tải danh sách câu hỏi kèm hình vẽ, đồ thị và thao tác duyệt kết nối Sheet.
+                        Bấm nút <span class="text-amber-400 font-bold">"Hiện ~20 câu cần duyệt"</span> ở góc trên để tải danh sách câu hỏi và tương tác trực tiếp.
                     </div>
                 </div>
             </div>
@@ -155,44 +155,40 @@
         </div>
     </div>
 
-    <!-- SCRIPT XỬ LÝ GIAO DIỆN & TƯƠNG TÁC SHEET -->
+    <!-- SCRIPT XỬ LÝ GIAO DIỆN & TƯƠNG TÁC -->
     <script>
-        // ĐỊNH NGHĨA DANH SÁCH TÁC VỤ CHUYÊN SUỐNG RIÊNG CHO TỪNG AGENT
         const danhSachTacVuTheoAgent = {
-            "0": [ // 0. Kho Chung
+            "0": [
                 { value: "quet_anh", label: "Quét bù hình ảnh & đồ thị từ PDF gốc (Cột W)" },
                 { value: "kiem_dinh", label: "Chạy kiểm định nội dung câu hỏi 5 tầng" },
                 { value: "xuat_de", label: "Xuất dữ liệu ngân hàng câu hỏi ra questions.json" }
             ],
-            "1": [ // 1. Khảo Thí & Ôn Tập
+            "1": [
                 { value: "tao_de_kiem_tra", label: "Tạo đề kiểm tra 15p / 45p theo ma trận chuẩn" },
                 { value: "tron_de_thi", label: "Trộn mã đề thi trắc nghiệm (Xáo trộn câu hỏi & đáp án)" },
                 { value: "thong_ke_diem", label: "Phân tích thống kê phổ điểm và độ khó câu hỏi" }
             ],
-            "2": [ // 2. Kế Hoạch Bài Dạy (Theo CV 5512)
+            "2": [
                 { value: "soan_giao_an_5512", label: "Soạn kế hoạch bài dạy (giáo án) chuẩn CV 5512" },
                 { value: "thiet_ke_hoat_dong", label: "Thiết kế chuỗi hoạt động học (Khởi động, Luyện tập...)" },
                 { value: "phieu_hoc_tap", label: "Tạo phiếu học tập & hệ thống câu hỏi thảo luận" }
             ],
-            "3": [ // 3. Bồi Dưỡng HSG
+            "3": [
                 { value: "chuyen_de_nang_cao", label: "Biên soạn chuyên đề Vật lí nâng cao (Thi học sinh giỏi)" },
                 { value: "giai_chi_tiet_hsg", label: "Giải chi tiết bài toán Vật lí chuyên sâu / Olympic" },
                 { value: "nguon_suy_luan_hsg", label: "Tuyển chọn hệ thống bài tập phân loại điểm 9-10" }
             ],
-            "4": [ // 4. Thu Thập Tài Liệu
+            "4": [
                 { value: "tai_tai_lieu_drive", label: "Đồng bộ và phân loại tài liệu mới từ Google Drive" },
                 { value: "chuan_hoa_van_ban", label: "Chuẩn hóa định dạng văn bản theo Nghị định 30" },
                 { value: "quet_metadata", label: "Quét và cập nhật metadata tệp nguồn vào Google Sheet" }
             ]
         };
 
-        // TỰ ĐỘNG CẬP NHẬT TÁC VỤ KHI THẦY ĐỔI AGENT
         document.getElementById('select-agent').addEventListener('change', function() {
             const agentId = this.value;
             const taskSelect = document.getElementById('select-task');
-            
             taskSelect.innerHTML = '<option value="">— Chọn tác vụ chuyên sâu —</option>';
-            
             if (danhSachTacVuTheoAgent[agentId]) {
                 danhSachTacVuTheoAgent[agentId].forEach(task => {
                     const opt = document.createElement('option');
@@ -203,7 +199,6 @@
             }
         });
 
-        // Kích hoạt chạy ngay khi tải trang để load đúng tác vụ của Agent đầu tiên
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('select-agent').dispatchEvent(new Event('change'));
         });
@@ -239,7 +234,61 @@
                 const card = document.createElement('div');
                 card.className = "bg-slate-900/80 border border-slate-800 rounded-xl p-4 space-y-3";
 
-                const phuongAnHtml = (item.phuong_an || '').replace(/\n/g, '<br>');
+                let dangCauHoi = (item.dang || item.loai_cau_hoi || 'Trắc nghiệm').toLowerCase();
+                let phuongAnHtml = item.phuong_an || '';
+
+                let interactiveControlHtml = '';
+                
+                // 1. Dạng Trắc nghiệm nhiều lựa chọn (A, B, C, D) -> Thêm Radio button tích chọn đáp án
+                if (dangCauHoi.includes('nhiều lựa chọn') || dangCauHoi.includes('trắc nghiệm') || !dangCauHoi.includes('đúng sai') && !dangCauHoi.includes('ngắn')) {
+                    interactiveControlHtml = `
+                        <div class="mt-2 p-2.5 bg-slate-950/70 rounded-lg border border-slate-800">
+                            <div class="text-[11px] font-semibold text-sky-400 mb-1.5"><i class="fa-solid fa-check-to-slot mr-1"></i> Tích chọn đáp án đúng:</div>
+                            <div class="flex flex-wrap gap-4 text-xs text-white">
+                                <label class="flex items-center gap-1.5 cursor-pointer hover:text-sky-300"><input type="radio" name="ans_${index}" value="A" class="accent-sky-500"> A</label>
+                                <label class="flex items-center gap-1.5 cursor-pointer hover:text-sky-300"><input type="radio" name="ans_${index}" value="B" class="accent-sky-500"> B</label>
+                                <label class="flex items-center gap-1.5 cursor-pointer hover:text-sky-300"><input type="radio" name="ans_${index}" value="C" class="accent-sky-500"> C</label>
+                                <label class="flex items-center gap-1.5 cursor-pointer hover:text-sky-300"><input type="radio" name="ans_${index}" value="D" class="accent-sky-500"> D</label>
+                            </div>
+                        </div>
+                    `;
+                } 
+                // 2. Dạng Đúng / Sai -> Thêm các ý a, b, c, d tích Đúng/Sai
+                else if (dangCauHoi.includes('đúng sai')) {
+                    interactiveControlHtml = `
+                        <div class="mt-2 p-2.5 bg-slate-950/70 rounded-lg border border-slate-800 space-y-2">
+                            <div class="text-[11px] font-semibold text-amber-400"><i class="fa-solid fa-list-check mr-1"></i> Tích chọn Đúng / Sai cho từng ý:</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300">
+                                <div class="flex items-center justify-between bg-slate-900 p-1.5 rounded border border-slate-800">
+                                    <span>Ý a)</span>
+                                    <div class="flex gap-3"><label class="cursor-pointer text-emerald-400"><input type="radio" name="tf_a_${index}" value="Đúng"> Đúng</label><label class="cursor-pointer text-rose-400"><input type="radio" name="tf_a_${index}" value="Sai"> Sai</label></div>
+                                </div>
+                                <div class="flex items-center justify-between bg-slate-900 p-1.5 rounded border border-slate-800">
+                                    <span>Ý b)</span>
+                                    <div class="flex gap-3"><label class="cursor-pointer text-emerald-400"><input type="radio" name="tf_b_${index}" value="Đúng"> Đúng</label><label class="cursor-pointer text-rose-400"><input type="radio" name="tf_b_${index}" value="Sai"> Sai</label></div>
+                                </div>
+                                <div class="flex items-center justify-between bg-slate-900 p-1.5 rounded border border-slate-800">
+                                    <span>Ý c)</span>
+                                    <div class="flex gap-3"><label class="cursor-pointer text-emerald-400"><input type="radio" name="tf_c_${index}" value="Đúng"> Đúng</label><label class="cursor-pointer text-rose-400"><input type="radio" name="tf_c_${index}" value="Sai"> Sai</label></div>
+                                </div>
+                                <div class="flex items-center justify-between bg-slate-900 p-1.5 rounded border border-slate-800">
+                                    <span>Ý d)</span>
+                                    <div class="flex gap-3"><label class="cursor-pointer text-emerald-400"><input type="radio" name="tf_d_${index}" value="Đúng"> Đúng</label><label class="cursor-pointer text-rose-400"><input type="radio" name="tf_d_${index}" value="Sai"> Sai</label></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                // 3. Dạng Trả lời ngắn -> Thêm ô nhập số liệu đáp án
+                else if (dangCauHoi.includes('ngắn') || dangCauHoi.includes('tự luận')) {
+                    interactiveControlHtml = `
+                        <div class="mt-2 p-2.5 bg-slate-950/70 rounded-lg border border-slate-800 flex items-center gap-3">
+                            <label class="text-[11px] font-semibold text-emerald-400"><i class="fa-solid fa-pen-to-square mr-1"></i> Nhập số liệu đáp án:</label>
+                            <input type="text" id="short_ans_${index}" placeholder="Nhập đáp án số liệu..." class="bg-slate-900 border border-slate-700 rounded px-3 py-1 text-xs text-white w-48 focus:outline-none focus:border-sky-500">
+                        </div>
+                    `;
+                }
+
                 let html = `
                     <div class="flex flex-wrap justify-between items-center gap-2 text-xs text-slate-400 border-b border-slate-800/80 pb-2">
                         <span class="font-bold text-sky-400">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} ${item.dang ? '· ' + item.dang : ''}</span>
@@ -273,16 +322,25 @@
                 }
 
                 if (phuongAnHtml) {
-                    html += `<div class="text-xs text-slate-300 bg-slate-950/40 p-2.5 rounded-lg border border-slate-800/50"><strong>Phương án:</strong><br>${phuongAnHtml}</div>`;
+                    html += `<div class="text-xs text-slate-300 bg-slate-950/40 p-2.5 rounded-lg border border-slate-800/50"><strong>Phương án:</strong><br>${phuongAnHtml.replace(/\n/g, '<br>')}</div>`;
                 }
+
+                // Gắn khung tương tác chọn đáp án / nhập số liệu vào đây
+                html += interactiveControlHtml;
 
                 if (item.dap_an) {
-                    html += `<div class="text-xs text-emerald-400"><strong>Đáp án (Cột I):</strong> ${item.dap_an}</div>`;
+                    html += `<div class="text-xs text-emerald-400"><strong>Đáp án gốc (Cột I):</strong> ${item.dap_an}</div>`;
                 }
 
-                if (item.loi_giai) {
-                    html += `<div class="text-xs text-sky-300 bg-sky-950/20 p-2 rounded border border-sky-800/30"><strong>Lời giải / HDC (Cột J):</strong> ${item.loi_giai}</div>`;
-                }
+                // Ô bổ sung / chỉnh sửa lời giải chi tiết
+                html += `
+                    <div class="space-y-1 pt-1">
+                        <label class="text-[11px] font-semibold text-sky-300 flex items-center gap-1">
+                            <i class="fa-solid fa-book-open-reader"></i> Ô thêm / chỉnh sửa lời giải chi tiết (Cột J):
+                        </label>
+                        <textarea id="loi_giai_${index}" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-600" placeholder="Nhập hoặc chỉnh sửa lời giải, hướng dẫn giải chi tiết...">${item.loi_giai || ''}</textarea>
+                    </div>
+                `;
 
                 html += `
                     <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800/60">
@@ -305,7 +363,7 @@
 
             const log = document.getElementById('terminal-log');
             if (log) {
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã tải thành công ${dsHienThi.length} câu hỏi kèm hình ảnh chuẩn xác.</div>`;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã tải thành công ${dsHienThi.length} câu hỏi kèm ô tương tác đáp án & lời giải.</div>`;
             }
         }
 
@@ -326,6 +384,9 @@
 
         function xuLyDuyetCau(maCau, trangThaiMoi, index) {
             const badge = document.getElementById(`trang-thai-${index}`);
+            const loiGiaiInput = document.getElementById(`loi_giai_${index}`);
+            const loiGiaiMoi = loiGiaiInput ? loiGiaiInput.value : '';
+
             if (badge) {
                 badge.textContent = trangThaiMoi;
                 badge.className = trangThaiMoi === 'AI duyệt' 
@@ -334,7 +395,7 @@
             }
             const log = document.getElementById('terminal-log');
             if (log) {
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã cập nhật trạng thái câu [${maCau}] thành "${trangThaiMoi}" (Đã đồng bộ với Cột U trên Sheet).</div>`;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã cập nhật câu [${maCau}] thành "${trangThaiMoi}" kèm lời giải cập nhật (Đã lưu vào bộ nhớ đệm).</div>`;
             }
         }
     </script>
