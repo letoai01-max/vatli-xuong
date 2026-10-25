@@ -23,8 +23,8 @@ jobs:
           python-version: "3.11"
           cache: pip
 
-      - name: Install dependencies
-        run: pip install -q -r requirements.txt
+      - name: Install dependencies quickly
+        run: pip install --no-cache-dir gspread google-auth
 
       - name: Run xuat_de.py
         env:
@@ -33,9 +33,9 @@ jobs:
           SHEET_ID: ${{ secrets.SHEET_ID }}
         run: python trung_tam.py xuat_de.py
 
-      - name: Commit and push generated files (questions.json, DeThi.docx)
+      - name: Commit and push generated files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🤖 Tự động cập nhật questions.json và DeThi.docx từ Kho chung"
+          commit_message: "🤖 Tự động cập nhật questions.json tức thì"
           branch: main
           file_pattern: "questions.json DeThi.docx"
