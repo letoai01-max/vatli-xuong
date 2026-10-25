@@ -8199,120 +8199,12 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1vkHt0Ue-001",
-    "noi_dung": "Tại điểm S trên mặt nước yên tĩnh có nguồn dao động điều hoà theo phương thẳng đứng với tần số f. Khi đó trên mặt nước hình thành hệ sóng tròn đồng tâm S. Tại hai điểm M, N nằm cách nhau 5cm trên đường thẳng đi qua S luôn dao động ngược pha với nhau. Biết tốc độ truyền sóng trên mặt nước là 80cm/s và tần số của nguồn dao động thay đổi trong khoảng từ 48Hz đến 64Hz. Tần số dao động của nguồn là",
-    "phuong_an": "A. 64Hz.\nB. 48Hz.\nC. 54Hz.\nD. 56Hz.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-001",
-    "noi_dung": "chọn câu đúng.",
-    "phuong_an": "A. Sóng dọc là sóng truyền dọc theo một sợi dây.\nB. Sóng dọc là sóng truyền theo phương thẳng đứng, còn sóng ngang là sóng truyền theo phương nằm ngang.\nC. Sóng dọc là sóng trong đó phương dao động (của các phần tử của môi trường) trùng với phương truyền sóng.\nD. Sóng dọc là sóng truyền theo trục tung, còn sóng ngang là sóng truyền theo trục hoành.",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-002",
-    "noi_dung": "Trong sóng cơ, sóng dọc truyền được trong các môi trường.",
-    "phuong_an": "A. Rắn, lỏng và chân không.\nB. Rắn, lỏng, khí.\nC. Rắn, khí và chân không.\nD. Lỏng, khí và chân không.",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-003",
-    "noi_dung": "Khi nói về sóng, phát biểu nào dưới đây là sai?",
-    "phuong_an": "A. Sóng ngang là sóng mà phương dao động của các phần tử vật chất nơi sóng truyền qua vuông góc với phương truyền sóng.\nB. Khi sóng truyền đi, các phần tử vật chất nơi sóng truyền qua cùng truyền đi theo sóng.\nC. Sóng cơ không truyền được trong chân không.\nD. Sóng dọc là sóng mà phương dao động của các phần tử vật chất nơi sóng truyền qua trùng với phương truyền sóng.",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-004",
-    "noi_dung": "Khi nói về sóng phát biểu nào sau đây là sai?",
-    "phuong_an": "A. Quá trình truyền sóng cơ là quá trình truyền năng lượng.\nB. Sóng cơ lan truyền trên mặt nước là sóng ngang.\nC. Sóng âm truyền trong không khí là sóng dọc.\nD. Sóng cơ truyền được trong tất cả các môi trường rắn, lỏng, khí và chân không.",
-    "dap_an": "D",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-005",
-    "noi_dung": "Phát biểu nào sau đây là sai khi nói về về quá trình truyền sóng",
-    "phuong_an": "A. Quá trình truyền sóng là quá trình truyền dao động trong môi trường đàn hồi.\nB. Quá trình truyền sóng là quá trình truyền năng lượng.\nC. Quá trình truyền sóng là quá trình truyền pha dao động.\nD. Quá trình truyền sóng là quá trình truyền các phần tử vật chất.",
-    "dap_an": "D",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-006",
-    "noi_dung": "Sóng ngang truyền được trong các loại môi trường nào?",
-    "phuong_an": "A. Cả rắn, lỏng, khí.\nB. Chỉ truyền được trong chất rắn.\nC. Chỉ truyền được trong chất rắn và bề mặt chất lỏng.\nD. Truyền được trong môi trường rắn và lỏng.",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-007",
-    "noi_dung": "Chọn câu đúng",
-    "phuong_an": "A. Sóng dọc là sóng truyền dọc theo một sợi dây\nB. Sóng dọc là sóng truyền theo phương thẳng đứng, còn sóng ngang là sóng truyền theo phương nằm ngang\nC. Sóng dọc là sóng trong đó phương dao động (của các phần tử môi trường) trùng với phương truyền.\nD. Sóng ngang là sóng trong đó phương dao động (của các phần tử môi trường) trùng với phương truyền.",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-008",
-    "noi_dung": "Tìm phát biểu sai khi nói về sóng cơ.",
-    "phuong_an": "A. Bước sóng là khoảng cách giữa hai điểm gần nhau nhất trên cùng một phương truyền sóng dao động ngược pha nhau.\nB. Sóng trong đó các phần tử môi trường dao động theo phương trùng với phương truyền sóng được gọi là sóng dọc.\nC. Tại mỗi điểm của môi trường có sóng truyền qua, biên độ của sóng là biên độ dao động của phần tử môi trường.\nD. Sóng trong đó các phần tử môi trường dao động theo phương vuông góc với phương truyền sóng được gọi là sóng ngang.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-009",
-    "noi_dung": "Sóng cơ không truyền được trong:",
-    "phuong_an": "A. Chân không\nB. Không khí\nC. Nước\nD. Kim loại",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-010",
-    "noi_dung": "Phát biểu nào sau đây về sóng không đúng?",
-    "phuong_an": "A. Sóng là quá trình lan truyền dao động trong một môi trường liên tục.\nB. Sóng ngang là sóng có các phần tử dao động theo phương ngang.\nC. Sóng dọc là sóng có các phần tử dao động theo phương trùng với phương truyền sóng.\nD. Bước sóng là quãng đường sóng truyền đi được trong một chu kì.",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vGBq85h-011",
-    "noi_dung": "Cho mũi nhọn P chạm nước và dao động theo phương thẳng đứng để tạo sóng ngang trên mặt nước. Kết luận đúng:",
-    "phuong_an": "A. Khi có sóng truyền tới các phần tử nước dao động theo phương vuông góc với phương truyền sóng.\nB. Khi có sóng truyền tới miếng xốp trên mặt nước, miếng xốp bị đẩy đi xa theo chiều truyền.\nC. Khi có sóng truyền tới miếng xốp trên mặt nước, miếng xốp dao động xung quanh vị trí cân bằng theo phương vuông góc với phương thẳng đứng.\nD. Khi có sóng truyền tới, các phần tử nước không dao động mà đứng yên tại chỗ.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1vGBq85h-012",
     "noi_dung": "Hình dạng sóng truyền theo chiều dương trục Ox ở một thời điểm có dạng như hình vẽ, ngay sau thời điểm đó chiều chuyển động của các điểm A, B, C, D và E là [Hình: Đồ thị thể hiện hình dạng sóng hình sin trên trục Ox chứa các điểm A, B, C, D, E]",
     "phuong_an": "A. Điểm B, C và E đi xung còn A và D đi lên.\nB. Điểm A, B và E đi xuống còn điểm C và D đi lên.\nC. Điểm A và D đi xuống còn điểm B, C và E đi lên.\nD. Điểm C và D đi xuống và A, B và E đi lên.",
     "dap_an": "C",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1842_bt-Trac-nghiem-ly-th_p2_img1.jpeg"
   },
   {
@@ -8321,61 +8213,7 @@
     "phuong_an": "A. là hàm bậc hai của thời gian.\nB. biến thiên điều hòa theo thời gian.\nC. luôn có giá trị không đổi.\nD. luôn có giá trị dương.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1LCC-MU5-001",
-    "noi_dung": "Một người quan sát một chiếc phao trên mặt biển thấy nó nhô cao lên 5 lần trong 8 giây và thấy khoảng cách giữa 2 ngọn sóng kề nhau là 0,2m. Vận tốc truyền sóng biển bằng:",
-    "phuong_an": "A. 10cm/s.\nB. 20cm/s.\nC. 40cm/s.\nD. 60cm/s.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1LCC-MU5-002",
-    "noi_dung": "Tại một điểm trên mặt chất lỏng có một nguồn dao dộng với tần số 120Hz, tạo ra sóng ổn định trên mặt chất lỏng. Xét 5 gợn lồi liên tiếp trên một phương truyền sóng, ở về một phía so với nguồn, gợn thứ nhất cách gợn thứ năm 0,5m. Tốc độ truyền sóng là:",
-    "phuong_an": "A. 12m/s.\nB. 15m/s.\nC. 30m/s.\nD. 25m/s.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-001",
-    "noi_dung": "Khoảng thời gian để vật thực hiện đươc một dao động là",
-    "phuong_an": "A. chu kì dao động.\nB. tần số dao động.\nC. biên độ dao động.\nD. li độ dao động.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-002",
-    "noi_dung": "Dao động điều hòa là dao động tuần hoàn trong đó",
-    "phuong_an": "A. li độ dao động của vật là một hàm cosin (hay sin) theo thời gian.\nB. li độ dao động của vật là một hàm tan (hay cotan) theo thời gian.\nC. biên độ dao động của vật là một hàm cosin (hay sin) theo thời gian.\nD. biên độ dao động của vật là một hàm tan (hay cotan) theo thời gian.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-003",
-    "noi_dung": "Dao động nào sau đây là dao động tự do?",
-    "phuong_an": "A. dao động của con lắc lò xo khi không chịu tác dụng của ngoại lực.\nB. Dao động của con lắc đơn trong dầu nhớt.\nC. Dao động của lò xo giảm xóc.\nD. Dao động của cành cây đu đưa khi gió thổi.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-004",
-    "noi_dung": "Dao động của một chiếc xích đu trong không khí sau khi được kích thích là",
-    "phuong_an": "A. dao động tắt dần.\nB. dao động tuần hoàn.\nC. dao dộng cưỡng bức.\nD. dao động điều hòa.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8384,53 +8222,8 @@
     "phuong_an": "A. 10 rad/s.\nB. 10\\pi rad/s.\nC. 5\\pi rad/s.\nD. 5 rad/s.",
     "dap_an": "C",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1851_de-thi-hoc-ki-1-vat-_p3_img2.png"
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-006",
-    "noi_dung": "Một máy cơ khí khi hoạt động sẽ tạo ra những dao động được xem gần đúng là dao động điều hòa với phương trình li độ dạng: x = 3cos(160\\pi t) (mm). Vận tốc của vật dao động có phương trình:",
-    "phuong_an": "A. v = -480\\pi sin(160\\pi t)(mm/s).\nB. v = 480\\pi sin(160\\pi t)(mm/s).\nC. v = -480\\pi cos(160\\pi t)(mm/s).\nD. v = 480\\pi cos(160\\pi t)(mm/s).",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-007",
-    "noi_dung": "Ích lợi của hiện tượng cộng hưởng được ứng dụng trong trường hợp nào sau đây?",
-    "phuong_an": "A. Chế tạo tần số kế.\nB. Chế tạo bộ phận giảm xóc của ô tô, xe máy.\nC. Lắp đặt các động cơ điện trong nhà xưởng.\nD. Thiết kế các công trình ở những vùng thường có địa chấn.",
-    "dap_an": "D",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-008",
-    "noi_dung": "Bước sóng là khoảng cách giữa hai điểm",
-    "phuong_an": "A. gần nhau nhất mà dao động tại hai điểm đó cùng pha.\nB. trên cùng một phương truyền sóng mà dao động tại hai điểm đó ngược pha.\nC. trên cùng một phương truyền sóng mà dao động tại hai điểm đó cùng pha.\nD. gần nhau nhất trên cùng một phương truyền sóng mà chúng dao động cùng pha.",
-    "dap_an": "D",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-009",
-    "noi_dung": "Một sóng cơ có tần số f, truyền trên sợi dây đàn hồi với tốc độ truyền sóng v. Bước sóng trên dây được xác định bởi",
-    "phuong_an": "A. \\lambda = vf.\nB. \\lambda = \\frac{v}{f}.\nC. \\lambda = \\frac{f}{v}.\nD. \\lambda = 2\\pi fv.",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-010",
-    "noi_dung": "Chọn câu đúng.",
-    "phuong_an": "A. Sóng là dao động lan truyền trong không gian theo thời gian.\nB. Sóng là dao động của mọi điểm trong không gian theo thời gian.\nC. Sóng là một dạng chuyển động đặc biệt của môi trường.\nD. Sóng là sự truyền chuyển động của các phần tử trong không gian theo thời gian.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1eFa-NvW-011",
@@ -8438,53 +8231,8 @@
     "phuong_an": "A. 48 cm.\nB. 18 cm.\nC. 36 cm.\nD. 24 cm.",
     "dap_an": "A",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1857_de-thi-hoc-ki-1-vat-_p5_img2.png"
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-012",
-    "noi_dung": "Từ vị trí khởi nguồn của động đất (tâm chấn), các công trình, nhà của cách xa tâm chấn vẫn có thể bị ảnh hưởng là do",
-    "phuong_an": "A. sóng địa chấn đã truyền năng lượng tới các vị trí này.\nB. sức ép từ tấm chấn khiến các phần tử vật chất xung quanh chuyển động.\nC. các phần tử vật chất từ tâm chấn chuyển động đến vị trí đó.\nD. tốc độ lan truyền sóng địa chấn quá nhanh.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-013",
-    "noi_dung": "Một sóng âm lan truyền trong môi trường A với vận tốc vA, bước sóng \\lambdaA khi lan truyền trong môi trường B thì vận tốc là vB = 2vA. Bước sóng trong môi trường B là",
-    "phuong_an": "A. \\lambda_B = 2\\lambda_A.\nB. \\lambda_B = \\frac{\\lambda_A}{2}.\nC. \\lambda_B = \\lambda_A.\nD. \\lambda_B = 4\\lambda_A.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-014",
-    "noi_dung": "Để phân loại sóng ngang và sóng dọc người ta dựa vào",
-    "phuong_an": "A. tốc độ truyền sóng và bước sóng.\nB. phương truyền sóng và tần số sóng.\nC. phương dao động và phương truyền sóng.\nD. phương dao động và tốc độ truyền sóng.",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-015",
-    "noi_dung": "Hình vẽ bên mô tả hai sóng địa chấn truyền trong môi trường khi có động đất. Sóng P là sóng sơ cấp, sóng S là sóng thứ cấp. Chọn câu đúng. [Hình: Mô tả sóng P và sóng S]",
-    "phuong_an": "A. Sóng P là sóng dọc, sóng S là sóng ngang.\nB. Sóng S là sóng dọc, sóng P là sóng ngang.\nC. Cả hai sóng là sóng ngang.\nD. Cả hai sóng là sóng dọc.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": "images/q1861_de-thi-hoc-ki-1-vat-_p7_img2.jpeg"
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-017",
-    "noi_dung": "Trong chân không, tất cả các sóng điện từ đều truyền với tốc độ",
-    "phuong_an": "A. 2.10^8 m/s.\nB. 3.10^8 m/s.\nC. 2.10^{-8} m/s.\nD. 3.10^{-8} m/s.",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1eFa-NvW-019",
@@ -8492,16 +8240,7 @@
     "phuong_an": "A. Tia X.\nB. Tia tử ngoại.\nC. Tia hồng ngoại.\nD. Tia Gamma",
     "dap_an": "A",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-021",
-    "noi_dung": "Trong vùng hai sóng kết hợp gặp nhau, những điểm có khoảng cách tới hai nguồn sóng lần lượt là d1 và d2 sẽ dao động với biên độ cực đại khi",
-    "phuong_an": "A. d2 - d1 = k\\lambda, với k = 0; \\pm1; \\pm2; ...\nB. d2 - d1 = k\\lambda/2, với k = 0; \\pm1; \\pm2; ...\nC. d2 - d1 = (k+1)\\lambda, với k = 0; \\pm1; \\pm2; ...\nD. d2 - d1 = (k + 1/2)\\lambda, với k = 0; \\pm1; \\pm2; ...",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8510,61 +8249,7 @@
     "phuong_an": "A. cả (I) và (II) đúng.\nB. (I) đúng; (II) sai.\nC. (I) sai; (II) đúng.\nD. cả (I) và (II) sai.",
     "dap_an": "B",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-025",
-    "noi_dung": "Ta quan sát thấy hiện tượng gì khi trên một sợi dây có sóng dừng?",
-    "phuong_an": "A. Tất cả các phần tử của dây đều đứng yên\nB. Trên dây có những phần tử dao động với biên độ cực đại (bụng sóng) xen kẽ với phần tử đứng yên (nút sóng)\nC. Trên dây có những điểm dao động với biên độ cực đại (nút sóng) xen kẽ với những điểm đứng yên (bụng sóng)\nD. Tất cả các phần tử trên dây đều chuyển động với cùng tốc độ",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-026",
-    "noi_dung": "Trên một sợi dây đàn hồi có hai đầu cố định, đang có sóng dừng với 5 bụng sóng. Số nút sóng trên dây (không tính 2 đầu cố định) là",
-    "phuong_an": "A. 5.\nB. 6.\nC. 3.\nD. 4.",
-    "dap_an": "D",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-027",
-    "noi_dung": "Từ hình ảnh sóng dừng trên dây như hình vẽ. Phát biểu nào sau đây là đúng: [Hình: Sóng dừng trên dây có các điểm A, B]",
-    "phuong_an": "A. B là bụng sóng.\nB. A là bụng sóng.\nC. A là nút sóng.\nD. A và B không phải là nút sóng.",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": "images/q1873_de-thi-hoc-ki-1-vat-_p11_img2.jpeg"
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-028",
-    "noi_dung": "Sóng dừng trên dây được hình thành bởi:",
-    "phuong_an": "A. Sự giao thoa của hai sóng kết hợp\nB. Sự tổng hợp trong không gian của hai hay nhiều sóng kết hợp\nC. Sự giao thoa của một sóng tới và sóng phản xạ của nó cùng truyền theo một phương\nD. Sự tổng hợp của hai sóng tới và sóng phản xạ truyền khác phương",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1eFa-NvW-029",
-    "noi_dung": "Một vật dao động điều hòa với tần số góc \\omega = 5rad/s. Khi t = 0, vật đi qua vị trí có li độ x = -2cm và có vận tốc 10cm/s hướng về vị trí biên gần nhất. Hãy viết phương trình dao động của vật.",
-    "phuong_an": "A. x = 2\\cos(5t + \\frac{5\\pi}{4}) cm\nB. x = 2\\sqrt{2}\\cos(5t + \\frac{3\\pi}{4}) cm\nC. x = 2\\cos(5t - \\frac{\\pi}{4}) cm\nD. x = 2\\sqrt{2}\\cos(5t + \\frac{\\pi}{4}) cm",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1RXsdcbw-001",
-    "noi_dung": "Một vật dao động điều hòa trên trục Ox. Vận tốc của vật",
-    "phuong_an": "A. là hàm bậc hai của thời gian.\nB. biến thiên điều hòa theo thời gian.\nC. luôn có giá trị không đổi.\nD. luôn có giá trị dương.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8573,7 +8258,7 @@
     "phuong_an": "12 p_0 V_0.\n10 p_0 V_0.\n6 p_0 V_0.\n8 p_0 V_0.",
     "dap_an": "C",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1879_thuvienhoclieu_com-D_p8_img7.png, images/q1879_thuvienhoclieu_com-D_p8_img3.png"
   },
   {
@@ -8582,7 +8267,7 @@
     "phuong_an": "Đốt một ngọn đèn dầu.\nĐúc một cái chuông đồng.\nBăng tan ở Nam Cực.\nĐốt một ngọn nến.",
     "dap_an": "A",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8591,7 +8276,7 @@
     "phuong_an": "Hấp thụ một phần lực va đập lên người lái và hành khách khi có tai nạn xảy ra.\nGiữ chặt người lái và hành khách trên ghế ngồi khi xe ô tô đột ngột dừng lại.\nTăng khả năng va đập của một số bộ phận cơ thể quan trọng với các vật thể trong xe.\nĐảm bảo tính thẩm mỹ bên trong chiếc xe.",
     "dap_an": "A",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8600,7 +8285,7 @@
     "phuong_an": "0,04 m/s.\n80,00 cm/s.\n0,08 m/s.\n40,00 cm/s.",
     "dap_an": "D",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1883_thuvienhoclieu_com-D_p1_img10.png, images/q1883_thuvienhoclieu_com-D_p2_img22.png"
   },
   {
@@ -8609,16 +8294,7 @@
     "phuong_an": "xảy ra cộng hưởng cơ ở cầu.\ndao động tắt dần của cây cầu.\ncầu không chịu được tải trọng.\ndao động tuần hoàn của cầu.",
     "dap_an": "A",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1pGXYMAP-007",
-    "noi_dung": "Tính chất nào sau đây không phải là của phân tử ở thể khí?",
-    "phuong_an": "Chuyển động càng nhanh thì nhiệt độ của khối khí càng cao.\nChuyển động không ngừng.\nCó lúc đứng yên, có lúc chuyển động.\nGiữa các phân tử có khoảng cách.",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8627,7 +8303,7 @@
     "phuong_an": "Vị trí C.\nVị trí D.\nVị trí B.\nVị trí A.",
     "dap_an": "D",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1886_thuvienhoclieu_com-D_p1_img17.png"
   },
   {
@@ -8636,7 +8312,7 @@
     "phuong_an": "2,0 giờ.\n1,5 giờ.\n1,8 giờ.\n2,5 giờ.",
     "dap_an": "A",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8645,7 +8321,7 @@
     "phuong_an": "Acquy đang nạp điện.\nQuạt điện.\nBàn ủi điện.\nBóng đèn nêon.",
     "dap_an": "C",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8654,7 +8330,7 @@
     "phuong_an": "$r_1 - r_2$.\n0.\n$\\frac{r_1 r_2}{r_1 + r_2}$.\n$r_1 + r_2$.",
     "dap_an": "A",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1889_thuvienhoclieu_com-D_p2_img21.png"
   },
   {
@@ -8663,7 +8339,7 @@
     "phuong_an": "19 440 N.\n360 N.\n5 400 N.\n1 296 N.",
     "dap_an": "B",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8672,7 +8348,7 @@
     "phuong_an": "Đồ thị A\nĐồ thị B\nĐồ thị C\nĐồ thị D",
     "dap_an": "D",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1891_thuvienhoclieu_com-D_p2_img20.png, images/q1891_thuvienhoclieu_com-D_p2_img14.png"
   },
   {
@@ -8681,7 +8357,7 @@
     "phuong_an": "4 mm.\n1 cm.\n2 cm.\n8 mm.",
     "dap_an": "C",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1892_thuvienhoclieu_com-D_p1_img10.png, images/q1892_thuvienhoclieu_com-D_p2_img22.png"
   },
   {
@@ -8690,7 +8366,7 @@
     "phuong_an": "lực cản không khí tác dụng vào vật dao động.\nlực căng của dây biến đổi theo thời gian.\nlực đẩy Archimedes tác dụng vào vật dao động.\ntrọng lực của Trái Đất tác dụng vào vật dao động.",
     "dap_an": "A",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8699,7 +8375,7 @@
     "phuong_an": "Chưa đủ điều kiện để kết luận.\nKhông đổi.\nGiảm.\nTăng.",
     "dap_an": "A",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8708,7 +8384,7 @@
     "phuong_an": "8 lít.\n20 lít.\n4 lít.\n16 lít.",
     "dap_an": "D",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1895_thuvienhoclieu_com-D_p2_img7.png, images/q1895_thuvienhoclieu_com-D_p2_img8.png"
   },
   {
@@ -8717,7 +8393,7 @@
     "phuong_an": "con muỗi bay chậm hơn con ruồi.\ncon muỗi đập cánh đều hơn con ruồi.\ntần số đập cánh của muỗi thuộc vùng tai người nghe được nhưng con ruồi thì không.\ncon muỗi bay nhanh hơn con ruồi.",
     "dap_an": "C",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8726,7 +8402,7 @@
     "phuong_an": "a) Gia tốc chuyển động của ô tô trên quãng đường s là 1,0 m/s^2.\nb) Lực kéo của động cơ ô tô trên quãng đường s là 1 940 N.\nc) Công do lực kéo của động cơ ô tô thực hiện trên quãng đường s là 600 kJ.\nd) Công của lực cản thực hiện trên quãng đường s là − 200 kJ.",
     "dap_an": "Đ S Đ Đ",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8735,7 +8411,7 @@
     "phuong_an": "a) Các thiết bị điện trong lớp học được mắc song song để đảm bảo hoạt động độc lập.\nb) Một phương án tiết kiệm điện là tắt các thiết bị điện khi không sử dụng.\nc) Tiền điện phải trả trong 4 tuần học được tính bằng cách nhân tổng số điện tiêu thụ với đơn giá trung bình 2 552,4 đồng/kWh.\nd) Số tiền điện của lớp học phải trả trong 4 tuần học là 286 686 đồng.",
     "dap_an": "Đ Đ S S",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8744,7 +8420,7 @@
     "phuong_an": "a) Vật dao động điều hòa với tần số góc 5π rad/s.\nb) Khi vật bắt đầu dao động, lực kéo về có độ lớn 1,0 N.\nc) Vật sẽ dao động cưỡng bức với tần số 5 Hz.\nd) Biên độ dao động của vật bằng 0,8 cm.",
     "dap_an": "Đ Đ S S",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8753,7 +8429,7 @@
     "phuong_an": "a) Có khoảng 70% năng lượng chuyển hoá thành nhiệt năng thải ra ngoài nhờ sự bay hơi của nước qua hô hấp và da để giữ cho nhiệt độ của cơ thể không đổi.\nb) Nhiệt năng mà người thải ra ngoài nhờ sự bay hơi là 8 800 kJ.\nc) Khối lượng nước trong cơ thể đã bay hơi là 3,592 kg.\nd) Người này cần uống 3,592 lít nước trong quá trình chạy để bù lượng nước thoát ra ngoài cơ thể.",
     "dap_an": "S Đ Đ Đ",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8762,7 +8438,7 @@
     "phuong_an": "",
     "dap_an": "4000",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8771,7 +8447,7 @@
     "phuong_an": "",
     "dap_an": "1,22",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8780,7 +8456,7 @@
     "phuong_an": "",
     "dap_an": "4,41",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8789,7 +8465,7 @@
     "phuong_an": "",
     "dap_an": "0,74",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1904_thuvienhoclieu_com-D_p2_img22.png, images/q1904_thuvienhoclieu_com-D_p6_img9.png"
   },
   {
@@ -8798,7 +8474,7 @@
     "phuong_an": "",
     "dap_an": "16,1",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8807,7 +8483,7 @@
     "phuong_an": "",
     "dap_an": "7,07",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1906_thuvienhoclieu_com-D_p2_img4.png, images/q1906_thuvienhoclieu_com-D_p4_img2.png"
   },
   {
@@ -8816,7 +8492,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "Áp dụng định luật II Newton, chiếu lên các trục tọa độ để tìm gia tốc. Dùng bất đẳng thức Bunhiacopxki tìm góc \\alpha để lực kéo cực đại và suy ra trọng lượng.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8825,7 +8501,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "Sử dụng công thức tính tần số góc, biên độ ban đầu từ điều kiện đầu. Áp dụng định luật bảo toàn động lượng và năng lượng cho va chạm đàn hồi xuyên tâm để tìm vận tốc mới và biên độ sau va chạm.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8834,7 +8510,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "Sử dụng công thức tính công suất tỏa nhiệt của đoạn mạch hỗn hợp các điện trở tương đương theo các cách mắc chốt khác nhau để giải hệ phương trình tìm điện trở và nguồn.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8843,7 +8519,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "Lập phương trình cân bằng nhiệt / truyền nhiệt theo công suất của bếp trong từng giai đoạn nóng chảy của nước đá và tăng nhiệt độ của nước.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8852,7 +8528,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "Sử dụng phương trình trạng thái khí lí tưởng kết hợp phương trình đường thẳng trên đồ thị p-V để khảo sát hàm số nhiệt độ theo thể tích và tìm cực đại.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8861,7 +8537,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "Thiết kế các sơ đồ mạch điện khác nhau với vôn kế và ampe kế mắc vào các vị trí cho phép, áp dụng định luật Ohm để lập hệ phương trình tính R1, R2, R3.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8870,62 +8546,8 @@
     "phuong_an": "a) Đồ thị hình bên mô tả quá trình chuyển từ thể rắn sang thể lỏng và từ thể lỏng sang thể khí của chất.\nb) Trên đoạn OA, khối nước đá không tăng nhiệt độ vì vậy nó không nhận nhiệt lượng từ nguồn nhiệt đun nước.\nc) Trên đoạn AB, xảy ra quá trình tan chảy của nước đá.\nd) Trên đoạn BC là giai đoạn nước ở thể hơi.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1913_vat-li-12-xem_pdf_p7_img1.jpeg, images/q1913_vat-li-12-xem_pdf_p3_img1.jpeg"
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-001",
-    "noi_dung": "Phát biểu nào sau đây về nội năng là không đúng?",
-    "phuong_an": "A. Nội năng là nhiệt lượng.\nB. Nội năng có thể chuyển hoá thành các dạng năng lượng khác.\nC. Nội năng của một vật có thể tăng lên, giảm đi.\nD. Nội năng là một dạng năng lượng.",
-    "dap_an": "A",
-    "loi_giai": "Nội năng không phải là nhiệt lượng. Nhiệt lượng là phần nội năng tăng hay giảm trong quá trình truyền nhiệt.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-002",
-    "noi_dung": "Đơn vị của nhiệt dung riêng trong hệ SI là",
-    "phuong_an": "A. cal/g độ.\nB. kJ/kg.K.\nC. J/kg.K.\nD. J/g độ.",
-    "dap_an": "C",
-    "loi_giai": "Đơn vị của nhiệt dung riêng trong hệ SI là J/kg.K.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-003",
-    "noi_dung": "Một nhiệt lượng kế bằng đồng thau có khối lượng 128 gam chứa 210 gam nước ở nhiệt độ 8,4 ℃. Người ta thả một miếng kim loại có khối lượng 192 gam đã đun nóng tới nhiệt độ $100^o\\text{C}$ vào nhiệt lượng kế. Biết nhiệt độ khi có sự cân bằng nhiệt là 21,5 oC và biết nhiệt dung riêng của đồng thau là 128 J/kg.K và của nước là 4180 J/kg.K. Bỏ qua sự truyền nhiệt ra môi trường xung quanh. Nhiệt dung riêng của miếng kim loại có giá trị gần nhất:",
-    "phuong_an": "A. 827,2 J/kg.K.\nB. 772,7 J/kg.K.\nC. 777,2 J/kg.K.\nD. 727,7 J/kg.K.",
-    "dap_an": "C",
-    "loi_giai": "Áp dụng phương trình cân bằng nhiệt: $Q_{\\text{tỏa}} = Q_{\\text{thu}} \\Rightarrow m_{\\text{kl}} c_{\\text{kl}} (100 - 21,5) = (m_{\\text{đ}} c_{\\text{đ}} + m_{\\text{n}} c_{\\text{n}})(21,5 - 8,4) \\Rightarrow c_{\\text{kl}} \\approx 777,2\\text{ J/kg.K}$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-004",
-    "noi_dung": "Nhiệt độ cơ thể người bình thường là $37^o\\text{C}$. Trong thang nhiệt giai Kelvin kết quả đo nào sau đây là đúng?",
-    "phuong_an": "A. 37K.\nB. 236K.\nC. 310K.\nD. 98,6K.",
-    "dap_an": "C",
-    "loi_giai": "$T = t + 273 = 37 + 273 = 310\\text{ K}$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-005",
-    "noi_dung": "Nhiệt nóng chảy riêng của vàng là $62,8.10^3\\text{ J/kg}$. Phát biểu đúng là",
-    "phuong_an": "A. mỗi kg vàng cần thu nhiệt lượng $62,8.10^3\\text{ J}$ hoá lỏng hoàn toàn ở nhiệt độ nóng chảy.\nB. mỗi kg vàng toả ra nhiệt lượng $62,8.10^3\\text{ J}$ khi hoá lỏng hoàn toàn.\nC. khối vàng cần thu nhiệt lượng $62,8.10^3\\text{ J}$ để hoá lỏng.\nD. khối vàng sẽ toả ra nhiệt lượng $62,8.10^3\\text{ J}$ khi nóng chảy hoàn toàn.",
-    "dap_an": "A",
-    "loi_giai": "Nhiệt nóng chảy riêng là nhiệt lượng cần thiết để làm cho 1 kg chất đó hoá lỏng hoàn toàn ở nhiệt độ nóng chảy.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-006",
-    "noi_dung": "Quy ước về dấu nào sau đây phù hợp với công thức $\\Delta U = A + Q$ của nguyên lí I nhiệt động lực học?",
-    "phuong_an": "A. Vật nhận công $A > 0$, vật nhận nhiệt $Q > 0$.\nB. Vật nhận công $A < 0$, vật nhận nhiệt $Q < 0$.\nC. Vật thực hiện công $A > 0$, vật truyền nhiệt $Q < 0$.\nD. Vật thực hiện công $A < 0$, vật truyền nhiệt $Q > 0$.",
-    "dap_an": "A",
-    "loi_giai": "Vật nhận công $A > 0$, vật nhận nhiệt $Q > 0$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1ZCqqv-s-007",
@@ -8933,7 +8555,7 @@
     "phuong_an": "A. $\\Delta U = 1,5\\text{J}$\nB. $\\Delta U = 0,5\\text{J}$\nC. $\\Delta U = -0,5\\text{J}$\nD. $\\Delta U = -1,5\\text{J}$",
     "dap_an": "B",
     "loi_giai": "Khí thực hiện công $A' = F \\cdot s = 10 \\cdot 0,05 = 0,5\\text{ J} \\Rightarrow A = -0,5\\text{ J}$. Độ biến thiên nội năng $\\Delta U = Q + A = 2 - 0,5 = 1,5\\text{ J}$. (Ghi chú: Theo đáp án đề gốc là B).",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8942,16 +8564,7 @@
     "phuong_an": "A. Nhiệt độ từ 298K đến 302K.\nB. Nhiệt độ từ 290K đến 294K.\nC. Nhiệt độ từ 302K đến 306K.\nD. Nhiệt độ từ 295K đến 399K.",
     "dap_an": "A",
     "loi_giai": "$T_1 = 25 + 273 = 298\\text{ K}$, $T_2 = 29 + 273 = 302\\text{ K}$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-009",
-    "noi_dung": "Chuyển động nào sau đây là chuyển động của riêng các phân tử ở thể lỏng?",
-    "phuong_an": "A. Chuyển động hoàn toàn tự do.\nB. Chuyển động hỗn loạn không ngừng.\nC. Dao động xung quanh các vị trí cân bằng không cố định.\nD. Dao động xung quanh các vị trí cân bằng cố định.",
-    "dap_an": "C",
-    "loi_giai": "Các phân tử ở thể lỏng dao động xung quanh các vị trí cân bằng không cố định.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -8960,61 +8573,7 @@
     "phuong_an": "A. 5040 (kJ)\nB. 504 (kJ)\nC. 504000 (kJ)\nD. 50400 (J)",
     "dap_an": "A",
     "loi_giai": "$Q = m c \\Delta t = 2 \\cdot 4200 \\cdot (80 - 20) = 504000\\text{ J} = 504\\text{ kJ}$. (Theo đáp án của đề A là 5040 kJ, đề ghi A).",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-011",
-    "noi_dung": "Một vật khối lượng m, có nhiệt dung riêng c, nhiệt độ đầu và cuối là $t_1$ và $t_2$. Công thức $Q = mc(t_2 - t_1)$ dùng để xác định",
-    "phuong_an": "A. năng lượng.\nB. nhiệt năng.\nC. nhiệt lượng.\nD. nội năng.",
-    "dap_an": "C",
-    "loi_giai": "Công thức dùng để xác định nhiệt lượng thu vào hoặc tỏa ra.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-012",
-    "noi_dung": "Biết khối lượng của một mol nước là $18\\text{ g}$, và 1 mol có $N_A = 6,02.10^{23}$ phân tử. Số phân tử trong 2 gam nước là",
-    "phuong_an": "A. $3,24.10^{24}$ phân tử.\nB. $6,68.10^{22}$ phân tử.\nC. $1,8.10^{20}$ phân tử.\nD. $4.10^{21}$ phân tử.",
-    "dap_an": "B",
-    "loi_giai": "$N = \\frac{m}{M} N_A = \\frac{2}{18} \\cdot 6,02.10^{23} \\approx 6,68.10^{22}$ phân tử.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-013",
-    "noi_dung": "Câu nào sau đây nói về lực tương tác phân tử là không đúng?",
-    "phuong_an": "A. Lực phân tử chỉ đáng kể khi các phân tử ở rất gần nhau.\nB. Lực hút phân tử có thể lớn hơn lực đẩy phân tử.\nC. Lực hút phân tử không thể lớn hơn lực đẩy phân tử.\nD. Lực hút phân tử có thể bằng lực đẩy phân tử.",
-    "dap_an": "C",
-    "loi_giai": "Lực hút phân tử có thể lớn hơn, nhỏ hơn hoặc bằng lực đẩy phân tử tùy thuộc vào khoảng cách giữa các phân tử.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-014",
-    "noi_dung": "Nén đẳng nhiệt một khối khí từ 10 lít xuống còn 5 lít. Áp suất của khối khí sau khi nén đã thay đổi như thế nào?",
-    "phuong_an": "A. Giảm 2 lần.\nB. Tăng 2 lần.\nC. Giảm 4 lần.\nD. Tăng 4 lần.",
-    "dap_an": "B",
-    "loi_giai": "Thể tích giảm 2 lần thì áp suất tăng 2 lần.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-015",
-    "noi_dung": "Định luật Boyle và Charles được rút ra từ những thí nghiệm có điều kiện áp suất và nhiệt độ như thế nào?",
-    "phuong_an": "A. $p \\le 10^6\\text{ Pa}, T \\le 200\\text{ K}$.\nB. $p \\le 10^6\\text{ Pa}, T \\ge 200\\text{ K}$.\nC. $p \\ge 10^6\\text{ Pa}, T \\le 200\\text{ K}$.\nD. $p \\ge 10^6\\text{ Pa}, T \\ge 200\\text{ K}$.",
-    "dap_an": "B",
-    "loi_giai": "Các định luật chất khí áp dụng cho khí lí tưởng ở điều kiện áp suất không quá lớn ($p \\le 10^6\\text{ Pa}$) và nhiệt độ không quá thấp ($T \\ge 200\\text{ K}$).",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-016",
-    "noi_dung": "Một mol của bất kì khí nào ở điều kiện tiêu chuẩn đều có thể tích bằng bao nhiêu?",
-    "phuong_an": "A. $22,4.10^{-3}\\text{ mm}^3$.\nB. $22,4.10^{-3}\\text{ cm}^3$.\nC. $22,4.10^{-3}\\text{ dm}^3$.\nD. $22,4.10^{-3}\\text{ m}^3$.",
-    "dap_an": "D",
-    "loi_giai": "$V = 22,4\\text{ lít} = 22,4.10^{-3}\\text{ m}^3$.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9023,34 +8582,7 @@
     "phuong_an": "A. $1,5.10^4\\text{ Pa}$.\nB. $1,5.10^{-4}\\text{ Pa}$.\nC. $6,67.10^{-5}\\text{ Pa}$.\nD. $6,67.10^5\\text{ Pa}$.",
     "dap_an": "A",
     "loi_giai": "Áp suất $p = \\frac{2}{3} e_n = \\frac{2}{3} . 10^{-4}\\text{ Pa}$. (Đáp án A được chọn theo bảng đáp án gốc đề).",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-018",
-    "noi_dung": "Nhiệt độ của một khối khí để động năng tịnh tiến trung bình của các phân tử khí đó bằng $1,0\\text{ eV}$ là bao nhiêu? Biết $1\\text{ eV} = 1,6.10^{-19}\\text{ J}$.",
-    "phuong_an": "A. 7407 K.\nB. 3290 K.\nC. 6192 K.\nD. 2998 K.",
-    "dap_an": "A",
-    "loi_giai": "$E_đ = \\frac{3}{2} k T \\Rightarrow T = \\frac{2 E_đ}{3 k} = \\frac{2 \\cdot 1,6.10^{-19}}{3 \\cdot 1,38.10^{-23}} \\approx 7729\\text{ K} \\approx 7407\\text{ K}$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-019",
-    "noi_dung": "Ở điều kiện chuẩn, khối lượng riêng của oxygen là $1,43\\text{ kg/m}^3$. Đựng lượng khí oxygen trong một bình kín có thể tích 15 lít dưới áp suất 150 atm ở nhiệt độ $0^0\\text{C}$. Khối lượng lượng khí oxygen này là",
-    "phuong_an": "A. 3,23 kg.\nB. 214,5 kg.\nC. 7,5 kg.\nD. 2,25 kg.",
-    "dap_an": "A",
-    "loi_giai": "$m = D_0 \\cdot V_0 = D_0 \\cdot \\frac{p V}{p_0} = 1,43 \\cdot \\frac{150 \\cdot 15.10^{-3}}{1} \\approx 3,218\\text{ kg} \\approx 3,23\\text{ kg}$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-020",
-    "noi_dung": "Đẳng quá trình là gì?",
-    "phuong_an": "A. Là quá trình chỉ có hai thông số biến đổi còn một thông số không đổi.\nB. Là quá trình chỉ có một thông số biến đổi còn hai thông số không đổi.\nC. Là quá trình cả ba thông số đều thay đổi.\nD. Là quá trình cả ba thông số đều không đổi.",
-    "dap_an": "A",
-    "loi_giai": "Đẳng quá trình là quá trình chỉ có hai thông số biến đổi còn một thông số không đổi.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9059,7 +8591,7 @@
     "phuong_an": "a) Lúc nhiệt độ cao nhất đạt T= 304K\nb) Nhiệt độ đạt $31^0\\text{C}$ vào lúc 18 giờ.\nc) Nhiệt độ lúc 9 giờ là $27^0\\text{C}$.\nd) Chênh lệch nhiệt độ cao nhất trong khoảng thời gian thực hiện là $10^o\\text{C}$",
     "dap_an": "a) Đúng\nb) Sai\nc) Đúng\nd) Sai",
     "loi_giai": "a) Đúng vì nhiệt độ cao nhất $T = 31\\text{ }^oC = 31 + 273 = 304\\text{ K}$\nb) Sai vì Nhiệt độ đạt $31^0\\text{C}$ vào lúc 12 giờ\nc) Đúng vì Nhiệt độ lúc 9 giờ là $27^0\\text{C}$\nd) Sai vì chênh lệch nhiệt độ là $31 - 25 = 6\\text{ }^oC$",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9068,7 +8600,7 @@
     "phuong_an": "a) ấm nhôm tỏa nhiệt còn nước thu nhiệt.\nb) Nhiệt lượng của nước thu vào là $504\\text{ (kJ)}$.\nc) Nhiệt lượng cần cung cấp là $517800\\text{ (J)}$.\nd) thời gian đun nước là 3 phút.",
     "dap_an": "a) Sai\nb) Đúng\nc) Đúng\nd) Sai",
     "loi_giai": "a) Sai vì Cả ấm và nước đều thu nhiệt từ bếp.\nb) Đúng. $Q_n = m_n c_n \\Delta T = 2 \\cdot 4200 \\cdot (80 - 20) = 504000\\text{ J} = 504\\text{ kJ}$.\nc) Đúng. $Q_{\\text{Al}} = 0,25 \\cdot 920 \\cdot (80 - 20) = 13800\\text{ J} \\Rightarrow Q = Q_{\\text{Al}} + Q_n = 517800\\text{ J}$.\nd) Sai. $t = Q/P = 517800/1500 = 345,2\\text{ s} = 5,75\\text{ phút}$.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9077,7 +8609,7 @@
     "phuong_an": "a) Khi pít – tông dịch chuyển sang trái 2 cm thì thể tích khí lúc này là $288\\text{ cm}^3$\nb) Khi pít – tông dịch chuyển sang phải 2 cm thì thể tích khí lúc này là $192\\text{ cm}^3$\nc) Để dịch chuyển pít – tông sang trái 2 cm cần một lực 60 N\nd) Để dịch chuyển pít – tông sang phải 2 cm cần một lực 40 N",
     "dap_an": "a) Sai\nb) Sai\nc) Đúng\nd) Đúng",
     "loi_giai": "a) Sai. Khi dịch trái 2 cm: $V_2 = V_1 - S l = 240 - 24 \\cdot 2 = 192\\text{ cm}^3$.\nb) Sai. Khi dịch phải 2 cm: $V_2 = V_1 + S l = 240 + 24 \\cdot 2 = 288\\text{ cm}^3$.\nc) Đúng. $p_1 V_1 = p_2 V_2 \\Rightarrow p_2 = 125\\text{ kPa} \\Rightarrow F = (p_2 - p_1)S = 25.10^3 \\cdot 24.10^{-4} = 60\\text{ N}$.\nd) Đúng. $p_1 V_1 = p_2 V_2 \\Rightarrow p_2 = 83,33\\text{ kPa} \\Rightarrow F = (p_1 - p_2)S = 40\\text{ N}$.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1936_de-cuong-on-tap-hk1-_p6_img2.png"
   },
   {
@@ -9086,7 +8618,7 @@
     "phuong_an": "a) Áp suất của khối khí khi kết thúc quá trình (trạng thái 2) là 4,8 atm\nb) Đồ thị biến đổi khối khí trong hệ tọa độ (p, T) như hình H1\nc) Đồ thị biến đổi khối khí trong hệ tọa độ (V, T) như hình H2\nd) Công của khối khí thực hiện được trong quá trình đẳng tích là bằng 0",
     "dap_an": "a) Đúng\nb) Đúng\nc) Sai\nd) Đúng",
     "loi_giai": "a) Đúng. $\\frac{p_1}{T_1} = \\frac{p_2}{T_2} \\Rightarrow p_2 = 4,8\\text{ atm}$.\nb) Đúng. Đồ thị $p-T$ đẳng tích kéo dài qua gốc tọa độ.\nc) Sai. Đường đẳng tích trong $(V, T)$ vuông góc với trục $OV$.\nd) Đúng. $V$ không đổi nên $A = 0$.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1937_de-cuong-on-tap-hk1-_p9_img3.png"
   },
   {
@@ -9095,7 +8627,7 @@
     "phuong_an": "",
     "dap_an": "130",
     "loi_giai": "$\\Delta U = Q + A = 200 - 70 = 130\\text{ J}$.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9104,16 +8636,7 @@
     "phuong_an": "",
     "dap_an": "460",
     "loi_giai": "$Q = m L = 0,2 \\cdot 2,3.10^6 = 4,6.10^5\\text{ J} = 460\\text{ kJ}$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-027",
-    "noi_dung": "Nhiệt độ của nước ở $80^o\\text{C}$. Tính nhiệt độ trên theo thang nhiệt độ Farenheit.",
-    "phuong_an": "",
-    "dap_an": "176",
-    "loi_giai": "$F = \\frac{9}{5} t + 32 = \\frac{9}{5} \\cdot 80 + 32 = 176^o\\text{F}$.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9122,16 +8645,7 @@
     "phuong_an": "",
     "dap_an": "123",
     "loi_giai": "$n = \\frac{m}{M} = \\frac{4400}{44} = 100\\text{ mol}$. $p = \\frac{nRT}{V} = \\frac{100 \\cdot 0,082 \\cdot 300}{20} = 123\\text{ atm}$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZCqqv-s-029",
-    "noi_dung": "Một nồi áp suất có van có trọng lượng không đáng kể và có một lỗ tròn diện tích $1\\text{ cm}^2$ luôn được áp chặt bởi một lò xo có độ cứng $k = 1300\\text{ N/m}$ và luôn bị nén $1\\text{ cm}$. Bỏ qua mọi ma sát. Hỏi khi đun khí ban đầu ở áp suất khí quyển $p_0 = 10^5\\text{ Pa}$, có nhiệt đô $27\\text{ }^o\\text{C}$ thì đến nhiệt độ bao nhiêu can sẽ mở ra (Kết quả thao thang nhiệt độ Celcius)",
-    "phuong_an": "",
-    "dap_an": "417",
-    "loi_giai": "$F = k x = 13\\text{ N}$. $p_m = p_0 + \\frac{F}{S} = 10^5 + \\frac{13}{10^{-4}} = 2,3.10^5\\text{ Pa}$. $\\frac{p_0}{T_1} = \\frac{p_m}{T_2} \\Rightarrow T_2 = 690\\text{ K} \\Rightarrow t_2 = 417^o\\text{C}$.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9140,88 +8654,7 @@
     "phuong_an": "",
     "dap_an": "482",
     "loi_giai": "$p = \\frac{1}{3} \\rho \\bar{v^2} \\Rightarrow \\sqrt{\\bar{v^2}} = \\sqrt{\\frac{3p}{\\rho}} = \\sqrt{\\frac{3 \\cdot 10^5}{1,29}} \\approx 482\\text{ m/s}$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-001",
-    "noi_dung": "Khi bắt đầu đun, nhiệt độ của vật rắn kết tinh tăng dần. Đến nhiệt độ xác định, sự nóng chảy diễn ra, vật chuyển từ thể rắn sang thể lỏng và nhiệt độ …(1)... dù tiếp tục đun. Sau khi toàn bộ vật chuyển sang thể lỏng, nhiệt độ của chất lỏng ...(2)... khi tiếp tục đun. Chỗ trống (1) và (2) lần lượt là",
-    "phuong_an": "A. “giảm xuống” và “giữ giá trị ổn định“.\nB. “không tăng” và “giảm xuống“.\nC. “giảm xuống” và “tiếp tục tăng lên“.\nD. “không tăng” và “tiếp tục tăng lên“.",
-    "dap_an": "D",
-    "loi_giai": "Đáp án: D.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-002",
-    "noi_dung": "Quá trình làm thay đổi nội năng của vật bằng cách cho nó tiếp xúc với vật khác khi",
-    "phuong_an": "A. nhiệt độ của chúng bằng nhau gọi là sự trao đổi công.\nB. có sự chênh lệch nhiệt độ giữa chúng gọi là sự nhận công.\nC. có sự chênh lệch nhiệt độ giữa chúng gọi là sự truyền nhiệt.\nD. nhiệt độ của chúng bằng nhau gọi là sự truyền nhiệt.",
-    "dap_an": "C",
-    "loi_giai": "Đáp án: C.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-003",
-    "noi_dung": "Mỗi độ chia (1 °C) trong thang Celsius bằng X của khoảng cách giữa nhiệt độ tan chảy của nước tinh khiết đóng băng và nhiệt độ sôi của nước tinh khiết (ở áp suất tiêu chuẩn). X là",
-    "phuong_an": "A. 1/273,16.\nB. 1/100.\nC. 1/10.\nD. 1/273,15.",
-    "dap_an": "B",
-    "loi_giai": "Đáp án: B.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-004",
-    "noi_dung": "Khi hai vật tiếp xúc nhau mà ở trạng thái cân bằng nhiệt thì",
-    "phuong_an": "A. không có nhiệt lượng trao đổi giữa hai vật.\nB. khối lượng hai vật bằng nhau.\nC. số phân tử trong hai vật bằng nhau.\nD. vận tốc của hệ hai vật bằng không.",
-    "dap_an": "A",
-    "loi_giai": "Đáp án: A.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-005",
-    "noi_dung": "Hãy tìm ý không đúng với mô hình động học phân tử trong các ý sau:",
-    "phuong_an": "A. Các chất được cấu tạo từ các hạt riêng biệt là phân tử.\nB. Các phân tử chuyển động không ngừng.\nC. Tốc độ chuyển động của các phân tử cấu tạo nên vật càng lớn thì thể tích của vật càng lớn.\nD. Giữa các phân tử có lực tương tác gọi là lực tương tác phân tử.",
-    "dap_an": "C",
-    "loi_giai": "Đáp án: C.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-006",
-    "noi_dung": "Mối liên hệ giữa áp suất, thể tích và nhiệt độ của một lượng khí trong quá trình nào dưới đây không được xác định bằng phương trình trạng thái của khí lí tưởng?",
-    "phuong_an": "A. Làm nóng một lượng khí trong một bình đậy kín;\nB. Làm nóng một lượng khí trong một bình không đậy kín;\nC. Làm nóng một lượng khí trong xilanh kín có pít-tông làm khí nóng lên, nở ra, đẩy pít-tông di chuyển;\nD. Dùng tay bóp méo quả bóng bay.",
-    "dap_an": "B",
-    "loi_giai": "Đáp án: B.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-007",
-    "noi_dung": "Cho một quá trình biến đổi trạng thái của một lượng khí xác định được biểu diễn như hình vẽ [Hình: đồ thị p-V biểu diễn quá trình biến đổi trạng thái từ 1 đến 2 đi qua gốc tọa độ]. Các thông số trạng thái của hệ đã thay đổi như thế nào khi chuyển từ trạng thái 1 sang trạng thái 2?",
-    "phuong_an": "A. T không đổi, p tăng, V giảm.\nB. V không đổi, p tăng, T giảm.\nC. V tăng, p tăng, T giảm.\nD. p tăng, V tăng, T tăng.",
-    "dap_an": "D",
-    "loi_giai": "Đáp án: D.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": "images/q1950_LY_pdf_p17_img2.jpeg, images/q1950_LY_pdf_p63_img1.jpeg"
-  },
-  {
-    "ma_cau": "C-1cQNINaF-008",
-    "noi_dung": "Tính khối lượng riêng của không khí ở đỉnh núi Fansipan (Phan-Xi-Păng) cao 3 140 m. Biết rằng mỗi khi cao thêm 10,0 m (so với mực nước biển) thì áp suất khí quyển giảm 1,00 mmHg và nhiệt độ trên đỉnh núi là 2,00 °C. Khối lượng riêng của không khí ở điều kiện tiêu chuẩn (áp suất 760 mmHg, nhiệt độ 0 °C) là 1,29 kg/m3.",
-    "phuong_an": "A. 1,50 kg/m3.\nB. 0,58 kg/m3.\nC. 2,90 kg/m3.\nD. 0,75 kg/m3.",
-    "dap_an": "D",
-    "loi_giai": "Đáp án: D.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-009",
-    "noi_dung": "Một dây dẫn dài 50 cm được đặt vuông góc với một từ trường đều. Cường độ dòng điện trong dây là 10,0 A, lực do từ trường tác dụng lên dây là 3,0 N. Độ lớn cảm ứng từ của từ trường là",
-    "phuong_an": "A. 0,60 T.\nB. 1,5 T.\nC. 1,8.10-3 T.\nD. 6,7.10-3 T.",
-    "dap_an": "A",
-    "loi_giai": "Đáp án: A.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9230,17 +8663,8 @@
     "phuong_an": "A. Hình A.\nB. Hình B.\nC. Hình C.\nD. Hình D.",
     "dap_an": "C",
     "loi_giai": "Đáp án: C.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1953_LY_pdf_p92_img1.jpeg, images/q1953_LY_pdf_p63_img2.jpeg"
-  },
-  {
-    "ma_cau": "C-1cQNINaF-011",
-    "noi_dung": "Phát biểu nào sau đây là đúng?",
-    "phuong_an": "A. Điện trường xuất hiện khi có từ trường biến thiên.\nB. Từ trường xuất hiện khi có điện trường biến thiên.\nC. Trường điện từ lan truyền trong không gian được gọi là sóng điện từ.\nD. Trong quá trình truyền sóng điện từ, cường độ điện trường và cảm ứng từ biến thiên với pha lệch nhau một góc vuông.",
-    "dap_an": "C",
-    "loi_giai": "Đáp án: C.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1cQNINaF-012",
@@ -9248,34 +8672,7 @@
     "phuong_an": "A. Dòng điện chạy theo chiều kim đồng hồ, đầu 1 là cực bắc của ống dây và hút cực bắc của thanh nam châm.\nB. Dòng điện chạy ngược chiều kim đồng hồ, đầu 1 là cực bắc của ống dây và đẩy cực nam của thanh nam châm.\nC. Dòng điện chạy ngược chiều kim đồng hồ, đầu 1 là cực nam của ống dây và đẩy cực nam của thanh nam châm.\nD. Dòng điện chạy theo chiều kim đồng hồ, đầu 1 là cực nam của ống dây và hút cực bắc của thanh nam châm.",
     "dap_an": "D",
     "loi_giai": "Đáp án: D.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-014",
-    "noi_dung": "Trong hạt nhân nguyên tử americium $^{240}_{95}\\text{Am}$ có bao nhiêu hạt neutron?",
-    "phuong_an": "A. 145 neutron.\nB. 95 neutron.\nC. 240 neutron.\nD. 135 neutron.",
-    "dap_an": "A",
-    "loi_giai": "Đáp án: A.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-015",
-    "noi_dung": "Các hạt nhân đồng vị có cùng",
-    "phuong_an": "A. số neutron.\nB. điện tích.\nC. số khối.\nD. khối lượng.",
-    "dap_an": "B",
-    "loi_giai": "Đáp án: B.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-016",
-    "noi_dung": "Biết khối lượng của các hạt proton, neutron và hạt nhân $^{19}_{9}\\text{F}$ lần lượt là 1,0073 u; 1,0087 u; 18,9934 u. Độ hụt khối của hạt nhân $^{19}_{9}\\text{F}$ là",
-    "phuong_an": "A. 0,1529 u.\nB. 0,1506 u.\nC. 0,1478 u.\nD. 0,1593 u.",
-    "dap_an": "D",
-    "loi_giai": "Đáp án: D.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9284,52 +8681,7 @@
     "phuong_an": "A. 3,87.1019 Bq.\nB. 3,87.1013 Bq.\nC. 1,61.1012 Bq.\nD. 1,61.1019 Bq.",
     "dap_an": "B",
     "loi_giai": "$H = \\lambda N = \\frac{\\ln 2}{T}.N = \\frac{\\ln 2}{15,00.3600}.(1,002.10^{-3}).(5,003.10^{-3})(6,02.10^{23}) = 3,87.10^{13}\\text{ Bq}$\nĐáp án: B.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-018",
-    "noi_dung": "Cho phản ứng nhiệt hạch có phương trình: $^{2}_{1}\\text{D} + ^{A}_{Z}\\text{X} \\rightarrow ^{4}_{2}\\text{He} + ^{1}_{0}\\text{n}$. Hạt nhân $^{A}_{Z}\\text{X}$ có điện tích là",
-    "phuong_an": "A. + 3e.\nB. + 2e.\nC. + 1e.\nD. 0.",
-    "dap_an": "C",
-    "loi_giai": "Đáp án: C.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-019",
-    "noi_dung": "Khi hai vật tiếp xúc với nhau,",
-    "phuong_an": "a) nhiệt lượng luôn tự truyền từ vật có nội năng lớn hơn sang vật có nội năng nhỏ hơn.\nb) nhiệt lượng luôn tự truyền từ vật có nhiệt độ cao hơn sang vật có nhiệt độ nhỏ hơn.\nc) hai vật không trao đổi nhiệt với nhau nếu nhiệt độ chúng bằng nhau.\nd) hai vật không trao đổi nhiệt với nhau nếu khối lượng chúng bằng nhau.",
-    "dap_an": "a) Sai; b) Đúng; c) Đúng; d) Sai.",
-    "loi_giai": "a) Sai; b) Đúng; c) Đúng; d) Sai.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-020",
-    "noi_dung": "Một lốp ô tô được bơm căng không khí ở 27,0 °C. Áp suất ban đầu của khí ở áp suất khí quyển bình thường là $1,013.10^5\\text{ Pa}$. Trong quá trình bơm, không khí vào trong lốp bị nén lại và giảm 80,0% thể tích ban đầu (khi không khí còn ở bên ngoài lốp), nhiệt độ khí trong lốp tăng lên đến 40,0 °C.",
-    "phuong_an": "a) Tỉ số giữa thể tích khí sau khi đưa vào trong lốp và thể tích khí khi ở ngoài lốp là 0,2.\nb) Áp suất khí trong lốp là 2,11.103 Pa.\nc) Sau khi ô tô chạy ở tốc độ cao, nhiệt độ không khí trong lốp tăng đến 75,0 °C và thể tích khí bên trong lốp tăng bằng 102% thể tích khi lốp ở 40,0 °C. Áp suất mới của khí trong lốp là 5,76.105 Pa.\nd) Biết phần lốp tiếp xúc với mặt đường có dạng hình chữ nhật, diện tích 205 cm2. Áp lực lốp xe lên mặt đường cỡ 1 000 N.",
-    "dap_an": "a) Đúng; b) Sai; c) Đúng; d) Sai.",
-    "loi_giai": "a) Thể tích khí giảm 80% nên tỉ số là 0,2;\nb) $\\frac{p_1 V_1}{T_1} = \\frac{p_2 V_2}{T_2} \\Rightarrow p_2 = 5,28.10^5\\text{ Pa}$\nc) Tương tự, $p_3 = 5,76.10^5\\text{ Pa}$; d) $F = p_3 S = 1,2.10^4\\text{ N}$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-021",
-    "noi_dung": "Hình bên [Hình: thanh dẫn điện chiều dài d trượt trên hai ray vuông góc với từ trường B hướng vào mặt phẳng] biểu diễn một thanh dẫn điện dài l đang được kéo theo chiều vuông góc với thanh và vuông góc với cảm ứng từ $\\vec{B}$. Thanh trượt đều trên hai ray dẫn điện, các ray này cách nhau một khoảng d. Toàn bộ mạch có điện trở R. Biết các ray không nhiễm từ, độ lớn suất điện động cảm ứng trong thanh do chuyển động của thanh là Bdv, bỏ qua ma sát.",
-    "phuong_an": "a) Dòng điện trong mạch có cường độ biến thiên,\nb) Dòng điện trong mạch có chiều cùng chiều kim đồng hồ.\nc) Công suất toả nhiệt trên điện trở R là $\\frac{B^2 d^2 v^2}{R}$.\nd) Lực kéo thanh chuyển động đều với tốc độ đã cho là $\\frac{B^2 d^2 v}{R}$.",
-    "dap_an": "a) Sai; b) Sai; c) Đúng; d) Đúng.",
-    "loi_giai": "a) Sai; b) Sai; c) Đúng; d) Đúng.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": "images/q1964_LY_pdf_p79_img1.jpeg, images/q1964_LY_pdf_p70_img1.jpeg"
-  },
-  {
-    "ma_cau": "C-1cQNINaF-022",
-    "noi_dung": "Trong thí nghiệm tán xạ hạt $\\alpha$, chùm hạt $\\alpha$ có động năng lớn phát ra từ nguồn phóng xạ được bắn vào lá vàng mỏng. Kết quả cho thấy hầu hết các hạt $\\alpha$ đi thẳng nhưng có một số ít hạt bị lệch so với hướng truyền ban đầu (bị tán xạ) với các góc lệch khác nhau. Trong đó, có những hạt $\\alpha$ bị tán xạ ở góc lớn hơn 90°.",
-    "phuong_an": "a) Hầu hết các hạt $\\alpha$ đi thẳng, xuyên qua lá vàng mỏng chứng tỏ phần điện tích dương và phần điện tích âm trong nguyên tử vàng phân bố ở hai rìa nguyên tử còn toàn bộ bên trong nguyên tử là không gian trống rỗng.\nb) Một số ít các hạt $\\alpha$ bị tán xạ với các góc lệch khác nhau chứng tỏ các hạt $\\alpha$ này đã tương tác với các hạt nhân mang điện tích dương nằm trong nguyên tử vàng.\nc) Một số rất ít các hạt $\\alpha$ bay đến gần hạt nhân vàng theo phương nối tâm hai hạt nhân có thể bị bật ngược trở lại.\nd) Từ thí nghiệm tán xạ hạt $\\alpha$, các nhà khoa học có thể đánh giá được kích thước hạt nhân vào cỡ $10^{-10}\\text{ m}$.",
-    "dap_an": "a) Sai; b) Đúng; c) Đúng; d) Sai.",
-    "loi_giai": "a) Sai; b) Đúng; c) Đúng; d) Sai.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9338,7 +8690,7 @@
     "phuong_an": "",
     "dap_an": "210 s.",
     "loi_giai": "Khối lượng nước: m = 20 kg.\n$Q = mc\\Delta T = (20)(4200)(50) = 4,2.10^6\\text{ J}$.\n$t = \\frac{Q}{\\text{Hiệu suất}.P} = \\frac{4,2.10^6}{0,8.(25,0.10^3)} = 210\\text{ s}$.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9347,7 +8699,7 @@
     "phuong_an": "",
     "dap_an": "1,67.",
     "loi_giai": "Đáp án: 1,67.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9356,16 +8708,7 @@
     "phuong_an": "",
     "dap_an": "1,3 s.",
     "loi_giai": "$t = \\frac{d}{c} = \\frac{3,8.10^8}{3,0.10^8} = 1,3\\text{ s}$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1cQNINaF-026",
-    "noi_dung": "Trong 1,0 ns, ánh sáng truyền được quãng đường bao nhiêu mét?",
-    "phuong_an": "",
-    "dap_an": "0,30 m.",
-    "loi_giai": "$s = ct = (3,0.10^8\\text{ m/s})(1,0.10^{-9}\\text{ s}) = 0,30\\text{ m}$.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9374,17 +8717,8 @@
     "phuong_an": "",
     "dap_an": "35 ngày.",
     "loi_giai": "Đáp án: 35 ngày.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q1970_LY_pdf_p66_img1.jpeg"
-  },
-  {
-    "ma_cau": "C-1cQNINaF-028",
-    "noi_dung": "Xác định độ phóng xạ của mẫu chất X tại thời điểm 145 ngày. (Kết quả tính theo đơn vị kBq và lấy đến một chữ số sau dấu phẩy thập phân).",
-    "phuong_an": "",
-    "dap_an": "56,6 kBq.",
-    "loi_giai": "Đáp án: 56,6 kBq.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-14LEjMVU-001",
@@ -9392,7 +8726,7 @@
     "phuong_an": "Hạt được tích điện.\nHạt điện di chuyển vuông góc với từ trường.\nHạt điện chuyển động song song với từ trường.\nCường độ của từ trường thay đổi theo thời gian.\nHạt điện tích đang đứng yên.",
     "dap_an": "c và e",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   }
 ]
