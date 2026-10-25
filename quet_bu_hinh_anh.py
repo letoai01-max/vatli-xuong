@@ -3,6 +3,7 @@ import re
 import io
 import json
 import base64
+import hashlib
 import subprocess
 import warnings
 
@@ -74,12 +75,11 @@ def quet_drive_va_gan_anh():
     patterns = config.get("BO_LOC_KY_THUAT", {}).get("bieu_thuc_nhan_dien_hinh", [])
     RE_CAN_HINH = re.compile("|".join(patterns), re.IGNORECASE) if patterns else re.compile(r"Hình|Đồ thị|Mạch điện|Giản đồ|Sơ đồ", re.IGNORECASE)
 
-    # Gom nhóm các câu cần hình theo File ID gốc ở Cột R (index 17)
     nhom_theo_file = {}
     for row_num, row_vals in enumerate(all_values[1:], start=2):
         row_vals = (row_vals + [""] * 23)[:23]
         nd = row_vals[6].strip()          # Cột G: Nội dung
-        ten_file_cau = row_vals[15].strip() # Cột P: Tên file (câu X)
+        ten_file_cau = row_vals[15].strip() # Cột P: Tên file
         file_id = row_vals[17].strip()    # Cột R: File ID gốc
         trang_thai = row_vals[20].strip() # Cột U: Trạng thái
         link_cu = row_vals[22].strip()    # Cột W: Link ảnh
@@ -87,7 +87,6 @@ def quet_drive_va_gan_anh():
         if trang_thai == "Loại" or not file_id:
             continue
         
-        # Nếu có từ khóa yêu cầu hình
         if RE_CAN_HINH.search(nd):
             clean_snippet = re.sub(r"\$.*?\$", "", nd)
             clean_snippet = re.sub(r"\[.*?\]", "", clean_snippet).strip()
@@ -102,13 +101,13 @@ def quet_drive_va_gan_anh():
             })
 
     tong_cau = sum(len(v) for v in nhom_theo_file.values())
-    print(f"🔎 Tìm thấy {tong_cau} câu hỏi cần kiểm tra/trích xuất hình ảnh từ {len(nhom_theo_file)} file đề gốc.", flush=True)
+    print(f"🔎 Tìm thấy {tong_cau} câu hỏi cần kiểm tra hình ảnh từ {len(nhom_theo_file)} file đề gốc.", flush=True)
     if not tong_cau:
         return
 
     os.makedirs("images", exist_ok=True)
-    min_w = config.get("BO_LOC_KY_THUAT", {}).get("min_width", 35)
-    min_h = config.get("BO_LOC_KY_THUAT", {}).get("min_height", 35)
+    min_w = config.get("BO_LOC_KY_THUAT", {}).get("min_width", 50)
+    min_h = config.get("BO_LOC_KY_THUAT", {}).get("min_height", 50)
 
     cap_nhat_sheet = []
     thay_doi_count = 0
@@ -139,9 +138,13 @@ def quet_drive_va_gan_anh():
                 so_cau = item["so_cau"]
                 link_cu = item["link_cu"]
                 
+                # Giữ lại link cũ nếu thực sự hợp lệ, hoặc làm sạch danh sách cũ bị trùng
                 danh_sach_link_anh = []
                 if link_cu:
-                    danh_sach_link_anh = [l.strip() for l in link_cu.split(",") if l.strip()]
+                    # Lọc bỏ các link rác/trùng lặp ngay từ đầu
+                    danh_sach_link_anh = list(dict.fromkeys([l.strip() for l in link_cu.split(",") if l.strip() and "images/" in l]))
+
+                ung_vien_hinh = []
 
                 for page_index in range(len(pdf_document)):
                     page = pdf_document[page_index]
@@ -153,7 +156,6 @@ def quet_drive_va_gan_anh():
 
                     if text_instances:
                         q_y = text_instances[0].y1
-                        # Thu thập tất cả các hình nằm gần câu hỏi này (khoảng cách Y từ -30 đến +420 pixels để bắt cả hình lớn)
                         for img_index, img in enumerate(page.get_images(full=True)):
                             xref = img[0]
                             rects = page.get_image_rects(xref)
@@ -161,27 +163,57 @@ def quet_drive_va_gan_anh():
                                 continue
                             img_y = rects[0].y0
                             
-                            # Kiểm soát biên độ để đạt độ chính xác >90%, tránh lấy nhầm ảnh câu khác
-                            if q_y - 40 <= img_y <= q_y + 420:
+                            # THU HẸP BIÊN ĐỘ TỌA ĐỘ CHÍNH XÁC: Chỉ lấy ảnh nằm ngay dưới câu hỏi (từ -10 đến +220 pixels) để loại bỏ ảnh rác xa câu hỏi
+                            if q_y - 10 <= img_y <= q_y + 220:
+                                khoang_cach_y = abs(img_y - q_y)
                                 base_image = pdf_document.extract_image(xref)
-                                w, h = base_image.get("width", 0), base_image.get("height", 0)
-                                
-                                # Lọc kích thước chuẩn xác icon/ảnh rác
-                                if w < min_w or h < min_h or w > 1800 or h > 1800:
+                                image_bytes = base_image.get("image")
+                                if not image_bytes:
                                     continue
                                 
-                                safe_name = f"q{row_num}_{re.sub(r'[^a-zA-Z0-9_-]', '_', file_name)[:25]}_p{page_index+1}_img{img_index+1}.{base_image['ext']}"
-                                image_path = os.path.join("images", safe_name)
+                                w, h = base_image.get("width", 0), base_image.get("height", 0)
+                                # Lọc kích thước bỏ icon nhỏ hoặc ảnh toàn trang quá khổ
+                                if w < min_w or h < min_h or w > 1600 or h > 1600:
+                                    continue
                                 
-                                with open(image_path, "wb") as f:
-                                    f.write(base_image["image"])
+                                # TẠO MÃ HÃM MD5 ĐỂ KHỬ TRÙNG LẶP NỘI DUNG BYTE ẢNH TUYỆT ĐỐI
+                                img_hash = hashlib.md5(image_bytes).hexdigest()
                                 
-                                direct_link = f"images/{safe_name}"
-                                if direct_link not in danh_sach_link_anh:
-                                    danh_sach_link_anh.append(direct_link)
-                                    print(f"✅ [Chính xác >90%] Dòng {row_num} bắt được ảnh: {safe_name}", flush=True)
+                                ung_vien_hinh.append({
+                                    "distance": khoang_cach_y,
+                                    "hash": img_hash,
+                                    "bytes": image_bytes,
+                                    "ext": base_image['ext'],
+                                    "page": page_index + 1,
+                                    "img_idx": img_index + 1
+                                })
 
-                # Nếu tìm thấy hình mới, cập nhật vào danh sách ghi Sheet
+                # Sắp xếp các ứng viên theo khoảng cách gần dòng câu hỏi nhất lên đầu
+                ung_vien_hinh.sort(key=lambda x: x["distance"])
+
+                da_nhận_hash = set()
+                # Chỉ lấy TỐI ĐA 1 hoặc 2 hình gần nhất và KHÔNG BAO GIỜ TRÙNG NỘI DUNG (Hash)
+                for uv in ung_vien_hinh:
+                    if uv["hash"] in da_nhận_hash:
+                        continue # Bỏ qua ảnh trùng lặp nội dung
+                    
+                    da_nhận_hash.add(uv["hash"])
+                    safe_name = f"q{row_num}_{re.sub(r'[^a-zA-Z0-9_-]', '_', file_name)[:20]}_p{uv['page']}_img{uv['img_idx']}.{uv['ext']}"
+                    image_path = os.path.join("images", safe_name)
+                    
+                    # Chỉ lưu file nếu chưa tồn tại trên ổ cứng để tránh ghi đè/nhân bản
+                    if not os.path.exists(image_path):
+                        with open(image_path, "wb") as f:
+                            f.write(uv["bytes"])
+                    
+                    direct_link = f"images/{safe_name}"
+                    if direct_link not in danh_sach_link_anh:
+                        danh_sach_link_anh.append(direct_link)
+                        print(f"✅ [Độ chính xác >90%] Dòng {row_num} nhận diện ảnh chuẩn: {safe_name}", flush=True)
+                    
+                    # Chỉ lấy đúng hình đầu tiên hoặc tối đa 1 hình duy nhất sát câu hỏi nhất để chống lan man
+                    break 
+
                 if danh_sach_link_anh:
                     final_link_str = ", ".join(danh_sach_link_anh)
                     if final_link_str != link_cu:
@@ -200,13 +232,13 @@ def quet_drive_va_gan_anh():
             subprocess.run(["git", "config", "--global", "user.name", "agent-bot"], check=True)
             subprocess.run(["git", "config", "--global", "user.email", "agent-bot@users.noreply.github.com"], check=True)
             subprocess.run(["git", "add", "images/"], check=True)
-            subprocess.run(["git", "commit", "-m", f"Auto-update high-precision physics images ({thay_doi_count} rows)"], check=True)
+            subprocess.run(["git", "commit", "-m", f"Auto-update high-precision deduplicated physics images ({thay_doi_count} rows)"], check=True)
             subprocess.run(["git", "push"], check=True)
-            print("✨ Đã đẩy toàn bộ ảnh chuẩn xác lên GitHub thành công!")
+            print("✨ Đã đẩy toàn bộ ảnh sạch, không trùng lặp lên GitHub thành công!")
         except Exception as e:
             print(f"⚠️ Lưu ý khi push Git: {e}")
 
-    print(f"✨ Hoàn tất! Đã kiểm soát và cập nhật thành công {thay_doi_count} câu hỏi có hình ảnh.")
+    print(f"✨ Hoàn tất! Đã kiểm soát và làm sạch dữ liệu cho {thay_doi_count} câu hỏi.")
 
 if __name__ == "__main__":
     quet_drive_va_gan_anh()
