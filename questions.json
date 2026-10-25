@@ -13,19 +13,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1qnRQQDl-019",
-    "lop": "12",
-    "muc_do": "Thông hiểu",
-    "dang": "Nhiều lựa chọn",
-    "noi_dung": "Hình vẽ bên cho biết hướng Bắc địa lý và chiều của dòng điện $I$ trong dây dẫn thẳng dài đi từ ngoài vào trong mặt phẳng hình vẽ. Đường sức từ của từ trường do dòng điện $I$ gây ra tại M hướng về phía [Hình: Dây dẫn I vuông góc mặt phẳng hình vẽ đi vào trong, điểm M nằm ở phía trên bên phải, mũi tên chỉ hướng Bắc hướng lên]",
-    "phuong_an": "A. Đông.\nB. Tây.\nC. Nam.\nD. Bắc.",
-    "dap_an": "",
-    "loi_giai": "",
-    "kiem_tra": "[AI 12/10] Không có đáp án; AI giải chưa thống nhất | [GV/Claude 13/10] phụ thuộc vị trí M trên hình gốc (mô tả: phía trên bên phải ⇒ hướng Đông Nam, không có phương án). Cần xem hình gốc rồi ghi đáp án | [CT2018 13/10] ✓ thuộc chương trình",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q67_De_tham_khao_HSG_Vat_li_12_cap_p5_img3.png, images/q67_De_tham_khao_HSG_Vat_li_1_p5_img3.png, images/q67_De_tham_khao_HSG_Vat_p5_img3.png"
-  },
-  {
     "ma_cau": "C-1qnRQQDl-023",
     "lop": "12",
     "muc_do": "Vận dụng",
@@ -50,32 +37,6 @@
     "kiem_tra": "[AI 12/10] Không có đáp án; AI giải chưa thống nhất | [GV/Claude 13/10] Claude giải lại, giả sử khí ở bên trái pit-tông – đối chiếu hình gốc | [CT2018 13/10] ✓ thuộc chương trình",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q72_De_tham_khao_HSG_Vat_li_12_cap_p3_img1.jpeg, images/q72_De_tham_khao_HSG_Vat_li_1_p3_img1.jpeg, images/q72_De_tham_khao_HSG_Vat_li_1_p3_img2.png, images/q72_De_tham_khao_HSG_Vat_li_1_p4_img1.png, images/q72_De_tham_khao_HSG_Vat_li_1_p4_img2.png, images/q72_De_tham_khao_HSG_Vat_p3_img1.jpeg"
-  },
-  {
-    "ma_cau": "C-1qnRQQDl-031",
-    "lop": "12",
-    "muc_do": "Vận dụng",
-    "dang": "Trả lời ngắn",
-    "noi_dung": "Dùng thông tin sau cho câu 5 và câu 6: Trong các trạm không gian vũ trụ, cần thu hồi khí oxygen $\\text{O}_2$ từ khí carbon dioxide $\\text{CO}_2$ do các nhà du hành thở ra để tái sử dụng. Trong một phương pháp thu hồi, cứ 1,00 mol $\\text{CO}_2$ tạo ra 1,00 mol $\\text{O}_2$ và 1,00 mol methane $\\text{CH}_4$. Sau một thời gian, lượng khí $\\text{CO}_2$ thu được là 0,480 kg. Khí $\\text{CH}_4$ và $\\text{O}_2$ tạo thành từ lượng $\\text{CO}_2$ nói trên được chứa trong hai bình khác nhau ban đầu đều chưa chứa khí. Khối lượng mol của $\\text{CO}_2$ và $\\text{O}_2$ lần lượt là $44,0\\text{ g/mol}$ và $32,0\\text{ g/mol}$. Coi các khí là khí lí tưởng.\nBình chứa khí $\\text{CH}_4$ có thể tích 136 lít và được duy trì ở nhiệt độ $-45^{\\circ}\\text{C}$. Áp suất của khí $\\text{CH}_4$ trong bình là $x.10^5\\text{ Pa}$. Tìm $x$ (làm tròn kết quả đến chữ số hàng phần trăm).",
-    "phuong_an": "",
-    "dap_an": "1,52",
-    "loi_giai": "n(CH₄) = n(CO₂) = 480/44 = 10,91 mol; p = nRT/V = 10,91.8,31.228/0,136 ≈ 1,52.10⁵ Pa ⇒ x = 1,52.",
-    "kiem_tra": "[AI 13/10] Không có đáp án; AI giải chưa thống nhất | [GV/Claude 13/10] Claude giải lại, đáp số 1,52 | [CT2018 14/10] ✓ thuộc chương trình",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1zcpbmq8-013",
-    "lop": "12",
-    "muc_do": "Vận dụng",
-    "dang": "Nhiều lựa chọn",
-    "noi_dung": "Một khối khí ban đầu ở trạng thái $(p_0, V_0, T_0)$. Khối khí giãn đẳng nhiệt đến thể tích $4V_0$, sau đó biến đổi đẳng áp về lại thể tích ban đầu. Đồ thị nào sau đây diễn tả đúng quá trình? [Hình: Bốn đồ thị biến đổi trạng thái Hình A (V-T), Hình B (p-T), Hình C (V-T), Hình D (p-V)]",
-    "phuong_an": "A. Đồ thị A.\nB. Đồ thị B.\nC. Đồ thị C.\nD. Đồ thị D.",
-    "dap_an": "",
-    "loi_giai": "",
-    "kiem_tra": "[AI 13/10] Không có đáp án; AI giải chưa thống nhất | [CT2018 14/10] ✓ thuộc chương trình",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q99_De_thi_thu_HSG_Vat_li_12_So_01_p2_img2.png, images/q99_De_thi_thu_HSG_Vat_li_12__p2_img2.png, images/q99_De_thi_thu_HSG_Vat_li_12__p2_img3.png, images/q99_De_thi_thu_HSG_Vat_l_p2_img3.png"
   },
   {
     "ma_cau": "C-1zcpbmq8-016",
@@ -14794,6 +14755,19 @@
     "link_anh": ""
   },
   {
+    "ma_cau": "C-1qnRQQDl-019",
+    "lop": "12",
+    "muc_do": "Thông hiểu",
+    "dang": "Nhiều lựa chọn",
+    "noi_dung": "Hình vẽ bên cho biết hướng Bắc địa lý và chiều của dòng điện $I$ trong dây dẫn thẳng dài đi từ ngoài vào trong mặt phẳng hình vẽ. Đường sức từ của từ trường do dòng điện $I$ gây ra tại M hướng về phía [Hình: Dây dẫn I vuông góc mặt phẳng hình vẽ đi vào trong, điểm M nằm ở phía trên bên phải, mũi tên chỉ hướng Bắc hướng lên]",
+    "phuong_an": "A. Đông.\nB. Tây.\nC. Nam.\nD. Bắc.",
+    "dap_an": "",
+    "loi_giai": "Nhập hoặc chỉnh sửa lời giải chi tiết...",
+    "kiem_tra": "[AI 12/10] Không có đáp án; AI giải chưa thống nhất | [GV/Claude 13/10] phụ thuộc vị trí M trên hình gốc (mô tả: phía trên bên phải ⇒ hướng Đông Nam, không có phương án). Cần xem hình gốc rồi ghi đáp án | [CT2018 13/10] ✓ thuộc chương trình",
+    "trang_thai": "AI duyệt",
+    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q67_De_tham_khao_HSG_Vat_li_12_cap_p5_img3.png, images/q67_De_tham_khao_HSG_Vat_li_1_p5_img3.png, images/q67_De_tham_khao_HSG_Vat_p5_img3.png"
+  },
+  {
     "ma_cau": "C-1qnRQQDl-020",
     "lop": "12",
     "muc_do": "Thông hiểu",
@@ -14907,6 +14881,19 @@
     "dap_an": "178",
     "loi_giai": "",
     "kiem_tra": "[AI 13/10] Không có đáp án gốc; 2 model giải độc lập cùng ra \"178\" (3.5-flash-lite + 3.8-flash) | [CT2018 14/10] ✓ thuộc chương trình",
+    "trang_thai": "AI duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1qnRQQDl-031",
+    "lop": "12",
+    "muc_do": "Vận dụng",
+    "dang": "Trả lời ngắn",
+    "noi_dung": "Dùng thông tin sau cho câu 5 và câu 6: Trong các trạm không gian vũ trụ, cần thu hồi khí oxygen $\\text{O}_2$ từ khí carbon dioxide $\\text{CO}_2$ do các nhà du hành thở ra để tái sử dụng. Trong một phương pháp thu hồi, cứ 1,00 mol $\\text{CO}_2$ tạo ra 1,00 mol $\\text{O}_2$ và 1,00 mol methane $\\text{CH}_4$. Sau một thời gian, lượng khí $\\text{CO}_2$ thu được là 0,480 kg. Khí $\\text{CH}_4$ và $\\text{O}_2$ tạo thành từ lượng $\\text{CO}_2$ nói trên được chứa trong hai bình khác nhau ban đầu đều chưa chứa khí. Khối lượng mol của $\\text{CO}_2$ và $\\text{O}_2$ lần lượt là $44,0\\text{ g/mol}$ và $32,0\\text{ g/mol}$. Coi các khí là khí lí tưởng.\nBình chứa khí $\\text{CH}_4$ có thể tích 136 lít và được duy trì ở nhiệt độ $-45^{\\circ}\\text{C}$. Áp suất của khí $\\text{CH}_4$ trong bình là $x.10^5\\text{ Pa}$. Tìm $x$ (làm tròn kết quả đến chữ số hàng phần trăm).",
+    "phuong_an": "",
+    "dap_an": "1,52",
+    "loi_giai": "n(CH₄) = n(CO₂) = 480/44 = 10,91 mol; p = nRT/V = 10,91.8,31.228/0,136 ≈ 1,52.10⁵ Pa ⇒ x = 1,52.",
+    "kiem_tra": "[AI 13/10] Không có đáp án; AI giải chưa thống nhất | [GV/Claude 13/10] Claude giải lại, đáp số 1,52 | [CT2018 14/10] ✓ thuộc chương trình",
     "trang_thai": "AI duyệt",
     "link_anh": ""
   },
@@ -15156,6 +15143,19 @@
     "kiem_tra": "[AI 13/10] Không có đáp án gốc; 2 model giải độc lập cùng ra \"A\" (3.8-flash + 3.5-flash-lite) | [CT2018 14/10] ✓ thuộc chương trình",
     "trang_thai": "AI duyệt",
     "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1zcpbmq8-013",
+    "lop": "12",
+    "muc_do": "Vận dụng",
+    "dang": "Nhiều lựa chọn",
+    "noi_dung": "Một khối khí ban đầu ở trạng thái $(p_0, V_0, T_0)$. Khối khí giãn đẳng nhiệt đến thể tích $4V_0$, sau đó biến đổi đẳng áp về lại thể tích ban đầu. Đồ thị nào sau đây diễn tả đúng quá trình? [Hình: Bốn đồ thị biến đổi trạng thái Hình A (V-T), Hình B (p-T), Hình C (V-T), Hình D (p-V)]",
+    "phuong_an": "A. Đồ thị A.\nB. Đồ thị B.\nC. Đồ thị C.\nD. Đồ thị D.",
+    "dap_an": "",
+    "loi_giai": "Nhập hoặc chỉnh sửa lời giải chi tiết...",
+    "kiem_tra": "[AI 13/10] Không có đáp án; AI giải chưa thống nhất | [CT2018 14/10] ✓ thuộc chương trình",
+    "trang_thai": "Loại",
+    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q99_De_thi_thu_HSG_Vat_li_12_So_01_p2_img2.png, images/q99_De_thi_thu_HSG_Vat_li_12__p2_img2.png, images/q99_De_thi_thu_HSG_Vat_li_12__p2_img3.png, images/q99_De_thi_thu_HSG_Vat_l_p2_img3.png"
   },
   {
     "ma_cau": "C-1zcpbmq8-014",
