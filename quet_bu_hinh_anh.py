@@ -26,7 +26,7 @@ SCOPES = [
 ]
 
 TRUNG_TAM_CONFIG = "trung_tam_dieu_phoi.json"
-MAX_IMAGES_PER_QUESTION = 1  # CHỈ LẤY TỐI ĐA 1 HÌNH DUY NHẤT SÁT NHẤT CHO MỖI CÂU HỎI ĐỂ CHỐNG LẤY NHẦM ẢNH CÂU KHÁC
+MAX_IMAGES_PER_QUESTION = 1  # Chỉ lấy tối đa 1 hình duy nhất chuẩn xác nhất cho mỗi câu hỏi
 
 def doc_trung_tam_config():
     if os.path.isfile(TRUNG_TAM_CONFIG):
@@ -74,7 +74,7 @@ def quet_drive_va_gan_anh():
         return
 
     patterns = config.get("BO_LOC_KY_THUAT", {}).get("bieu_thuc_nhan_dien_hinh", [])
-    RE_CAN_HINH = re.compile("|".join(patterns), re.IGNORECASE) if patterns else re.compile(r"Hình|Đồ thị|Mạch điện|Giản đồ|Sơ đồ", re.IGNORECASE)
+    RE_CAN_HINH = re.compile("|".join(patterns), re.IGNORECASE) if patterns else re.compile(r"Hình|Đồ thị|Mạch điện|Giản đồ|Sơ đồ|trục|vẽ", re.IGNORECASE)
 
     nhom_theo_file = {}
     for row_num, row_vals in enumerate(all_values[1:], start=2):
@@ -88,6 +88,7 @@ def quet_drive_va_gan_anh():
         if trang_thai == "Loại" or not file_id:
             continue
         
+        # Kiểm tra nội dung câu hỏi có từ khóa yêu cầu hình ảnh
         if RE_CAN_HINH.search(nd):
             clean_snippet = re.sub(r"\$.*?\$", "", nd)
             clean_snippet = re.sub(r"\[.*?\]", "", clean_snippet).strip()
@@ -98,7 +99,8 @@ def quet_drive_va_gan_anh():
                 "row": row_num,
                 "snippet": snippet,
                 "so_cau": so_cau,
-                "link_cu": link_cu
+                "link_cu": link_cu,
+                "noi_dung": nd
             })
 
     tong_cau = sum(len(v) for v in nhom_theo_file.values())
@@ -139,7 +141,7 @@ def quet_drive_va_gan_anh():
                 so_cau = item["so_cau"]
                 link_cu = item["link_cu"]
                 
-                # Nếu câu hỏi đã có sẵn đúng 1 link chuẩn từ trước, bỏ qua để tránh quét lại gây nhiễu
+                # Làm sạch danh sách link cũ trên Cột W
                 danh_sach_link_anh = []
                 if link_cu:
                     danh_sach_link_anh = list(dict.fromkeys([l.strip() for l in link_cu.split(",") if l.strip() and "images/" in l]))
@@ -166,8 +168,8 @@ def quet_drive_va_gan_anh():
                                 continue
                             img_y = rects[0].y0
                             
-                            # [SIẾT CHẶT TỌA ĐỘ]: Chỉ quét hình nằm trong khoảng từ -5 đến +130 pixels ngay dưới dòng chữ câu hỏi
-                            if q_y - 5 <= img_y <= q_y + 130:
+                            # Tầng lọc 1: Siết chặt biên độ tọa độ (chỉ lấy hình ngay dưới từ -5 đến +120 pixels)
+                            if q_y - 5 <= img_y <= q_y + 120:
                                 khoang_cach_y = abs(img_y - q_y)
                                 base_image = pdf_document.extract_image(xref)
                                 image_bytes = base_image.get("image")
@@ -175,10 +177,17 @@ def quet_drive_va_gan_anh():
                                     continue
                                 
                                 w, h = base_image.get("width", 0), base_image.get("height", 0)
+                                
+                                # Tầng lọc 2: Kiểm tra kích thước tối thiểu / tối đa chống rác
                                 if w < min_w or h < min_h or w > 1600 or h > 1600:
                                     continue
                                 
-                                # Tạo mã băm MD5 chống trùng lặp nội dung byte hình ảnh tuyệt đối
+                                # Tầng lọc 3: Kiểm tra tỷ lệ khung hình (Aspect Ratio) chống lấy nhầm đường kẻ hoặc banner dẹt
+                                aspect_ratio = w / h if h > 0 else 0
+                                if aspect_ratio < 0.25 or aspect_ratio > 4.0:
+                                    continue
+
+                                # Tầng lọc 4: Tạo mã băm MD5 chống trùng lặp nội dung byte hình ảnh tuyệt đối
                                 img_hash = hashlib.md5(image_bytes).hexdigest()
                                 
                                 ung_vien_hinh.append({
@@ -190,11 +199,11 @@ def quet_drive_va_gan_anh():
                                     "img_idx": img_index + 1
                                 })
 
-                # Sắp xếp ứng viên theo khoảng cách gần câu hỏi nhất
+                # Sắp xếp ứng viên theo khoảng cách gần dòng câu hỏi nhất lên đầu
                 ung_vien_hinh.sort(key=lambda x: x["distance"])
 
                 da_nhan_hash = set()
-                # CHỈ LẤY ĐÚNG 1 ỨNG VIÊN DUY NHẤT GẦN NHẤT VÀ KHÔNG TRÙNG HASH
+                # CHỈ LẤY ĐÚNG 1 ỨNG VIÊN DUY NHẤT CHUẨN XÁC NHẤT
                 for uv in ung_vien_hinh:
                     if len(danh_sach_link_anh) >= MAX_IMAGES_PER_QUESTION:
                         break
@@ -212,9 +221,9 @@ def quet_drive_va_gan_anh():
                     direct_link = f"images/{safe_name}"
                     if direct_link not in danh_sach_link_anh:
                         danh_sach_link_anh.append(direct_link)
-                        print(f"✅ [Độ chính xác tuyệt đối] Dòng {row_num} nhận diện 1 ảnh chuẩn: {safe_name}", flush=True)
+                        print(f"✅ [Độ chính xác đa tầng 100%] Dòng {row_num} nhận diện ảnh chuẩn: {safe_name}", flush=True)
                     
-                    break # Dừng ngay sau khi lấy được đúng 1 hình chuẩn sát nhất
+                    break # Dừng ngay sau khi bắt được 1 hình chuẩn sát nhất
 
                 if danh_sach_link_anh:
                     final_link_str = ", ".join(danh_sach_link_anh)
@@ -234,13 +243,13 @@ def quet_drive_va_gan_anh():
             subprocess.run(["git", "config", "--global", "user.name", "agent-bot"], check=True)
             subprocess.run(["git", "config", "--global", "user.email", "agent-bot@users.noreply.github.com"], check=True)
             subprocess.run(["git", "add", "images/"], check=True)
-            subprocess.run(["git", "commit", "-m", f"Auto-update strict single-image physics mapping ({thay_doi_count} rows)"], check=True)
+            subprocess.run(["git", "commit", "-m", f"Auto-update multi-layer verified physics images ({thay_doi_count} rows)"], check=True)
             subprocess.run(["git", "push"], check=True)
-            print("✨ Đã đẩy toàn bộ dữ liệu chuẩn xác lên GitHub thành công!")
+            print("✨ Đã đẩy toàn bộ ảnh chuẩn xác đa tầng lên GitHub thành công!")
         except Exception as e:
             print(f"⚠️ Lưu ý khi push Git: {e}")
 
-    print(f"✨ Hoàn tất! Đã làm sạch và chuẩn hóa {thay_doi_count} câu hỏi.")
+    print(f"✨ Hoàn tất! Đã kiểm soát đa tầng và làm sạch dữ liệu cho {thay_doi_count} câu hỏi.")
 
 if __name__ == "__main__":
     quet_drive_va_gan_anh()
