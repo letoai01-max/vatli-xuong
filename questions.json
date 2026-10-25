@@ -72,15 +72,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-14cLJcR_-012",
-    "noi_dung": "Hình bên là đồ thị biểu diễn sự phụ thuộc của điện áp xoay chiều u ở hai đầu một đoạn mạch vào thời gian t. Điện áp hiệu dụng ở hai đầu đoạn mạch bằng [Hình: Đồ thị hàm sin của u(V) theo t với biên độ cực đại là 220 V]",
-    "phuong_an": "A. $220\\sqrt{2}\\text{ (V)}.$\nB. $110\\sqrt{2}\\text{ (V)}.$\nC. $110\\text{ (V)}.$\nD. $220\\text{ (V)}.$",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q126_LOP11_DCONTAPKIEMTRAGK1.pdf_p5_img1.png, images/q126_LOP12_CUMBINHGIANG-CAMGIA_p4_img3.png, images/q126_LOP12_CUMBINHGIANG-C_p4_img3.png"
-  },
-  {
     "ma_cau": "C-14cLJcR_-013",
     "noi_dung": "Chỉ ra công thức đúng của định luật Coulomb trong chân không",
     "phuong_an": "A. $F = \\frac{1}{\\pi\\varepsilon^2} \\cdot \\frac{|q_1 q_2|}{r^2}$\nB. $F = k \\cdot \\frac{|q_1 q_2|}{r^2}$\nC. $F = \\frac{1}{4\\pi\\varepsilon^2} \\cdot \\frac{|q_1 q_2|}{r}$\nD. $F = k \\cdot \\frac{|q_1 q_2|}{r}$",
