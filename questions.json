@@ -1,14 +1,5 @@
 [
   {
-    "ma_cau": "C-1qnRQQDl-011",
-    "noi_dung": "Hình bên là các đường đẳng nhiệt của một lượng khí lí tưởng, ở các trạng thái A, B, C nhiệt độ của khí này tương ứng là $T_A$, $T_B$, $T_C$. Hệ thức nào sau đây đúng? [Hình: Đồ thị p-V với các trạng thái A, B trên đường cong phía trên và C trên đường cong phía dưới]",
-    "phuong_an": "A. $T_B = T_C < T_A$.\nB. $T_A > T_B > T_C$.\nC. $T_A = T_C < T_B$.\nD. $T_A < T_B < T_C$.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1zcpbmq8-018",
     "noi_dung": "Treo đoạn dây $MN = 5\\text{ cm}$, khối lượng $m = 5\\text{ g}$ bằng hai dây nhẹ, không giãn, có cùng chiều dài; đoạn dây luôn nằm ngang. Đặt hệ trong từ trường đều $B = 0,5\\text{ T}$ vuông góc với đoạn $MN$, chiều như hình. Dòng điện qua $MN$ có cường độ $I = 2\\text{ A}$. Lấy $g = 10\\text{ m/s}^2$. Khi cân bằng, góc lệch $\\alpha$ của dây treo so với phương thẳng đứng là [Hình: Dây MN nằm ngang được treo bởi 2 dây thẳng đứng, từ trường B hướng thẳng đứng xuống dưới, dòng điện I từ M sang N]",
     "phuong_an": "A. $74^\\circ$.\nB. $26^\\circ$.\nC. $45^\\circ$.\nD. $14^\\circ$.",
