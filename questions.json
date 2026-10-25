@@ -72,15 +72,6 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q164_vat-li-nghe-an_pdf_p1_img2.png, images/q164_vat-li-nghe-an_pdf_p1_img2.png, images/q164_vat-li-nghe-an_pdf_p1_img3.jpeg, images/q164_vat-li-nghe-an_pdf_p2_img2.png, images/q164_vat-li-nghe-an_pdf_p3_img4.jpeg"
   },
   {
-    "ma_cau": "C-1vdAbmXK-024",
-    "noi_dung": "Chất rắn Sodium azide (NaN3) được sử dụng trong túi khí ô tô như một nguồn cung cấp khí Nitơ để bơm căng túi khí nhanh chóng khi xảy ra va chạm. Khi ô tô va chạm mạnh vào vật cản, cảm biến va chạm sẽ kích hoạt làm chất rắn này phân hủy tạo ra khí N2 theo phương trình $2\\text{NaN}_3 \\rightarrow 2\\text{Na} + 3\\text{N}_2$. Khí N2 làm túi khí phồng lên, giúp người lái xe không va chạm trực tiếp với hệ thống lái. Trong một đợt thử nghiệm, thể tích túi khí khi có và không có người đè lên lần lượt là 64 lít và 67 lít. Biết nhiệt độ túi khí là $30^\\circ\\text{C}$ không đổi. Hằng số Bolzmann $k = 1,38 \\cdot 10^{-23}\\text{ J/K}$.\nKhi túi khí bung ra, động năng chuyển động tịnh tiến trung bình của một phân tử N2 là $b \\cdot 10^{-21}\\text{ J}$. Giá trị của b là bao nhiêu (làm tròn kết quả đến chữ số hàng phần mười)?",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1vdAbmXK-026",
     "noi_dung": "Xe đạp điện, xe máy điện là các ứng dụng của động cơ điện một chiều. Nguyên lí hoạt động của động cơ điện một chiều được mô tả như hình vẽ bên. Khung dây hình chữ nhật $ABCD$ có kích thước $AB = 30,0\\text{ cm}$; $BC = 20,0\\text{ cm}$; đặt trong từ trường đều giữa hai cực của nam châm có độ lớn cảm ứng từ là $0,60\\text{ T}$. Biết cạnh AB và CD luôn vuông góc với các đường sức từ.\nKhi khung dây quay thì xuất hiện suất điện động cảm ứng gọi là suất phản điện. Biết khung gồm $20,0$ vòng dây. Lấy $\\pi = 3,14$. Khi tốc độ quay của khung là $6,0\\text{ vòng/s}$ thì suất phản điện có giá trị hiệu dụng là bao nhiêu Vôn (làm tròn kết quả đến chữ số hàng phần đơn vị)?",
     "phuong_an": "",
@@ -88,24 +79,6 @@
     "loi_giai": "",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q168_vat-li-nghe-an_pdf_p1_img2.png, images/q168_vat-li-nghe-an_pdf_p1_img2.png, images/q168_vat-li-nghe-an_pdf_p1_img3.jpeg, images/q168_vat-li-nghe-an_pdf_p2_img2.png, images/q168_vat-li-nghe-an_pdf_p3_img1.jpeg, images/q168_vat-li-nghe-an_pdf_p3_img2.jpeg, images/q168_vat-li-nghe-an_pdf_p3_img3.jpeg, images/q168_vat-li-nghe-an_pdf_p4_img2.jpeg"
-  },
-  {
-    "ma_cau": "C-1vdAbmXK-027",
-    "noi_dung": "Các sự cố hạt nhân như Chernobyl (1986) hay Fukushima (2011) có thể làm phát tán đồng vị phóng xạ $_{38}^{90}\\text{Sr}$ vào môi trường. Đây là chất có tính chất hóa học tương tự calcium, nên dễ dàng hấp thụ vào cơ thể người thông qua chuỗi thức ăn, đặc biệt là sữa bò. Đồng vị $_{38}^{90}\\text{Sr}$ có chu kỳ bán rã là $T_1 = 28,8\\text{ năm}$. Trong 1,0 lít sữa bò bị nhiễm xạ có độ phóng xạ $_{38}^{90}\\text{Sr}$ là $0,69\\text{ Bq}$. Lấy 1 năm = 365 ngày.\nTrong một mẫu thử có thể tích 200 ml lấy từ lô sữa trên, số hạt $_{38}^{90}\\text{Sr}$ có trong mẫu là $x \\cdot 10^8\\text{ hạt}$. Giá trị của x là bao nhiêu (làm tròn kết quả đến chữ số hàng phần mười)?",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1vdAbmXK-028",
-    "noi_dung": "Các sự cố hạt nhân như Chernobyl (1986) hay Fukushima (2011) có thể làm phát tán đồng vị phóng xạ $_{38}^{90}\\text{Sr}$ vào môi trường. Đây là chất có tính chất hóa học tương tự calcium, nên dễ dàng hấp thụ vào cơ thể người thông qua chuỗi thức ăn, đặc biệt là sữa bò. Đồng vị $_{38}^{90}\\text{Sr}$ có chu kỳ bán rã là $T_1 = 28,8\\text{ năm}$. Trong 1,0 lít sữa bò bị nhiễm xạ có độ phóng xạ $_{38}^{90}\\text{Sr}$ là $0,69\\text{ Bq}$. Lấy 1 năm = 365 ngày.\nMột người uống loại sữa trên, đồng vị $_{38}^{90}\\text{Sr}$ tích tụ trong xương và giảm đi theo hai cơ chế song song: phân rã phóng xạ tự nhiên và đào thải sinh học theo cùng qui luật của phóng xạ với chu kỳ $T_2 = 30,0\\text{ năm}$. Thời gian để số hạt nhân $_{38}^{90}\\text{Sr}$ trong xương người đó giảm đi 75,0 % so với ban đầu là bao nhiêu năm (làm tròn kết quả đến chữ số đến hàng phần mười)?",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1Hly_M0y-018",
