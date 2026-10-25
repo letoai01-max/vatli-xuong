@@ -9,33 +9,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1qnRQQDl-023",
-    "noi_dung": "Trong một thí nghiệm tìm nhiệt dung riêng và nhiệt hóa hơi riêng, người ta đổ một lượng chất lỏng có khối lượng $m = 40\\text{ g}$ vào một cốc kim loại không có nắp và bắt đầu đun nóng bằng đèn cồn, liên tục đo nhiệt độ của cốc kim loại và thu được đồ thị nhiệt độ của cốc là $t\\text{ }(^{\\circ}\\text{C})$ phụ thuộc vào thời gian $T\\text{ (s)}$ như hình vẽ: Biết mỗi giây đèn đốt hết 11 mg cồn và nhiệt lượng tỏa ra khi đốt cháy 1 g cồn là 27 kJ. Bỏ qua nhiệt lượng hao phí ra môi trường. [Hình: Đồ thị đường t-T từ điểm A (0s, 20°C) đến B (60s, 80°C), đoạn BC nằm ngang ở 80°C từ 60s đến 180s, đoạn CD từ 180s đến 220s tăng từ 80°C lên 140°C]",
-    "phuong_an": "a) Nhiệt lượng đèn cồn cung cấp trong giai đoạn BC là 35,64 kJ.\nb) Tương ứng với giai đoạn CD thì chất lỏng đã bay hơi hết. Khi đó nhiệt lượng do đèn cồn cung cấp chỉ dùng để làm nóng cốc.\nc) Chất lỏng được sử dụng trong thí nghiệm có nhiệt dung riêng $c = 2,71\\text{ J/(g.K)}$.\nd) Nhiệt hóa hơi riêng của chất lỏng dùng trong thí nghiệm là $L = 9,8\\text{ J/g}$.",
-    "dap_an": "a) Đ, b) Đ, c) S, d) S",
-    "loi_giai": "P = 0,011 g/s × 27 kJ/g = 297 W; BC: 297.120 = 35,64 kJ. CD: 297.40 = C_cốc.60 ⇒ C_cốc = 198 J/K; AB: 297.60 = (mc + 198).60 ⇒ c = 2,475 J/(g.K); BC: mL = 35 640 J ⇒ L = 891 J/g.",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q71_De_tham_khao_HSG_Vat_li_12_cap_p3_img1.jpeg, images/q71_De_tham_khao_HSG_Vat_li_1_p3_img1.jpeg, images/q71_De_tham_khao_HSG_Vat_li_1_p3_img2.png, images/q71_De_tham_khao_HSG_Vat_li_1_p5_img1.jpeg, images/q71_De_tham_khao_HSG_Vat_li_1_p5_img2.png, images/q71_De_tham_khao_HSG_Vat_li_1_p5_img3.png, images/q71_De_tham_khao_HSG_Vat_li_1_p6_img1.png, images/q71_De_tham_khao_HSG_Vat_p5_img1.jpeg"
-  },
-  {
-    "ma_cau": "C-1qnRQQDl-024",
-    "noi_dung": "Một lượng khí được coi là khí lí tưởng có thể tích $240\\text{ cm}^3$ được chứa trong một xi lanh có pit-tông đóng kín đặt nằm ngang như hình, tiết diện của pit-tông là $24\\text{ cm}^2$. Áp suất khí quyển bên ngoài là $10^5\\text{ Pa}$. Bỏ qua sự thay đổi nhiệt độ của khối khí, bỏ qua lực ma sát giữa pit-tông và xi lanh. [Hình: Xi lanh nằm ngang chứa khí có pít-tông đóng kín]",
-    "phuong_an": "a) Khi pit-tông ở trạng thái cân bằng, áp suất khí trong xi lanh bằng $10^5\\text{ Pa}$.\nb) Dùng lực kéo hoặc đẩy để thay đổi vị trí của pit-tông. Đồ thị áp suất phụ thuộc vào thể tích của lượng khí trong xi lanh là đường thẳng kéo dài đi qua gốc tọa độ.\nc) Cần tác dụng lực có độ lớn 4 N để dịch chuyển pit-tông sang phải 2 cm so với vị trí ban đầu.\nd) Khi pit-tông đã dịch chuyển sang phải 2 cm so với vị trí ban đầu, đột nhiên xi lanh bị thủng một lỗ nhỏ ở phần chứa khí. Khi đó số phân tử khí trong xi lanh tràn ra môi trường nhiều hơn số phân tử khí từ môi trường tràn vào xi lanh.",
-    "dap_an": "a) Đ, b) S, c) S, d) S",
-    "loi_giai": "(Giả sử khí ở bên trái pit-tông.) Cân bằng p = p₀. Đẳng nhiệt: p–V là hypebol. Kéo sang phải 2 cm: V = 288 cm³ ⇒ p = 0,833.10⁵ Pa ⇒ F = (p₀ − p)S = 40 N. Khi thủng: p < p₀ nên khí bên ngoài tràn vào nhiều hơn.",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q72_De_tham_khao_HSG_Vat_li_12_cap_p3_img1.jpeg, images/q72_De_tham_khao_HSG_Vat_li_1_p3_img1.jpeg, images/q72_De_tham_khao_HSG_Vat_li_1_p3_img2.png, images/q72_De_tham_khao_HSG_Vat_li_1_p4_img1.png, images/q72_De_tham_khao_HSG_Vat_li_1_p4_img2.png, images/q72_De_tham_khao_HSG_Vat_p3_img1.jpeg"
-  },
-  {
-    "ma_cau": "C-1zcpbmq8-016",
-    "noi_dung": "Đặt một khung dây dẫn hình chữ nhật có dòng điện chạy qua trong từ trường đều sao cho mặt phẳng khung vuông góc với các đường cảm ứng từ, chiều dòng điện và cảm ứng từ như hình. Lực từ có tác dụng [Hình: Khung dây nằm ngang mang dòng điện I ngược chiều kim đồng hồ nhìn từ trên xuống, cảm ứng từ B hướng thẳng đứng lên trên]",
-    "phuong_an": "A. làm dãn khung.\nB. làm khung dây quay.\nC. làm nén khung.\nD. không tác dụng lên khung.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q102_De_thi_thu_HSG_Vat_li_12_So_01_p3_img1.png, images/q102_De_thi_thu_HSG_Vat_li_12__p3_img1.png, images/q102_De_thi_thu_HSG_Vat_li_12__p3_img2.png, images/q102_De_thi_thu_HSG_Vat_li_12__p3_img3.jpeg, images/q102_De_thi_thu_HSG_Vat_l_p3_img1.png"
-  },
-  {
     "ma_cau": "C-1zcpbmq8-018",
     "noi_dung": "Treo đoạn dây $MN = 5\\text{ cm}$, khối lượng $m = 5\\text{ g}$ bằng hai dây nhẹ, không giãn, có cùng chiều dài; đoạn dây luôn nằm ngang. Đặt hệ trong từ trường đều $B = 0,5\\text{ T}$ vuông góc với đoạn $MN$, chiều như hình. Dòng điện qua $MN$ có cường độ $I = 2\\text{ A}$. Lấy $g = 10\\text{ m/s}^2$. Khi cân bằng, góc lệch $\\alpha$ của dây treo so với phương thẳng đứng là [Hình: Dây MN nằm ngang được treo bởi 2 dây thẳng đứng, từ trường B hướng thẳng đứng xuống dưới, dòng điện I từ M sang N]",
     "phuong_an": "A. $74^\\circ$.\nB. $26^\\circ$.\nC. $45^\\circ$.\nD. $14^\\circ$.",
