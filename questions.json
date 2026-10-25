@@ -9,15 +9,6 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q104_De_thi_thu_HSG_Vat_li_12_So_01_p3_img3.jpeg, images/q104_De_thi_thu_HSG_Vat_li_12__p3_img3.jpeg, images/q104_De_thi_thu_HSG_Vat_li_12__p3_img4.jpeg, images/q104_De_thi_thu_HSG_Vat_l_p3_img3.jpeg"
   },
   {
-    "ma_cau": "C-1zcpbmq8-019",
-    "noi_dung": "Người ta làm thí nghiệm cho những giọt dầu nhỏ mang điện rơi trong điện trường đều đặt trong chân không. Cường độ điện trường $E = 5,92 \\times 10^4\\text{ N/C}$ hướng thẳng đứng xuống dưới. Khối lượng mỗi giọt dầu $m = 2,93 \\times 10^{-15}\\text{ kg}$. Lấy $g = 9,80\\text{ m/s}^2$. [Hình: Giọt dầu điện tích q ở giữa hai bản tụ điện phẳng song song cách nhau khoảng d]",
-    "phuong_an": "a) Khi giọt dầu lơ lửng trong điện trường thì điện tích của giọt dầu mang dấu dương.\nb) Khi giọt dầu lơ lửng, trọng lực $\\vec{P}$ và lực điện $\\vec{F}_đ$ cân bằng nhau.\nc) Khi giọt dầu lơ lửng, độ lớn điện tích của giọt dầu là $4,85 \\times 10^{-19}\\text{ C}$.\nd) Một giọt dầu khác có cùng khối lượng, rơi từ trạng thái nghỉ và trong $0,250\\text{ s}$ đi được $10,3\\text{ cm}$. Điện tích của giọt dầu này là $-3,32 \\times 10^{-19}\\text{ C}$.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q105_De_thi_thu_HSG_Vat_li_12_So_01_p2_img2.png, images/q105_De_thi_thu_HSG_Vat_li_12__p2_img2.png, images/q105_De_thi_thu_HSG_Vat_li_12__p2_img3.png, images/q105_De_thi_thu_HSG_Vat_li_12__p3_img4.jpeg, images/q105_De_thi_thu_HSG_Vat_l_p3_img4.jpeg"
-  },
-  {
     "ma_cau": "C-1zcpbmq8-020",
     "noi_dung": "Hình dưới biểu diễn sự thay đổi nhiệt độ theo thời gian của chất $X$ trong quá trình làm nguội. [Hình: Đồ thị t(°C) theo thời gian (phút), từ 160°C hạ xuống 120°C, nằm ngang ở 120°C (Khí -> Lỏng), hạ tiếp xuống 40°C, nằm ngang ở 40°C (Lỏng -> Rắn), rồi tiếp tục hạ nhiệt độ]",
     "phuong_an": "a) Nhiệt độ sôi của chất $X$ là $160^\\circ\\text{C}$.\nb) Nhiệt độ nóng chảy của chất $X$ là $40^\\circ\\text{C}$.\nc) Ở $120^\\circ\\text{C}$, chất $X$ có thể đồng thời tồn tại ở thể lỏng và thể khí.\nd) Ở $40^\\circ\\text{C}$, chất $X$ đồng thời tồn tại ở thể rắn, thể lỏng và thể hơi.",
@@ -9572,6 +9563,15 @@
     "phuong_an": "",
     "dap_an": "56,6 kBq.",
     "loi_giai": "Đáp án: 56,6 kBq.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-14LEjMVU-001",
+    "noi_dung": "Một từ trường đều không thể gây ra một lực từ lên một hạt trong trường hợp nào sau đây? Có thể chọn nhiều đáp án.\n(a) Hạt được tích điện.\n(b) Hạt điện di chuyển vuông góc với từ trường.\n(c) Hạt điện chuyển động song song với từ trường.\n(d) Cường độ của từ trường thay đổi theo thời gian.\n(e) Hạt điện tích đang đứng yên.",
+    "phuong_an": "Hạt được tích điện.\nHạt điện di chuyển vuông góc với từ trường.\nHạt điện chuyển động song song với từ trường.\nCường độ của từ trường thay đổi theo thời gian.\nHạt điện tích đang đứng yên.",
+    "dap_an": "c và e",
+    "loi_giai": "",
     "trang_thai": "Chưa duyệt",
     "link_anh": ""
   }
