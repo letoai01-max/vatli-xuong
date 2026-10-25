@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "30 23 * * *"
+  repository_dispatch:
+    types: [trigger_xuat_de]
 
 permissions:
   contents: write
