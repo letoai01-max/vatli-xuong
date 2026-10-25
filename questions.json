@@ -90,26 +90,8 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-14cLJcR_-025",
-    "noi_dung": "Khí carbon dioxide ($\\text{CO}_2$) được sử dụng trong các bình chữa cháy. Khi mở van bình, do có sự chênh lệch về áp suất, $\\text{CO}_2$ (lỏng) trong bình thoát ra ngoài qua hệ thống và chuyển thành dạng tuyết thán khí (rắn), lạnh tới $-78^\\circ\\text{C}$. Khi phun vào đám cháy, $\\text{CO}_2$ có tác dụng làm loãng nồng độ hỗn hợp hơi khí cháy, đồng thời làm lạnh vùng cháy dẫn tới triệt tiêu đám cháy. Để hóa lỏng khí $\\text{CO}_2$ ở nhiệt độ $20^\\circ\\text{C}$, ta cần phải đưa khí $\\text{CO}_2$ về áp suất 60 atm. Muốn có một bình chứa 5 lít khí $\\text{CO}_2$ đã được hóa lỏng thì phải cần cần ít nhất bao nhiêu lít khí $\\text{CO}_2$ ở nhiệt độ $27^\\circ\\text{C}$ và áp suất 1 atm ? (Bỏ qua sự chuyển thể từ khí thành lỏng). (Kết quả làm tròn đến đơn vị) [Hình: Bình chữa cháy khí CO2]",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q139_LOP12_CUMBINHGIANG-CAMGIANG-TH_p7_img2.jpeg, images/q139_LOP12_CUMBINHGIANG-CAMGIA_p7_img2.jpeg, images/q139_LOP12_CUMBINHGIANG-C_p7_img2.jpeg"
-  },
-  {
     "ma_cau": "C-14cLJcR_-026",
     "noi_dung": "Tính tốc độ căn quân phương (đơn vị m/s ) trong chuyển động nhiệt của phân tử khí Hydrogen có khối lượng moi là 2 g/mol ở nhiệt độ 320 K. Coi các phân tử khí là giống nhau, cho hằng số khí $R = 8,31\\left(\\frac{\\text{J}}{\\text{mol.K}}\\right)$. (Kết quả làm tròn đến hàng đơn vị).",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-14cLJcR_-027",
-    "noi_dung": "Một thanh kim loại MN có chiều dài $l = 10,0\\text{ cm}$ khối lượng $m = 12\\text{ g}$ được treo nằm ngang bằng hai dây kim loại, nhẹ, cứng song song cùng độ dài AM và CN trong từ trường đều. Cảm ứng từ của từ trường này có độ lớn, $B = 0,10\\text{ T}$ hướng vuông góc với thanh MN và chếch lên phía trên hợp với phương thẳng đứng một gốc $\\alpha = 30^\\circ$. Lúc đầu, hai dây treo AM và CN nằm trong mặt phẳng thẳng đứng. Sau đó, cho dòng điện cuờng độ 12 A chạy qua thanh MN. Lấy $g = 10\\text{ m/s}^2$. Gọi $\\gamma$ là góc lệch của mặt phẳng chứa hai dây treo AM và CN so với mặt phẳng thẳng đứng cân bằng. Gọi a là giá trị lớn nhất của góc $\\gamma$; b là giá trị nhỏ nhất của góc $\\gamma$ thì b - a có giá trị bằng bao nhiêu độ?",
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "",
