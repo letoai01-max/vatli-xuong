@@ -90,24 +90,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-14cLJcR_-026",
-    "noi_dung": "Tính tốc độ căn quân phương (đơn vị m/s ) trong chuyển động nhiệt của phân tử khí Hydrogen có khối lượng moi là 2 g/mol ở nhiệt độ 320 K. Coi các phân tử khí là giống nhau, cho hằng số khí $R = 8,31\\left(\\frac{\\text{J}}{\\text{mol.K}}\\right)$. (Kết quả làm tròn đến hàng đơn vị).",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-14cLJcR_-028",
-    "noi_dung": "Hai thanh ray dẫn điện, song song cách nhau một khoảng $d = 20\\text{ cm}$ nằm trong mặt phẳng thẳng đứng. Một thanh dây dẫn điện MN có khối lượng $m = 2\\text{ g}$ tựa vào 2 đường ray và có thể trượt không ma sát dọc theo các đường ray. Hệ thống được đặt trong từ trường đều $\\vec{B}$ nằm ngang vuông góc với mặt phẳng của hai đường ray như hình vẽ, $B = 2\\text{ T}$. Mắc vào giữa hai điểm $P$ và $Q$ một tụ điện có điện dung $C = 1\\text{mF}$ ban đầu không tích điện. Tại thời điểm ban đầu thanh MN được giữ yên. Bỏ qua mọi ma sát và điện trở của các thanh, coi chiều dài 2 thanh ray đủ lớn. Thả thanh MN tự do thì nó sẽ trượt với gia tốc bằng bao nhiêu $\\text{m/s}^2$? Coi trong quá trình trượt thanh MN luôn nằm ngang và tì vào 2 thanh ray, lấy $g = 10\\text{ m/s}^2$. (kết quả làm tròn đến 2 chữ số thập phân) [Hình: Khung ray thẳng đứng gồm hai ray song song, phía trên thanh MN vắt ngang, phía dưới có hai cực P, Q nối với tụ điện, từ trường B vuông góc hướng ra]",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q142_LOP12_CUMBINHGIANG-CAMGIANG-TH_p8_img2.png, images/q142_LOP12_CUMBINHGIANG-CAMGIA_p8_img2.png, images/q142_LOP12_CUMBINHGIANG-C_p8_img2.png"
-  },
-  {
     "ma_cau": "C-1vdAbmXK-005",
     "noi_dung": "Nối ống dây dẫn vào nguồn điện không đổi qua khóa K như hình vẽ bên. Khi đóng khóa K và đặt kim nam châm tại điểm A thì cực Nam của nó sẽ hướng về vị trí\n[Hình: Ống dây quấn nối với nguồn qua khóa K, bên phải là điểm A với 4 hướng (1), (2), (3), (4)]",
     "phuong_an": "A. (2).\nB. (3).\nC. (1).\nD. (4).",
