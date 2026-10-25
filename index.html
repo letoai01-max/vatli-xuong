@@ -232,7 +232,8 @@
             container.innerHTML = '';
             dsHienThi.forEach((item, index) => {
                 const card = document.createElement('div');
-                card.className = "bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-4 shadow-lg";
+                // Gán lớp định danh question-card để hàm xử lý duyệt nhận diện chính xác thẻ câu hỏi
+                card.className = "question-card bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-4 shadow-lg";
 
                 let dangCauHoi = (item.dang || item.loai_cau_hoi || 'Trắc nghiệm').toLowerCase();
                 let phuongAnRaw = item.phuong_an || '';
@@ -414,8 +415,8 @@
         }
 
         function xuLyDuyetCau(maCau, trangThaiMoi, buttonElement) {
-            // Tìm và xóa card câu hỏi hiện tại ngay khi bấm nút duyệt hoặc loại bỏ
-            const card = buttonElement.closest('.bg-slate-900');
+            // Tìm chính xác thẻ câu hỏi dựa vào lớp định danh question-card
+            const card = buttonElement.closest('.question-card');
             if (card) {
                 card.style.transition = "all 0.3s ease";
                 card.style.opacity = "0";
