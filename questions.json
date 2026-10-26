@@ -45,15 +45,6 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q135_LOP12_CUMBINHGIANG-CAMGIANG-TH_p6_img3.png, images/q135_LOP12_CUMBINHGIANG-CAMGIA_p6_img3.png, images/q135_LOP12_CUMBINHGIANG-C_p6_img3.png"
   },
   {
-    "ma_cau": "C-14cLJcR_-022",
-    "noi_dung": "Đặt điện áp biểu thức $u = 200\\cos\\left(100\\pi t - \\frac{\\pi}{6}\\right)\\text{ (V)}$ vào hai đầu đoạn mạch thì dòng điện trong mạch có biểu thức $i = 2\\cos\\left(100\\pi t + \\frac{\\pi}{12}\\right)\\text{ (A)}$. Với t tính bằng s.",
-    "phuong_an": "a) Cường độ dòng điện hiệu dụng trong mạch là $\\sqrt{2}\\text{ A}.$\nb) Điện áp hai đầu đoạn mạch nhanh pha $\\frac{\\pi}{4}$ so với dòng điện trong mạch.\nc) Ở thời điểm điện áp hai đầu đoạn mạch có giá trị nhỏ nhất thì dòng điện trong mạch $t = -\\sqrt{2}\\text{ (A)}$ và đang tăng.\nd) Trong một chu kì, khoảng thời gian mà điện áp và dòng điện cùng dấu là 15 (ms)",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1vdAbmXK-022",
     "noi_dung": "Khi tìm hiểu về quá trình tản nhiệt, một nhóm học sinh thảo luận và cho rằng: Công suất tản nhiệt từ vật ra môi trường tỷ lệ thuận với độ chênh lệch nhiệt độ giữa chúng. Để kiểm chứng nhận định đó, nhóm thực hiện thí nghiệm về sự truyền nhiệt của một cốc nước ra môi trường. Các bước thí nghiệm như sau:\nBước 1: Bố trí thí nghiệm theo sơ đồ như hình vẽ, điện trở chìm hoàn toàn trong nước. Ban đầu k ngắt, nhiệt kế chỉ $t_0$.\nBước 2: Đóng khóa k, điều chỉnh công suất đủ nhỏ để nước không sôi, theo dõi nhiệt độ của nước thì nhóm nhận thấy, với một công suất điện P nhất định, nhiệt độ của nước tăng đến một giá trị rồi ổn định. Nhóm ghi lại công suất P và nhiệt độ ổn định t.\nBước 3: Lặp lại thí nghiệm với các giá trị công suất khác nhau.\nCoi nhiệt độ môi trường không đổi, bỏ qua sự hóa hơi của nước.\n[Hình: Sơ đồ thí nghiệm đo công suất tỏa nhiệt của cốc nước với điện trở và oát kế]",
     "phuong_an": "a) Nhiệt độ môi trường là $t_0$.\nb) Nhiệt năng truyền từ điện trở sang nước và từ nước ra môi trường.\nc) Khi nhiệt độ ổn định, công suất tỏa nhiệt của điện trở cho nước và công suất tỏa nhiệt của nước cho môi trường bằng nhau.\nd) Nhóm vẽ đồ thị biểu diễn sự phụ thuộc của $\\Delta t = t - t_0$ vào P. Nếu đồ thị sau khi xử lí có dạng là đường thẳng đi qua gốc tọa độ thì nhận định ban đầu của nhóm là đúng.",
