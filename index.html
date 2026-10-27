@@ -11,7 +11,7 @@
     <!-- MathJax cho hiển thị công thức Vật lí -->
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
             svg: { fontCache: 'global' }
         };
     </script>
@@ -30,6 +30,9 @@
         .tt-chua-tot { color: #fb7185; }
         .tt-chua-tot .cham { background: #fb7185; }
         .agent-card.chua-tot { border-color: rgba(251, 113, 133, 0.5); }
+        /* [MỚI] Khung xem trước lời giải: giữ xuống dòng, công thức $$ căn giữa, tràn ngang thì cuộn */
+        .xem-loi-giai { white-space: pre-line; overflow-x: auto; }
+        .xem-loi-giai mjx-container[display="true"] { margin: 0.4em 0 !important; }
         /* BIỂU TƯỢNG LOGO CHUYỂN ĐỘNG: nguyên tử quay chậm + khung phát sáng nhịp nhàng */
         .logo-quay { display: inline-block; animation: nguyenTuQuay 6s linear infinite; }
         .logo-khung { animation: khungPhatSang 2.4s ease-in-out infinite; }
@@ -225,6 +228,9 @@
                         <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
                             <i class="fa-solid fa-eye"></i> Hiện ~20 câu cần duyệt
                         </button>
+                        <button onclick="chuanHoaTatCaLoiGiai()" title="Chuẩn hoá chữ và công thức trong lời giải của mọi câu đang hiện" class="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-violet-600/20 cursor-pointer">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Chuẩn hoá tất cả lời giải
+                        </button>
                     </div>
                 </div>
 
@@ -351,6 +357,119 @@
                 MathJax.typesetPromise([xem]);
             }
         }
+
+        // ===================== [MỚI] CHUẨN HOÁ LaTeX LỜI GIẢI =====================
+        // Bản JavaScript của ChuanLatex.gs (chuanHoaToan_ / chuanHoaLatex_) để chuẩn hoá ngay trên web.
+        // Idempotent: bấm nhiều lần kết quả không đổi.
+        const LATEX_UNICODE = {
+            'α': '\\alpha', 'β': '\\beta', 'γ': '\\gamma', 'δ': '\\delta', 'ε': '\\varepsilon', 'θ': '\\theta',
+            'λ': '\\lambda', 'μ': '\\mu', 'π': '\\pi', 'ρ': '\\rho', 'σ': '\\sigma', 'τ': '\\tau', 'φ': '\\varphi',
+            'ω': '\\omega', 'Δ': '\\Delta', 'Ω': '\\Omega', 'Φ': '\\Phi', 'Σ': '\\Sigma', 'Θ': '\\Theta', 'Λ': '\\Lambda',
+            '≈': '\\approx', '≤': '\\le ', '≥': '\\ge ', '≠': '\\ne ', '±': '\\pm ', '×': '\\times ', '·': '\\cdot ', '∙': '\\cdot ',
+            '→': '\\to ', '⇒': '\\Rightarrow ', '∞': '\\infty ', '∝': '\\propto ', '−': '-', '–': '-', '°': '^\\circ '
+        };
+        const SO_MU = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-' };
+
+        function chuanHoaToan(m) {
+            let s = String(m == null ? '' : m);
+            s = s.replace(/\\\\(?=[A-Za-z])/g, '\\');                                   // \\cdot -> \cdot
+            s = s.replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, c => {                                     // 10⁻³ -> 10^{-3}, m² -> m^2
+                const t = c.replace(/./g, k => SO_MU[k]);
+                return t.length > 1 ? '^{' + t + '}' : '^' + t;
+            });
+            s = s.replace(/[αβγδεθλμπρστφωΔΩΦΣΘΛ≈≤≥≠±×·∙→⇒∞∝−–°]/g, c => LATEX_UNICODE[c]);
+            s = s.replace(/√\s*\(([^()]*)\)/g, '\\sqrt{$1}').replace(/√\s*([A-Za-z0-9.,]+)/g, '\\sqrt{$1}');
+            s = s.replace(/\\[dt]frac\b/g, '\\frac').replace(/\\mathrm\{/g, '\\text{');
+            s = s.replace(/(\d)\s*\\times\s*(?=\d)/g, '$1\\cdot ');                     // 3 \times 4 -> 3\cdot 4
+            s = s.replace(/\s*\*\s*/g, '\\cdot ');                                       // B*I*L -> B\cdot I\cdot L
+            s = s.replace(/\^\s*(-?\d{2,}|-\d)(?![\d}])/g, '^{$1}');                   // 10^-3 -> 10^{-3}
+            s = s.replace(/(\d(?:\{,\})?\d*)\s+(km\/h|m\/s|cm|mm|km|kg|mg|ms|Hz|MHz|kHz|mA|mV|mT|kV|rad|[gmsNJWVATΩ])(\^\{?-?\d\}?)?(?![A-Za-z\\{])/g,
+                (x, n, u, e) => n + '\\text{ ' + u + '}' + (e || ''));                 // 0,5 T -> 0,5\text{ T}
+            s = s.replace(/(\d)\s*\\text\{\s*/g, '$1\\text{ ');                         // 5\text{cm} -> 5\text{ cm}
+            s = s.replace(/(\d)\.(?=\d)/g, '$1{,}');                                    // 0.05 -> 0{,}05
+            s = s.replace(/(\d),(?=\d)/g, '$1{,}');                                     // 0,05 -> 0{,}05
+            s = s.replace(/\s+/g, ' ').trim();
+            return s;
+        }
+
+        function chuanHoaLatex(s) {
+            let t = String(s == null ? '' : s).replace(/\r\n?/g, '\n');
+            t = t.replace(/\[\s*cite[^\]]*\]/gi, '').replace(/\*\*|`/g, '');
+            t = t.replace(/\\(?:textbf|textit|emph)\{([^{}]*)\}/g, '$1').replace(/\\item\s*/g, '');
+            t = t.replace(/\\\[([\s\S]*?)\\\]/g, (m, x) => '$$' + x + '$$')
+                 .replace(/\\\(([\s\S]*?)\\\)/g, (m, x) => '$' + x + '$');
+            t = t.replace(/\$\$([\s\S]*?)\$\$|\$([^$\n]+?)\$/g, (m, blk, inl) =>
+                blk != null ? '$$' + chuanHoaToan(blk) + '$$' : '$' + chuanHoaToan(inl) + '$');
+            t = t.replace(/([^\n])[ \t]*(\$\$[\s\S]*?\$\$)/g, '$1\n$2')                 // $$...$$ đứng riêng một dòng
+                 .replace(/(\$\$[\s\S]*?\$\$)[ \t]*(?=[A-Za-z\u00C0-\u1EF9])/g, '$1\n');
+            t = t.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/[ \t]{2,}/g, ' ');
+            return t.trim();
+        }
+
+        // Dựng công thức MathJax cho một vùng (chờ MathJax tải xong, xoá bản dựng cũ trước)
+        function dungCongThuc(el) {
+            if (!el || !window.MathJax) return;
+            const chay = () => {
+                if (typeof MathJax.typesetClear === 'function') MathJax.typesetClear([el]);
+                if (typeof MathJax.typesetPromise === 'function') {
+                    MathJax.typesetPromise([el]).catch(err => console.warn('MathJax:', err));
+                }
+            };
+            if (MathJax.startup && MathJax.startup.promise) MathJax.startup.promise.then(chay);
+            else if (typeof MathJax.typesetPromise === 'function') chay();
+        }
+
+        // Đổ lời giải từ ô sửa sang khung xem (textContent: an toàn, giữ nguyên kí tự < >)
+        function capNhatXemLoiGiai(index, dungNgay = true) {
+            const o = document.getElementById(`loi_giai_${index}`);
+            const xem = document.getElementById(`xem_loi_giai_${index}`);
+            if (!o || !xem) return;
+            const v = o.value.trim();
+            if (!v) {
+                xem.innerHTML = '<span class="text-slate-500 italic">Chưa có lời giải.</span>';
+                return;
+            }
+            // Bỏ dòng trống quanh $$...$$ (công thức riêng dòng đã tự xuống dòng) để không bị hở khoảng trống
+            xem.textContent = v.replace(/\n*(\$\$[\s\S]*?\$\$)\n*/g, '$1');
+            if (dungNgay) dungCongThuc(xem);
+        }
+
+        // Khi gõ: đợi ngừng gõ 0,6 s rồi mới dựng lại công thức
+        const _henGioLoiGiai = {};
+        function henGioXemLoiGiai(index) {
+            clearTimeout(_henGioLoiGiai[index]);
+            _henGioLoiGiai[index] = setTimeout(() => capNhatXemLoiGiai(index), 600);
+        }
+
+        // Nút "Chuẩn hoá công thức" của từng câu
+        function chuanHoaLoiGiai(index, imLang = false) {
+            const o = document.getElementById(`loi_giai_${index}`);
+            if (!o) return false;
+            const cu = o.value;
+            const moi = chuanHoaLatex(cu);
+            const doi = moi !== cu.trim();
+            o.value = moi;
+            capNhatXemLoiGiai(index);
+            const nut = document.getElementById(`nut_chuan_hoa_${index}`);
+            if (nut && !imLang) {
+                nut.innerHTML = doi
+                    ? '<i class="fa-solid fa-check mr-1"></i> Đã chuẩn hoá'
+                    : '<i class="fa-solid fa-check mr-1"></i> Đã chuẩn sẵn';
+                setTimeout(() => { nut.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Chuẩn hoá công thức'; }, 1800);
+            }
+            return doi;
+        }
+
+        // Nút "Chuẩn hoá tất cả lời giải" ở đầu mục duyệt
+        function chuanHoaTatCaLoiGiai() {
+            const cacO = document.querySelectorAll('#danh-sach-cau-hoi textarea[id^="loi_giai_"]');
+            if (cacO.length === 0) { alert('Chưa có câu nào đang hiện. Thầy bấm "Hiện ~20 câu cần duyệt" trước.'); return; }
+            let soDoi = 0;
+            cacO.forEach(o => { if (chuanHoaLoiGiai(o.id.replace('loi_giai_', ''), true)) soDoi++; });
+            const log = document.getElementById('terminal-log');
+            if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã chuẩn hoá lời giải: ${soDoi}/${cacO.length} câu có thay đổi (bấm Duyệt để lưu về Google Sheet).</div>`;
+        }
+        // =================== HẾT PHẦN CHUẨN HOÁ LaTeX ===================
 
         async function taiCauHoiCanDuyet(chiCanDuyet = true) {
             const container = document.getElementById('danh-sach-cau-hoi');
@@ -509,10 +628,18 @@
 
                 html += `
                     <div class="space-y-2 pt-2">
-                        <div class="text-xs font-semibold text-sky-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-book-open-reader"></i> LỜI GIẢI CHI TIẾT:
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="text-xs font-semibold text-sky-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-book-open-reader"></i> LỜI GIẢI CHI TIẾT:
+                            </div>
+                            <button type="button" id="nut_chuan_hoa_${index}" onclick="chuanHoaLoiGiai(${index})" title="Đưa công thức về chuẩn $...$ / $$...$$, số thập phân 0{,}05, dấu nhân \\cdot, đơn vị \\text{ cm}" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-violet-600 text-violet-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Chuẩn hoá công thức
+                            </button>
                         </div>
-                        <textarea id="loi_giai_${index}" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-600 leading-relaxed">${item.loi_giai || 'Nhập hoặc chỉnh sửa lời giải chi tiết...'}</textarea>
+                        <!-- [MỚI] Khung hiển thị lời giải đã dựng công thức (MathJax không hiển thị được bên trong ô sửa) -->
+                        <div id="xem_loi_giai_${index}" class="xem-loi-giai text-xs text-slate-100 leading-relaxed bg-slate-950/60 border border-sky-500/20 rounded-xl p-3"></div>
+                        <div class="text-[10px] text-slate-500"><i class="fa-solid fa-code mr-1"></i> Mã LaTeX của lời giải (sửa tại đây, khung trên tự cập nhật):</div>
+                        <textarea id="loi_giai_${index}" rows="3" oninput="henGioXemLoiGiai(${index})" onblur="capNhatXemLoiGiai(${index})" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-600 leading-relaxed font-mono" placeholder="Nhập hoặc chỉnh sửa lời giải chi tiết...">${escSua(item.loi_giai || '')}</textarea>
                     </div>
                 `;
 
@@ -529,6 +656,7 @@
 
                 card.innerHTML = html;
                 container.appendChild(card);
+                capNhatXemLoiGiai(index, false); // [MỚI] đổ chữ lời giải vào khung xem (MathJax dựng chung ở dưới)
             });
 
             if (window.MathJax) {
