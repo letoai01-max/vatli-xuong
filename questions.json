@@ -1,14 +1,5 @@
 [
   {
-    "ma_cau": "C-1zcpbmq8-018",
-    "noi_dung": "Treo đoạn dây $MN = 5\\text{ cm}$, khối lượng $m = 5\\text{ g}$ bằng hai dây nhẹ, không giãn, có cùng chiều dài; đoạn dây luôn nằm ngang. Đặt hệ trong từ trường đều $B = 0,5\\text{ T}$ vuông góc với đoạn $MN$, chiều như hình. Dòng điện qua $MN$ có cường độ $I = 2\\text{ A}$. Lấy $g = 10\\text{ m/s}^2$. Khi cân bằng, góc lệch $\\alpha$ của dây treo so với phương thẳng đứng là [Hình: Dây MN nằm ngang được treo bởi 2 dây thẳng đứng, từ trường B hướng thẳng đứng xuống dưới, dòng điện I từ M sang N]",
-    "phuong_an": "A. $74^\\circ$.\nB. $26^\\circ$.\nC. $45^\\circ$.\nD. $14^\\circ$.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $L = 5\\text{ cm} = 0,05\\text{ m}$; $m = 5\\text{ g} = 5\\cdot 10^{-3}\\text{ kg}$; $B = 0,5\\text{ T}$; $I = 2\\text{ A}$; $g = 10\\text{ m/s}^2$.\nTính lực từ tác dụng lên đoạn dây: Lực từ có phương nằm ngang, độ lớn:\n$$F = B\\cdot I\\cdot L = 0,5\\cdot 2\\cdot 0,05 = 0,05\\text{ N}\n$$\nTính trọng lực tác dụng lên đoạn dây: Trọng lực có phương thẳng đứng, hướng xuống, độ lớn:\n$$\nP = m\\cdot g = 5\\cdot 10^{-3}\\cdot 10 = 0,05\\text{ N}\n$$\nTính góc lệch của dây treo: Khi cân bằng, góc lệch $\\alpha$ của dây treo so với phương thẳng đứng thỏa mãn:\n$$\\tan\\alpha = \\frac{F}{P} = \\frac{0,05}{0,05} = 1 \\Rightarrow \\alpha = 45^\\circ$$\nDo $\\tan\\alpha = 1$ nên góc lệch của dây treo là $45^\\circ$.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q104_De_thi_thu_HSG_Vat_li_12_So_01_p3_img3.jpeg, images/q104_De_thi_thu_HSG_Vat_li_12__p3_img3.jpeg, images/q104_De_thi_thu_HSG_Vat_li_12__p3_img4.jpeg, images/q104_De_thi_thu_HSG_Vat_l_p3_img3.jpeg"
-  },
-  {
     "ma_cau": "C-1zcpbmq8-020",
     "noi_dung": "Hình dưới biểu diễn sự thay đổi nhiệt độ theo thời gian của chất $X$ trong quá trình làm nguội. [Hình: Đồ thị t(°C) theo thời gian (phút), từ 160°C hạ xuống 120°C, nằm ngang ở 120°C (Khí -> Lỏng), hạ tiếp xuống 40°C, nằm ngang ở 40°C (Lỏng -> Rắn), rồi tiếp tục hạ nhiệt độ]",
     "phuong_an": "a) Nhiệt độ sôi của chất $X$ là $160^\\circ\\text{C}$.\nb) Nhiệt độ nóng chảy của chất $X$ là $40^\\circ\\text{C}$.\nc) Ở $120^\\circ\\text{C}$, chất $X$ có thể đồng thời tồn tại ở thể lỏng và thể khí.\nd) Ở $40^\\circ\\text{C}$, chất $X$ đồng thời tồn tại ở thể rắn, thể lỏng và thể hơi.",
