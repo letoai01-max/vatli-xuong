@@ -16,6 +16,8 @@
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <!-- [MỚI] MathLive: sửa công thức trực quan như Equation trong Word -->
+    <script defer src="https://cdn.jsdelivr.net/npm/mathlive@0.98.6/dist/mathlive.min.js"></script>
     <style>
         body { background-color: #0b0f19; color: #cbd5e1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .glass-panel { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.4); }
@@ -31,8 +33,20 @@
         .tt-chua-tot .cham { background: #fb7185; }
         .agent-card.chua-tot { border-color: rgba(251, 113, 133, 0.5); }
         /* [MỚI] Khung xem trước lời giải: giữ xuống dòng, công thức $$ căn giữa, tràn ngang thì cuộn */
-        .xem-loi-giai { white-space: pre-line; overflow-x: auto; }
-        .xem-loi-giai mjx-container[display="true"] { margin: 0.4em 0 !important; }
+        .xem-loi-giai { white-space: pre-wrap; overflow-x: auto; min-height: 3.5rem; outline: none; }
+        .xem-loi-giai:focus { border-color: rgba(56, 189, 248, 0.7); }
+        .xem-loi-giai:empty::before { content: attr(data-goi-y); color: #64748b; font-style: italic; }
+        .xem-loi-giai mjx-container[display="true"] { margin: 0.2em 0 !important; }
+        /* [MỚI] Mỗi công thức là một "viên" bấm vào để sửa */
+        .xem-loi-giai[data-mot-dong="1"] { min-height: 1.6em; overflow-x: auto; }
+        .ct { white-space: normal; display: inline-block; cursor: pointer; border-radius: 6px; padding: 0 3px; border: 1px dashed transparent; }
+        .ct:hover { border-color: rgba(56, 189, 248, 0.7); background: rgba(56, 189, 248, 0.08); }
+        .ct-khoi { display: block; text-align: center; margin: 4px 0; }
+        .ct-cho { border-color: rgba(167, 139, 250, 0.8); color: #a78bfa; padding: 0 8px; }
+        math-field#hop-mf { display: block; width: 100%; font-size: 1.35rem; padding: 10px 12px; border-radius: 12px;
+            background: #020617; color: #f8fafc; border: 1px solid #334155;
+            --caret-color: #38bdf8; --selection-background-color: rgba(56, 189, 248, 0.35); --contains-highlight-background-color: rgba(56, 189, 248, 0.12); }
+        math-field#hop-mf:focus-within { border-color: #38bdf8; }
         /* BIỂU TƯỢNG LOGO CHUYỂN ĐỘNG: nguyên tử quay chậm + khung phát sáng nhịp nhàng */
         .logo-quay { display: inline-block; animation: nguyenTuQuay 6s linear infinite; }
         .logo-khung { animation: khungPhatSang 2.4s ease-in-out infinite; }
@@ -256,6 +270,32 @@
         </div>
     </div>
 
+    <!-- [MỚI] HỘP SỬA CÔNG THỨC TRỰC QUAN (dùng chung cho mọi câu) -->
+    <div id="hop-cong-thuc" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-4" onmousedown="if (event.target === this) huyCongThuc()">
+        <div class="w-full max-w-2xl bg-slate-900 border border-sky-500/40 rounded-2xl p-5 space-y-3 shadow-2xl">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-sm font-bold text-white flex items-center gap-2"><i class="fa-solid fa-square-root-variable text-sky-400"></i> Sửa công thức</div>
+                <label class="text-xs text-slate-300 flex items-center gap-2 cursor-pointer"><input type="checkbox" id="hop-khoi" class="accent-sky-500 w-4 h-4"> Đứng riêng một dòng (căn giữa)</label>
+            </div>
+            <math-field id="hop-mf"></math-field>
+            <div id="hop-du-phong" class="hidden min-h-[3rem] text-base text-white bg-slate-950 border border-slate-700 rounded-xl p-3 text-center"></div>
+            <div class="text-[11px] text-slate-500 leading-relaxed">
+                Gõ như sau: <b class="text-slate-300">/</b> tạo phân số, <b class="text-slate-300">^</b> số mũ, <b class="text-slate-300">_</b> chỉ số, gõ chữ <b class="text-slate-300">sqrt</b>, <b class="text-slate-300">alpha</b>, <b class="text-slate-300">omega</b>, <b class="text-slate-300">Delta</b>, <b class="text-slate-300">pi</b>… máy tự đổi thành kí hiệu. Đơn vị: bấm nút ⋯ (menu) để chèn chữ thường.
+            </div>
+            <details id="hop-chi-tiet" class="text-xs">
+                <summary class="cursor-pointer text-slate-400 hover:text-white">Mã LaTeX của công thức (không bắt buộc)</summary>
+                <textarea id="hop-ma" rows="2" spellcheck="false" class="mt-2 w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white font-mono focus:outline-none focus:border-sky-500"></textarea>
+            </details>
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                <button type="button" onclick="xoaCongThuc()" class="px-4 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-semibold border border-rose-500/30 transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Xoá công thức</button>
+                <div class="flex gap-2">
+                    <button type="button" onclick="huyCongThuc()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition cursor-pointer">Huỷ</button>
+                    <button type="button" onclick="luuCongThuc()" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition cursor-pointer"><i class="fa-solid fa-check mr-1"></i> Xong</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPT XỬ LÝ GIAO DIỆN & TƯƠNG TÁC API -->
     <script>
         // THẦY THAY ĐƯỜNG DẪN WEB APP GOOGLE APPS SCRIPT CỦA MÌNH VÀO ĐÂY ĐỂ ĐỒNG BỘ 2 CHIỀU
@@ -419,27 +459,408 @@
             else if (typeof MathJax.typesetPromise === 'function') chay();
         }
 
-        // Đổ lời giải từ ô sửa sang khung xem (textContent: an toàn, giữ nguyên kí tự < >)
-        function capNhatXemLoiGiai(index, dungNgay = true) {
-            const o = document.getElementById(`loi_giai_${index}`);
-            const xem = document.getElementById(`xem_loi_giai_${index}`);
-            if (!o || !xem) return;
-            const v = o.value.trim();
-            if (!v) {
-                xem.innerHTML = '<span class="text-slate-500 italic">Chưa có lời giải.</span>';
-                return;
-            }
-            // Bỏ dòng trống quanh $$...$$ (công thức riêng dòng đã tự xuống dòng) để không bị hở khoảng trống
-            xem.textContent = v.replace(/\n*(\$\$[\s\S]*?\$\$)\n*/g, '$1');
-            if (dungNgay) dungCongThuc(xem);
+        // [MỚI] ===== SỬA TRỰC QUAN (dùng chung cho lời giải và phương án) =====
+        // Mỗi khung sửa trực quan có data-nguon = id của ô lưu mã LaTeX (textarea lời giải / input ẩn của phương án).
+        // Ô lưu mã vẫn là nơi gửi về Sheet; khung trực quan luôn đồng bộ hai chiều với nó.
+        // data-mot-dong="1": khung một dòng (phương án) — Enter không xuống dòng.
+
+        const nguonCua = ed => ed && ed.dataset.nguon ? document.getElementById(ed.dataset.nguon) : null;
+
+        // Tạo "viên" công thức: giữ LaTeX trong data-tex, MathJax dựng hình bên trong
+        function taoChipCongThuc(tex, khoi) {
+            const sp = document.createElement('span');
+            sp.className = 'ct' + (khoi ? ' ct-khoi' : '') + (tex ? '' : ' ct-cho');
+            sp.contentEditable = 'false';
+            sp.dataset.tex = tex || '';
+            sp.dataset.block = khoi ? '1' : '0';
+            sp.title = 'Bấm để sửa công thức';
+            sp.textContent = tex ? (khoi ? '$$' + tex + '$$' : '$' + tex + '$') : '…';
+            return sp;
         }
 
-        // Khi gõ: đợi ngừng gõ 0,6 s rồi mới dựng lại công thức
+        // Dựng khung trực quan từ mã LaTeX trong ô nguồn
+        function dungKhungTuMa(ed, dungNgay = true) {
+            const o = nguonCua(ed);
+            if (!o || !ed) return;
+            if (window.MathJax && typeof MathJax.typesetClear === 'function') MathJax.typesetClear([ed]);
+            ed.innerHTML = '';
+            const v = String(o.value || '').replace(/\r\n?/g, '\n').trim();
+            if (!v) return;
+            const themChu = t => t.split('\n').forEach((dong, i) => {
+                if (i > 0) ed.appendChild(document.createElement('br'));
+                if (dong) ed.appendChild(document.createTextNode(dong));
+            });
+            const re = /\$\$([\s\S]*?)\$\$|\$([^$\n]+?)\$/g;
+            let cuoi = 0, m;
+            while ((m = re.exec(v))) {
+                const khoi = m[1] != null;
+                let truoc = v.slice(cuoi, m.index);
+                if (khoi) truoc = truoc.replace(/\n$/, '');      // công thức riêng dòng đã tự xuống dòng
+                themChu(truoc);
+                const tex = (khoi ? m[1] : m[2]).trim();
+                if (tex) ed.appendChild(taoChipCongThuc(tex, khoi));
+                cuoi = re.lastIndex;
+                if (khoi && v[cuoi] === '\n') cuoi++;
+            }
+            themChu(v.slice(cuoi));
+            if (dungNgay) dungCongThuc(ed);
+        }
+
+        // Đọc khung trực quan ra mã LaTeX
+        function docLoiGiaiTuKhung(ed) {
+            let out = '';
+            const di = node => node.childNodes.forEach(n => {
+                if (n.nodeType === 3) {
+                    out += n.nodeValue.replace(/\u00a0/g, ' ').replace(/[\u200b-\u200d\ufeff]/g, '');
+                } else if (n.nodeType === 1) {
+                    if (n.classList.contains('ct')) {
+                        const t = n.dataset.tex || '';
+                        if (t) out += n.dataset.block === '1' ? '\n$$' + t + '$$\n' : '$' + t + '$';
+                    } else if (n.tagName === 'BR') {
+                        out += '\n';
+                    } else if (/^(DIV|P)$/.test(n.tagName)) {
+                        if (out && !out.endsWith('\n')) out += '\n';
+                        di(n);
+                        if (!out.endsWith('\n')) out += '\n';
+                    } else {
+                        di(n);
+                    }
+                }
+            });
+            di(ed);
+            out = out.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/^\n+|\n+$/g, '');
+            if (ed.dataset.motDong === '1') out = out.replace(/\s*\n\s*/g, ' ').trim();
+            return out;
+        }
+
+        function dongBoKhung(ed) {
+            const o = nguonCua(ed);
+            if (o && ed) o.value = docLoiGiaiTuKhung(ed);
+        }
+
+        // Enter = xuống dòng thường (không tạo khối div lạ); khung một dòng thì bỏ qua Enter
+        function phimTrongKhung(e, ed) {
+            if (e.key !== 'Enter' || e.isComposing) return;
+            e.preventDefault();
+            if (ed.dataset.motDong === '1') return;
+            if (!document.execCommand('insertLineBreak')) {
+                const sel = window.getSelection();
+                if (!sel.rangeCount) return;
+                const r = sel.getRangeAt(0);
+                r.deleteContents();
+                const br = document.createElement('br');
+                r.insertNode(br);
+                if (!br.nextSibling) br.parentNode.appendChild(document.createElement('br'));
+                r.setStartAfter(br); r.collapse(true);
+                sel.removeAllRanges(); sel.addRange(r);
+            }
+            dongBoKhung(ed);
+        }
+
+        // Dán: chỉ lấy chữ thuần; nếu có $...$ thì dựng luôn thành công thức
+        function danChuThuan(e, ed) {
+            e.preventDefault();
+            let t = (e.clipboardData || window.clipboardData).getData('text/plain') || '';
+            if (ed.dataset.motDong === '1') t = t.replace(/\s*\n\s*/g, ' ');
+            document.execCommand('insertText', false, t);
+            setTimeout(() => { dongBoKhung(ed); if (t.includes('$')) dungKhungTuMa(ed); }, 0);
+        }
+
+        // Rời khung: nếu thầy tự gõ $...$ bằng tay thì đổi thành công thức
+        function khiRoiKhung(ed) {
+            if (_hop.mo || !ed) return;
+            const w = document.createTreeWalker(ed, NodeFilter.SHOW_TEXT);
+            let n, coDola = false;
+            while ((n = w.nextNode())) {
+                if (!n.parentElement.closest('.ct') && n.nodeValue.includes('$')) { coDola = true; break; }
+            }
+            if (coDola) { dongBoKhung(ed); dungKhungTuMa(ed); }
+        }
+
+        // Bấm vào một công thức để sửa
+        function bamVaoCongThuc(e, ed) {
+            const c = e.target.closest && e.target.closest('.ct');
+            if (c && ed && ed.contains(c)) { e.preventDefault(); e.stopPropagation(); moHop(ed, c, false); }
+        }
+
+        // Chèn công thức mới vào chỗ con trỏ trong một khung
+        function chenCongThucVao(ed, khoi) {
+            if (!ed) return;
+            const chip = taoChipCongThuc('', khoi);
+            const sel = window.getSelection();
+            if (sel.rangeCount && ed.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+                const r = sel.getRangeAt(0);
+                r.deleteContents(); r.insertNode(chip);
+            } else {
+                ed.appendChild(chip);
+            }
+            moHop(ed, chip, true);
+        }
+
+        // ----- Các hàm riêng cho lời giải (giữ tên cũ) -----
+        function capNhatXemLoiGiai(index, dungNgay = true) { dungKhungTuMa(document.getElementById(`xem_loi_giai_${index}`), dungNgay); }
+        function dongBoVeMa(index) { dongBoKhung(document.getElementById(`xem_loi_giai_${index}`)); }
+        function chenCongThuc(index, khoi) { chenCongThucVao(document.getElementById(`xem_loi_giai_${index}`), khoi); }
+
+        // Gõ trong ô mã LaTeX: đợi ngừng gõ 0,6 s rồi dựng lại khung trực quan
         const _henGioLoiGiai = {};
         function henGioXemLoiGiai(index) {
             clearTimeout(_henGioLoiGiai[index]);
             _henGioLoiGiai[index] = setTimeout(() => capNhatXemLoiGiai(index), 600);
         }
+
+        // Hiện / ẩn ô mã LaTeX của lời giải (mặc định ẩn)
+        function batMaLatex(index) {
+            const o = document.getElementById(`loi_giai_${index}`);
+            const nut = document.getElementById(`nut_ma_${index}`);
+            if (!o) return;
+            const dangAn = o.classList.toggle('hidden') === false;
+            if (nut) nut.innerHTML = dangAn ? '<i class="fa-solid fa-eye-slash mr-1"></i> Ẩn mã LaTeX' : '<i class="fa-solid fa-code mr-1"></i> Hiện mã LaTeX';
+            if (!dangAn) capNhatXemLoiGiai(index);
+        }
+
+        // ----- Hộp sửa công thức -----
+        const _hop = { mo: false, ed: null, chip: null, moi: false };
+        const coMathLive = () => !!(window.customElements && customElements.get('math-field'));
+
+        function moHop(ed, chip, moi) {
+            Object.assign(_hop, { mo: true, ed, chip, moi });
+            const tex = chip.dataset.tex || '';
+            document.getElementById('hop-khoi').checked = chip.dataset.block === '1';
+            document.getElementById('hop-ma').value = tex;
+            const mf = document.getElementById('hop-mf');
+            const duPhong = document.getElementById('hop-du-phong');
+            if (coMathLive()) {
+                mf.classList.remove('hidden'); duPhong.classList.add('hidden');
+                mf.value = tex;
+            } else {
+                // Không tải được MathLive: sửa mã, xem trước bằng MathJax
+                mf.classList.add('hidden'); duPhong.classList.remove('hidden');
+                document.getElementById('hop-chi-tiet').open = true;
+                veDuPhong();
+            }
+            const hop = document.getElementById('hop-cong-thuc');
+            hop.classList.remove('hidden'); hop.classList.add('flex');
+            setTimeout(() => (coMathLive() ? mf : document.getElementById('hop-ma')).focus(), 50);
+        }
+
+        function dongHop() {
+            const hop = document.getElementById('hop-cong-thuc');
+            hop.classList.add('hidden'); hop.classList.remove('flex');
+            if (window.mathVirtualKeyboard && typeof mathVirtualKeyboard.hide === 'function') mathVirtualKeyboard.hide();
+            const ed = _hop.ed;
+            Object.assign(_hop, { mo: false, ed: null, chip: null, moi: false });
+            if (ed) dongBoKhung(ed);
+        }
+
+        function layMaHop() {
+            return coMathLive() ? document.getElementById('hop-mf').value : document.getElementById('hop-ma').value;
+        }
+
+        function luuCongThuc() {
+            if (!_hop.chip) return dongHop();
+            const tex = chuanHoaToan(layMaHop());          // tự đưa về chuẩn: 0{,}05, \cdot, \text{ cm}...
+            if (!tex) return xoaCongThuc();
+            const chipMoi = taoChipCongThuc(tex, document.getElementById('hop-khoi').checked);
+            _hop.chip.replaceWith(chipMoi);
+            dungCongThuc(chipMoi);
+            dongHop();
+        }
+
+        function xoaCongThuc() { if (_hop.chip) _hop.chip.remove(); dongHop(); }
+        function huyCongThuc() { if (_hop.moi && _hop.chip) _hop.chip.remove(); dongHop(); }
+
+        function veDuPhong() {
+            const tex = document.getElementById('hop-ma').value.trim();
+            const el = document.getElementById('hop-du-phong');
+            el.textContent = tex ? '$$' + tex + '$$' : '…';
+            dungCongThuc(el);
+        }
+
+        // Đồng bộ hai ô trong hộp + phím tắt (Esc = huỷ, Ctrl+Enter = xong)
+        window.addEventListener('DOMContentLoaded', () => {
+            const mf = document.getElementById('hop-mf');
+            const ma = document.getElementById('hop-ma');
+            mf.addEventListener('input', () => { ma.value = mf.value; });
+            ma.addEventListener('input', () => { if (coMathLive()) mf.value = ma.value; else veDuPhong(); });
+        });
+        document.addEventListener('keydown', e => {
+            if (!_hop.mo) return;
+            if (e.key === 'Escape') { e.preventDefault(); huyCongThuc(); }
+            else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); luuCongThuc(); }
+        });
+        // [MỚI] ===== HẾT PHẦN SỬA TRỰC QUAN =====
+
+        // [MỚI] ===== DẠNG CÂU & ĐÁP ÁN =====
+        // Mã dạng dùng trên web: tn | ds | ngan | tuluan ; tên ghi về Sheet giống TEN_DANG trong ChucNang.gs
+        const TEN_DANG_WEB = { tn: 'Nhiều lựa chọn', ds: 'Đúng/sai', ngan: 'Trả lời ngắn', tuluan: 'Tự luận' };
+        const NHAN_NUT_DANG = { tn: 'Trắc nghiệm nhiều lựa chọn', ds: 'Đúng – Sai', ngan: 'Trả lời ngắn', tuluan: 'Tự luận' };
+
+        // Nhận dạng câu (sửa lỗi cũ: "Đúng/sai", "Trắc nghiệm đúng sai" bị hiện như trắc nghiệm A–D)
+        function nhanDang(dang, phuongAn) {
+            const d = String(dang || '').toLowerCase().replace(/[\/\-–—_|]+/g, ' ').replace(/\s+/g, ' ').trim();
+            if (d.includes('đúng sai') || d === 'ds') return 'ds';
+            if (d.includes('ngắn') || d === 'tln') return 'ngan';
+            if (d.includes('tự luận') || d === 'tl') return 'tuluan';
+            if (d.includes('nhiều lựa chọn') || d.includes('trắc nghiệm') || d === 'tn') return 'tn';
+            const pa = String(phuongAn || '');
+            if (/(^|\n)\s*a\s*\)/.test(pa) && /(^|\n)\s*b\s*\)/.test(pa)) return 'ds';
+            return 'tn';
+        }
+
+        // Đọc đáp án đúng/sai: "a) Đ, b) S…", "a) Đúng; b) Sai…" hoặc "ĐSĐS"
+        function tachDungSaiWeb(s) {
+            const kq = {};
+            const t = String(s || '');
+            const re = /([a-d])\s*\)?\s*[:.\-]?\s*(Đúng|Sai|Đ|S)(?![A-Za-z\u00C0-\u1EF9])/gi;
+            let m, co = false;
+            while ((m = re.exec(t)) !== null) { kq[m[1].toLowerCase()] = /^đ/i.test(m[2]) ? 'Đúng' : 'Sai'; co = true; }
+            if (!co) {
+                const chuoi = t.replace(/đúng/gi, 'Đ').replace(/sai/gi, 'S').replace(/[^ĐđSs]/g, '');
+                chuoi.split('').forEach((c, i) => { if (i < 4) kq['abcd'[i]] = /đ/i.test(c) ? 'Đúng' : 'Sai'; });
+            }
+            return kq;
+        }
+
+        // Một dòng phương án / ý: radio + input ẩn lưu mã + khung sửa trực quan + nút chèn công thức
+        function taoDongPhuongAn(index, k, giaTri, goiY, phanChon) {
+            const id = `pa_${index}_${k}`;
+            return `
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 transition text-xs text-white">
+                    ${phanChon.truoc || ''}
+                    <input type="hidden" id="${id}" class="pa-input-${index}" value="${escSua(giaTri)}">
+                    <div id="xem_${id}" data-nguon="${id}" data-mot-dong="1" contenteditable="true" spellcheck="false" data-goi-y="${goiY}"
+                         oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)"
+                         class="xem-loi-giai flex-1 min-w-0 !min-h-0 px-2 py-1 rounded-md border border-transparent hover:border-slate-700 focus:border-sky-500 leading-relaxed"></div>
+                    <button type="button" title="Chèn công thức" onmousedown="event.preventDefault()" onclick="chenCongThucVao(document.getElementById('xem_${id}'), false)" class="shrink-0 w-7 h-7 rounded-md bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white border border-slate-700 transition cursor-pointer"><i class="fa-solid fa-square-root-variable"></i></button>
+                    ${phanChon.sau || ''}
+                </div>`;
+        }
+
+        // Dựng khu trả lời theo dạng câu
+        function taoKhungTraLoi(index, dang, phuongAnRaw, dapAn) {
+            const cacDong = String(phuongAnRaw || '').split('\n').filter(l => l.trim() !== '');
+            if (dang === 'tn') {
+                const chu = ['A', 'B', 'C', 'D'];
+                const dongs = cacDong.length > 0 ? cacDong : ['', '', '', ''];
+                const m = String(dapAn || '').match(/(^|[^A-Za-z\u00C0-\u1EF9])([A-D])(?![A-Za-z\u00C0-\u1EF9])/);
+                const dung = m ? m[2] : '';
+                const html = dongs.map((line, idx) => {
+                    const c = chu[idx] || String(idx + 1);
+                    return taoDongPhuongAn(index, idx, line, `${c}. Nhập phương án ${c}...`, {
+                        truoc: `<input type="radio" name="ans_${index}" value="${c}" ${c === dung ? 'checked' : ''} title="Chọn ${c} là đáp án đúng" class="accent-sky-500 w-4 h-4 shrink-0 cursor-pointer">`
+                    });
+                }).join('');
+                return `
+                    <div class="space-y-2 pt-2">
+                        <div class="text-xs font-semibold text-sky-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-check"></i> PHƯƠNG ÁN & TÍCH CHỌN ĐÁP ÁN ĐÚNG:
+                            <span class="text-[10px] font-normal text-slate-500">(gõ chữ trực tiếp · bấm vào công thức để sửa)</span>
+                        </div>
+                        <div class="space-y-2">${html}</div>
+                    </div>`;
+            }
+            if (dang === 'ds') {
+                const dongs = cacDong.length > 0 ? cacDong : ['a) ', 'b) ', 'c) ', 'd) '];
+                const ds = tachDungSaiWeb(dapAn);
+                const html = dongs.map((y, idx) => {
+                    const kyTu = ['a', 'b', 'c', 'd'][idx] || String(idx + 1);
+                    const chon = ds[kyTu] || '';
+                    return taoDongPhuongAn(index, idx, y, `${kyTu}) Nhập phát biểu ${kyTu}...`, {
+                        sau: `<div class="flex gap-4 font-semibold shrink-0">
+                                <label class="cursor-pointer text-emerald-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Đúng" ${chon === 'Đúng' ? 'checked' : ''} class="accent-emerald-500"> Đúng</label>
+                                <label class="cursor-pointer text-rose-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Sai" ${chon === 'Sai' ? 'checked' : ''} class="accent-rose-500"> Sai</label>
+                              </div>`
+                    });
+                }).join('');
+                return `
+                    <div class="space-y-2.5 pt-2">
+                        <div class="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check"></i> TÍCH CHỌN ĐÚNG / SAI CHO TỪNG Ý:
+                            <span class="text-[10px] font-normal text-slate-500">(gõ chữ trực tiếp · bấm vào công thức để sửa)</span>
+                        </div>
+                        <div class="space-y-2">${html}</div>
+                    </div>`;
+            }
+            const laTuLuan = dang === 'tuluan';
+            return `
+                <div class="space-y-2 pt-2">
+                    <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-pen-to-square"></i> ${laTuLuan ? 'ĐÁP SỐ / KẾT QUẢ CUỐI:' : 'Ô NHẬP SỐ LIỆU ĐÁP ÁN:'}
+                        ${laTuLuan ? '<span class="text-[10px] font-normal text-slate-500">(không bắt buộc · các bước giải và thang điểm ghi ở phần Lời giải)</span>' : ''}
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                        <input type="text" id="short_ans_${index}" value="${escSua(dapAn)}" placeholder="${laTuLuan ? 'Ví dụ: v = 12 m/s' : 'Nhập đáp án số liệu...'}" class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-white w-64 max-w-full focus:outline-none focus:border-sky-500">
+                    </div>
+                </div>`;
+        }
+
+        // Thanh nút chuyển dạng câu
+        function taoNutDang(index, dang) {
+            return `
+                <div class="flex flex-wrap items-center gap-2 pt-1">
+                    <span class="text-[11px] text-slate-400"><i class="fa-solid fa-shuffle mr-1"></i> Dạng câu:</span>
+                    ${Object.keys(NHAN_NUT_DANG).map(k => `
+                        <button type="button" data-dang="${k}" onclick="doiDangCau(${index}, '${k}')"
+                            class="nut-dang-${index} px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition cursor-pointer ${k === dang ? 'bg-sky-600 text-white border-sky-500' : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-sky-500'}">${NHAN_NUT_DANG[k]}</button>`).join('')}
+                </div>`;
+        }
+
+        function dungCacKhungTrong(vung) {
+            vung.querySelectorAll('[data-nguon]').forEach(ed => dungKhungTuMa(ed, false));
+            dungCongThuc(vung);
+        }
+
+        // Chuyển dạng câu: giữ lại chữ của các phương án, đổi kí hiệu A./a) cho hợp dạng mới
+        function doiDangCau(index, dangMoi) {
+            const vung = document.getElementById(`vung_tra_loi_${index}`);
+            if (!vung) return;
+            const card = vung.closest('.question-card');
+            const dangCu = card.dataset.dang;
+            if (dangCu === dangMoi) return;
+            const cacO = Array.from(vung.querySelectorAll(`.pa-input-${index}`)).map(o => o.value.trim()).filter(v => v !== '');
+            if (cacO.length > 0) card.dataset.paLuu = JSON.stringify(cacO);
+            let goc = [];
+            try { goc = cacO.length > 0 ? cacO : JSON.parse(card.dataset.paLuu || '[]'); } catch (e) { goc = []; }
+            const than = goc.map(l => l.replace(/^\s*(?:[A-Da-d]|[1-4])\s*[.)]\s*/, ''));
+            let paMoi = '';
+            if (dangMoi === 'tn') paMoi = than.map((t, i) => (['A', 'B', 'C', 'D'][i] || (i + 1)) + '. ' + t).join('\n');
+            if (dangMoi === 'ds') paMoi = than.map((t, i) => (['a', 'b', 'c', 'd'][i] || (i + 1)) + ') ' + t).join('\n');
+            const dapAnCu = (dangCu === 'ngan' || dangCu === 'tuluan') && (dangMoi === 'ngan' || dangMoi === 'tuluan')
+                ? ((document.getElementById(`short_ans_${index}`) || {}).value || '') : '';
+            vung.innerHTML = taoKhungTraLoi(index, dangMoi, paMoi, dapAnCu);
+            dungCacKhungTrong(vung);
+            card.dataset.dang = dangMoi;
+            card.dataset.dangDoi = '1';
+            card.querySelectorAll(`.nut-dang-${index}`).forEach(nut => {
+                const bat = nut.dataset.dang === dangMoi;
+                nut.classList.toggle('bg-sky-600', bat); nut.classList.toggle('text-white', bat); nut.classList.toggle('border-sky-500', bat);
+                nut.classList.toggle('bg-slate-800', !bat); nut.classList.toggle('text-slate-300', !bat); nut.classList.toggle('border-slate-700', !bat);
+            });
+            const nhan = document.getElementById(`nhan_dang_${index}`);
+            if (nhan) nhan.textContent = '· ' + TEN_DANG_WEB[dangMoi];
+            const log = document.getElementById('terminal-log');
+            if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Câu ${index + 1}: đổi dạng sang "${TEN_DANG_WEB[dangMoi]}" (bấm Duyệt để lưu về Google Sheet).</div>`;
+        }
+
+        // Đọc đáp án thầy đã tích chọn trên thẻ
+        function layDapAn(card, index, dang) {
+            if (!card) return undefined;
+            if (dang === 'tn') {
+                const r = card.querySelector(`input[name="ans_${index}"]:checked`);
+                return r ? r.value : undefined;
+            }
+            if (dang === 'ds') {
+                const kq = ['a', 'b', 'c', 'd'].map(k => {
+                    const r = card.querySelector(`input[name="tf_${k}_${index}"]:checked`);
+                    return r ? `${k}) ${r.value === 'Đúng' ? 'Đ' : 'S'}` : '';
+                }).filter(Boolean);
+                return kq.length ? kq.join(', ') : undefined;
+            }
+            const o = document.getElementById(`short_ans_${index}`);
+            return o && o.value.trim() ? o.value.trim() : undefined;
+        }
+        // [MỚI] ===== HẾT PHẦN DẠNG CÂU & ĐÁP ÁN =====
 
         // Nút "Chuẩn hoá công thức" của từng câu
         function chuanHoaLoiGiai(index, imLang = false) {
@@ -502,93 +923,15 @@
                 const card = document.createElement('div');
                 card.className = "question-card bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-4 shadow-lg";
 
-                let dangCauHoi = (item.dang || item.loai_cau_hoi || 'Trắc nghiệm').toLowerCase();
-                let phuongAnRaw = item.phuong_an || '';
-                
-                let interactiveControlHtml = '';
-
-                // [MỚI] Lớp chung cho ô sửa phương án
-                const lopOSuaPA = "pa-input-" + index + " flex-1 bg-transparent border border-transparent hover:border-slate-700 focus:border-sky-500 rounded-md px-2 py-1 text-xs text-white focus:outline-none placeholder-slate-600";
-
-                if (dangCauHoi.includes('nhiều lựa chọn') || dangCauHoi.includes('trắc nghiệm') || (!dangCauHoi.includes('đúng sai') && !dangCauHoi.includes('ngắn'))) {
-                    let optionsList = ["A", "B", "C", "D"];
-                    let optHtml = optionsList.map(opt => `
-                        <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
-                            <div class="flex items-center gap-3 text-xs text-white w-full">
-                                <input type="radio" name="ans_${index}" value="${opt}" class="accent-sky-500 w-4 h-4">
-                                <input type="text" class="${lopOSuaPA}" value="" placeholder="${opt}. Nhập phương án ${opt}...">
-                            </div>
-                        </label>
-                    `).join('');
-
-                    if (phuongAnRaw.trim() !== '') {
-                        let lines = phuongAnRaw.split('\n').filter(l => l.trim() !== '');
-                        if (lines.length > 0) {
-                            optHtml = lines.map((line, idx) => {
-                                let optChar = ["A", "B", "C", "D"][idx] || (idx + 1);
-                                return `
-                                    <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
-                                        <div class="flex items-center gap-3 text-xs text-white w-full">
-                                            <input type="radio" name="ans_${index}" value="${optChar}" class="accent-sky-500 w-4 h-4">
-                                            <input type="text" class="${lopOSuaPA}" value="${escSua(line)}">
-                                        </div>
-                                    </label>
-                                `;
-                            }).join('');
-                        }
-                    }
-
-                    interactiveControlHtml = `
-                        <div class="space-y-2 pt-2">
-                            <div class="text-xs font-semibold text-sky-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-list-check"></i> PHƯƠNG ÁN & TÍCH CHỌN ĐÁP ÁN ĐÚNG:
-                                <span class="text-[10px] font-normal text-slate-500">(bấm vào chữ phương án để sửa)</span>
-                            </div>
-                            <div class="space-y-2">${optHtml}</div>
-                        </div>
-                    `;
-                } else if (dangCauHoi.includes('đúng sai')) {
-                    // Mặc định giữ ý a) như cũ; nếu có phương án thì mỗi dòng là một ý sửa được
-                    let cacY = phuongAnRaw.split('\n').filter(l => l.trim() !== '');
-                    if (cacY.length === 0) cacY = ['Ý a) Phát biểu kiểm định tương ứng'];
-                    let yHtml = cacY.map((y, idx) => {
-                        let kyTu = ["a", "b", "c", "d"][idx] || (idx + 1);
-                        return `
-                                <div class="flex items-center justify-between gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-200">
-                                    <input type="text" class="${lopOSuaPA}" value="${escSua(y)}">
-                                    <div class="flex gap-4 font-semibold shrink-0">
-                                        <label class="cursor-pointer text-emerald-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Đúng" class="accent-emerald-500"> Đúng</label>
-                                        <label class="cursor-pointer text-rose-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Sai" class="accent-rose-500"> Sai</label>
-                                    </div>
-                                </div>`;
-                    }).join('');
-
-                    interactiveControlHtml = `
-                        <div class="space-y-2.5 pt-2">
-                            <div class="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-circle-check"></i> TÍCH CHỌN ĐÚNG / SAI CHO TỪNG Ý:
-                                <span class="text-[10px] font-normal text-slate-500">(bấm vào chữ của ý để sửa)</span>
-                            </div>
-                            <div class="space-y-2">${yHtml}
-                            </div>
-                        </div>
-                    `;
-                } else if (dangCauHoi.includes('ngắn') || dangCauHoi.includes('tự luận')) {
-                    interactiveControlHtml = `
-                        <div class="space-y-2 pt-2">
-                            <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-pen-to-square"></i> Ô NHẬP SỐ LIỆU ĐÁP ÁN:
-                            </div>
-                            <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800">
-                                <input type="text" id="short_ans_${index}" placeholder="Nhập đáp án số liệu..." class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-white w-64 focus:outline-none focus:border-sky-500">
-                            </div>
-                        </div>
-                    `;
-                }
+                // [MỚI] Nhận đúng dạng câu (kể cả "Đúng/sai") + khu trả lời có sửa công thức trực quan + nút chuyển dạng
+                const dangCau = nhanDang(item.dang || item.loai_cau_hoi, item.phuong_an);
+                card.dataset.dang = dangCau;
+                let interactiveControlHtml = taoNutDang(index, dangCau) +
+                    `<div id="vung_tra_loi_${index}">${taoKhungTraLoi(index, dangCau, item.phuong_an || '', item.dap_an || '')}</div>`;
 
                 let html = `
                     <div class="flex flex-wrap justify-between items-center gap-2 text-xs border-b border-slate-800 pb-3">
-                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} ${item.dang ? '· ' + item.dang : ''}</span>
+                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} <span id="nhan_dang_${index}">${item.dang ? '· ' + item.dang : ''}</span></span>
                         <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${item.trang_thai || 'Cần người xem'}</span>
                     </div>
                     <div class="text-xs text-white leading-relaxed space-y-2">
@@ -631,15 +974,26 @@
                         <div class="flex flex-wrap items-center justify-between gap-2">
                             <div class="text-xs font-semibold text-sky-300 flex items-center gap-1.5">
                                 <i class="fa-solid fa-book-open-reader"></i> LỜI GIẢI CHI TIẾT:
+                                <span class="text-[10px] font-normal text-slate-500">(gõ chữ trực tiếp · bấm vào công thức để sửa)</span>
                             </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                            <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, false)" title="Chèn công thức vào chỗ con trỏ, nằm trong dòng" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-square-root-variable mr-1"></i> + Công thức
+                            </button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, true)" title="Chèn công thức đứng riêng một dòng, căn giữa" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-align-center mr-1"></i> + Công thức riêng dòng
+                            </button>
                             <button type="button" id="nut_chuan_hoa_${index}" onclick="chuanHoaLoiGiai(${index})" title="Đưa công thức về chuẩn $...$ / $$...$$, số thập phân 0{,}05, dấu nhân \\cdot, đơn vị \\text{ cm}" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-violet-600 text-violet-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Chuẩn hoá công thức
                             </button>
+                            <button type="button" id="nut_ma_${index}" onclick="batMaLatex(${index})" title="Hiện / ẩn mã LaTeX (chỉ khi cần)" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-600 text-slate-400 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-code mr-1"></i> Hiện mã LaTeX
+                            </button>
+                            </div>
                         </div>
-                        <!-- [MỚI] Khung hiển thị lời giải đã dựng công thức (MathJax không hiển thị được bên trong ô sửa) -->
-                        <div id="xem_loi_giai_${index}" class="xem-loi-giai text-xs text-slate-100 leading-relaxed bg-slate-950/60 border border-sky-500/20 rounded-xl p-3"></div>
-                        <div class="text-[10px] text-slate-500"><i class="fa-solid fa-code mr-1"></i> Mã LaTeX của lời giải (sửa tại đây, khung trên tự cập nhật):</div>
-                        <textarea id="loi_giai_${index}" rows="3" oninput="henGioXemLoiGiai(${index})" onblur="capNhatXemLoiGiai(${index})" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-600 leading-relaxed font-mono" placeholder="Nhập hoặc chỉnh sửa lời giải chi tiết...">${escSua(item.loi_giai || '')}</textarea>
+                        <!-- [MỚI] Khung sửa trực quan: gõ chữ trực tiếp, công thức hiện đẹp, bấm vào công thức để sửa -->
+                        <div id="xem_loi_giai_${index}" data-nguon="loi_giai_${index}" contenteditable="true" spellcheck="false" data-goi-y="Gõ lời giải tại đây; bấm + Công thức để chèn công thức..." oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)" class="xem-loi-giai text-xs text-slate-100 leading-relaxed bg-slate-950/60 border border-sky-500/20 rounded-xl p-3"></div>
+                        <textarea id="loi_giai_${index}" rows="4" oninput="henGioXemLoiGiai(${index})" onblur="capNhatXemLoiGiai(${index})" class="hidden w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-600 leading-relaxed font-mono" placeholder="Nhập hoặc chỉnh sửa lời giải chi tiết...">${escSua(item.loi_giai || '')}</textarea>
                     </div>
                 `;
 
@@ -657,11 +1011,10 @@
                 card.innerHTML = html;
                 container.appendChild(card);
                 capNhatXemLoiGiai(index, false); // [MỚI] đổ chữ lời giải vào khung xem (MathJax dựng chung ở dưới)
+                card.querySelectorAll(`#vung_tra_loi_${index} [data-nguon]`).forEach(ed => dungKhungTuMa(ed, false)); // [MỚI] phương án
             });
 
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
+            dungCongThuc(container); // [MỚI] chờ MathJax tải xong rồi mới dựng (tránh lỗi khi bấm tải quá sớm)
 
             const log = document.getElementById('terminal-log');
             if (log) {
@@ -714,6 +1067,11 @@
                     phuongAnMoi = Array.from(cacOPA).map(o => o.value.trim()).filter(v => v !== '').join('\n');
                 }
             }
+            // [MỚI] Đáp án đã tích chọn + dạng câu (chỉ gửi dạng khi thầy có bấm chuyển dạng)
+            const dangHienTai = card ? card.dataset.dang : undefined;
+            const dapAnMoi = layDapAn(card, index, dangHienTai);
+            const dangMoi = (card && card.dataset.dangDoi === '1') ? TEN_DANG_WEB[dangHienTai] : undefined;
+            if (dangMoi && (dangHienTai === 'ngan' || dangHienTai === 'tuluan')) phuongAnMoi = ''; // máy chủ xoá phương án A–D cũ
 
             // Ẩn câu hỏi trên giao diện ngay lập tức
             if (card) {
@@ -734,7 +1092,7 @@
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi })
+                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi, dap_an: dapAnMoi, dang: dangMoi })
                 });
                 if (log) {
                     log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Google Sheet đã cập nhật thành công câu [${maCau}].</div>`;
