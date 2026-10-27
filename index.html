@@ -30,6 +30,15 @@
         .tt-chua-tot { color: #fb7185; }
         .tt-chua-tot .cham { background: #fb7185; }
         .agent-card.chua-tot { border-color: rgba(251, 113, 133, 0.5); }
+        /* BIỂU TƯỢNG LOGO CHUYỂN ĐỘNG: nguyên tử quay chậm + khung phát sáng nhịp nhàng */
+        .logo-quay { display: inline-block; animation: nguyenTuQuay 6s linear infinite; }
+        .logo-khung { animation: khungPhatSang 2.4s ease-in-out infinite; }
+        @keyframes nguyenTuQuay { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes khungPhatSang {
+            0%, 100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.35); }
+            50% { box-shadow: 0 0 24px rgba(56, 189, 248, 0.75); }
+        }
+        @media (prefers-reduced-motion: reduce) { .logo-quay, .logo-khung { animation: none; } }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-6">
@@ -39,8 +48,8 @@
         <!-- HEADER TITLE -->
         <header class="glass-panel rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-4 glow-blue">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center shadow-lg shadow-sky-500/30">
-                    <i class="fa-solid fa-atom text-white text-2xl"></i>
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center logo-khung">
+                    <i class="fa-solid fa-atom text-white text-2xl logo-quay"></i>
                 </div>
                 <div>
                     <h1 class="text-2xl font-extrabold tracking-wider text-white uppercase">PHYSICS AGENT COMMANDER</h1>
@@ -61,42 +70,42 @@
             <h2 class="text-sm font-bold text-sky-400 uppercase tracking-wider mb-4">
                 <i class="fa-solid fa-rocket mr-2"></i>Mở Agent
             </h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="grid grid-cols-3 gap-2 max-w-3xl">
                 <a href="https://script.google.com/macros/s/AKfycbyS1giScN0BMr4iR1BdHxxLusZNs03HDSMVep5xNJmGdmzkhM2kZhbyV_NqNPaJDVJ9/exec?trang=dieukhien" target="_blank" rel="noopener"
-                   class="flex flex-col gap-1 p-4 rounded-xl bg-slate-900/60 border border-sky-500/30 hover:border-sky-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-file-pen text-sky-400 text-xl"></i>
-                    <span class="font-semibold text-white text-sm">Tạo đề 45 phút</span>
-                    <span class="text-xs text-slate-400">Ma trận, đặc tả, đề</span>
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-sky-500/30 hover:border-sky-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-file-pen text-sky-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Tạo đề 45 phút</span>
+                    <span class="text-[10px] text-slate-400 truncate">Ma trận, đặc tả, đề</span>
                 </a>
                 <a href="https://script.google.com/macros/s/AKfycbx1vP4oedz8kXdCh65i9zRNtQO6Di23n-oQrQR-DlL6vMDIkg6Ww5g52SBI66i3370I/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-1 p-4 rounded-xl bg-slate-900/60 border border-emerald-500/30 hover:border-emerald-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-book-open text-emerald-400 text-xl"></i>
-                    <span class="font-semibold text-white text-sm">Giáo án</span>
-                    <span class="text-xs text-slate-400">KHBD Vật lí 10–11</span>
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-emerald-500/30 hover:border-emerald-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-book-open text-emerald-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Giáo án</span>
+                    <span class="text-[10px] text-slate-400 truncate">KHBD Vật lí 10–11</span>
                 </a>
                 <a href="https://script.google.com/macros/s/AKfycbzdjB_KOLivcDVp5OHiLy0LDtRaxbkmcaYlKeBQctqL5SmQvqW0eolPWaxERr0R-Sf7/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-1 p-4 rounded-xl bg-slate-900/60 border border-amber-500/30 hover:border-amber-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-trophy text-amber-400 text-xl"></i>
-                    <span class="font-semibold text-white text-sm">Ôn thi HSG</span>
-                    <span class="text-xs text-slate-400">Chuyên đề, đề HSG</span>
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-amber-500/30 hover:border-amber-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Ôn thi HSG</span>
+                    <span class="text-[10px] text-slate-400 truncate">Chuyên đề, đề HSG</span>
                 </a>
                 <a href="https://script.google.com/macros/s/AKfycbwmDYjQx_GoFmHW7RbXZ-PSj4pgyib_D-P3jPwC0APURdgqmPGnie1b_RmgHBIl-yspiw/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-1 p-4 rounded-xl bg-slate-900/60 border border-teal-500/30 hover:border-teal-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-flask text-teal-400 text-xl"></i>
-                    <span class="font-semibold text-white text-sm">STEM & Thí nghiệm</span>
-                    <span class="text-xs text-slate-400">Phiếu, mô phỏng</span>
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-teal-500/30 hover:border-teal-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-flask text-teal-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">STEM & Thí nghiệm</span>
+                    <span class="text-[10px] text-slate-400 truncate">Phiếu, mô phỏng</span>
                 </a>
                 <a href="https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-1 p-4 rounded-xl bg-slate-900/60 border border-violet-500/30 hover:border-violet-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-database text-violet-400 text-xl"></i>
-                    <span class="font-semibold text-white text-sm">Kho chung</span>
-                    <span class="text-xs text-slate-400">Trung tâm điều hành</span>
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-violet-500/30 hover:border-violet-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-database text-violet-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Kho chung</span>
+                    <span class="text-[10px] text-slate-400 truncate">Trung tâm điều hành</span>
                 </a>
                 <a href="https://script.google.com/macros/s/AKfycbyHffG8HN2H8XSNgCfU9a774gyV24vXRSXOEsM_flu_eyD06UsLgwpW5vccFJNi6LIr/exec?trang=dieukhien" target="_blank" rel="noopener"
-                   class="flex flex-col gap-1 p-4 rounded-xl bg-slate-900/60 border border-pink-500/30 hover:border-pink-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-lightbulb text-pink-400 text-xl"></i>
-                    <span class="font-semibold text-white text-sm">Nghiên cứu & Sáng kiến</span>
-                    <span class="text-xs text-slate-400">SKKN, KHKT, đặt tên</span>
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-pink-500/30 hover:border-pink-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-lightbulb text-pink-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Nghiên cứu & Sáng kiến</span>
+                    <span class="text-[10px] text-slate-400 truncate">SKKN, KHKT, đặt tên</span>
                 </a>
             </div>
         </section>
