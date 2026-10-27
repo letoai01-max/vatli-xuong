@@ -1,435 +1,1222 @@
-/**
- * =====================================================================
- * HÀM API CHÍNH DÙNG CHO GITHUB PAGES & WEB APP (ĐỒNG BỘ 2 CHIỀU)
- * Tự động tạo cột "Link Ảnh" ở cuối bảng và đồng bộ dữ liệu hoàn hảo
- *
- * SỬA NGÀY 27/10/2026:
- *  - goiApiCoLog_ không còn tự gọi lại chính nó (trước đây lặp vô hạn, chèn hàng loạt dòng LOI).
- *  - doPost gọi goiApiCoLog_ đủ 4 tham số → GitHub Actions trigger_xuat_de chạy lại được.
- *  - Ghi log theo mã HTTP thật (muteHttpExceptions không ném lỗi nên trước đây 401/404 vẫn ghi OK).
- *  - Thiếu MY_GITHUB_TOKEN thì ghi log báo thiếu, không gửi "Bearer null".
- *  - Mã bí mật API_SECRET (TUỲ CHỌN): chưa đặt → chạy như cũ; đã đặt → mọi lệnh đọc/sửa qua link
- *    phải kèm secret (GET: &secret=…, POST: "secret": "…"). Trang điều khiển (không có action) không bị ảnh hưởng.
- *  - Tab Quota_Logs tự xoá dòng cũ khi vượt LOG_SO_DONG_TOI_DA.
- *  - Thêm tác vụ execute_task "chuan_hoa_cong_thuc": chuẩn hóa công thức toàn tab NganHangCauHoi (code ở CongThuc.gs).
- * =====================================================================
- */
-var LOG_SO_DONG_TOI_DA = 2000;
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHYSICS AGENT COMMANDER - THPT Thủy Sơn</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax cho hiển thị công thức Vật lí -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <!-- [MỚI] MathLive: sửa công thức trực quan như Equation trong Word -->
+    <script defer src="https://cdn.jsdelivr.net/npm/mathlive@0.98.6/dist/mathlive.min.js"></script>
+    <style>
+        body { background-color: #0b0f19; color: #cbd5e1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .glass-panel { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.4); }
+        .glow-blue { box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
+        .agent-card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(51, 65, 85, 0.6); transition: all 0.2s ease; }
+        .agent-card:hover { border-color: rgba(56, 189, 248, 0.5); transform: translateY(-2px); }
+        /* TRẠNG THÁI AGENT: chỉ 2 mức. Đổi class tt-tot <-> tt-chua-tot và chữ "Tốt" <-> "Chưa tốt" */
+        .tt { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; margin-top: 2px; }
+        .tt .cham { width: 6px; height: 6px; border-radius: 9999px; flex-shrink: 0; }
+        .tt-tot { color: #34d399; }
+        .tt-tot .cham { background: #34d399; }
+        .tt-chua-tot { color: #fb7185; }
+        .tt-chua-tot .cham { background: #fb7185; }
+        .agent-card.chua-tot { border-color: rgba(251, 113, 133, 0.5); }
+        /* [MỚI] Khung xem trước lời giải: giữ xuống dòng, công thức $$ căn giữa, tràn ngang thì cuộn */
+        .xem-loi-giai { white-space: pre-wrap; overflow-x: auto; min-height: 3.5rem; outline: none; }
+        .xem-loi-giai:focus { border-color: rgba(56, 189, 248, 0.7); }
+        .xem-loi-giai:empty::before { content: attr(data-goi-y); color: #64748b; font-style: italic; }
+        .xem-loi-giai mjx-container[display="true"] { margin: 0.2em 0 !important; }
+        /* [MỚI] Mỗi công thức là một "viên" bấm vào để sửa */
+        .xem-loi-giai[data-mot-dong="1"] { min-height: 1.6em; overflow-x: auto; }
+        .ct { white-space: normal; display: inline-block; cursor: pointer; border-radius: 6px; padding: 0 3px; border: 1px dashed transparent; }
+        .ct:hover { border-color: rgba(56, 189, 248, 0.7); background: rgba(56, 189, 248, 0.08); }
+        .ct-khoi { display: block; text-align: center; margin: 4px 0; }
+        .ct-cho { border-color: rgba(167, 139, 250, 0.8); color: #a78bfa; padding: 0 8px; }
+        math-field#hop-mf { display: block; width: 100%; font-size: 1.35rem; padding: 10px 12px; border-radius: 12px;
+            background: #020617; color: #f8fafc; border: 1px solid #334155;
+            --caret-color: #38bdf8; --selection-background-color: rgba(56, 189, 248, 0.35); --contains-highlight-background-color: rgba(56, 189, 248, 0.12); }
+        math-field#hop-mf:focus-within { border-color: #38bdf8; }
+        /* BIỂU TƯỢNG LOGO CHUYỂN ĐỘNG: nguyên tử quay chậm + khung phát sáng nhịp nhàng */
+        .logo-quay { display: inline-block; animation: nguyenTuQuay 6s linear infinite; }
+        .logo-khung { animation: khungPhatSang 2.4s ease-in-out infinite; }
+        @keyframes nguyenTuQuay { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes khungPhatSang {
+            0%, 100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.35); }
+            50% { box-shadow: 0 0 24px rgba(56, 189, 248, 0.75); }
+        }
+        @media (prefers-reduced-motion: reduce) { .logo-quay, .logo-khung { animation: none; } }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-6">
 
-function doGet(e) {
-  if (e && e.parameter && e.parameter.action) {
-    if (!kiemTraSecret_(e.parameter.secret)) return traJson_({ success: false, status: "error", message: "Sai hoặc thiếu mã bí mật" });
+    <div class="max-w-7xl mx-auto space-y-6">
 
-    var action = e.parameter.action;
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
+        <!-- HEADER TITLE -->
+        <header class="glass-panel rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-4 glow-blue">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center logo-khung">
+                    <i class="fa-solid fa-atom text-white text-2xl logo-quay"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-wider text-white uppercase">PHYSICS AGENT COMMANDER</h1>
+                    <p class="text-xs text-sky-400 font-medium">Hệ sinh thái AI & Kiểm định tự động - THPT Thủy Sơn</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Trực tuyến: 10/10 Agent
+                </span>
+                <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
+                    <i class="fa-solid fa-rotate"></i> Đồng bộ dữ liệu
+                </button>
+            </div>
+        </header>
+                <!-- ===== CÁC AGENT CON: mỗi nút mở web app của một agent ===== -->
+        <section class="glass-panel rounded-xl p-5">
+            <h2 class="text-sm font-bold text-sky-400 uppercase tracking-wider mb-4">
+                <i class="fa-solid fa-rocket mr-2"></i>Mở Agent
+            </h2>
+            <div class="grid grid-cols-3 gap-2 max-w-3xl">
+                <a href="https://script.google.com/macros/s/AKfycbyS1giScN0BMr4iR1BdHxxLusZNs03HDSMVep5xNJmGdmzkhM2kZhbyV_NqNPaJDVJ9/exec?trang=dieukhien" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-sky-500/30 hover:border-sky-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-file-pen text-sky-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Tạo đề 45 phút</span>
+                    <span class="text-[10px] text-slate-400 truncate">Ma trận, đặc tả, đề</span>
+                </a>
+                <a href="https://script.google.com/macros/s/AKfycbx1vP4oedz8kXdCh65i9zRNtQO6Di23n-oQrQR-DlL6vMDIkg6Ww5g52SBI66i3370I/exec" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-emerald-500/30 hover:border-emerald-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-book-open text-emerald-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Giáo án</span>
+                    <span class="text-[10px] text-slate-400 truncate">KHBD Vật lí 10–11</span>
+                </a>
+                <a href="https://script.google.com/macros/s/AKfycbzdjB_KOLivcDVp5OHiLy0LDtRaxbkmcaYlKeBQctqL5SmQvqW0eolPWaxERr0R-Sf7/exec" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-amber-500/30 hover:border-amber-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Ôn thi HSG</span>
+                    <span class="text-[10px] text-slate-400 truncate">Chuyên đề, đề HSG</span>
+                </a>
+                <a href="https://script.google.com/macros/s/AKfycbwmDYjQx_GoFmHW7RbXZ-PSj4pgyib_D-P3jPwC0APURdgqmPGnie1b_RmgHBIl-yspiw/exec" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-teal-500/30 hover:border-teal-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-flask text-teal-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">STEM & Thí nghiệm</span>
+                    <span class="text-[10px] text-slate-400 truncate">Phiếu, mô phỏng</span>
+                </a>
+                <a href="https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-violet-500/30 hover:border-violet-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-database text-violet-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Kho chung</span>
+                    <span class="text-[10px] text-slate-400 truncate">Trung tâm điều hành</span>
+                </a>
+                <a href="https://script.google.com/macros/s/AKfycbyHffG8HN2H8XSNgCfU9a774gyV24vXRSXOEsM_flu_eyD06UsLgwpW5vccFJNi6LIr/exec?trang=dieukhien" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-pink-500/30 hover:border-pink-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-lightbulb text-pink-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Nghiên cứu & Sáng kiến</span>
+                    <span class="text-[10px] text-slate-400 truncate">SKKN, KHKT, đặt tên</span>
+                </a>
+                <!-- AGENT 4 - THU THẬP TÀI LIỆU: THẦY DÁN LINK WEB APP (/exec) VÀO CHỖ href="#" -->
+                <a href="https://script.google.com/macros/s/AKfycbyiA9RswTbLuC1bylYeeH6lr0kO_7yx6qQCKYrUEN9-DWaMaCBBzzp718najOwYZNVZEw/exec" target="_blank" rel="noopener" onclick="if(this.getAttribute('href')==='#'){alert('Thầy chưa dán link web app cho agent này trong code (href=&quot;#&quot;).');return false;}"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-cloud-arrow-down text-cyan-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Thu thập tài liệu</span>
+                    <span class="text-[10px] text-slate-400 truncate">Đề HSG, TN THPT, học liệu</span>
+                </a>
+                <!-- AGENT 6 - BẢO VỆ & SAO LƯU: THẦY DÁN LINK WEB APP (/exec) VÀO CHỖ href="#" -->
+                <a href="https://script.google.com/macros/s/AKfycbzLXzoTZsJPR9A1lOfDatJ4tmIR6COmDQGzq9FbOikOgOZq4E0BsqL06AhSfKiY-xqpkQ/exec" target="_blank" rel="noopener" onclick="if(this.getAttribute('href')==='#'){alert('Thầy chưa dán link web app cho agent này trong code (href=&quot;#&quot;).');return false;}"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-indigo-500/30 hover:border-indigo-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-shield-halved text-indigo-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Bảo vệ & Sao lưu</span>
+                    <span class="text-[10px] text-slate-400 truncate">Sao lưu code, chống xoá</span>
+                </a>
+                <!-- AGENT 7 - META-AGENT: THẦY DÁN LINK WEB APP (/exec) VÀO CHỖ href="#" -->
+                <a href="https://script.google.com/macros/s/AKfycbzAPAYUlMFj8FBnBZ34a8xp-tg9RoK0KDnxFsFmp3cdXaONWEhYhgP4pbrhH7w9tyAD/exec" target="_blank" rel="noopener" onclick="if(this.getAttribute('href')==='#'){alert('Thầy chưa dán link web app cho agent này trong code (href=&quot;#&quot;).');return false;}"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-orange-500/30 hover:border-orange-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-brain text-orange-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Meta-Agent</span>
+                    <span class="text-[10px] text-slate-400 truncate">Cấu hình, kiểm định lớp 2</span>
+                </a>
+                <!-- AGENT 9 - VIDEO BÀI GIẢNG: THẦY DÁN LINK WEB APP (/exec) VÀO CHỖ href="#" -->
+                <a href="https://script.google.com/macros/s/AKfycbyvA4VyefFG3ZCCX9b4t4VzVjbTXIcTWuOGtrVII577fyxd1EnXms1EYaYhRr8H-flmCw/exec" target="_blank" rel="noopener" onclick="if(this.getAttribute('href')==='#'){alert('Thầy chưa dán link web app cho agent này trong code (href=&quot;#&quot;).');return false;}"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-red-500/30 hover:border-red-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-video text-red-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Video bài giảng</span>
+                    <span class="text-[10px] text-slate-400 truncate">Kịch bản, dựng video</span>
+                </a>
+            </div>
+        </section>
 
-    // Trỏ trực tiếp vào tab NganHangCauHoi
-    var sheet = ss.getSheetByName("NganHangCauHoi") || ss.getSheetByName("KhoChung") || ss.getSheets()[0];
+        <!-- MAIN LAYOUT -->
+        <div class="space-y-6">
 
-    // Tự động kiểm tra và thêm cột "Link Ảnh" vào ô trống cuối cùng nếu chưa có
-    var lastCol = sheet.getLastColumn();
-    var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
-    var linkAnhColIdx = -1;
+            <!-- 10 AGENTS HEALTH GRID (ĐÃ THU GỌN: chỉ Tốt / Chưa tốt) -->
+            <div class="glass-panel rounded-xl p-5 space-y-3">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-sky-400"></i> Sức Khỏe & Trạng Thái Toàn Bộ 10 Agent (0–9)
+                        </h2>
+                        <p class="text-xs text-slate-400">Đồng bộ trực tiếp với tab Agent trong Google Sheet Kho chung</p>
+                    </div>
+                </div>
 
-    for (var c = 0; c < headers.length; c++) {
-      var hText = String(headers[c]).trim().toLowerCase();
-      if (hText.includes("link ảnh") || hText.includes("linkanh") || hText.includes("ảnh đồ thị")) {
-        linkAnhColIdx = c + 1;
-        break;
-      }
-    }
+                <!-- Muốn báo agent "Chưa tốt": thêm class chua-tot vào agent-card, đổi tt-tot thành tt-chua-tot và chữ Tốt thành Chưa tốt -->
+                <div class="grid grid-cols-5 lg:grid-cols-10 gap-2">
+                    <div class="agent-card rounded-md px-2 py-1.5" title="0. Kho Chung"><div class="text-[10px] font-semibold text-white truncate">0. Kho Chung</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="1. Khảo Thí"><div class="text-[10px] font-semibold text-white truncate">1. Khảo Thí</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="2. Kế Hoạch Bài Dạy"><div class="text-[10px] font-semibold text-white truncate">2. Kế Hoạch Bài Dạy</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="3. Bồi Dưỡng HSG"><div class="text-[10px] font-semibold text-white truncate">3. Bồi Dưỡng HSG</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="4. Thu Thập Tài Liệu"><div class="text-[10px] font-semibold text-white truncate">4. Thu Thập Tài Liệu</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="5. STEM & Thí Nghiệm"><div class="text-[10px] font-semibold text-white truncate">5. STEM & Thí Nghiệm</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="6. Bảo Vệ & Sao Lưu"><div class="text-[10px] font-semibold text-white truncate">6. Bảo Vệ & Sao Lưu</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="7. Meta-Agent"><div class="text-[10px] font-semibold text-white truncate">7. Meta-Agent</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="8. Nghiên Cứu & SKKN"><div class="text-[10px] font-semibold text-white truncate">8. Nghiên Cứu & SKKN</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="9. Video Bài Giảng"><div class="text-[10px] font-semibold text-white truncate">9. Video Bài Giảng</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                </div>
+            </div>
 
-    if (linkAnhColIdx === -1) {
-      linkAnhColIdx = lastCol + 1;
-      sheet.getRange(1, linkAnhColIdx).setValue("Link Ảnh");
-    }
+            <!-- TRUNG TÂM ĐIỀU HÀNH & TÁC VỤ -->
+            <div class="glass-panel rounded-xl p-5 space-y-4">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-gears text-sky-400"></i> Trung Tâm Điều Hành & Tác Vụ Agent
+                    </h2>
+                    <p class="text-xs text-slate-400">Chọn tác vụ chuyên sâu theo từng Agent hoặc nhập yêu cầu để điều khiển hệ thống</p>
+                </div>
 
-    var data = sheet.getDataRange().getDisplayValues();
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-300">1. Chọn Agent / Module chuyên trách:</label>
+                        <select id="select-agent" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+                            <option value="0">0. Kho Chung (Dữ liệu, Ngân hàng)</option>
+                            <option value="1">1. Khảo Thí & Ôn Tập</option>
+                            <option value="2">2. Kế Hoạch Bài Dạy (CV 5512)</option>
+                            <option value="3">3. Bồi Dưỡng HSG</option>
+                            <option value="4">4. Thu Thập Tài Liệu</option>
+                            <option value="5">5. STEM & Thí Nghiệm</option>
+                            <option value="6">6. Bảo Vệ & Sao Lưu</option>
+                            <option value="7">7. Meta-Agent</option>
+                            <option value="8">8. Nghiên Cứu & SKKN</option>
+                            <option value="9">9. Video Bài Giảng</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-300">2. Chọn tác vụ chuẩn có sẵn trong Sheet:</label>
+                        <select id="select-task" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+                            <option value="">— Chọn tác vụ chuyên sâu —</option>
+                        </select>
+                    </div>
+                </div>
 
-    function toDirectImgUrl(url) {
-      if (!url) return "";
-      var u = String(url).trim();
-      var m = u.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || u.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-      if (m && m[1] && u.includes("drive.google.com")) {
-        return "https://lh3.googleusercontent.com/d/" + m[1];
-      }
-      return u;
-    }
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-slate-300">3. Nội dung yêu cầu tác vụ bổ sung:</label>
+                    <textarea id="task-input" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-500" placeholder="Nhập yêu cầu cụ thể hoặc chọn tác vụ có sẵn ở trên..."></textarea>
+                </div>
 
-    // 1. LẤY DANH SÁCH CẦN NGƯỜI XEM (Chỉ lấy câu chưa duyệt / trống trạng thái)
-    if (action === 'getQuestions') {
-      var questions = [];
-      for (var i = 1; i < data.length; i++) {
-        var row = data[i];
-        var status = row[20] ? row[20].toString().trim().toLowerCase() : ""; // Cột U (index 20): Trạng thái duyệt
+                <div class="flex justify-end gap-3 pt-2">
+                    <button onclick="thucThiTacVu()" class="px-5 py-2.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
+                        <i class="fa-solid fa-play"></i> Thực thi tác vụ
+                    </button>
+                </div>
+            </div>
 
-        // Chỉ đưa vào danh sách nếu trạng thái là trống, cần người xem hoặc chưa duyệt
-        if (status === "" || status.includes("cần người xem") || status.includes("chưa duyệt")) {
-          // Lấy trực tiếp link ảnh từ cột Link Ảnh ở cuối bảng
-          var customImgLink = row[linkAnhColIdx - 1] ? toDirectImgUrl(row[linkAnhColIdx - 1]) : "";
+            <!-- MỤC CÁC CÂU CẦN DUYỆT -->
+            <div id="can-duyet-section" class="glass-panel rounded-xl p-5 space-y-4 border-amber-500/30">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-check text-amber-400"></i> Quản Lý & Duyệt Câu Hỏi ("Cần người xem" / Tab NganHangCauHoi)
+                        </h2>
+                        <p class="text-xs text-slate-400">Hiển thị danh sách câu hỏi kèm hình vẽ/đồ thị minh họa chuẩn xác tuyệt đối từ Cột W</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
+                            <i class="fa-solid fa-eye"></i> Hiện ~20 câu cần duyệt
+                        </button>
+                        <button onclick="chuanHoaTatCaLoiGiai()" title="Chuẩn hoá chữ và công thức trong lời giải của mọi câu đang hiện" class="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-violet-600/20 cursor-pointer">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Chuẩn hoá tất cả lời giải
+                        </button>
+                    </div>
+                </div>
 
-          // Nếu cột Link Ảnh trống, quét dự phòng các cột phía sau
-          if (!customImgLink) {
-            for (var col = 15; col < row.length; col++) {
-              var val = row[col] ? row[col].toString().trim() : "";
-              if (val.indexOf("http") === 0 && (val.includes("drive.google.com") || val.includes("lh3.googleusercontent.com") || val.match(/\.(png|jpg|jpeg|webp)$/i))) {
-                customImgLink = toDirectImgUrl(val);
-                break;
-              }
+                <!-- DANH SÁCH CÂU HỎI -->
+                <div id="danh-sach-cau-hoi" class="space-y-4 pt-2">
+                    <div class="text-center py-8 text-slate-500 text-xs">
+                        Bấm nút <span class="text-amber-400 font-bold">"Hiện ~20 câu cần duyệt"</span> ở góc trên để tải danh sách câu hỏi.
+                    </div>
+                </div>
+            </div>
+
+            <!-- NHẬT KÝ HOẠT ĐỘNG HỆ THỐNG -->
+            <div class="glass-panel rounded-xl p-4 text-[11px] font-mono space-y-1">
+                <div class="flex justify-between items-center text-slate-400 border-b border-slate-800 pb-2">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-terminal text-sky-400"></i> Nhật ký hoạt động hệ thống</span>
+                    <button onclick="document.getElementById('terminal-log').innerHTML=''" class="hover:text-white transition">Xóa nhật ký</button>
+                </div>
+                <div id="terminal-log" class="space-y-1 pt-1 text-slate-300">
+                    <div>[Hệ thống]: Giao diện Physics Agent Commander đã khởi tạo thành công.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- [MỚI] HỘP SỬA CÔNG THỨC TRỰC QUAN (dùng chung cho mọi câu) -->
+    <div id="hop-cong-thuc" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-4" onmousedown="if (event.target === this) huyCongThuc()">
+        <div class="w-full max-w-2xl bg-slate-900 border border-sky-500/40 rounded-2xl p-5 space-y-3 shadow-2xl">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-sm font-bold text-white flex items-center gap-2"><i class="fa-solid fa-square-root-variable text-sky-400"></i> Sửa công thức</div>
+                <label class="text-xs text-slate-300 flex items-center gap-2 cursor-pointer"><input type="checkbox" id="hop-khoi" class="accent-sky-500 w-4 h-4"> Đứng riêng một dòng (căn giữa)</label>
+            </div>
+            <math-field id="hop-mf"></math-field>
+            <div id="hop-du-phong" class="hidden min-h-[3rem] text-base text-white bg-slate-950 border border-slate-700 rounded-xl p-3 text-center"></div>
+            <div class="text-[11px] text-slate-500 leading-relaxed">
+                Gõ như sau: <b class="text-slate-300">/</b> tạo phân số, <b class="text-slate-300">^</b> số mũ, <b class="text-slate-300">_</b> chỉ số, gõ chữ <b class="text-slate-300">sqrt</b>, <b class="text-slate-300">alpha</b>, <b class="text-slate-300">omega</b>, <b class="text-slate-300">Delta</b>, <b class="text-slate-300">pi</b>… máy tự đổi thành kí hiệu. Đơn vị: bấm nút ⋯ (menu) để chèn chữ thường.
+            </div>
+            <details id="hop-chi-tiet" class="text-xs">
+                <summary class="cursor-pointer text-slate-400 hover:text-white">Mã LaTeX của công thức (không bắt buộc)</summary>
+                <textarea id="hop-ma" rows="2" spellcheck="false" class="mt-2 w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white font-mono focus:outline-none focus:border-sky-500"></textarea>
+            </details>
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                <button type="button" onclick="xoaCongThuc()" class="px-4 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-semibold border border-rose-500/30 transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Xoá công thức</button>
+                <div class="flex gap-2">
+                    <button type="button" onclick="huyCongThuc()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition cursor-pointer">Huỷ</button>
+                    <button type="button" onclick="luuCongThuc()" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition cursor-pointer"><i class="fa-solid fa-check mr-1"></i> Xong</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT XỬ LÝ GIAO DIỆN & TƯƠNG TÁC API -->
+    <script>
+        // THẦY THAY ĐƯỜNG DẪN WEB APP GOOGLE APPS SCRIPT CỦA MÌNH VÀO ĐÂY ĐỂ ĐỒNG BỘ 2 CHIỀU
+        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec";
+
+        const danhSachTacVuTheoAgent = {
+            "0": [
+                { value: "quet_anh", label: "Quét bù hình ảnh & đồ thị từ PDF gốc (Cột W)" },
+                { value: "kiem_dinh", label: "Chạy kiểm định nội dung câu hỏi 5 tầng" },
+                { value: "xuat_de", label: "Xuất dữ liệu ngân hàng câu hỏi ra questions.json" }
+            ],
+            "1": [
+                { value: "tao_de_kiem_tra", label: "Tạo đề kiểm tra 15p / 45p theo ma trận chuẩn" },
+                { value: "tron_de_thi", label: "Trộn mã đề thi trắc nghiệm (Xáo trộn câu hỏi & đáp án)" },
+                { value: "thong_ke_diem", label: "Phân tích thống kê phổ điểm và độ khó câu hỏi" }
+            ],
+            "2": [
+                { value: "soan_giao_an_5512", label: "Soạn kế hoạch bài dạy (giáo án) chuẩn CV 5512" },
+                { value: "thiet_ke_hoat_dong", label: "Thiết kế chuỗi hoạt động học (Khởi động, Luyện tập...)" },
+                { value: "phieu_hoc_tap", label: "Tạo phiếu học tập & hệ thống câu hỏi thảo luận" }
+            ],
+            "3": [
+                { value: "chuyen_de_nang_cao", label: "Biên soạn chuyên đề Vật lí nâng cao (Thi học sinh giỏi)" },
+                { value: "giai_chi_tiet_hsg", label: "Giải chi tiết bài toán Vật lí chuyên sâu / Olympic" },
+                { value: "nguon_suy_luan_hsg", label: "Tuyển chọn hệ thống bài tập phân loại điểm 9-10" }
+            ],
+            "4": [
+                { value: "tai_tai_lieu_drive", label: "Đồng bộ và phân loại tài liệu mới từ Google Drive" },
+                { value: "chuan_hoa_van_ban", label: "Chuẩn hóa định dạng văn bản theo Nghị định 30" },
+                { value: "quet_metadata", label: "Quét và cập nhật metadata tệp nguồn vào Google Sheet" }
+            ],
+            "5": [
+                { value: "stem_thuc_nghiem", label: "Thiết kế mô hình thí nghiệm STEM thực tế" },
+                { value: "huong_dan_che_tao", label: "Lập quy trình chế tạo thiết bị đo lường vật lí" }
+            ],
+            "6": [
+                { value: "sao_luu_du_lieu", label: "Sao lưu toàn bộ ngân hàng câu hỏi lên mây" },
+                { value: "kiem_tra_bao_mat", label: "Kiểm tra tính toàn vẹn dữ liệu hệ thống" }
+            ],
+            "7": [
+                { value: "dieu_phoi_tong", label: "Chạy thuật toán điều phối tổng hợp đa Agent" },
+                { value: "toi_uu_he_thong", label: "Tối ưu hóa hiệu năng phản hồi toàn hệ thống" }
+            ],
+            "8": [
+                { value: "nghien_cuu_skkn", label: "Tổng hợp SKKN và sáng kiến kinh nghiệm giảng dạy" },
+                { value: "bien_soan_chuyen_de", label: "Biên soạn tài liệu nghiên cứu khoa học sư phạm" }
+            ],
+            "9": [
+                { value: "tao_video_demo", label: "Tạo kịch bản video mô phỏng thí nghiệm Vật lí" },
+                { value: "xuat_giao_an_video", label: "Liên kết video minh họa vào bài giảng điện tử" }
+            ]
+        };
+
+        document.getElementById('select-agent').addEventListener('change', function() {
+            const agentId = this.value;
+            const taskSelect = document.getElementById('select-task');
+            taskSelect.innerHTML = '<option value="">— Chọn tác vụ chuyên sâu —</option>';
+            if (danhSachTacVuTheoAgent[agentId]) {
+                danhSachTacVuTheoAgent[agentId].forEach(task => {
+                    const opt = document.createElement('option');
+                    opt.value = task.value;
+                    opt.textContent = task.label;
+                    taskSelect.appendChild(opt);
+                });
             }
-          }
+        });
 
-          var rawQuestion = row[6] ? row[6].toString().trim() : "";
-          var rawOptions  = row[7] ? row[7].toString().trim() : "";
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('select-agent').dispatchEvent(new Event('change'));
+        });
 
-          var sourceFileUrl = row[16] ? row[16].toString().trim() : "";
-          var sourceFileId  = row[17] ? row[17].toString().trim() : "";
-          if (!sourceFileId && sourceFileUrl) {
-            var idMatch = sourceFileUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || sourceFileUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-            if (idMatch && idMatch[1]) sourceFileId = idMatch[1];
-          }
-
-          questions.push({
-            id: row[0] || ("Q-" + i),                           // Cột A (0): Mã câu
-            yccd: row[1] || "",                                 // Cột B (1): Mã YCCĐ
-            text: rawQuestion.replace(/\r\n|\r|\n/g, "<br>") || "(Trống nội dung)",
-            rawText: rawQuestion,
-            options: rawOptions.replace(/\r\n|\r|\n/g, "<br>"),
-            rawOptions: rawOptions,
-            answer: row[8] ? row[8].toString().trim() : "",     // Cột I (8): Đáp án
-            solution: row[9] ? row[9].toString().trim() : "",   // Cột J (9): Lời giải / HDC
-            score: row[10] || "",                               // Cột K (10): Điểm
-            examInfo: [row[11], row[14], row[13], row[12]].filter(Boolean).join(" • "),
-            sourceFileId: sourceFileId,
-            sourceFileName: row[15] || "",
-            imgUrl: customImgLink                               // Link ảnh đồ thị ưu tiên từ cột cuối
-          });
+        // [MỚI] Thoát ký tự để nội dung có dấu ngoặc kép, <, > vẫn đưa vào ô sửa được an toàn
+        function escSua(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
-      }
-      return traJson_(questions);
-    }
 
-    // 2. CẬP NHẬT TRẠNG THÁI DUYỆT & BỔ SUNG DỮ LIỆU QUA GET (Hỗ trợ tương thích ngược)
-    if (action === 'updateStatus') {
-      var targetId = String(e.parameter.id || "").trim();
-      var webStatus = e.parameter.status;
-      var newAnswer = e.parameter.answer;
-      var newSolution = e.parameter.solution;
-      var newQuestion = e.parameter.question;
-      var newOptions = e.parameter.options;
-
-      var finalStatus = (webStatus === "Đã duyệt" || webStatus === "AI duyệt") ? "AI duyệt" : "Loại";
-      var result = { success: false };
-      if (!targetId) return traJson_({ success: false, message: "Thiếu mã câu (id)" });
-
-      for (var j = 1; j < data.length; j++) {
-        var currentId = data[j][0] || ("Q-" + j);
-        if (currentId.toString().trim() === targetId) {
-          var rowIdx = j + 1;
-
-          sheet.getRange(rowIdx, 21).setValue(finalStatus); // Cột U: Trạng thái duyệt
-
-          if (coNoiDung_(newQuestion)) sheet.getRange(rowIdx, 7).setValue(chongCongThuc_(newQuestion.trim()));  // Cột G: Nội dung
-          if (coNoiDung_(newOptions))  sheet.getRange(rowIdx, 8).setValue(chongCongThuc_(newOptions.trim()));   // Cột H: Phương án
-          if (coNoiDung_(newAnswer))   sheet.getRange(rowIdx, 9).setValue(chongCongThuc_(newAnswer.trim()));    // Cột I: Đáp án
-          if (coNoiDung_(newSolution)) sheet.getRange(rowIdx, 10).setValue(chongCongThuc_(newSolution.trim())); // Cột J: Lời giải
-
-          SpreadsheetApp.flush();
-          result = { success: true };
-          break;
+        // [MỚI] Hiện / ẩn ô sửa nội dung câu hỏi
+        function batSuaNoiDung(index) {
+            const o = document.getElementById(`noi_dung_${index}`);
+            const nut = document.getElementById(`nut_sua_${index}`);
+            if (!o) return;
+            const dangAn = o.classList.contains('hidden');
+            o.classList.toggle('hidden');
+            if (nut) nut.innerHTML = dangAn
+                ? '<i class="fa-solid fa-check mr-1"></i> Xong'
+                : '<i class="fa-solid fa-pen mr-1"></i> Sửa nội dung';
+            if (dangAn) { o.focus(); } else { capNhatXemTruoc(index); }
         }
-      }
-      return traJson_(result);
-    }
 
-    return traJson_({ success: false, status: "unknown_action" });
-  }
-
-  return HtmlService.createHtmlOutputFromFile('GiaoDien')
-    .setTitle('Trung Tâm Điều Hành Agent - THPT Thủy Sơn')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DEFAULT);
-}
-
-/**
- * HÀM NHẬN DỮ LIỆU POST TỪ TRANG WEB (ĐỒNG BỘ 2 CHIỀU QUA FETCH POST)
- */
-function doPost(e) {
-  try {
-    var data = JSON.parse(e.postData.contents);
-    if (!kiemTraSecret_(data.secret)) return traJson_({ status: "error", message: "Sai hoặc thiếu mã bí mật" });
-
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var action = data.action;
-
-    // 1. XỬ LÝ CẬP NHẬT TRẠNG THÁI DUYỆT / LOẠI CÂU HỎI VÀ LỜI GIẢI
-    if (action === "update_status") {
-      var sheet = ss.getSheetByName("NganHangCauHoi");
-      if (!sheet) return traJson_({ status: "error", message: "Không tìm thấy tab NganHangCauHoi" });
-
-      var maCauCanTim = String(data.ma_cau || "").trim();
-      if (!maCauCanTim) return traJson_({ status: "error", message: "Thiếu mã câu (ma_cau)" });
-      var trangThaiMoi = (data.trang_thai === "Loại") ? "Loại" : "AI duyệt";
-      var loiGiaiMoi = data.loi_giai;
-
-      var lastRow = sheet.getLastRow();
-      if (lastRow < 2) return traJson_({ status: "error", message: "Sheet trống" });
-
-      var lastCol = sheet.getLastColumn();
-      var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
-
-      var colMaCau = 1;       // Mặc định Cột A (MaCau)
-      var colTrangThai = 21;  // Mặc định Cột U (Trạng thái)
-      var colLoiGiai = 10;    // Mặc định Cột J (Lời giải/HDC)
-      // [MỚI] Các cột trang điều khiển sửa được (mặc định giống nhánh updateStatus của doGet)
-      var colNoiDung = 7;     // Mặc định Cột G (Nội dung)
-      var colPhuongAn = 8;    // Mặc định Cột H (Phương án)
-      var colDapAn = 9;       // Mặc định Cột I (Đáp án)
-      var colDang = 0;        // Cột Dạng câu: chỉ ghi khi tìm thấy tiêu đề
-      var daThayNoiDung = false, daThayPhuongAn = false, daThayDapAn = false, daThayDang = false;
-      var colLinkAnh = 0;     // [MỚI] Cột "Link Ảnh" (tìm theo tiêu đề giống doGet)
-
-      // Quét tìm vị trí cột dựa trên tiêu đề thực tế trên Sheet
-      for (var c = 0; c < headers.length; c++) {
-        var h = String(headers[c]).trim().toLowerCase();
-        if (h === "macau" || h.includes("mã câu") || h === "id" || h.includes("ma_cau")) {
-          colMaCau = c + 1;
-        }
-        if (h === "trangthai" || h.includes("trạng thái") || h === "status" || h.includes("trang_thai") || h.includes("duyệt")) {
-          colTrangThai = c + 1;
-        }
-        if (h === "loigiai" || h.includes("lời giải") || h.includes("hdc") || h.includes("loi_giai")) {
-          colLoiGiai = c + 1;
-        }
-        // [MỚI] Lấy cột ĐẦU TIÊN khớp tên để tránh nhầm với cột phụ có tên gần giống
-        if (!daThayNoiDung && (h === "noidung" || h.includes("nội dung") || h.includes("noi_dung"))) {
-          colNoiDung = c + 1; daThayNoiDung = true;
-        }
-        if (!daThayPhuongAn && (h === "phuongan" || h.includes("phương án") || h.includes("phuong_an"))) {
-          colPhuongAn = c + 1; daThayPhuongAn = true;
-        }
-        if (!daThayDapAn && (h === "dapan" || h.includes("đáp án") || h.includes("dap_an"))) {
-          colDapAn = c + 1; daThayDapAn = true;
-        }
-        if (!daThayDang && (h === "dang" || h.includes("dạng") || h.includes("loại câu") || h.includes("loai_cau"))) {
-          colDang = c + 1; daThayDang = true;
-        }
-        if (!colLinkAnh && (h.includes("link ảnh") || h.includes("linkanh") || h.includes("ảnh đồ thị"))) {
-          colLinkAnh = c + 1;
-        }
-      }
-
-      var dataValues = sheet.getRange(2, colMaCau, lastRow - 1, 1).getValues();
-      var updated = false;
-
-      // Tìm đúng dòng chứa Mã câu để cập nhật trạng thái và lời giải mới
-      for (var i = 0; i < dataValues.length; i++) {
-        var rowMa = String(dataValues[i][0]).trim();
-        if (rowMa === maCauCanTim) {
-          var targetRow = i + 2;
-          sheet.getRange(targetRow, colTrangThai).setValue(trangThaiMoi);
-          // [MỚI] Bỏ qua dòng chữ mẫu của ô lời giải trên trang điều khiển (không ghi đè lời giải thật)
-          if (coNoiDung_(loiGiaiMoi) && String(loiGiaiMoi).trim() !== "Nhập hoặc chỉnh sửa lời giải chi tiết...") {
-            sheet.getRange(targetRow, colLoiGiai).setValue(chongCongThuc_(String(loiGiaiMoi).trim()));
-          }
-          // [MỚI] Nội dung, phương án, đáp án, dạng câu thầy sửa trên trang điều khiển
-          if (coNoiDung_(data.noi_dung)) sheet.getRange(targetRow, colNoiDung).setValue(chongCongThuc_(String(data.noi_dung).trim()));
-          if (coNoiDung_(data.phuong_an)) {
-            sheet.getRange(targetRow, colPhuongAn).setValue(chongCongThuc_(String(data.phuong_an).trim()));
-          } else if (data.phuong_an === "" && coNoiDung_(data.dang)) {
-            sheet.getRange(targetRow, colPhuongAn).setValue(""); // Đổi sang trả lời ngắn / tự luận → xoá phương án A–D cũ
-          }
-          if (coNoiDung_(data.dap_an)) sheet.getRange(targetRow, colDapAn).setValue(chongCongThuc_(String(data.dap_an).trim()));
-          if (coNoiDung_(data.dang) && colDang) sheet.getRange(targetRow, colDang).setValue(chongCongThuc_(String(data.dang).trim()));
-          // [MỚI] Hình vẽ thầy xoá / thêm trên trang điều khiển
-          if (data.link_anh !== undefined || (data.anh_moi && data.anh_moi.length)) {
-            if (!colLinkAnh) {
-              colLinkAnh = sheet.getLastColumn() + 1;
-              sheet.getRange(1, colLinkAnh).setValue("Link Ảnh");
+        // [MỚI] Cập nhật phần hiển thị (kèm công thức MathJax) theo nội dung vừa sửa
+        function capNhatXemTruoc(index) {
+            const o = document.getElementById(`noi_dung_${index}`);
+            const xem = document.getElementById(`xem_noi_dung_${index}`);
+            if (!o || !xem) return;
+            xem.innerHTML = o.value;
+            if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+                MathJax.typesetPromise([xem]);
             }
-            var dsLink = String(data.link_anh || "").split(/[,;\s]+/).filter(function (x) { return x; });
-            dsLink = dsLink.concat(luuAnhLenGitHub_(maCauCanTim, data.anh_moi || []));
-            sheet.getRange(targetRow, colLinkAnh).setValue(dsLink.join(", "));
-          }
-          updated = true;
-          break;
         }
-      }
 
-      SpreadsheetApp.flush();
+        // ===================== [MỚI] CHUẨN HOÁ LaTeX LỜI GIẢI =====================
+        // Bản JavaScript của ChuanLatex.gs (chuanHoaToan_ / chuanHoaLatex_) để chuẩn hoá ngay trên web.
+        // Idempotent: bấm nhiều lần kết quả không đổi.
+        const LATEX_UNICODE = {
+            'α': '\\alpha', 'β': '\\beta', 'γ': '\\gamma', 'δ': '\\delta', 'ε': '\\varepsilon', 'θ': '\\theta',
+            'λ': '\\lambda', 'μ': '\\mu', 'π': '\\pi', 'ρ': '\\rho', 'σ': '\\sigma', 'τ': '\\tau', 'φ': '\\varphi',
+            'ω': '\\omega', 'Δ': '\\Delta', 'Ω': '\\Omega', 'Φ': '\\Phi', 'Σ': '\\Sigma', 'Θ': '\\Theta', 'Λ': '\\Lambda',
+            '≈': '\\approx', '≤': '\\le ', '≥': '\\ge ', '≠': '\\ne ', '±': '\\pm ', '×': '\\times ', '·': '\\cdot ', '∙': '\\cdot ',
+            '→': '\\to ', '⇒': '\\Rightarrow ', '∞': '\\infty ', '∝': '\\propto ', '−': '-', '–': '-', '°': '^\\circ '
+        };
+        const SO_MU = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-' };
 
-      // --- KÍCH HOẠT GITHUB ACTIONS TỨC THÌ (chỉ khi thật sự cập nhật được câu) ---
-      if (updated) {
-        try {
-          var token = PropertiesService.getScriptProperties().getProperty("MY_GITHUB_TOKEN");
-          var repoOwner = "letoai01-max"; // Tên tài khoản GitHub của thầy
-          var repoName = "vatli-xuong";   // Tên kho lưu trữ của thầy
-          var url = "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/dispatches";
-
-          if (!token) {
-            ghiLog_("GitHub Actions", "MY_GITHUB_TOKEN", "LOI", "Chưa đặt MY_GITHUB_TOKEN trong Thuộc tính tập lệnh");
-          } else {
-            goiApiCoLog_("GitHub Actions", "MY_GITHUB_TOKEN", url, {
-              method: "post",
-              headers: {
-                Authorization: "Bearer " + token,
-                Accept: "application/vnd.github+json",
-                "X-GitHub-Api-Version": "2022-11-28"
-              },
-              payload: JSON.stringify({ event_type: "trigger_xuat_de" }),
-              muteHttpExceptions: true
+        function chuanHoaToan(m) {
+            let s = String(m == null ? '' : m);
+            s = s.replace(/\\\\(?=[A-Za-z])/g, '\\');                                   // \\cdot -> \cdot
+            s = s.replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, c => {                                     // 10⁻³ -> 10^{-3}, m² -> m^2
+                const t = c.replace(/./g, k => SO_MU[k]);
+                return t.length > 1 ? '^{' + t + '}' : '^' + t;
             });
-          }
-        } catch (webhookErr) {
-          // Lỗi đã được ghi vào Quota_Logs; không làm hỏng việc cập nhật sheet
+            s = s.replace(/[αβγδεθλμπρστφωΔΩΦΣΘΛ≈≤≥≠±×·∙→⇒∞∝−–°]/g, c => LATEX_UNICODE[c]);
+            s = s.replace(/√\s*\(([^()]*)\)/g, '\\sqrt{$1}').replace(/√\s*([A-Za-z0-9.,]+)/g, '\\sqrt{$1}');
+            s = s.replace(/\\[dt]frac\b/g, '\\frac').replace(/\\mathrm\{/g, '\\text{');
+            s = s.replace(/(\d)\s*\\times\s*(?=\d)/g, '$1\\cdot ');                     // 3 \times 4 -> 3\cdot 4
+            s = s.replace(/\s*\*\s*/g, '\\cdot ');                                       // B*I*L -> B\cdot I\cdot L
+            s = s.replace(/\^\s*(-?\d{2,}|-\d)(?![\d}])/g, '^{$1}');                   // 10^-3 -> 10^{-3}
+            s = s.replace(/(\d(?:\{,\})?\d*)\s+(km\/h|m\/s|cm|mm|km|kg|mg|ms|Hz|MHz|kHz|mA|mV|mT|kV|rad|[gmsNJWVATΩ])(\^\{?-?\d\}?)?(?![A-Za-z\\{])/g,
+                (x, n, u, e) => n + '\\text{ ' + u + '}' + (e || ''));                 // 0,5 T -> 0,5\text{ T}
+            s = s.replace(/(\d)\s*\\text\{\s*/g, '$1\\text{ ');                         // 5\text{cm} -> 5\text{ cm}
+            s = s.replace(/(\d)\.(?=\d)/g, '$1{,}');                                    // 0.05 -> 0{,}05
+            s = s.replace(/(\d),(?=\d)/g, '$1{,}');                                     // 0,05 -> 0{,}05
+            s = s.replace(/\s+/g, ' ').trim();
+            return s;
         }
-      }
 
-      return traJson_({ status: "success", updated: updated });
-    }
+        function chuanHoaLatex(s) {
+            let t = String(s == null ? '' : s).replace(/\r\n?/g, '\n');
+            t = t.replace(/\[\s*cite[^\]]*\]/gi, '').replace(/\*\*|`/g, '');
+            t = t.replace(/\\(?:textbf|textit|emph)\{([^{}]*)\}/g, '$1').replace(/\\item\s*/g, '');
+            t = t.replace(/\\\[([\s\S]*?)\\\]/g, (m, x) => '$$' + x + '$$')
+                 .replace(/\\\(([\s\S]*?)\\\)/g, (m, x) => '$' + x + '$');
+            t = t.replace(/\$\$([\s\S]*?)\$\$|\$([^$\n]+?)\$/g, (m, blk, inl) =>
+                blk != null ? '$$' + chuanHoaToan(blk) + '$$' : '$' + chuanHoaToan(inl) + '$');
+            t = t.replace(/([^\n])[ \t]*(\$\$[\s\S]*?\$\$)/g, '$1\n$2')                 // $$...$$ đứng riêng một dòng
+                 .replace(/(\$\$[\s\S]*?\$\$)[ \t]*(?=[A-Za-z\u00C0-\u1EF9])/g, '$1\n');
+            t = t.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/[ \t]{2,}/g, ' ');
+            return t.trim();
+        }
 
-    // 2. XỬ LÝ NHẬN LỆNH THỰC THI TÁC VỤ TỪ CÁC AGENT KHÁC
-    if (action === "execute_task") {
-      var logSheet = ss.getSheetByName("AgentLogs") || ss.insertSheet("AgentLogs");
-      if (logSheet.getLastRow() === 0) {
-        logSheet.appendRow(["Thời gian", "Agent ID", "Tác vụ", "Nội dung yêu cầu"]);
-      }
-      logSheet.appendRow([new Date(), "Agent #" + chongCongThuc_(String(data.agent || "")),
-        chongCongThuc_(String(data.task || "")), chongCongThuc_(String(data.detail || "").slice(0, 2000))]);
+        // Dựng công thức MathJax cho một vùng (chờ MathJax tải xong, xoá bản dựng cũ trước)
+        function dungCongThuc(el) {
+            if (!el || !window.MathJax) return;
+            const chay = () => {
+                if (typeof MathJax.typesetClear === 'function') MathJax.typesetClear([el]);
+                if (typeof MathJax.typesetPromise === 'function') {
+                    MathJax.typesetPromise([el]).catch(err => console.warn('MathJax:', err));
+                }
+            };
+            if (MathJax.startup && MathJax.startup.promise) MathJax.startup.promise.then(chay);
+            else if (typeof MathJax.typesetPromise === 'function') chay();
+        }
 
-      // [MỚI] Tác vụ "Chuẩn hóa công thức toàn bộ ngân hàng câu hỏi" (xử lí ở CongThuc.gs)
-      if (String(data.task || "") === "chuan_hoa_cong_thuc") {
-        var kqCT = chCTLamViec_(false);
-        logSheet.appendRow([new Date(), "Agent #0", "Kết quả chuẩn hóa công thức", chongCongThuc_(kqCT.tomTat)]);
-        return traJson_({ status: kqCT.loi ? "error" : "success", message: kqCT.tomTat });
-      }
+        // [MỚI] ===== SỬA TRỰC QUAN (dùng chung cho lời giải và phương án) =====
+        // Mỗi khung sửa trực quan có data-nguon = id của ô lưu mã LaTeX (textarea lời giải / input ẩn của phương án).
+        // Ô lưu mã vẫn là nơi gửi về Sheet; khung trực quan luôn đồng bộ hai chiều với nó.
+        // data-mot-dong="1": khung một dòng (phương án) — Enter không xuống dòng.
 
-      return traJson_({ status: "success", message: "Logged" });
-    }
+        const nguonCua = ed => ed && ed.dataset.nguon ? document.getElementById(ed.dataset.nguon) : null;
 
-    return traJson_({ status: "unknown_action" });
-  } catch (err) {
-    return traJson_({ status: "error", message: err.toString() });
-  }
-}
+        // Tạo "viên" công thức: giữ LaTeX trong data-tex, MathJax dựng hình bên trong
+        function taoChipCongThuc(tex, khoi) {
+            const sp = document.createElement('span');
+            sp.className = 'ct' + (khoi ? ' ct-khoi' : '') + (tex ? '' : ' ct-cho');
+            sp.contentEditable = 'false';
+            sp.dataset.tex = tex || '';
+            sp.dataset.block = khoi ? '1' : '0';
+            sp.title = 'Bấm để sửa công thức';
+            sp.textContent = tex ? (khoi ? '$$' + tex + '$$' : '$' + tex + '$') : '…';
+            return sp;
+        }
 
-/**
- * Hàm hỗ trợ chạy thủ công để thêm ngay cột Link Ảnh vào Sheet nếu cần
- */
-function taoCotLinkAnhNgayLapTuc() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("NganHangCauHoi");
-  var lastCol = sheet.getLastColumn();
-  sheet.getRange(1, lastCol + 1).setValue("Link Ảnh");
-  ss.toast("Đã thêm cột Link Ảnh vào cuối bảng thành công!", "Thông báo", 5);
-}
+        // Dựng khung trực quan từ mã LaTeX trong ô nguồn
+        function dungKhungTuMa(ed, dungNgay = true) {
+            const o = nguonCua(ed);
+            if (!o || !ed) return;
+            if (window.MathJax && typeof MathJax.typesetClear === 'function') MathJax.typesetClear([ed]);
+            ed.innerHTML = '';
+            const v = String(o.value || '').replace(/\r\n?/g, '\n').trim();
+            if (!v) return;
+            const themChu = t => t.split('\n').forEach((dong, i) => {
+                if (i > 0) ed.appendChild(document.createElement('br'));
+                if (dong) ed.appendChild(document.createTextNode(dong));
+            });
+            const re = /\$\$([\s\S]*?)\$\$|\$([^$\n]+?)\$/g;
+            let cuoi = 0, m;
+            while ((m = re.exec(v))) {
+                const khoi = m[1] != null;
+                let truoc = v.slice(cuoi, m.index);
+                if (khoi) truoc = truoc.replace(/\n$/, '');      // công thức riêng dòng đã tự xuống dòng
+                themChu(truoc);
+                const tex = (khoi ? m[1] : m[2]).trim();
+                if (tex) ed.appendChild(taoChipCongThuc(tex, khoi));
+                cuoi = re.lastIndex;
+                if (khoi && v[cuoi] === '\n') cuoi++;
+            }
+            themChu(v.slice(cuoi));
+            if (dungNgay) dungCongThuc(ed);
+        }
 
-// =====================================================================
-// HÀM PHỤ
-// =====================================================================
+        // Đọc khung trực quan ra mã LaTeX
+        function docLoiGiaiTuKhung(ed) {
+            let out = '';
+            const di = node => node.childNodes.forEach(n => {
+                if (n.nodeType === 3) {
+                    out += n.nodeValue.replace(/\u00a0/g, ' ').replace(/[\u200b-\u200d\ufeff]/g, '');
+                } else if (n.nodeType === 1) {
+                    if (n.classList.contains('ct')) {
+                        const t = n.dataset.tex || '';
+                        if (t) out += n.dataset.block === '1' ? '\n$$' + t + '$$\n' : '$' + t + '$';
+                    } else if (n.tagName === 'BR') {
+                        out += '\n';
+                    } else if (/^(DIV|P)$/.test(n.tagName)) {
+                        if (out && !out.endsWith('\n')) out += '\n';
+                        di(n);
+                        if (!out.endsWith('\n')) out += '\n';
+                    } else {
+                        di(n);
+                    }
+                }
+            });
+            di(ed);
+            out = out.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/^\n+|\n+$/g, '');
+            if (ed.dataset.motDong === '1') out = out.replace(/\s*\n\s*/g, ' ').trim();
+            return out;
+        }
 
-// [MỚI] Đưa hình mới (base64 gửi từ trang điều khiển) vào thư mục images/ của kho GitHub,
-// trả về danh sách đường dẫn "images/<tên tệp>" để ghi vào cột Link Ảnh.
-function luuAnhLenGitHub_(maCau, dsAnh) {
-  var ketQua = [];
-  if (!dsAnh || !dsAnh.length) return ketQua;
-  var token = PropertiesService.getScriptProperties().getProperty("MY_GITHUB_TOKEN");
-  if (!token) { ghiLog_("Duyệt câu – Hình", "MY_GITHUB_TOKEN", "LOI", "Chưa đặt MY_GITHUB_TOKEN nên không lưu được hình mới"); return ketQua; }
-  var repoOwner = "letoai01-max", repoName = "vatli-xuong";   // giống phần kích hoạt GitHub Actions
-  var duoi = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif" };
-  var goc = String(maCau || "cau").replace(/[^A-Za-z0-9_-]+/g, "_");
-  for (var i = 0; i < dsAnh.length; i++) {
-    var a = dsAnh[i] || {};
-    if (!a.base64) continue;
-    var ten = goc + "_" + Date.now() + "_" + (i + 1) + "." + (duoi[a.mime] || "png");
-    var duongDan = "images/" + ten;
-    try {
-      var res = UrlFetchApp.fetch("https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contents/" + duongDan, {
-        method: "put",
-        contentType: "application/json",
-        headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" },
-        payload: JSON.stringify({ message: "Thêm hình cho câu " + maCau, content: String(a.base64) }),
-        muteHttpExceptions: true
-      });
-      var ma = res.getResponseCode();
-      if (ma === 200 || ma === 201) {
-        ketQua.push(duongDan);
-        ghiLog_("Duyệt câu – Hình", "MY_GITHUB_TOKEN", "OK", "Đã lưu " + duongDan);
-      } else {
-        ghiLog_("Duyệt câu – Hình", "MY_GITHUB_TOKEN", "LOI", "HTTP " + ma + " khi lưu " + duongDan + ": " + res.getContentText().slice(0, 300));
-      }
-    } catch (err) {
-      ghiLog_("Duyệt câu – Hình", "MY_GITHUB_TOKEN", "LOI", "Lỗi lưu " + duongDan + ": " + err);
-    }
-  }
-  return ketQua;
-}
+        function dongBoKhung(ed) {
+            const o = nguonCua(ed);
+            if (o && ed) o.value = docLoiGiaiTuKhung(ed);
+        }
 
-function traJson_(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}
+        // Enter = xuống dòng thường (không tạo khối div lạ); khung một dòng thì bỏ qua Enter
+        function phimTrongKhung(e, ed) {
+            if (e.key !== 'Enter' || e.isComposing) return;
+            e.preventDefault();
+            if (ed.dataset.motDong === '1') return;
+            if (!document.execCommand('insertLineBreak')) {
+                const sel = window.getSelection();
+                if (!sel.rangeCount) return;
+                const r = sel.getRangeAt(0);
+                r.deleteContents();
+                const br = document.createElement('br');
+                r.insertNode(br);
+                if (!br.nextSibling) br.parentNode.appendChild(document.createElement('br'));
+                r.setStartAfter(br); r.collapse(true);
+                sel.removeAllRanges(); sel.addRange(r);
+            }
+            dongBoKhung(ed);
+        }
 
-function coNoiDung_(x) {
-  return x !== undefined && x !== null && String(x).trim() !== "";
-}
+        // Dán: chỉ lấy chữ thuần; nếu có $...$ thì dựng luôn thành công thức
+        function danChuThuan(e, ed) {
+            e.preventDefault();
+            let t = (e.clipboardData || window.clipboardData).getData('text/plain') || '';
+            if (ed.dataset.motDong === '1') t = t.replace(/\s*\n\s*/g, ' ');
+            document.execCommand('insertText', false, t);
+            setTimeout(() => { dongBoKhung(ed); if (t.includes('$')) dungKhungTuMa(ed); }, 0);
+        }
 
-// Chặn chữ bắt đầu bằng = + - @ bị Sheets hiểu thành công thức (giữ nguyên nội dung, chỉ thêm dấu ' phía trước)
-function chongCongThuc_(s) {
-  return String(s).replace(/^[=+\-@]/, "'$&");
-}
+        // Rời khung: nếu thầy tự gõ $...$ bằng tay thì đổi thành công thức
+        function khiRoiKhung(ed) {
+            if (_hop.mo || !ed) return;
+            const w = document.createTreeWalker(ed, NodeFilter.SHOW_TEXT);
+            let n, coDola = false;
+            while ((n = w.nextNode())) {
+                if (!n.parentElement.closest('.ct') && n.nodeValue.includes('$')) { coDola = true; break; }
+            }
+            if (coDola) { dongBoKhung(ed); dungKhungTuMa(ed); }
+        }
 
-// Mã bí mật TUỲ CHỌN: chưa đặt API_SECRET thì cho qua như cũ
-function kiemTraSecret_(giaTri) {
-  var secret = PropertiesService.getScriptProperties().getProperty("API_SECRET");
-  if (!secret) return true;
-  return String(giaTri || "") === secret;
-}
+        // Bấm vào một công thức để sửa
+        function bamVaoCongThuc(e, ed) {
+            const c = e.target.closest && e.target.closest('.ct');
+            if (c && ed && ed.contains(c)) { e.preventDefault(); e.stopPropagation(); moHop(ed, c, false); }
+        }
 
-// Ghi 1 dòng log vào tab Quota_Logs (dùng cho các API ngoài Gemini: GitHub, Pipedream…)
-function ghiLog_(agent, maKey, trangThai, chiTiet) {
-  try {
-    const ss = SpreadsheetApp.getActive();
-    let sh = ss.getSheetByName('Quota_Logs');
-    if (!sh) {
-      sh = ss.insertSheet('Quota_Logs');
-      sh.appendRow(['ThoiGian', 'Agent', 'API_Key', 'TrangThai', 'ChiTiet']);
-      sh.setFrozenRows(1);
-    }
-    sh.appendRow([new Date(), agent || '', maKey || '', trangThai || 'OK', chongCongThuc_(chiTiet || '')]);
-    const thua = sh.getLastRow() - 1 - LOG_SO_DONG_TOI_DA;
-    if (thua > 0) sh.deleteRows(2, thua);   // xoá dòng cũ nhất
-  } catch (e) {
-    console.error('ghiLog_ loi: ' + e); // lỗi ghi log không được làm hỏng tác vụ chính
-  }
-}
+        // Chèn công thức mới vào chỗ con trỏ trong một khung
+        function chenCongThucVao(ed, khoi) {
+            if (!ed) return;
+            const chip = taoChipCongThuc('', khoi);
+            const sel = window.getSelection();
+            if (sel.rangeCount && ed.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+                const r = sel.getRangeAt(0);
+                r.deleteContents(); r.insertNode(chip);
+            } else {
+                ed.appendChild(chip);
+            }
+            moHop(ed, chip, true);
+        }
 
-// Gọi API và tự ghi log. maKey chỉ là TÊN khoá (VD "MY_GITHUB_TOKEN"), không bao giờ truyền khoá thật.
-function goiApiCoLog_(agent, maKey, url, options) {
-  try {
-    const res = UrlFetchApp.fetch(url, options);
-    const code = res.getResponseCode();
-    const ok = code >= 200 && code < 300;          // GitHub dispatch thành công trả 204
-    ghiLog_(agent, maKey, ok ? 'OK' : 'LOI', 'HTTP ' + code + (ok ? '' : ': ' + res.getContentText().slice(0, 150)));
-    return res;
-  } catch (e) {
-    ghiLog_(agent, maKey, 'LOI', String(e).slice(0, 200));
-    throw e;
-  }
-}
+        // ----- Các hàm riêng cho lời giải (giữ tên cũ) -----
+        function capNhatXemLoiGiai(index, dungNgay = true) { dungKhungTuMa(document.getElementById(`xem_loi_giai_${index}`), dungNgay); }
+        function dongBoVeMa(index) { dongBoKhung(document.getElementById(`xem_loi_giai_${index}`)); }
+        function chenCongThuc(index, khoi) { chenCongThucVao(document.getElementById(`xem_loi_giai_${index}`), khoi); }
 
-// Chạy tay 1 lần để thử ghi log
-function thuGhiLog() {
-  ghiLog_('TEST', 'KEY_FREE_1', 'OK', 'thu tay');
-}
+        // Gõ trong ô mã LaTeX: đợi ngừng gõ 0,6 s rồi dựng lại khung trực quan
+        const _henGioLoiGiai = {};
+        function henGioXemLoiGiai(index) {
+            clearTimeout(_henGioLoiGiai[index]);
+            _henGioLoiGiai[index] = setTimeout(() => capNhatXemLoiGiai(index), 600);
+        }
 
-// Chạy tay để thử kích hoạt GitHub Actions (xem kết quả ở tab Quota_Logs: mong đợi "OK · HTTP 204")
-function thuKichHoatGithub() {
-  const token = PropertiesService.getScriptProperties().getProperty("MY_GITHUB_TOKEN");
-  if (!token) { Logger.log("❌ Chưa đặt MY_GITHUB_TOKEN."); return; }
-  const res = goiApiCoLog_("GitHub Actions (thử tay)", "MY_GITHUB_TOKEN", "https://api.github.com/repos/letoai01-max/vatli-xuong/dispatches", {
-    method: "post",
-    headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" },
-    payload: JSON.stringify({ event_type: "trigger_xuat_de" }),
-    muteHttpExceptions: true
-  });
-  Logger.log("GitHub trả về HTTP " + res.getResponseCode() + (res.getResponseCode() === 204 ? " ✅" : " – " + res.getContentText().slice(0, 200)));
-}
+        // Hiện / ẩn ô mã LaTeX của lời giải (mặc định ẩn)
+        function batMaLatex(index) {
+            const o = document.getElementById(`loi_giai_${index}`);
+            const nut = document.getElementById(`nut_ma_${index}`);
+            if (!o) return;
+            const dangAn = o.classList.toggle('hidden') === false;
+            if (nut) nut.innerHTML = dangAn ? '<i class="fa-solid fa-eye-slash mr-1"></i> Ẩn mã LaTeX' : '<i class="fa-solid fa-code mr-1"></i> Hiện mã LaTeX';
+            if (!dangAn) capNhatXemLoiGiai(index);
+        }
+
+        // ----- Hộp sửa công thức -----
+        const _hop = { mo: false, ed: null, chip: null, moi: false };
+        const coMathLive = () => !!(window.customElements && customElements.get('math-field'));
+
+        function moHop(ed, chip, moi) {
+            Object.assign(_hop, { mo: true, ed, chip, moi });
+            const tex = chip.dataset.tex || '';
+            document.getElementById('hop-khoi').checked = chip.dataset.block === '1';
+            document.getElementById('hop-ma').value = tex;
+            const mf = document.getElementById('hop-mf');
+            const duPhong = document.getElementById('hop-du-phong');
+            if (coMathLive()) {
+                mf.classList.remove('hidden'); duPhong.classList.add('hidden');
+                mf.value = tex;
+            } else {
+                // Không tải được MathLive: sửa mã, xem trước bằng MathJax
+                mf.classList.add('hidden'); duPhong.classList.remove('hidden');
+                document.getElementById('hop-chi-tiet').open = true;
+                veDuPhong();
+            }
+            const hop = document.getElementById('hop-cong-thuc');
+            hop.classList.remove('hidden'); hop.classList.add('flex');
+            setTimeout(() => (coMathLive() ? mf : document.getElementById('hop-ma')).focus(), 50);
+        }
+
+        function dongHop() {
+            const hop = document.getElementById('hop-cong-thuc');
+            hop.classList.add('hidden'); hop.classList.remove('flex');
+            if (window.mathVirtualKeyboard && typeof mathVirtualKeyboard.hide === 'function') mathVirtualKeyboard.hide();
+            const ed = _hop.ed;
+            Object.assign(_hop, { mo: false, ed: null, chip: null, moi: false });
+            if (ed) dongBoKhung(ed);
+        }
+
+        function layMaHop() {
+            return coMathLive() ? document.getElementById('hop-mf').value : document.getElementById('hop-ma').value;
+        }
+
+        function luuCongThuc() {
+            if (!_hop.chip) return dongHop();
+            const tex = chuanHoaToan(layMaHop());          // tự đưa về chuẩn: 0{,}05, \cdot, \text{ cm}...
+            if (!tex) return xoaCongThuc();
+            const chipMoi = taoChipCongThuc(tex, document.getElementById('hop-khoi').checked);
+            _hop.chip.replaceWith(chipMoi);
+            dungCongThuc(chipMoi);
+            dongHop();
+        }
+
+        function xoaCongThuc() { if (_hop.chip) _hop.chip.remove(); dongHop(); }
+        function huyCongThuc() { if (_hop.moi && _hop.chip) _hop.chip.remove(); dongHop(); }
+
+        function veDuPhong() {
+            const tex = document.getElementById('hop-ma').value.trim();
+            const el = document.getElementById('hop-du-phong');
+            el.textContent = tex ? '$$' + tex + '$$' : '…';
+            dungCongThuc(el);
+        }
+
+        // Đồng bộ hai ô trong hộp + phím tắt (Esc = huỷ, Ctrl+Enter = xong)
+        window.addEventListener('DOMContentLoaded', () => {
+            const mf = document.getElementById('hop-mf');
+            const ma = document.getElementById('hop-ma');
+            mf.addEventListener('input', () => { ma.value = mf.value; });
+            ma.addEventListener('input', () => { if (coMathLive()) mf.value = ma.value; else veDuPhong(); });
+        });
+        document.addEventListener('keydown', e => {
+            if (!_hop.mo) return;
+            if (e.key === 'Escape') { e.preventDefault(); huyCongThuc(); }
+            else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); luuCongThuc(); }
+        });
+        // [MỚI] ===== HẾT PHẦN SỬA TRỰC QUAN =====
+
+        // [MỚI] ===== DẠNG CÂU & ĐÁP ÁN =====
+        // Mã dạng dùng trên web: tn | ds | ngan | tuluan ; tên ghi về Sheet giống TEN_DANG trong ChucNang.gs
+        const TEN_DANG_WEB = { tn: 'Nhiều lựa chọn', ds: 'Đúng/sai', ngan: 'Trả lời ngắn', tuluan: 'Tự luận' };
+        const NHAN_NUT_DANG = { tn: 'Trắc nghiệm nhiều lựa chọn', ds: 'Đúng – Sai', ngan: 'Trả lời ngắn', tuluan: 'Tự luận' };
+
+        // Nhận dạng câu (sửa lỗi cũ: "Đúng/sai", "Trắc nghiệm đúng sai" bị hiện như trắc nghiệm A–D)
+        function nhanDang(dang, phuongAn) {
+            const d = String(dang || '').toLowerCase().replace(/[\/\-–—_|]+/g, ' ').replace(/\s+/g, ' ').trim();
+            if (d.includes('đúng sai') || d === 'ds') return 'ds';
+            if (d.includes('ngắn') || d === 'tln') return 'ngan';
+            if (d.includes('tự luận') || d === 'tl') return 'tuluan';
+            if (d.includes('nhiều lựa chọn') || d.includes('trắc nghiệm') || d === 'tn') return 'tn';
+            const pa = String(phuongAn || '');
+            if (/(^|\n)\s*a\s*\)/.test(pa) && /(^|\n)\s*b\s*\)/.test(pa)) return 'ds';
+            return 'tn';
+        }
+
+        // Đọc đáp án đúng/sai: "a) Đ, b) S…", "a) Đúng; b) Sai…" hoặc "ĐSĐS"
+        function tachDungSaiWeb(s) {
+            const kq = {};
+            const t = String(s || '');
+            const re = /([a-d])\s*\)?\s*[:.\-]?\s*(Đúng|Sai|Đ|S)(?![A-Za-z\u00C0-\u1EF9])/gi;
+            let m, co = false;
+            while ((m = re.exec(t)) !== null) { kq[m[1].toLowerCase()] = /^đ/i.test(m[2]) ? 'Đúng' : 'Sai'; co = true; }
+            if (!co) {
+                const chuoi = t.replace(/đúng/gi, 'Đ').replace(/sai/gi, 'S').replace(/[^ĐđSs]/g, '');
+                chuoi.split('').forEach((c, i) => { if (i < 4) kq['abcd'[i]] = /đ/i.test(c) ? 'Đúng' : 'Sai'; });
+            }
+            return kq;
+        }
+
+        // Một dòng phương án / ý: radio + input ẩn lưu mã + khung sửa trực quan + nút chèn công thức
+        function taoDongPhuongAn(index, k, giaTri, goiY, phanChon) {
+            const id = `pa_${index}_${k}`;
+            return `
+                <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 transition text-xs text-white">
+                    ${phanChon.truoc || ''}
+                    <input type="hidden" id="${id}" class="pa-input-${index}" value="${escSua(giaTri)}">
+                    <div id="xem_${id}" data-nguon="${id}" data-mot-dong="1" contenteditable="true" spellcheck="false" data-goi-y="${goiY}"
+                         oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)"
+                         class="xem-loi-giai flex-1 min-w-0 !min-h-0 px-2 py-1 rounded-md border border-transparent hover:border-slate-700 focus:border-sky-500 leading-relaxed"></div>
+                    <button type="button" title="Chèn công thức" onmousedown="event.preventDefault()" onclick="chenCongThucVao(document.getElementById('xem_${id}'), false)" class="shrink-0 w-7 h-7 rounded-md bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white border border-slate-700 transition cursor-pointer"><i class="fa-solid fa-square-root-variable"></i></button>
+                    ${phanChon.sau || ''}
+                </div>`;
+        }
+
+        // Dựng khu trả lời theo dạng câu
+        function taoKhungTraLoi(index, dang, phuongAnRaw, dapAn) {
+            const cacDong = String(phuongAnRaw || '').split('\n').filter(l => l.trim() !== '');
+            if (dang === 'tn') {
+                const chu = ['A', 'B', 'C', 'D'];
+                const dongs = cacDong.length > 0 ? cacDong : ['', '', '', ''];
+                const m = String(dapAn || '').match(/(^|[^A-Za-z\u00C0-\u1EF9])([A-D])(?![A-Za-z\u00C0-\u1EF9])/);
+                const dung = m ? m[2] : '';
+                const html = dongs.map((line, idx) => {
+                    const c = chu[idx] || String(idx + 1);
+                    return taoDongPhuongAn(index, idx, line, `${c}. Nhập phương án ${c}...`, {
+                        truoc: `<input type="radio" name="ans_${index}" value="${c}" ${c === dung ? 'checked' : ''} title="Chọn ${c} là đáp án đúng" class="accent-sky-500 w-4 h-4 shrink-0 cursor-pointer">`
+                    });
+                }).join('');
+                return `
+                    <div class="space-y-2 pt-2">
+                        <div class="text-xs font-semibold text-sky-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-check"></i> PHƯƠNG ÁN & TÍCH CHỌN ĐÁP ÁN ĐÚNG:
+                            <span class="text-[10px] font-normal text-slate-500">(gõ chữ trực tiếp · bấm vào công thức để sửa)</span>
+                        </div>
+                        <div class="space-y-2">${html}</div>
+                    </div>`;
+            }
+            if (dang === 'ds') {
+                const dongs = cacDong.length > 0 ? cacDong : ['a) ', 'b) ', 'c) ', 'd) '];
+                const ds = tachDungSaiWeb(dapAn);
+                const html = dongs.map((y, idx) => {
+                    const kyTu = ['a', 'b', 'c', 'd'][idx] || String(idx + 1);
+                    const chon = ds[kyTu] || '';
+                    return taoDongPhuongAn(index, idx, y, `${kyTu}) Nhập phát biểu ${kyTu}...`, {
+                        sau: `<div class="flex gap-4 font-semibold shrink-0">
+                                <label class="cursor-pointer text-emerald-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Đúng" ${chon === 'Đúng' ? 'checked' : ''} class="accent-emerald-500"> Đúng</label>
+                                <label class="cursor-pointer text-rose-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Sai" ${chon === 'Sai' ? 'checked' : ''} class="accent-rose-500"> Sai</label>
+                              </div>`
+                    });
+                }).join('');
+                return `
+                    <div class="space-y-2.5 pt-2">
+                        <div class="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check"></i> TÍCH CHỌN ĐÚNG / SAI CHO TỪNG Ý:
+                            <span class="text-[10px] font-normal text-slate-500">(gõ chữ trực tiếp · bấm vào công thức để sửa)</span>
+                        </div>
+                        <div class="space-y-2">${html}</div>
+                    </div>`;
+            }
+            const laTuLuan = dang === 'tuluan';
+            return `
+                <div class="space-y-2 pt-2">
+                    <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-pen-to-square"></i> ${laTuLuan ? 'ĐÁP SỐ / KẾT QUẢ CUỐI:' : 'Ô NHẬP SỐ LIỆU ĐÁP ÁN:'}
+                        ${laTuLuan ? '<span class="text-[10px] font-normal text-slate-500">(không bắt buộc · các bước giải và thang điểm ghi ở phần Lời giải)</span>' : ''}
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                        <input type="text" id="short_ans_${index}" value="${escSua(dapAn)}" placeholder="${laTuLuan ? 'Ví dụ: v = 12 m/s' : 'Nhập đáp án số liệu...'}" class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-white w-64 max-w-full focus:outline-none focus:border-sky-500">
+                    </div>
+                </div>`;
+        }
+
+        // Thanh nút chuyển dạng câu
+        function taoNutDang(index, dang) {
+            return `
+                <div class="flex flex-wrap items-center gap-2 pt-1">
+                    <span class="text-[11px] text-slate-400"><i class="fa-solid fa-shuffle mr-1"></i> Dạng câu:</span>
+                    ${Object.keys(NHAN_NUT_DANG).map(k => `
+                        <button type="button" data-dang="${k}" onclick="doiDangCau(${index}, '${k}')"
+                            class="nut-dang-${index} px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition cursor-pointer ${k === dang ? 'bg-sky-600 text-white border-sky-500' : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-sky-500'}">${NHAN_NUT_DANG[k]}</button>`).join('')}
+                </div>`;
+        }
+
+        function dungCacKhungTrong(vung) {
+            vung.querySelectorAll('[data-nguon]').forEach(ed => dungKhungTuMa(ed, false));
+            dungCongThuc(vung);
+        }
+
+        // Chuyển dạng câu: giữ lại chữ của các phương án, đổi kí hiệu A./a) cho hợp dạng mới
+        function doiDangCau(index, dangMoi) {
+            const vung = document.getElementById(`vung_tra_loi_${index}`);
+            if (!vung) return;
+            const card = vung.closest('.question-card');
+            const dangCu = card.dataset.dang;
+            if (dangCu === dangMoi) return;
+            const cacO = Array.from(vung.querySelectorAll(`.pa-input-${index}`)).map(o => o.value.trim()).filter(v => v !== '');
+            if (cacO.length > 0) card.dataset.paLuu = JSON.stringify(cacO);
+            let goc = [];
+            try { goc = cacO.length > 0 ? cacO : JSON.parse(card.dataset.paLuu || '[]'); } catch (e) { goc = []; }
+            const than = goc.map(l => l.replace(/^\s*(?:[A-Da-d]|[1-4])\s*[.)]\s*/, ''));
+            let paMoi = '';
+            if (dangMoi === 'tn') paMoi = than.map((t, i) => (['A', 'B', 'C', 'D'][i] || (i + 1)) + '. ' + t).join('\n');
+            if (dangMoi === 'ds') paMoi = than.map((t, i) => (['a', 'b', 'c', 'd'][i] || (i + 1)) + ') ' + t).join('\n');
+            const dapAnCu = (dangCu === 'ngan' || dangCu === 'tuluan') && (dangMoi === 'ngan' || dangMoi === 'tuluan')
+                ? ((document.getElementById(`short_ans_${index}`) || {}).value || '') : '';
+            vung.innerHTML = taoKhungTraLoi(index, dangMoi, paMoi, dapAnCu);
+            dungCacKhungTrong(vung);
+            card.dataset.dang = dangMoi;
+            card.dataset.dangDoi = '1';
+            card.querySelectorAll(`.nut-dang-${index}`).forEach(nut => {
+                const bat = nut.dataset.dang === dangMoi;
+                nut.classList.toggle('bg-sky-600', bat); nut.classList.toggle('text-white', bat); nut.classList.toggle('border-sky-500', bat);
+                nut.classList.toggle('bg-slate-800', !bat); nut.classList.toggle('text-slate-300', !bat); nut.classList.toggle('border-slate-700', !bat);
+            });
+            const nhan = document.getElementById(`nhan_dang_${index}`);
+            if (nhan) nhan.textContent = '· ' + TEN_DANG_WEB[dangMoi];
+            const log = document.getElementById('terminal-log');
+            if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Câu ${index + 1}: đổi dạng sang "${TEN_DANG_WEB[dangMoi]}" (bấm Duyệt để lưu về Google Sheet).</div>`;
+        }
+
+        // Đọc đáp án thầy đã tích chọn trên thẻ
+        function layDapAn(card, index, dang) {
+            if (!card) return undefined;
+            if (dang === 'tn') {
+                const r = card.querySelector(`input[name="ans_${index}"]:checked`);
+                return r ? r.value : undefined;
+            }
+            if (dang === 'ds') {
+                const kq = ['a', 'b', 'c', 'd'].map(k => {
+                    const r = card.querySelector(`input[name="tf_${k}_${index}"]:checked`);
+                    return r ? `${k}) ${r.value === 'Đúng' ? 'Đ' : 'S'}` : '';
+                }).filter(Boolean);
+                return kq.length ? kq.join(', ') : undefined;
+            }
+            const o = document.getElementById(`short_ans_${index}`);
+            return o && o.value.trim() ? o.value.trim() : undefined;
+        }
+        // [MỚI] ===== HẾT PHẦN DẠNG CÂU & ĐÁP ÁN =====
+
+        // Nút "Chuẩn hoá công thức" của từng câu
+        function chuanHoaLoiGiai(index, imLang = false) {
+            const o = document.getElementById(`loi_giai_${index}`);
+            if (!o) return false;
+            const cu = o.value;
+            const moi = chuanHoaLatex(cu);
+            const doi = moi !== cu.trim();
+            o.value = moi;
+            capNhatXemLoiGiai(index);
+            const nut = document.getElementById(`nut_chuan_hoa_${index}`);
+            if (nut && !imLang) {
+                nut.innerHTML = doi
+                    ? '<i class="fa-solid fa-check mr-1"></i> Đã chuẩn hoá'
+                    : '<i class="fa-solid fa-check mr-1"></i> Đã chuẩn sẵn';
+                setTimeout(() => { nut.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Chuẩn hoá công thức'; }, 1800);
+            }
+            return doi;
+        }
+
+        // Nút "Chuẩn hoá tất cả lời giải" ở đầu mục duyệt
+        function chuanHoaTatCaLoiGiai() {
+            const cacO = document.querySelectorAll('#danh-sach-cau-hoi textarea[id^="loi_giai_"]');
+            if (cacO.length === 0) { alert('Chưa có câu nào đang hiện. Thầy bấm "Hiện ~20 câu cần duyệt" trước.'); return; }
+            let soDoi = 0;
+            cacO.forEach(o => { if (chuanHoaLoiGiai(o.id.replace('loi_giai_', ''), true)) soDoi++; });
+            const log = document.getElementById('terminal-log');
+            if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã chuẩn hoá lời giải: ${soDoi}/${cacO.length} câu có thay đổi (bấm Duyệt để lưu về Google Sheet).</div>`;
+        }
+        // =================== HẾT PHẦN CHUẨN HOÁ LaTeX ===================
+
+        async function taiCauHoiCanDuyet(chiCanDuyet = true) {
+            const container = document.getElementById('danh-sach-cau-hoi');
+            container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu câu hỏi từ questions.json...</div>`;
+
+            let data = [];
+            try {
+                const response = await fetch('questions.json?t=' + Date.now());
+                if (response.ok) {
+                    data = await response.json();
+                }
+            } catch (err) {
+                console.warn("Chưa đọc được questions.json:", err);
+            }
+
+            const dsCanDuyet = data.filter(item => {
+                const tt = (item.trang_thai || '').toLowerCase();
+                return tt.includes('cần người xem') || tt.includes('chưa duyệt') || !item.trang_thai;
+            });
+
+            const dsHienThi = dsCanDuyet.length > 0 ? dsCanDuyet.slice(0, 20) : data.slice(0, 20);
+
+            if (!dsHienThi || dsHienThi.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Chưa có dữ liệu trong questions.json. Thầy hãy chạy tác vụ xuất dữ liệu ở trên!</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            dsHienThi.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = "question-card bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-4 shadow-lg";
+
+                // [MỚI] Nhận đúng dạng câu (kể cả "Đúng/sai") + khu trả lời có sửa công thức trực quan + nút chuyển dạng
+                const dangCau = nhanDang(item.dang || item.loai_cau_hoi, item.phuong_an);
+                card.dataset.dang = dangCau;
+                let interactiveControlHtml = taoNutDang(index, dangCau) +
+                    `<div id="vung_tra_loi_${index}">${taoKhungTraLoi(index, dangCau, item.phuong_an || '', item.dap_an || '')}</div>`;
+
+                let html = `
+                    <div class="flex flex-wrap justify-between items-center gap-2 text-xs border-b border-slate-800 pb-3">
+                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} <span id="nhan_dang_${index}">${item.dang ? '· ' + item.dang : ''}</span></span>
+                        <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${item.trang_thai || 'Cần người xem'}</span>
+                    </div>
+                    <!-- [MỚI] Nội dung câu cần duyệt nằm cạnh hình -->
+                    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,24rem)] lg:grid-rows-[auto_1fr] gap-4 items-start">
+                    <div class="min-w-0 lg:col-start-1 lg:row-start-1">
+                    <div class="text-xs text-white leading-relaxed space-y-2">
+                        <div class="flex items-start justify-between gap-3">
+                            <div><strong class="text-sky-300">Nội dung:</strong> <span id="xem_noi_dung_${index}">${item.noi_dung}</span></div>
+                            <button type="button" id="nut_sua_${index}" onclick="batSuaNoiDung(${index})" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-pen mr-1"></i> Sửa nội dung
+                            </button>
+                        </div>
+                        <textarea id="noi_dung_${index}" rows="4" onblur="capNhatXemTruoc(${index})" class="hidden w-full bg-slate-950 border border-sky-500/40 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 leading-relaxed font-mono">${escSua(item.noi_dung)}</textarea>
+                    </div>
+                `;
+
+                // [MỚI] Hình vẽ: máy tính ở cột phải; điện thoại nằm giữa nội dung (trên) và đáp án (dưới)
+                html += `</div>${taoKhungAnh(index)}<div class="space-y-3 min-w-0 lg:col-start-1 lg:row-start-2">`;
+
+                html += interactiveControlHtml;
+                html += `</div></div>`; // [MỚI] đóng khu đáp án + lưới
+
+                html += `
+                    <div class="space-y-2 pt-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="text-xs font-semibold text-sky-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-book-open-reader"></i> LỜI GIẢI CHI TIẾT:
+                                <span class="text-[10px] font-normal text-slate-500">(gõ chữ trực tiếp · bấm vào công thức để sửa)</span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                            <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, false)" title="Chèn công thức vào chỗ con trỏ, nằm trong dòng" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-square-root-variable mr-1"></i> + Công thức
+                            </button>
+                            <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, true)" title="Chèn công thức đứng riêng một dòng, căn giữa" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-align-center mr-1"></i> + Công thức riêng dòng
+                            </button>
+                            <button type="button" id="nut_chuan_hoa_${index}" onclick="chuanHoaLoiGiai(${index})" title="Đưa công thức về chuẩn $...$ / $$...$$, số thập phân 0{,}05, dấu nhân \\cdot, đơn vị \\text{ cm}" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-violet-600 text-violet-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Chuẩn hoá công thức
+                            </button>
+                            <button type="button" id="nut_ma_${index}" onclick="batMaLatex(${index})" title="Hiện / ẩn mã LaTeX (chỉ khi cần)" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-600 text-slate-400 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-code mr-1"></i> Hiện mã LaTeX
+                            </button>
+                            </div>
+                        </div>
+                        <!-- [MỚI] Khung sửa trực quan: gõ chữ trực tiếp, công thức hiện đẹp, bấm vào công thức để sửa -->
+                        <div id="xem_loi_giai_${index}" data-nguon="loi_giai_${index}" contenteditable="true" spellcheck="false" data-goi-y="Gõ lời giải tại đây; bấm + Công thức để chèn công thức..." oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)" class="xem-loi-giai text-xs text-slate-100 leading-relaxed bg-slate-950/60 border border-sky-500/20 rounded-xl p-3"></div>
+                        <textarea id="loi_giai_${index}" rows="4" oninput="henGioXemLoiGiai(${index})" onblur="capNhatXemLoiGiai(${index})" class="hidden w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-600 leading-relaxed font-mono" placeholder="Nhập hoặc chỉnh sửa lời giải chi tiết...">${escSua(item.loi_giai || '')}</textarea>
+                    </div>
+                `;
+
+                html += `
+                    <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-800/80">
+                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'Loại', this, ${index})" class="px-4 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-semibold transition flex items-center gap-2 border border-rose-500/30 cursor-pointer">
+                            <i class="fa-solid fa-xmark"></i> Loại bỏ
+                        </button>
+                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'AI duyệt', this, ${index})" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer">
+                            <i class="fa-solid fa-check"></i> Duyệt (AI Duyệt)
+                        </button>
+                    </div>
+                `;
+
+                card.innerHTML = html;
+                container.appendChild(card);
+                capNhatXemLoiGiai(index, false); // [MỚI] đổ chữ lời giải vào khung xem (MathJax dựng chung ở dưới)
+                card.querySelectorAll(`#vung_tra_loi_${index} [data-nguon]`).forEach(ed => dungKhungTuMa(ed, false)); // [MỚI] phương án
+                khoiTaoAnh(card, index, item.link_anh); // [MỚI] hình vẽ: xem, xoá, thêm
+            });
+
+            dungCongThuc(container); // [MỚI] chờ MathJax tải xong rồi mới dựng (tránh lỗi khi bấm tải quá sớm)
+
+            const log = document.getElementById('terminal-log');
+            if (log) {
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã tải thành công ${dsHienThi.length} câu hỏi.</div>`;
+            }
+        }
+
+        // HÀM GỬI LỆNH THỰC THI TÁC VỤ CHUYÊN SÂU TỚI GOOGLE APPS SCRIPT
+        async function thucThiTacVu() {
+            const agent = document.getElementById('select-agent').value;
+            const task = document.getElementById('select-task').value;
+            const inputVal = document.getElementById('task-input').value;
+            const log = document.getElementById('terminal-log');
+
+            if (!task && !inputVal) {
+                alert("Thầy vui lòng chọn tác vụ chuyên sâu hoặc nhập nội dung yêu cầu!");
+                return;
+            }
+
+            log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đang gửi lệnh thực thi Agent #${agent} (Tác vụ: ${task || 'Tùy chỉnh'}) tới Google Sheet...</div>`;
+
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'execute_task', agent: agent, task: task, detail: inputVal })
+                });
+                alert(`Đã gửi lệnh thực thi tác vụ cho Agent #${agent} về Google Sheet thành công!`);
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã ghi nhận lệnh điều phối Agent #${agent} vào Google Sheet Kho chung.</div>`;
+            } catch (err) {
+                console.error(err);
+                alert("Lỗi kết nối tới Apps Script!");
+            }
+        }
+
+        // [MỚI] ===== HÌNH VẼ: XEM, XOÁ, THÊM =====
+        // Cách hiển thị đường dẫn giữ như cũ: chỉ hiện các link có "images/", link http lấy tên tệp đặt vào images/
+        function chuanLinkAnh(l) {
+            if (!l.startsWith('http')) return l.startsWith('images/') ? l : 'images/' + l;
+            const parts = l.split('/');
+            return 'images/' + parts[parts.length - 1];
+        }
+
+        function taoKhungAnh(index) {
+            return `
+                <div id="vung_anh_${index}" tabindex="0" title="Bấm vào khung rồi Ctrl+V để dán ảnh chụp màn hình"
+                     ondragover="event.preventDefault(); this.classList.add('border-sky-500')" ondragleave="this.classList.remove('border-sky-500')"
+                     ondrop="event.preventDefault(); this.classList.remove('border-sky-500'); themAnhTuTep(${index}, event.dataTransfer.files)"
+                     onpaste="danAnh(event, ${index})"
+                     class="lg:col-start-2 lg:row-start-1 lg:row-span-2 self-start lg:sticky lg:top-4 p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-2 text-center focus:outline-none focus:border-sky-500 transition">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="text-[11px] text-sky-400 font-semibold uppercase tracking-wide"><i class="fa-solid fa-image mr-1"></i> HÌNH VẼ / ĐỒ THỊ MINH HỌA:</div>
+                        <label class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                            <i class="fa-solid fa-plus mr-1"></i> Thêm hình
+                            <input type="file" accept="image/*" class="hidden" onchange="themAnhTuTep(${index}, this.files); this.value=''">
+                        </label>
+                    </div>
+                    <div id="ds_anh_${index}" class="space-y-2"></div>
+                    <div class="text-[10px] text-slate-500">Kéo thả ảnh vào đây, hoặc bấm vào khung rồi dán (Ctrl+V) ảnh chụp màn hình.</div>
+                </div>`;
+        }
+
+        function cardCuaAnh(index) {
+            const v = document.getElementById(`vung_anh_${index}`);
+            return v ? v.closest('.question-card') : null;
+        }
+
+        function khoiTaoAnh(card, index, linkAnh) {
+            const raw = String(linkAnh || '').split(/[,;\s]+/).map(l => l.trim()).filter(l => l.length > 0);
+            const coAnh = [...new Set(raw.filter(l => l.includes('images/')))];
+            // [SỬA] Như logic gốc: chỉ hiện hình ĐẦU TIÊN của câu. Các link images/ phía sau thường là hình của câu khác
+            // (dính vào khi quét PDF) nên không hiện; nếu thầy có xoá/thêm hình thì chúng cũng không được ghi lại.
+            card._anh = coAnh.slice(0, 1).map(l => ({ goc: l, src: chuanLinkAnh(l), moi: false }));
+            card._anhThua = coAnh.slice(1);
+            card._anhKhac = raw.filter(l => !l.includes('images/'));   // link khác (không hiện) vẫn giữ nguyên khi lưu
+            veDanhSachAnh(index);
+        }
+
+        function veDanhSachAnh(index) {
+            const card = cardCuaAnh(index);
+            const ds = document.getElementById(`ds_anh_${index}`);
+            if (!card || !ds) return;
+            const anh = card._anh || [];
+            ds.innerHTML = anh.length === 0
+                ? '<div class="py-6 text-xs text-slate-500 italic">Câu này chưa có hình.</div>'
+                : anh.map((x, i) => `
+                    <div class="relative">
+                        <img src="${x.src}" alt="Hình ${i + 1}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tim+thay+file+anh';">
+                        ${x.moi ? '<span class="absolute top-1 left-1 px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-bold">Mới · bấm Duyệt để lưu</span>' : ''}
+                        <button type="button" onclick="xoaAnh(${index}, ${i})" title="Xoá hình này" class="absolute top-1 right-1 px-2 py-1 rounded-md bg-rose-600/90 hover:bg-rose-500 text-white text-[10px] font-semibold cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Xoá</button>
+                    </div>`).join('');
+        }
+
+        function ghiLogAnh(index, chu) {
+            const log = document.getElementById('terminal-log');
+            if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Câu ${index + 1}: ${chu} (bấm Duyệt để lưu về Google Sheet).</div>`;
+        }
+
+        function xoaAnh(index, i) {
+            const card = cardCuaAnh(index);
+            if (!card || !card._anh || !card._anh[i]) return;
+            if (!confirm('Xoá hình này khỏi câu?')) return;
+            card._anh.splice(i, 1);
+            card.dataset.anhDoi = '1';
+            veDanhSachAnh(index);
+            ghiLogAnh(index, 'đã xoá 1 hình');
+        }
+
+        // Thu nhỏ ảnh (cạnh dài tối đa 1600 px) để gửi nhanh; ảnh nét mảnh giữ PNG, ảnh quá nặng chuyển JPEG
+        function nenAnh(file) {
+            return new Promise((xong, loi) => {
+                const doc = new FileReader();
+                doc.onerror = () => loi(new Error('Không đọc được tệp'));
+                doc.onload = () => {
+                    const img = new Image();
+                    img.onerror = () => loi(new Error('Tệp không phải ảnh'));
+                    img.onload = () => {
+                        const tl = Math.min(1, 1600 / Math.max(img.width, img.height));
+                        const cv = document.createElement('canvas');
+                        cv.width = Math.round(img.width * tl); cv.height = Math.round(img.height * tl);
+                        const g = cv.getContext('2d');
+                        g.fillStyle = '#ffffff'; g.fillRect(0, 0, cv.width, cv.height);
+                        g.drawImage(img, 0, 0, cv.width, cv.height);
+                        let url = cv.toDataURL('image/png'), mime = 'image/png';
+                        if (url.length > 2800000) { url = cv.toDataURL('image/jpeg', 0.9); mime = 'image/jpeg'; }
+                        xong({ url, mime, base64: url.split(',')[1] });
+                    };
+                    img.src = doc.result;
+                };
+                doc.readAsDataURL(file);
+            });
+        }
+
+        async function themAnhTuTep(index, files) {
+            const card = cardCuaAnh(index);
+            if (!card || !files) return;
+            const ds = Array.from(files).filter(f => f.type && f.type.startsWith('image/'));
+            if (ds.length === 0) { alert('Thầy chọn tệp ảnh (PNG, JPG…) nhé.'); return; }
+            card._anh = card._anh || [];
+            for (const f of ds) {
+                try {
+                    const k = await nenAnh(f);
+                    card._anh.push({ moi: true, src: k.url, mime: k.mime, base64: k.base64, ten: f.name || 'anh.png' });
+                } catch (e) { alert('Không thêm được ảnh ' + (f.name || '') + ': ' + e.message); }
+            }
+            card.dataset.anhDoi = '1';
+            veDanhSachAnh(index);
+            ghiLogAnh(index, `đã thêm ${ds.length} hình`);
+        }
+
+        function danAnh(e, index) {
+            const items = (e.clipboardData && e.clipboardData.items) ? Array.from(e.clipboardData.items) : [];
+            const tep = items.filter(it => it.kind === 'file' && it.type.startsWith('image/')).map(it => it.getAsFile()).filter(Boolean);
+            if (tep.length === 0) return;
+            e.preventDefault();
+            themAnhTuTep(index, tep);
+        }
+        // [MỚI] ===== HẾT PHẦN HÌNH VẼ =====
+
+        // HÀM GỬI LỆNH CẬP NHẬT TRẠNG THÁI DUYỆT / LOẠI VỀ GOOGLE SHEET
+        async function xuLyDuyetCau(maCau, trangThaiMoi, buttonElement, index) {
+            const card = buttonElement.closest('.question-card');
+            const loiGiaiElem = document.getElementById(`loi_giai_${index}`);
+            const loiGiaiMoi = loiGiaiElem ? loiGiaiElem.value : '';
+
+            // [MỚI] Lấy nội dung câu hỏi và phương án đã sửa (đọc trước khi thẻ bị xóa)
+            const noiDungElem = document.getElementById(`noi_dung_${index}`);
+            const noiDungMoi = noiDungElem ? noiDungElem.value : undefined;
+            let phuongAnMoi = undefined;
+            if (card) {
+                const cacOPA = card.querySelectorAll(`.pa-input-${index}`);
+                if (cacOPA.length > 0) {
+                    phuongAnMoi = Array.from(cacOPA).map(o => o.value.trim()).filter(v => v !== '').join('\n');
+                }
+            }
+            // [MỚI] Đáp án đã tích chọn + dạng câu (chỉ gửi dạng khi thầy có bấm chuyển dạng)
+            const dangHienTai = card ? card.dataset.dang : undefined;
+            const dapAnMoi = layDapAn(card, index, dangHienTai);
+            const dangMoi = (card && card.dataset.dangDoi === '1') ? TEN_DANG_WEB[dangHienTai] : undefined;
+            // [MỚI] Hình: chỉ gửi khi thầy có xoá / thêm hình (link_anh = các hình cũ còn giữ; anh_moi = hình mới tải lên)
+            let linkAnhMoi = undefined, anhMoi = undefined;
+            if (card && card.dataset.anhDoi === '1') {
+                linkAnhMoi = (card._anh || []).filter(x => !x.moi).map(x => x.goc).concat(card._anhKhac || []).join(', ');
+                anhMoi = (card._anh || []).filter(x => x.moi).map(x => ({ ten: x.ten, mime: x.mime, base64: x.base64 }));
+            }
+            if (dangMoi && (dangHienTai === 'ngan' || dangHienTai === 'tuluan')) phuongAnMoi = ''; // máy chủ xoá phương án A–D cũ
+
+            // Ẩn câu hỏi trên giao diện ngay lập tức
+            if (card) {
+                card.style.transition = "all 0.3s ease";
+                card.style.opacity = "0";
+                card.style.transform = "translateY(-10px)";
+                setTimeout(() => { card.remove(); }, 300);
+            }
+
+            const log = document.getElementById('terminal-log');
+            if (log) {
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đang cập nhật câu [${maCau}] thành "${trangThaiMoi}" lên Google Sheet...</div>`;
+            }
+
+            // Gửi dữ liệu ngầm về Google Apps Script để cập nhật Google Sheet
+            try {
+                await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi, dap_an: dapAnMoi, dang: dangMoi, link_anh: linkAnhMoi, anh_moi: anhMoi })
+                });
+                if (log) {
+                    log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Google Sheet đã cập nhật thành công câu [${maCau}].</div>`;
+                }
+            } catch (err) {
+                console.error("Lỗi cập nhật Sheet:", err);
+            }
+        }
+    </script>
+</body>
+</html>
