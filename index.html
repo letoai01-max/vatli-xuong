@@ -934,6 +934,9 @@
                         <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} <span id="nhan_dang_${index}">${item.dang ? '· ' + item.dang : ''}</span></span>
                         <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${item.trang_thai || 'Cần người xem'}</span>
                     </div>
+                    <!-- [MỚI] Nội dung câu cần duyệt nằm cạnh hình -->
+                    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,24rem)] lg:grid-rows-[auto_1fr] gap-4 items-start">
+                    <div class="min-w-0 lg:col-start-1 lg:row-start-1">
                     <div class="text-xs text-white leading-relaxed space-y-2">
                         <div class="flex items-start justify-between gap-3">
                             <div><strong class="text-sky-300">Nội dung:</strong> <span id="xem_noi_dung_${index}">${item.noi_dung}</span></div>
@@ -945,29 +948,11 @@
                     </div>
                 `;
 
-                if (item.link_anh && item.link_anh.trim() !== '') {
-                    let rawLinks = item.link_anh.split(/[,;\s]+/).map(l => l.trim()).filter(l => l.length > 0 && l.includes('images/'));
-                    let uniqueLinks = [...new Set(rawLinks)];
-                    
-                    if (uniqueLinks.length > 0) {
-                        let imgUrl = uniqueLinks[0];
-                        if (!imgUrl.startsWith('http')) {
-                            imgUrl = imgUrl.startsWith('images/') ? imgUrl : 'images/' + imgUrl;
-                        } else {
-                            const parts = imgUrl.split('/');
-                            imgUrl = 'images/' + parts[parts.length - 1];
-                        }
-
-                        html += `
-                            <div class="my-3 p-3 bg-slate-950 border border-slate-800 rounded-lg text-center">
-                                <div class="text-[11px] text-sky-400 mb-2 font-semibold uppercase tracking-wide"><i class="fa-solid fa-image mr-1"></i> HÌNH VẼ / ĐỒ THỊ MINH HỌA:</div>
-                                <img src="${imgUrl}" alt="Hình minh họa ${item.ma_cau}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tim+thay+file+anh';">
-                            </div>
-                        `;
-                    }
-                }
+                // [MỚI] Hình vẽ: máy tính ở cột phải; điện thoại nằm giữa nội dung (trên) và đáp án (dưới)
+                html += `</div>${taoKhungAnh(index)}<div class="space-y-3 min-w-0 lg:col-start-1 lg:row-start-2">`;
 
                 html += interactiveControlHtml;
+                html += `</div></div>`; // [MỚI] đóng khu đáp án + lưới
 
                 html += `
                     <div class="space-y-2 pt-2">
@@ -1012,6 +997,7 @@
                 container.appendChild(card);
                 capNhatXemLoiGiai(index, false); // [MỚI] đổ chữ lời giải vào khung xem (MathJax dựng chung ở dưới)
                 card.querySelectorAll(`#vung_tra_loi_${index} [data-nguon]`).forEach(ed => dungKhungTuMa(ed, false)); // [MỚI] phương án
+                khoiTaoAnh(card, index, item.link_anh); // [MỚI] hình vẽ: xem, xoá, thêm
             });
 
             dungCongThuc(container); // [MỚI] chờ MathJax tải xong rồi mới dựng (tránh lỗi khi bấm tải quá sớm)
@@ -1051,6 +1037,127 @@
             }
         }
 
+        // [MỚI] ===== HÌNH VẼ: XEM, XOÁ, THÊM =====
+        // Cách hiển thị đường dẫn giữ như cũ: chỉ hiện các link có "images/", link http lấy tên tệp đặt vào images/
+        function chuanLinkAnh(l) {
+            if (!l.startsWith('http')) return l.startsWith('images/') ? l : 'images/' + l;
+            const parts = l.split('/');
+            return 'images/' + parts[parts.length - 1];
+        }
+
+        function taoKhungAnh(index) {
+            return `
+                <div id="vung_anh_${index}" tabindex="0" title="Bấm vào khung rồi Ctrl+V để dán ảnh chụp màn hình"
+                     ondragover="event.preventDefault(); this.classList.add('border-sky-500')" ondragleave="this.classList.remove('border-sky-500')"
+                     ondrop="event.preventDefault(); this.classList.remove('border-sky-500'); themAnhTuTep(${index}, event.dataTransfer.files)"
+                     onpaste="danAnh(event, ${index})"
+                     class="lg:col-start-2 lg:row-start-1 lg:row-span-2 self-start lg:sticky lg:top-4 p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-2 text-center focus:outline-none focus:border-sky-500 transition">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="text-[11px] text-sky-400 font-semibold uppercase tracking-wide"><i class="fa-solid fa-image mr-1"></i> HÌNH VẼ / ĐỒ THỊ MINH HỌA:</div>
+                        <label class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                            <i class="fa-solid fa-plus mr-1"></i> Thêm hình
+                            <input type="file" accept="image/*" multiple class="hidden" onchange="themAnhTuTep(${index}, this.files); this.value=''">
+                        </label>
+                    </div>
+                    <div id="ds_anh_${index}" class="space-y-2"></div>
+                    <div class="text-[10px] text-slate-500">Kéo thả ảnh vào đây, hoặc bấm vào khung rồi dán (Ctrl+V) ảnh chụp màn hình.</div>
+                </div>`;
+        }
+
+        function cardCuaAnh(index) {
+            const v = document.getElementById(`vung_anh_${index}`);
+            return v ? v.closest('.question-card') : null;
+        }
+
+        function khoiTaoAnh(card, index, linkAnh) {
+            const raw = String(linkAnh || '').split(/[,;\s]+/).map(l => l.trim()).filter(l => l.length > 0);
+            const coAnh = [...new Set(raw.filter(l => l.includes('images/')))];
+            card._anh = coAnh.map(l => ({ goc: l, src: chuanLinkAnh(l), moi: false }));
+            card._anhKhac = raw.filter(l => !l.includes('images/'));   // link khác (không hiện) vẫn giữ nguyên khi lưu
+            veDanhSachAnh(index);
+        }
+
+        function veDanhSachAnh(index) {
+            const card = cardCuaAnh(index);
+            const ds = document.getElementById(`ds_anh_${index}`);
+            if (!card || !ds) return;
+            const anh = card._anh || [];
+            ds.innerHTML = anh.length === 0
+                ? '<div class="py-6 text-xs text-slate-500 italic">Câu này chưa có hình.</div>'
+                : anh.map((x, i) => `
+                    <div class="relative">
+                        <img src="${x.src}" alt="Hình ${i + 1}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tim+thay+file+anh';">
+                        ${x.moi ? '<span class="absolute top-1 left-1 px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-bold">Mới · bấm Duyệt để lưu</span>' : ''}
+                        <button type="button" onclick="xoaAnh(${index}, ${i})" title="Xoá hình này" class="absolute top-1 right-1 px-2 py-1 rounded-md bg-rose-600/90 hover:bg-rose-500 text-white text-[10px] font-semibold cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Xoá</button>
+                    </div>`).join('');
+        }
+
+        function ghiLogAnh(index, chu) {
+            const log = document.getElementById('terminal-log');
+            if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Câu ${index + 1}: ${chu} (bấm Duyệt để lưu về Google Sheet).</div>`;
+        }
+
+        function xoaAnh(index, i) {
+            const card = cardCuaAnh(index);
+            if (!card || !card._anh || !card._anh[i]) return;
+            if (!confirm('Xoá hình này khỏi câu?')) return;
+            card._anh.splice(i, 1);
+            card.dataset.anhDoi = '1';
+            veDanhSachAnh(index);
+            ghiLogAnh(index, 'đã xoá 1 hình');
+        }
+
+        // Thu nhỏ ảnh (cạnh dài tối đa 1600 px) để gửi nhanh; ảnh nét mảnh giữ PNG, ảnh quá nặng chuyển JPEG
+        function nenAnh(file) {
+            return new Promise((xong, loi) => {
+                const doc = new FileReader();
+                doc.onerror = () => loi(new Error('Không đọc được tệp'));
+                doc.onload = () => {
+                    const img = new Image();
+                    img.onerror = () => loi(new Error('Tệp không phải ảnh'));
+                    img.onload = () => {
+                        const tl = Math.min(1, 1600 / Math.max(img.width, img.height));
+                        const cv = document.createElement('canvas');
+                        cv.width = Math.round(img.width * tl); cv.height = Math.round(img.height * tl);
+                        const g = cv.getContext('2d');
+                        g.fillStyle = '#ffffff'; g.fillRect(0, 0, cv.width, cv.height);
+                        g.drawImage(img, 0, 0, cv.width, cv.height);
+                        let url = cv.toDataURL('image/png'), mime = 'image/png';
+                        if (url.length > 2800000) { url = cv.toDataURL('image/jpeg', 0.9); mime = 'image/jpeg'; }
+                        xong({ url, mime, base64: url.split(',')[1] });
+                    };
+                    img.src = doc.result;
+                };
+                doc.readAsDataURL(file);
+            });
+        }
+
+        async function themAnhTuTep(index, files) {
+            const card = cardCuaAnh(index);
+            if (!card || !files) return;
+            const ds = Array.from(files).filter(f => f.type && f.type.startsWith('image/'));
+            if (ds.length === 0) { alert('Thầy chọn tệp ảnh (PNG, JPG…) nhé.'); return; }
+            card._anh = card._anh || [];
+            for (const f of ds) {
+                try {
+                    const k = await nenAnh(f);
+                    card._anh.push({ moi: true, src: k.url, mime: k.mime, base64: k.base64, ten: f.name || 'anh.png' });
+                } catch (e) { alert('Không thêm được ảnh ' + (f.name || '') + ': ' + e.message); }
+            }
+            card.dataset.anhDoi = '1';
+            veDanhSachAnh(index);
+            ghiLogAnh(index, `đã thêm ${ds.length} hình`);
+        }
+
+        function danAnh(e, index) {
+            const items = (e.clipboardData && e.clipboardData.items) ? Array.from(e.clipboardData.items) : [];
+            const tep = items.filter(it => it.kind === 'file' && it.type.startsWith('image/')).map(it => it.getAsFile()).filter(Boolean);
+            if (tep.length === 0) return;
+            e.preventDefault();
+            themAnhTuTep(index, tep);
+        }
+        // [MỚI] ===== HẾT PHẦN HÌNH VẼ =====
+
         // HÀM GỬI LỆNH CẬP NHẬT TRẠNG THÁI DUYỆT / LOẠI VỀ GOOGLE SHEET
         async function xuLyDuyetCau(maCau, trangThaiMoi, buttonElement, index) {
             const card = buttonElement.closest('.question-card');
@@ -1071,6 +1178,12 @@
             const dangHienTai = card ? card.dataset.dang : undefined;
             const dapAnMoi = layDapAn(card, index, dangHienTai);
             const dangMoi = (card && card.dataset.dangDoi === '1') ? TEN_DANG_WEB[dangHienTai] : undefined;
+            // [MỚI] Hình: chỉ gửi khi thầy có xoá / thêm hình (link_anh = các hình cũ còn giữ; anh_moi = hình mới tải lên)
+            let linkAnhMoi = undefined, anhMoi = undefined;
+            if (card && card.dataset.anhDoi === '1') {
+                linkAnhMoi = (card._anh || []).filter(x => !x.moi).map(x => x.goc).concat(card._anhKhac || []).join(', ');
+                anhMoi = (card._anh || []).filter(x => x.moi).map(x => ({ ten: x.ten, mime: x.mime, base64: x.base64 }));
+            }
             if (dangMoi && (dangHienTai === 'ngan' || dangHienTai === 'tuluan')) phuongAnMoi = ''; // máy chủ xoá phương án A–D cũ
 
             // Ẩn câu hỏi trên giao diện ngay lập tức
@@ -1092,7 +1205,7 @@
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi, dap_an: dapAnMoi, dang: dangMoi })
+                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi, dap_an: dapAnMoi, dang: dangMoi, link_anh: linkAnhMoi, anh_moi: anhMoi })
                 });
                 if (log) {
                     log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Google Sheet đã cập nhật thành công câu [${maCau}].</div>`;
