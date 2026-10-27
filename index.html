@@ -394,6 +394,156 @@
             veCongThuc(xem);
         }
 
+        // [ĐỔI DẠNG CÂU] Các dạng câu thầy có thể chuyển qua lại
+        const CAC_DANG_CAU = [
+            { gt: 'Trắc nghiệm nhiều lựa chọn', nhan: 'Trắc nghiệm 4 lựa chọn' },
+            { gt: 'Trắc nghiệm đúng sai', nhan: 'Đúng / Sai (từng ý)' },
+            { gt: 'Trả lời ngắn', nhan: 'Trả lời ngắn' },
+            { gt: 'Tự luận', nhan: 'Tự luận' }
+        ];
+        let phuongAnTam = {}, dapAnNganTam = {};
+
+        function viTriDang(dangCauHoi) {
+            if (dangCauHoi.includes('đúng sai')) return 1;
+            if (dangCauHoi.includes('ngắn')) return 2;
+            if (dangCauHoi.includes('tự luận')) return 3;
+            return 0;
+        }
+
+        // [ĐỔI DẠNG CÂU] Ô chọn dạng câu đặt trên khu trả lời
+        function khoiDoiDang(index, dangCauHoi) {
+            const i = viTriDang(dangCauHoi);
+            return `
+                <div class="flex flex-wrap items-center gap-2 pt-2 text-xs">
+                    <label for="dang_cau_${index}" class="font-semibold text-slate-300"><i class="fa-solid fa-shuffle text-violet-400 mr-1"></i> Dạng câu:</label>
+                    <select id="dang_cau_${index}" data-goc="${i}" onchange="doiDangCau(${index})" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-violet-500 cursor-pointer">
+                        ${CAC_DANG_CAU.map((d, k) => `<option value="${k}" ${k === i ? 'selected' : ''}>${d.nhan}</option>`).join('')}
+                    </select>
+                    <span id="ghi_dang_${index}" class="text-[11px] text-violet-300"></span>
+                </div>`;
+        }
+
+        // [ĐỔI DẠNG CÂU] Đổi dạng: dựng lại khu trả lời, giữ lại phương án và đáp án đã gõ để đổi qua lại không bị mất
+        function doiDangCau(index) {
+            const sel = document.getElementById(`dang_cau_${index}`);
+            const khu = document.getElementById(`khu_tra_loi_${index}`);
+            if (!sel || !khu) return;
+            const card = sel.closest('.question-card');
+            const cacOPA = card ? card.querySelectorAll(`.pa-input-${index}`) : [];
+            if (cacOPA.length > 0) {
+                const v = Array.from(cacOPA).map(o => o.value.trim()).filter(x => x !== '').join('\n');
+                if (v !== '') phuongAnTam[index] = v;
+            }
+            const oNganCu = document.getElementById(`short_ans_${index}`);
+            if (oNganCu) dapAnNganTam[index] = oNganCu.value;
+
+            const k = Number(sel.value);
+            khu.innerHTML = taoKhuTraLoi(index, CAC_DANG_CAU[k].gt.toLowerCase(), k <= 1 ? (phuongAnTam[index] || '') : '');
+            const oNganMoi = document.getElementById(`short_ans_${index}`);
+            if (oNganMoi && dapAnNganTam[index]) oNganMoi.value = dapAnNganTam[index];
+
+            const daDoi = String(k) !== sel.dataset.goc;
+            document.getElementById(`ghi_dang_${index}`).textContent = daDoi ? 'Đã đổi dạng. Bấm Duyệt để lưu về Sheet.' : '';
+            const hien = document.getElementById(`dang_hien_${index}`);
+            if (hien) hien.textContent = '· ' + CAC_DANG_CAU[k].gt;
+            veCongThuc(khu);
+        }
+
+        // [ĐỔI DẠNG CÂU] Dựng khu trả lời theo dạng câu (đoạn code gốc, chỉ tách ra để dùng lại khi đổi dạng)
+        function taoKhuTraLoi(index, dangCauHoi, phuongAnRaw) {
+            let interactiveControlHtml = '';
+
+            // [MỚI] Lớp chung cho ô sửa phương án
+            const lopOSuaPA = "pa-input-" + index + " bg-transparent border border-transparent hover:border-slate-700 focus:border-sky-500 rounded-md px-2 py-1 text-xs text-white focus:outline-none placeholder-slate-600";
+
+            if (!dangCauHoi.includes('đúng sai') && !dangCauHoi.includes('ngắn') && !dangCauHoi.includes('tự luận')) {
+                let optionsList = ["A", "B", "C", "D"];
+                let optHtml = optionsList.map(opt => `
+                    <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
+                        <div class="flex items-center gap-3 text-xs text-white w-full">
+                            <input type="radio" name="ans_${index}" value="${opt}" class="accent-sky-500 w-4 h-4">
+                            <div class="flex-1 min-w-0">
+                                            <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)"><span class="text-slate-500">${opt}. Nhập phương án ${opt}...</span></div>
+                                            <input type="text" class="${lopOSuaPA} hidden w-full" value="" placeholder="${opt}. Nhập phương án ${opt}..." onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
+                                        </div>
+                        </div>
+                    </label>
+                `).join('');
+
+                if (phuongAnRaw.trim() !== '') {
+                    let lines = phuongAnRaw.split('\n').filter(l => l.trim() !== '');
+                    if (lines.length > 0) {
+                        optHtml = lines.map((line, idx) => {
+                            let optChar = ["A", "B", "C", "D"][idx] || (idx + 1);
+                            return `
+                                <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
+                                    <div class="flex items-center gap-3 text-xs text-white w-full">
+                                        <input type="radio" name="ans_${index}" value="${optChar}" class="accent-sky-500 w-4 h-4">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)">${hienCongThuc(line)}</div>
+                                            <input type="text" class="${lopOSuaPA} hidden w-full" value="${escSua(line)}" onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
+                                        </div>
+                                    </div>
+                                </label>
+                            `;
+                        }).join('');
+                    }
+                }
+
+                interactiveControlHtml = `
+                    <div class="space-y-2 pt-2">
+                        <div class="text-xs font-semibold text-sky-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-check"></i> PHƯƠNG ÁN & TÍCH CHỌN ĐÁP ÁN ĐÚNG:
+                            <span class="text-[10px] font-normal text-slate-500">(bấm vào chữ phương án để sửa)</span>
+                        </div>
+                        <div class="space-y-2">${optHtml}</div>
+                    </div>
+                `;
+            } else if (dangCauHoi.includes('đúng sai')) {
+                // Mặc định giữ ý a) như cũ; nếu có phương án thì mỗi dòng là một ý sửa được
+                let cacY = phuongAnRaw.split('\n').filter(l => l.trim() !== '');
+                if (cacY.length === 0) cacY = ['Ý a) Phát biểu kiểm định tương ứng'];
+                let yHtml = cacY.map((y, idx) => {
+                    let kyTu = ["a", "b", "c", "d"][idx] || (idx + 1);
+                    return `
+                            <div class="flex items-center justify-between gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-200">
+                                <div class="flex-1 min-w-0">
+                                            <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)">${hienCongThuc(y)}</div>
+                                            <input type="text" class="${lopOSuaPA} hidden w-full" value="${escSua(y)}" onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
+                                        </div>
+                                <div class="flex gap-4 font-semibold shrink-0">
+                                    <label class="cursor-pointer text-emerald-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Đúng" class="accent-emerald-500"> Đúng</label>
+                                    <label class="cursor-pointer text-rose-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Sai" class="accent-rose-500"> Sai</label>
+                                </div>
+                            </div>`;
+                }).join('');
+
+                interactiveControlHtml = `
+                    <div class="space-y-2.5 pt-2">
+                        <div class="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check"></i> TÍCH CHỌN ĐÚNG / SAI CHO TỪNG Ý:
+                            <span class="text-[10px] font-normal text-slate-500">(bấm vào chữ của ý để sửa)</span>
+                        </div>
+                        <div class="space-y-2">${yHtml}
+                        </div>
+                    </div>
+                `;
+            } else if (dangCauHoi.includes('ngắn') || dangCauHoi.includes('tự luận')) {
+                interactiveControlHtml = `
+                    <div class="space-y-2 pt-2">
+                        <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-to-square"></i> Ô NHẬP SỐ LIỆU ĐÁP ÁN:
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800">
+                            <input type="text" id="short_ans_${index}" placeholder="Nhập đáp án số liệu..." class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-white w-64 focus:outline-none focus:border-sky-500">
+                        </div>
+                    </div>
+                `;
+            }
+
+            return interactiveControlHtml;
+        }
+
         async function taiCauHoiCanDuyet(chiCanDuyet = true) {
             const container = document.getElementById('danh-sach-cau-hoi');
             container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu câu hỏi từ questions.json...</div>`;
@@ -428,99 +578,12 @@
                 let dangCauHoi = (item.dang || item.loai_cau_hoi || 'Trắc nghiệm').toLowerCase().replace(/[\/\-–—_|]+/g, ' ').replace(/\s+/g, ' ');
                 let phuongAnRaw = item.phuong_an || '';
                 
-                let interactiveControlHtml = '';
-
-                // [MỚI] Lớp chung cho ô sửa phương án
-                const lopOSuaPA = "pa-input-" + index + " bg-transparent border border-transparent hover:border-slate-700 focus:border-sky-500 rounded-md px-2 py-1 text-xs text-white focus:outline-none placeholder-slate-600";
-
-                if (!dangCauHoi.includes('đúng sai') && !dangCauHoi.includes('ngắn') && !dangCauHoi.includes('tự luận')) {
-                    let optionsList = ["A", "B", "C", "D"];
-                    let optHtml = optionsList.map(opt => `
-                        <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
-                            <div class="flex items-center gap-3 text-xs text-white w-full">
-                                <input type="radio" name="ans_${index}" value="${opt}" class="accent-sky-500 w-4 h-4">
-                                <div class="flex-1 min-w-0">
-                                                <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)"><span class="text-slate-500">${opt}. Nhập phương án ${opt}...</span></div>
-                                                <input type="text" class="${lopOSuaPA} hidden w-full" value="" placeholder="${opt}. Nhập phương án ${opt}..." onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
-                                            </div>
-                            </div>
-                        </label>
-                    `).join('');
-
-                    if (phuongAnRaw.trim() !== '') {
-                        let lines = phuongAnRaw.split('\n').filter(l => l.trim() !== '');
-                        if (lines.length > 0) {
-                            optHtml = lines.map((line, idx) => {
-                                let optChar = ["A", "B", "C", "D"][idx] || (idx + 1);
-                                return `
-                                    <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
-                                        <div class="flex items-center gap-3 text-xs text-white w-full">
-                                            <input type="radio" name="ans_${index}" value="${optChar}" class="accent-sky-500 w-4 h-4">
-                                            <div class="flex-1 min-w-0">
-                                                <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)">${hienCongThuc(line)}</div>
-                                                <input type="text" class="${lopOSuaPA} hidden w-full" value="${escSua(line)}" onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
-                                            </div>
-                                        </div>
-                                    </label>
-                                `;
-                            }).join('');
-                        }
-                    }
-
-                    interactiveControlHtml = `
-                        <div class="space-y-2 pt-2">
-                            <div class="text-xs font-semibold text-sky-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-list-check"></i> PHƯƠNG ÁN & TÍCH CHỌN ĐÁP ÁN ĐÚNG:
-                                <span class="text-[10px] font-normal text-slate-500">(bấm vào chữ phương án để sửa)</span>
-                            </div>
-                            <div class="space-y-2">${optHtml}</div>
-                        </div>
-                    `;
-                } else if (dangCauHoi.includes('đúng sai')) {
-                    // Mặc định giữ ý a) như cũ; nếu có phương án thì mỗi dòng là một ý sửa được
-                    let cacY = phuongAnRaw.split('\n').filter(l => l.trim() !== '');
-                    if (cacY.length === 0) cacY = ['Ý a) Phát biểu kiểm định tương ứng'];
-                    let yHtml = cacY.map((y, idx) => {
-                        let kyTu = ["a", "b", "c", "d"][idx] || (idx + 1);
-                        return `
-                                <div class="flex items-center justify-between gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-200">
-                                    <div class="flex-1 min-w-0">
-                                                <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)">${hienCongThuc(y)}</div>
-                                                <input type="text" class="${lopOSuaPA} hidden w-full" value="${escSua(y)}" onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
-                                            </div>
-                                    <div class="flex gap-4 font-semibold shrink-0">
-                                        <label class="cursor-pointer text-emerald-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Đúng" class="accent-emerald-500"> Đúng</label>
-                                        <label class="cursor-pointer text-rose-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Sai" class="accent-rose-500"> Sai</label>
-                                    </div>
-                                </div>`;
-                    }).join('');
-
-                    interactiveControlHtml = `
-                        <div class="space-y-2.5 pt-2">
-                            <div class="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-circle-check"></i> TÍCH CHỌN ĐÚNG / SAI CHO TỪNG Ý:
-                                <span class="text-[10px] font-normal text-slate-500">(bấm vào chữ của ý để sửa)</span>
-                            </div>
-                            <div class="space-y-2">${yHtml}
-                            </div>
-                        </div>
-                    `;
-                } else if (dangCauHoi.includes('ngắn') || dangCauHoi.includes('tự luận')) {
-                    interactiveControlHtml = `
-                        <div class="space-y-2 pt-2">
-                            <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-pen-to-square"></i> Ô NHẬP SỐ LIỆU ĐÁP ÁN:
-                            </div>
-                            <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800">
-                                <input type="text" id="short_ans_${index}" placeholder="Nhập đáp án số liệu..." class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-white w-64 focus:outline-none focus:border-sky-500">
-                            </div>
-                        </div>
-                    `;
-                }
-
+                let interactiveControlHtml = taoKhuTraLoi(index, dangCauHoi, phuongAnRaw);
+                phuongAnTam[index] = phuongAnRaw;
+                dapAnNganTam[index] = '';
                 let html = `
                     <div class="flex flex-wrap justify-between items-center gap-2 text-xs border-b border-slate-800 pb-3">
-                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} ${item.dang ? '· ' + item.dang : ''}</span>
+                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} <span id="dang_hien_${index}">${item.dang ? '· ' + item.dang : ''}</span></span>
                         <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${item.trang_thai || 'Cần người xem'}</span>
                     </div>
                     <div class="text-xs text-white leading-relaxed space-y-2">
@@ -556,7 +619,7 @@
                     }
                 }
 
-                html += interactiveControlHtml;
+                html += khoiDoiDang(index, dangCauHoi) + `<div id="khu_tra_loi_${index}">` + interactiveControlHtml + `</div>`;
 
                 html += `
                     <div class="space-y-2 pt-2">
@@ -636,6 +699,16 @@
                 }
             }
 
+            // [ĐỔI DẠNG CÂU] Chỉ gửi dạng câu khi thầy đã đổi; đổi sang trả lời ngắn / tự luận thì xoá phương án A–D
+            const selDang = document.getElementById(`dang_cau_${index}`);
+            let dangMoi = undefined, dapAnMoi = undefined;
+            if (selDang && selDang.value !== selDang.dataset.goc) {
+                dangMoi = CAC_DANG_CAU[Number(selDang.value)].gt;
+                if (Number(selDang.value) >= 2) phuongAnMoi = '';
+            }
+            const oNgan = document.getElementById(`short_ans_${index}`);
+            if (oNgan && oNgan.value.trim() !== '') dapAnMoi = oNgan.value.trim();
+
             // Ẩn câu hỏi trên giao diện ngay lập tức
             if (card) {
                 card.style.transition = "all 0.3s ease";
@@ -655,7 +728,7 @@
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi })
+                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi, dang: dangMoi, dap_an: dapAnMoi })
                 });
                 if (log) {
                     log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Google Sheet đã cập nhật thành công câu [${maCau}].</div>`;
