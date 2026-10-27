@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHYSICS AGENT COMMANDER - THPT Thủy Sơn</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- MathJax cho hiển thị công thức Vật lí -->
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
@@ -23,17 +20,13 @@
         .glow-blue { box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
         .agent-card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(51, 65, 85, 0.6); transition: all 0.2s ease; }
         .agent-card:hover { border-color: rgba(56, 189, 248, 0.5); transform: translateY(-2px); }
-        /* Cải tiến textarea lời giải: cho phép co giãn tự do và đủ chiều cao */
         textarea { resize: vertical; min-height: 140px; }
-        /* TRẠNG THÁI AGENT: chỉ 2 mức. Đổi class tt-tot <-> tt-chua-tot và chữ "Tốt" <-> "Chưa tốt" */
         .tt { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; margin-top: 2px; }
         .tt .cham { width: 6px; height: 6px; border-radius: 9999px; flex-shrink: 0; }
         .tt-tot { color: #34d399; }
         .tt-tot .cham { background: #34d399; }
         .tt-chua-tot { color: #fb7185; }
         .tt-chua-tot .cham { background: #fb7185; }
-        .agent-card.chua-tot { border-color: rgba(251, 113, 133, 0.5); }
-        /* BIỂU TƯỢNG LOGO CHUYỂN ĐỘNG: nguyên tử quay chậm + khung phát sáng nhịp nhàng */
         .logo-quay { display: inline-block; animation: nguyenTuQuay 6s linear infinite; }
         .logo-khung { animation: khungPhatSang 2.4s ease-in-out infinite; }
         @keyframes nguyenTuQuay { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -41,14 +34,10 @@
             0%, 100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.35); }
             50% { box-shadow: 0 0 24px rgba(56, 189, 248, 0.75); }
         }
-        @media (prefers-reduced-motion: reduce) { .logo-quay, .logo-khung { animation: none; } }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-6">
-
     <div class="max-w-7xl mx-auto space-y-6">
-
-        <!-- HEADER TITLE -->
         <header class="glass-panel rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-4 glow-blue">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center logo-khung">
@@ -60,279 +49,39 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <span class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Trực tuyến: 10/10 Agent
-                </span>
-                <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
+                <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-rotate"></i> Đồng bộ dữ liệu
                 </button>
             </div>
         </header>
 
-        <!-- ===== CÁC AGENT CON ===== -->
-        <section class="glass-panel rounded-xl p-5">
-            <h2 class="text-sm font-bold text-sky-400 uppercase tracking-wider mb-4">
-                <i class="fa-solid fa-rocket mr-2"></i>Mở Agent
-            </h2>
-            <div class="grid grid-cols-3 gap-2 max-w-3xl">
-                <a href="https://script.google.com/macros/s/AKfycbyS1giScN0BMr4iR1BdHxxLusZNs03HDSMVep5xNJmGdmzkhM2kZhbyV_NqNPaJDVJ9/exec?trang=dieukhien" target="_blank" rel="noopener"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-sky-500/30 hover:border-sky-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-file-pen text-sky-400 text-base"></i>
-                    <span class="font-semibold text-white text-xs truncate">Tạo đề 45 phút</span>
-                    <span class="text-[10px] text-slate-400 truncate">Ma trận, đặc tả, đề</span>
-                </a>
-                <a href="https://script.google.com/macros/s/AKfycbx1vP4oedz8kXdCh65i9zRNtQO6Di23n-oQrQR-DlL6vMDIkg6Ww5g52SBI66i3370I/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-emerald-500/30 hover:border-emerald-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-book-open text-emerald-400 text-base"></i>
-                    <span class="font-semibold text-white text-xs truncate">Giáo án</span>
-                    <span class="text-[10px] text-slate-400 truncate">KHBD Vật lí 10–11</span>
-                </a>
-                <a href="https://script.google.com/macros/s/AKfycbzdjB_KOLivcDVp5OHiLy0LDtRaxbkmcaYlKeBQctqL5SmQvqW0eolPWaxERr0R-Sf7/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-amber-500/30 hover:border-amber-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
-                    <span class="font-semibold text-white text-xs truncate">Ôn thi HSG</span>
-                    <span class="text-[10px] text-slate-400 truncate">Chuyên đề, đề HSG</span>
-                </a>
-                <a href="https://script.google.com/macros/s/AKfycbwmDYjQx_GoFmHW7RbXZ-PSj4pgyib_D-P3jPwC0APURdgqmPGnie1b_RmgHBIl-yspiw/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-teal-500/30 hover:border-teal-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-flask text-teal-400 text-base"></i>
-                    <span class="font-semibold text-white text-xs truncate">STEM & Thí nghiệm</span>
-                    <span class="text-[10px] text-slate-400 truncate">Phiếu, mô phỏng</span>
-                </a>
-                <a href="https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-violet-500/30 hover:border-violet-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-database text-violet-400 text-base"></i>
-                    <span class="font-semibold text-white text-xs truncate">Kho chung</span>
-                    <span class="text-[10px] text-slate-400 truncate">Trung tâm điều hành</span>
-                </a>
-                <a href="https://script.google.com/macros/s/AKfycbyHffG8HN2H8XSNgCfU9a774gyV24vXRSXOEsM_flu_eyD06UsLgwpW5vccFJNi6LIr/exec?trang=dieukhien" target="_blank" rel="noopener"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-pink-500/30 hover:border-pink-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-lightbulb text-pink-400 text-base"></i>
-                    <span class="font-semibold text-white text-xs truncate">Nghiên cứu & Sáng kiến</span>
-                    <span class="text-[10px] text-slate-400 truncate">SKKN, KHKT, đặt tên</span>
-                </a>
-                <a href="https://script.google.com/macros/s/AKfycbyiA9RswTbLuC1bylYeeH6lr0kO_7yx6qQCKYrUEN9-DWaMaCBBzzp718najOwYZNVZEw/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-cloud-arrow-down text-cyan-400 text-base"></i>
-                    <span class="font-semibold text-white text-xs truncate">Thu thập tài liệu</span>
-                    <span class="text-[10px] text-slate-400 truncate">Đề HSG, TN THPT, học liệu</span>
-                </a>
-                <a href="https://script.google.com/macros/s/AKfycbzLXzoTZsJPR9A1lOfDatJ4tmIR6COmDQGzq9FbOikOgOZq4E0BsqL06AhSfKiY-xqpkQ/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-indigo-500/30 hover:border-indigo-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-shield-halved text-indigo-400 text-base"></i>
-                    <span class="font-semibold text-white text-xs truncate">Bảo vệ & Sao lưu</span>
-                    <span class="text-[10px] text-slate-400 truncate">Sao lưu code, chống xoá</span>
-                </a>
-                <a href="https://script.google.com/macros/s/AKfycbzAPAYUlMFj8FBnBZ34a8xp-tg9RoK0KDnxFsFmp3cdXaONWEhYhgP4pbrhH7w9tyAD/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-orange-500/30 hover:border-orange-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-brain text-orange-400 text-base"></i>
-                    <span class="font-semibold text-white text-xs truncate">Meta-Agent</span>
-                    <span class="text-[10px] text-slate-400 truncate">Cấu hình, kiểm định lớp 2</span>
-                </a>
-                <a href="https://script.google.com/macros/s/AKfycbyvA4VyefFG3ZCCX9b4t4VzVjbTXIcTWuOGtrVII577fyxd1EnXms1EYaYhRr8H-flmCw/exec" target="_blank" rel="noopener"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-red-500/30 hover:border-red-400 hover:-translate-y-0.5 transition">
-                    <i class="fa-solid fa-video text-red-400 text-base"></i>
-                    <span class="font-semibold text-white text-xs truncate">Video bài giảng</span>
-                    <span class="text-[10px] text-slate-400 truncate">Kịch bản, dựng video</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- MAIN LAYOUT -->
         <div class="space-y-6">
-
-            <!-- 10 AGENTS HEALTH GRID -->
-            <div class="glass-panel rounded-xl p-5 space-y-3">
+            <div id="can-duyet-section" class="glass-panel rounded-xl p-5 space-y-4 border-amber-500/30">
                 <div class="flex justify-between items-center">
-                    <div>
-                        <h2 class="text-base font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-shield-halved text-sky-400"></i> Sức Khỏe & Trạng Thái Toàn Bộ 10 Agent (0–9)
-                        </h2>
-                        <p class="text-xs text-slate-400">Đồng bộ trực tiếp với tab Agent trong Google Sheet Kho chung</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-5 lg:grid-cols-10 gap-2">
-                    <div class="agent-card rounded-md px-2 py-1.5" title="0. Kho Chung"><div class="text-[10px] font-semibold text-white truncate">0. Kho Chung</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
-                    <div class="agent-card rounded-md px-2 py-1.5" title="1. Khảo Thí"><div class="text-[10px] font-semibold text-white truncate">1. Khảo Thí</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
-                    <div class="agent-card rounded-md px-2 py-1.5" title="2. Kế Hoạch Bài Dạy"><div class="text-[10px] font-semibold text-white truncate">2. Kế Hoạch Bài Dạy</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
-                    <div class="agent-card rounded-md px-2 py-1.5" title="3. Bồi Dưỡng HSG"><div class="text-[10px] font-semibold text-white truncate">3. Bồi Dưỡng HSG</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
-                    <div class="agent-card rounded-md px-2 py-1.5" title="4. Thu Thập Tài Liệu"><div class="text-[10px] font-semibold text-white truncate">4. Thu Thập Tài Liệu</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
-                    <div class="agent-card rounded-md px-2 py-1.5" title="5. STEM & Thí Nghiệm"><div class="text-[10px] font-semibold text-white truncate">5. STEM & Thí Nghiệm</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
-                    <div class="agent-card rounded-md px-2 py-1.5" title="6. Bảo Vệ & Sao Lưu"><div class="text-[10px] font-semibold text-white truncate">6. Bảo Vệ & Sao Lưu</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
-                    <div class="agent-card rounded-md px-2 py-1.5" title="7. Meta-Agent"><div class="text-[10px] font-semibold text-white truncate">7. Meta-Agent</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
-                    <div class="agent-card rounded-md px-2 py-1.5" title="8. Nghiên Cứu & SKKN"><div class="text-[10px] font-semibold text-white truncate">8. Nghiên Cứu & SKKN</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
-                    <div class="agent-card rounded-md px-2 py-1.5" title="9. Video Bài Giảng"><div class="text-[10px] font-semibold text-white truncate">9. Video Bài Giảng</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
-                </div>
-            </div>
-
-            <!-- TRUNG TÂM ĐIỀU HÀNH & TÁC VỤ -->
-            <div class="glass-panel rounded-xl p-5 space-y-4">
-                <div>
                     <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-gears text-sky-400"></i> Trung Tâm Điều Hành & Tác Vụ Agent
+                        <i class="fa-solid fa-clipboard-check text-amber-400"></i> Quản Lý & Duyệt Câu Hỏi
                     </h2>
-                    <p class="text-xs text-slate-400">Chọn tác vụ chuyên sâu theo từng Agent hoặc nhập yêu cầu để điều khiển hệ thống</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-semibold text-slate-300">1. Chọn Agent / Module chuyên trách:</label>
-                        <select id="select-agent" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
-                            <option value="0">0. Kho Chung (Dữ liệu, Ngân hàng)</option>
-                            <option value="1">1. Khảo Thí & Ôn Tập</option>
-                            <option value="2">2. Kế Hoạch Bài Dạy (CV 5512)</option>
-                            <option value="3">3. Bồi Dưỡng HSG</option>
-                            <option value="4">4. Thu Thập Tài Liệu</option>
-                            <option value="5">5. STEM & Thí Nghiệm</option>
-                            <option value="6">6. Bảo Vệ & Sao Lưu</option>
-                            <option value="7">7. Meta-Agent</option>
-                            <option value="8">8. Nghiên Cứu & SKKN</option>
-                            <option value="9">9. Video Bài Giảng</option>
-                        </select>
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-semibold text-slate-300">2. Chọn tác vụ chuẩn có sẵn trong Sheet:</label>
-                        <select id="select-task" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
-                            <option value="">— Chọn tác vụ chuyên sâu —</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="space-y-1.5">
-                    <label class="text-xs font-semibold text-slate-300">3. Nội dung yêu cầu tác vụ bổ sung:</label>
-                    <textarea id="task-input" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-500" placeholder="Nhập yêu cầu cụ thể hoặc chọn tác vụ có sẵn ở trên..."></textarea>
-                </div>
-
-                <div class="flex justify-end gap-3 pt-2">
-                    <button onclick="thucThiTacVu()" class="px-5 py-2.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
-                        <i class="fa-solid fa-play"></i> Thực thi tác vụ
+                    <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition cursor-pointer">
+                        <i class="fa-solid fa-eye"></i> Hiện ~20 câu cần duyệt
                     </button>
                 </div>
-            </div>
-
-            <!-- MỤC CÁC CÂU CẦN DUYỆT -->
-            <div id="can-duyet-section" class="glass-panel rounded-xl p-5 space-y-4 border-amber-500/30">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                    <div>
-                        <h2 class="text-base font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-clipboard-check text-amber-400"></i> Quản Lý & Duyệt Câu Hỏi ("Cần người xem" / Tab NganHangCauHoi)
-                        </h2>
-                        <p class="text-xs text-slate-400">Hiển thị danh sách câu hỏi kèm hình vẽ/đồ thị minh họa chuẩn xác tuyệt đối từ Cột W</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="chuanHoaCongThucTatCa()" title="Chuẩn hóa công thức của mọi câu đang hiện (bấm Duyệt từng câu để lưu)" class="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-violet-600/20 cursor-pointer">
-                            <i class="fa-solid fa-square-root-variable"></i> Chuẩn hóa công thức
-                        </button>
-                        <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
-                            <i class="fa-solid fa-eye"></i> Hiện ~20 câu cần duyệt
-                        </button>
-                    </div>
-                </div>
-
-                <!-- DANH SÁCH CÂU HỎI -->
                 <div id="danh-sach-cau-hoi" class="space-y-4 pt-2">
-                    <div class="text-center py-8 text-slate-500 text-xs">
-                        Bấm nút <span class="text-amber-400 font-bold">"Hiện ~20 câu cần duyệt"</span> ở góc trên để tải danh sách câu hỏi.
-                    </div>
+                    <div class="text-center py-8 text-slate-500 text-xs">Bấm nút "Hiện ~20 câu cần duyệt" ở trên để tải danh sách.</div>
                 </div>
             </div>
-
-            <!-- NHẬT KÝ HOẠT ĐỘNG HỆ THỐNG -->
-            <div class="glass-panel rounded-xl p-4 text-[11px] font-mono space-y-1">
-                <div class="flex justify-between items-center text-slate-400 border-b border-slate-800 pb-2">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-terminal text-sky-400"></i> Nhật ký hoạt động hệ thống</span>
-                    <button onclick="document.getElementById('terminal-log').innerHTML=''" class="hover:text-white transition">Xóa nhật ký</button>
-                </div>
-                <div id="terminal-log" class="space-y-1 pt-1 text-slate-300">
-                    <div>[Hệ thống]: Giao diện Physics Agent Commander đã khởi tạo thành công.</div>
-                </div>
-            </div>
-
         </div>
     </div>
 
-    <!-- SCRIPT XỬ LÝ GIAO DIỆN & TƯƠNG TÁC API -->
     <script>
         const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec";
 
-        const danhSachTacVuTheoAgent = {
-            "0": [
-                { value: "quet_anh", label: "Quét bù hình ảnh & đồ thị từ PDF gốc (Cột W)" },
-                { value: "kiem_dinh", label: "Chạy kiểm định nội dung câu hỏi 5 tầng" },
-                { value: "xuat_de", label: "Xuất dữ liệu ngân hàng câu hỏi ra questions.json" },
-                { value: "chuan_hoa_cong_thuc", label: "Chuẩn hóa công thức toàn bộ ngân hàng câu hỏi (Sheet)" }
-            ],
-            "1": [
-                { value: "tao_de_kiem_tra", label: "Tạo đề kiểm tra 15p / 45p theo ma trận chuẩn" },
-                { value: "tron_de_thi", label: "Trộn mã đề thi trắc nghiệm (Xáo trộn câu hỏi & đáp án)" },
-                { value: "thong_ke_diem", label: "Phân tích thống kê phổ điểm và độ khó câu hỏi" }
-            ],
-            "2": [
-                { value: "soan_giao_an_5512", label: "Soạn kế hoạch bài dạy (giáo án) chuẩn CV 5512" },
-                { value: "thiet_ke_hoat_dong", label: "Thiết kế chuỗi hoạt động học (Khởi động, Luyện tập...)" },
-                { value: "phieu_hoc_tap", label: "Tạo phiếu học tập & hệ thống câu hỏi thảo luận" }
-            ],
-            "3": [
-                { value: "chuyen_de_nang_cao", label: "Biên soạn chuyên đề Vật lí nâng cao (Thi học sinh giỏi)" },
-                { value: "giai_chi_tiet_hsg", label: "Giải chi tiết bài toán Vật lí chuyên sâu / Olympic" },
-                { value: "nguon_suy_luan_hsg", label: "Tuyển chọn hệ thống bài tập phân loại điểm 9-10" }
-            ],
-            "4": [
-                { value: "tai_tai_lieu_drive", label: "Đồng bộ và phân loại tài liệu mới từ Google Drive" },
-                { value: "chuan_hoa_van_ban", label: "Chuẩn hóa định dạng văn bản theo Nghị định 30" },
-                { value: "quet_metadata", label: "Quét và cập nhật metadata tệp nguồn vào Google Sheet" }
-            ],
-            "5": [
-                { value: "stem_thuc_nghiem", label: "Thiết kế mô hình thí nghiệm STEM thực tế" },
-                { value: "huong_dan_che_tao", label: "Lập quy trình chế tạo thiết bị đo lường vật lí" }
-            ],
-            "6": [
-                { value: "sao_luu_du_lieu", label: "Sao lưu toàn bộ ngân hàng câu hỏi lên mây" },
-                { value: "kiem_tra_bao_mat", label: "Kiểm tra tính toàn vẹn dữ liệu hệ thống" }
-            ],
-            "7": [
-                { value: "dieu_phoi_tong", label: "Chạy thuật toán điều phối tổng hợp đa Agent" },
-                { value: "toi_uu_he_thong", label: "Tối ưu hóa hiệu năng phản hồi toàn hệ thống" }
-            ],
-            "8": [
-                { value: "nghien_cuu_skkn", label: "Tổng hợp SKKN và sáng kiến kinh nghiệm giảng dạy" },
-                { value: "bien_soan_chuyen_de", label: "Biên soạn tài liệu nghiên cứu khoa học sư phạm" }
-            ],
-            "9": [
-                { value: "tao_video_demo", label: "Tạo kịch bản video mô phỏng thí nghiệm Vật lí" },
-                { value: "xuat_giao_an_video", label: "Liên kết video minh họa vào bài giảng điện tử" }
-            ]
-        };
-
-        document.getElementById('select-agent').addEventListener('change', function() {
-            const agentId = this.value;
-            const taskSelect = document.getElementById('select-task');
-            taskSelect.innerHTML = '<option value="">— Chọn tác vụ chuyên sâu —</option>';
-            if (danhSachTacVuTheoAgent[agentId]) {
-                danhSachTacVuTheoAgent[agentId].forEach(task => {
-                    const opt = document.createElement('option');
-                    opt.value = task.value;
-                    opt.textContent = task.label;
-                    taskSelect.appendChild(opt);
-                });
-            }
-        });
-
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('select-agent').dispatchEvent(new Event('change'));
-        });
-
         function escSua(s) {
-            return String(s == null ? '' : s)
-                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
         function hienCongThuc(s) {
             if (!s) return "";
             s = String(s);
-            // Khắc phục nhanh: làm sạch gạch chéo kép và dấu phẩy latex thừa để tránh sập trang
             s = s.replace(/\\\\/g, '\\').replace(/\{,\}/g, ',');
             s = s.replace(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g, (m, k, d) => {
                 const t = (k !== undefined ? k : d).replace(/(\d),(?=\d)/g, '$1{,}');
@@ -350,265 +99,27 @@
             }
         }
 
-        function suaPhuongAn(xem, e) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            const o = xem.nextElementSibling;
-            if (!o) return;
+        function batSuaLoiGiai(index) {
+            const xem = document.getElementById(`xem_loi_giai_${index}`);
+            const ta = document.getElementById(`loi_giai_${index}`);
+            const nut = document.getElementById(`nut_sua_lg_${index}`);
+            if (!xem || !ta) return;
             xem.classList.add('hidden');
-            o.classList.remove('hidden');
-            o.focus();
+            ta.classList.remove('hidden');
+            ta.focus();
+            if (nut) nut.textContent = "Xong (Xem lại)";
         }
 
-        function xongSuaPhuongAn(o) {
-            const xem = o.previousElementSibling;
-            if (!xem) return;
-            xem.innerHTML = o.value.trim() !== '' ? hienCongThuc(o.value)
-                : '<span class="text-slate-500">' + escSua(o.getAttribute('placeholder') || 'Bấm để nhập phương án') + '</span>';
-            o.classList.add('hidden');
+        function dongSuaLoiGiai(index) {
+            const xem = document.getElementById(`xem_loi_giai_${index}`);
+            const ta = document.getElementById(`loi_giai_${index}`);
+            const nut = document.getElementById(`nut_sua_lg_${index}`);
+            if (!xem || !ta) return;
+            ta.classList.add('hidden');
             xem.classList.remove('hidden');
+            xem.innerHTML = hienCongThuc(ta.value);
             veCongThuc(xem);
-        }
-
-        function batSuaNoiDung(index) {
-            const o = document.getElementById(`noi_dung_${index}`);
-            const nut = document.getElementById(`nut_sua_${index}`);
-            if (!o) return;
-            const dangAn = o.classList.contains('hidden');
-            o.classList.toggle('hidden');
-            if (nut) nut.innerHTML = dangAn
-                ? '<i class="fa-solid fa-check mr-1"></i> Xong'
-                : '<i class="fa-solid fa-pen mr-1"></i> Sửa nội dung';
-            if (dangAn) { o.focus(); } else { capNhatXemTruoc(index); }
-        }
-
-        function capNhatXemTruoc(index) {
-            const o = document.getElementById(`noi_dung_${index}`);
-            const xem = document.getElementById(`xem_noi_dung_${index}`);
-            if (!o || !xem) return;
-            xem.innerHTML = hienCongThuc(o.value);
-            veCongThuc(xem);
-        }
-
-        const BANG_KY_HIEU_CT = [
-            [/×/g, '\\times '], [/÷/g, '\\div '], [/·/g, '\\cdot '], [/≤/g, '\\le '], [/≥/g, '\\ge '],
-            [/≈/g, '\\approx '], [/≠/g, '\\ne '], [/±/g, '\\pm '], [/°/g, '^\\circ '], [/[−–]/g, '-']
-        ];
-        function chuanHoaCT(s) {
-            const canhBao = [];
-            let t = String(s == null ? '' : s)
-                .replace(/\\\[([\s\S]+?)\\\]/g, (m, x) => '$$' + x + '$$')
-                .replace(/\\\(([\s\S]+?)\\\)/g, (m, x) => '$' + x + '$');
-            const soDau = (t.replace(/\\\$/g, '').match(/\$/g) || []).length;
-            if (soDau % 2 === 1) return { text: t, canhBao: ['Số dấu $ lẻ (công thức chưa đóng)'] };
-            const parts = t.split(/(\$\$[\s\S]+?\$\$|\$[^$]+?\$)/g);
-            for (let i = 0; i < parts.length; i++) {
-                let p = parts[i];
-                if (i % 2 === 0) {
-                    p = p.replace(/\[\s*cite[^\]]*\]/gi, '').replace(/\*\*|__|`/g, '')
-                        .replace(/\\(?:textbf|textit|emph)\{([^{}]*)\}/g, '$1').replace(/\\item\s*/g, '');
-                    if (/\\[a-zA-Z]{2,}|[\^_]\{/.test(p) && !canhBao.includes('Có lệnh LaTeX nằm ngoài $…$')) canhBao.push('Có lệnh LaTeX nằm ngoài $…$');
-                } else {
-                    const dau = p.startsWith('$$') ? '$$' : '$';
-                    let x = p.slice(dau.length, p.length - dau.length).replace(/(\d),(?=\d)/g, '$1{,}');
-                    BANG_KY_HIEU_CT.forEach(([re, th]) => { x = x.replace(re, th); });
-                    p = dau + x.replace(/\s+/g, ' ').trim() + dau;
-                }
-                parts[i] = p;
-            }
-            return { text: parts.join(''), canhBao };
-        }
-
-        function apDungChuanHoaCT(index) {
-            let soODoi = 0; const canhBao = [];
-            const xuLy = (el) => {
-                if (!el) return false;
-                const v = el.value;
-                if (v.trim() === '' || v.trim() === 'Nhập hoặc chỉnh sửa lời giải chi tiết...') return false;
-                const kq = chuanHoaCT(v);
-                kq.canhBao.forEach(c => { if (!canhBao.includes(c)) canhBao.push(c); });
-                if (kq.text === v) return false;
-                el.value = kq.text; soODoi++; return true;
-            };
-            const oND = document.getElementById(`noi_dung_${index}`);
-            xuLy(oND);
-            xuLy(document.getElementById(`loi_giai_${index}`));
-            const card = oND ? oND.closest('.question-card') : null;
-            if (card) card.querySelectorAll(`.pa-input-${index}`).forEach(o => { if (xuLy(o)) xongSuaPhuongAn(o); });
-            capNhatXemTruoc(index);
-            return { soODoi, canhBao };
-        }
-
-        function chuanHoaCongThucCau(index, maCau, nut) {
-            const kq = apDungChuanHoaCT(index);
-            const log = document.getElementById('terminal-log');
-            if (log) {
-                const gio = new Date().toLocaleTimeString();
-                log.innerHTML += `<div>[${gio}] Chuẩn hóa công thức câu [${maCau}]: ${kq.soODoi > 0 ? 'đã sửa ' + kq.soODoi + ' ô (bấm Duyệt để lưu về Sheet)' : 'không có gì cần sửa'}.</div>`;
-                if (kq.canhBao.length) log.innerHTML += `<div class="text-amber-400">[${gio}] Câu [${maCau}] cần xem lại bằng tay: ${kq.canhBao.join('; ')}.</div>`;
-            }
-            if (nut) {
-                const cu = nut.innerHTML;
-                nut.innerHTML = kq.soODoi > 0 ? `<i class="fa-solid fa-check"></i> Đã sửa ${kq.soODoi} ô` : '<i class="fa-solid fa-check"></i> Công thức đã chuẩn';
-                setTimeout(() => { nut.innerHTML = cu; }, 2500);
-            }
-        }
-
-        function chuanHoaCongThucTatCa() {
-            const cacCau = document.querySelectorAll('#danh-sach-cau-hoi .question-card');
-            if (cacCau.length === 0) { alert('Chưa có câu nào trên màn hình. Bấm "Hiện ~20 câu cần duyệt" trước.'); return; }
-            let tongO = 0, soCauDoi = 0, soCauXem = 0;
-            cacCau.forEach(card => {
-                const ta = card.querySelector('textarea[id^="noi_dung_"]');
-                if (!ta) return;
-                const kq = apDungChuanHoaCT(ta.id.replace('noi_dung_', ''));
-                tongO += kq.soODoi;
-                if (kq.soODoi > 0) soCauDoi++;
-                if (kq.canhBao.length) soCauXem++;
-            });
-            const log = document.getElementById('terminal-log');
-            if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Chuẩn hóa công thức: sửa ${tongO} ô ở ${soCauDoi}/${cacCau.length} câu; ${soCauXem} câu cần xem lại bằng tay. Bấm Duyệt từng câu để lưu về Sheet.</div>`;
-        }
-
-        const CAC_DANG_CAU = [
-            { gt: 'Trắc nghiệm nhiều lựa chọn', nhan: 'Trắc nghiệm 4 lựa chọn' },
-            { gt: 'Trắc nghiệm đúng sai', nhan: 'Đúng / Sai (từng ý)' },
-            { gt: 'Trả lời ngắn', nhan: 'Trả lời ngắn' },
-            { gt: 'Tự luận', nhan: 'Tự luận' }
-        ];
-        let phuongAnTam = {}, dapAnNganTam = {};
-
-        function viTriDang(dangCauHoi) {
-            if (dangCauHoi.includes('đúng sai')) return 1;
-            if (dangCauHoi.includes('ngắn')) return 2;
-            if (dangCauHoi.includes('tự luận')) return 3;
-            return 0;
-        }
-
-        function khoiDoiDang(index, dangCauHoi) {
-            const i = viTriDang(dangCauHoi);
-            return `
-                <div class="flex flex-wrap items-center gap-2 pt-2 text-xs">
-                    <label for="dang_cau_${index}" class="font-semibold text-slate-300"><i class="fa-solid fa-shuffle text-violet-400 mr-1"></i> Dạng câu:</label>
-                    <select id="dang_cau_${index}" data-goc="${i}" onchange="doiDangCau(${index})" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-violet-500 cursor-pointer">
-                        ${CAC_DANG_CAU.map((d, k) => `<option value="${k}" ${k === i ? 'selected' : ''}>${d.nhan}</option>`).join('')}
-                    </select>
-                    <span id="ghi_dang_${index}" class="text-[11px] text-violet-300"></span>
-                </div>`;
-        }
-
-        function doiDangCau(index) {
-            const sel = document.getElementById(`dang_cau_${index}`);
-            const khu = document.getElementById(`khu_tra_loi_${index}`);
-            if (!sel || !khu) return;
-            const card = sel.closest('.question-card');
-            const cacOPA = card ? card.querySelectorAll(`.pa-input-${index}`) : [];
-            if (cacOPA.length > 0) {
-                const v = Array.from(cacOPA).map(o => o.value.trim()).filter(x => x !== '').join('\n');
-                if (v !== '') phuongAnTam[index] = v;
-            }
-            const oNganCu = document.getElementById(`short_ans_${index}`);
-            if (oNganCu) dapAnNganTam[index] = oNganCu.value;
-
-            const k = Number(sel.value);
-            khu.innerHTML = taoKhuTraLoi(index, CAC_DANG_CAU[k].gt.toLowerCase(), k <= 1 ? (phuongAnTam[index] || '') : '');
-            const oNganMoi = document.getElementById(`short_ans_${index}`);
-            if (oNganMoi && dapAnNganTam[index]) oNganMoi.value = dapAnNganTam[index];
-
-            const daDoi = String(k) !== sel.dataset.goc;
-            document.getElementById(`ghi_dang_${index}`).textContent = daDoi ? 'Đã đổi dạng. Bấm Duyệt để lưu về Sheet.' : '';
-            const hien = document.getElementById(`dang_hien_${index}`);
-            if (hien) hien.textContent = '· ' + CAC_DANG_CAU[k].gt;
-            veCongThuc(khu);
-        }
-
-        function taoKhuTraLoi(index, dangCauHoi, phuongAnRaw) {
-            let interactiveControlHtml = '';
-            const lopOSuaPA = "pa-input-" + index + " bg-transparent border border-transparent hover:border-slate-700 focus:border-sky-500 rounded-md px-2 py-1 text-xs text-white focus:outline-none placeholder-slate-600";
-
-            if (!dangCauHoi.includes('đúng sai') && !dangCauHoi.includes('ngắn') && !dangCauHoi.includes('tự luận')) {
-                let optionsList = ["A", "B", "C", "D"];
-                let optHtml = optionsList.map(opt => `
-                    <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
-                        <div class="flex items-center gap-3 text-xs text-white w-full">
-                            <input type="radio" name="ans_${index}" value="${opt}" class="accent-sky-500 w-4 h-4">
-                            <div class="flex-1 min-w-0">
-                                <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)"><span class="text-slate-500">${opt}. Nhập phương án ${opt}...</span></div>
-                                <input type="text" class="${lopOSuaPA} hidden w-full" value="" placeholder="${opt}. Nhập phương án ${opt}..." onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
-                            </div>
-                        </div>
-                    </label>
-                `).join('');
-
-                if (phuongAnRaw.trim() !== '') {
-                    let lines = phuongAnRaw.split('\n').filter(l => l.trim() !== '');
-                    if (lines.length > 0) {
-                        optHtml = lines.map((line, idx) => {
-                            let optChar = ["A", "B", "C", "D"][idx] || (idx + 1);
-                            return `
-                                <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
-                                    <div class="flex items-center gap-3 text-xs text-white w-full">
-                                        <input type="radio" name="ans_${index}" value="${optChar}" class="accent-sky-500 w-4 h-4">
-                                        <div class="flex-1 min-w-0">
-                                            <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)">${hienCongThuc(line)}</div>
-                                            <input type="text" class="${lopOSuaPA} hidden w-full" value="${escSua(line)}" onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
-                                        </div>
-                                    </div>
-                                </label>
-                            `;
-                        }).join('');
-                    }
-                }
-
-                interactiveControlHtml = `
-                    <div class="space-y-2 pt-2">
-                        <div class="text-xs font-semibold text-sky-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-list-check"></i> PHƯƠNG ÁN & TÍCH CHỌN ĐÁP ÁN ĐÚNG:
-                            <span class="text-[10px] font-normal text-slate-500">(bấm vào chữ phương án để sửa)</span>
-                        </div>
-                        <div class="space-y-2">${optHtml}</div>
-                    </div>
-                `;
-            } else if (dangCauHoi.includes('đúng sai')) {
-                let cacY = phuongAnRaw.split('\n').filter(l => l.trim() !== '');
-                if (cacY.length === 0) cacY = ['Ý a) Phát biểu kiểm định tương ứng'];
-                let yHtml = cacY.map((y, idx) => {
-                    let kyTu = ["a", "b", "c", "d"][idx] || (idx + 1);
-                    return `
-                        <div class="flex items-center justify-between gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-200">
-                            <div class="flex-1 min-w-0">
-                                <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)">${hienCongThuc(y)}</div>
-                                <input type="text" class="${lopOSuaPA} hidden w-full" value="${escSua(y)}" onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
-                            </div>
-                            <div class="flex gap-4 font-semibold shrink-0">
-                                <label class="cursor-pointer text-emerald-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Đúng" class="accent-emerald-500"> Đúng</label>
-                                <label class="cursor-pointer text-rose-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Sai" class="accent-rose-500"> Sai</label>
-                            </div>
-                        </div>`;
-                }).join('');
-
-                interactiveControlHtml = `
-                    <div class="space-y-2.5 pt-2">
-                        <div class="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-check"></i> TÍCH CHỌN ĐÚNG / SAI CHO TỪNG Ý:
-                            <span class="text-[10px] font-normal text-slate-500">(bấm vào chữ của ý để sửa)</span>
-                        </div>
-                        <div class="space-y-2">${yHtml}</div>
-                    </div>
-                `;
-            } else if (dangCauHoi.includes('ngắn') || dangCauHoi.includes('tự luận')) {
-                interactiveControlHtml = `
-                    <div class="space-y-2 pt-2">
-                        <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-pen-to-square"></i> Ô NHẬP SỐ LIỆU ĐÁP ÁN:
-                        </div>
-                        <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800">
-                            <input type="text" id="short_ans_${index}" placeholder="Nhập đáp án số liệu..." class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-white w-64 focus:outline-none focus:border-sky-500">
-                        </div>
-                    </div>
-                `;
-            }
-
-            return interactiveControlHtml;
+            if (nut) nut.textContent = "Sửa văn bản LaTeX";
         }
 
         async function taiCauHoiCanDuyet(chiCanDuyet = true) {
@@ -618,22 +129,14 @@
             let data = [];
             try {
                 const response = await fetch('questions.json?t=' + Date.now());
-                if (response.ok) {
-                    data = await response.json();
-                }
+                if (response.ok) { data = await response.json(); }
             } catch (err) {
                 console.warn("Chưa đọc được questions.json:", err);
             }
 
-            const dsCanDuyet = data.filter(item => {
-                const tt = (item.trang_thai || '').toLowerCase();
-                return tt.includes('cần người xem') || tt.includes('chưa duyệt') || !item.trang_thai;
-            });
-
-            const dsHienThi = dsCanDuyet.length > 0 ? dsCanDuyet.slice(0, 20) : data.slice(0, 20);
-
+            const dsHienThi = data.slice(0, 20);
             if (!dsHienThi || dsHienThi.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Chưa có dữ liệu trong questions.json. Thầy hãy chạy tác vụ xuất dữ liệu ở trên!</div>`;
+                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Chưa có dữ liệu trong questions.json.</div>`;
                 return;
             }
 
@@ -642,166 +145,30 @@
                 const card = document.createElement('div');
                 card.className = "question-card bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-4 shadow-lg";
 
-                let dangCauHoi = (item.dang || item.loai_cau_hoi || 'Trắc nghiệm').toLowerCase().replace(/[\/\-–—_|]+/g, ' ').replace(/\s+/g, ' ');
-                let phuongAnRaw = item.phuong_an || '';
-                
-                let interactiveControlHtml = taoKhuTraLoi(index, dangCauHoi, phuongAnRaw);
-                phuongAnTam[index] = phuongAnRaw;
-                dapAnNganTam[index] = '';
-
                 let html = `
-                    <div class="flex flex-wrap justify-between items-center gap-2 text-xs border-b border-slate-800 pb-3">
-                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} <span id="dang_hien_${index}">${item.dang ? '· ' + item.dang : ''}</span></span>
-                        <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${item.trang_thai || 'Cần người xem'}</span>
+                    <div class="flex justify-between items-center text-xs border-b border-slate-800 pb-3">
+                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}]</span>
+                        <span class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold">${item.trang_thai || 'Cần người xem'}</span>
                     </div>
                     <div class="text-xs text-white leading-relaxed space-y-2">
-                        <div class="flex items-start justify-between gap-3">
-                            <div><strong class="text-sky-300">Nội dung:</strong> <span id="xem_noi_dung_${index}">${hienCongThuc(item.noi_dung)}</span></div>
-                            <button type="button" id="nut_sua_${index}" onclick="batSuaNoiDung(${index})" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
-                                <i class="fa-solid fa-pen mr-1"></i> Sửa nội dung
-                            </button>
-                        </div>
-                        <textarea id="noi_dung_${index}" rows="4" onblur="capNhatXemTruoc(${index})" class="hidden w-full bg-slate-950 border border-sky-500/40 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 leading-relaxed font-mono">${escSua(item.noi_dung)}</textarea>
+                        <div><strong class="text-sky-300">Nội dung:</strong> <span>${hienCongThuc(item.noi_dung)}</span></div>
                     </div>
-                `;
-
-                if (item.link_anh && item.link_anh.trim() !== '') {
-                    let rawLinks = item.link_anh.split(/[,;\s]+/).map(l => l.trim()).filter(l => l.length > 0 && l.includes('images/'));
-                    let uniqueLinks = [...new Set(rawLinks)];
-                    
-                    if (uniqueLinks.length > 0) {
-                        let imgUrl = uniqueLinks[0];
-                        if (!imgUrl.startsWith('http')) {
-                            imgUrl = imgUrl.startsWith('images/') ? imgUrl : 'images/' + imgUrl;
-                        } else {
-                            const parts = imgUrl.split('/');
-                            imgUrl = 'images/' + parts[parts.length - 1];
-                        }
-
-                        html += `
-                            <div class="my-3 p-3 bg-slate-950 border border-slate-800 rounded-lg text-center">
-                                <div class="text-[11px] text-sky-400 mb-2 font-semibold uppercase tracking-wide"><i class="fa-solid fa-image mr-1"></i> HÌNH VẼ / ĐỒ THỊ MINH HỌA:</div>
-                                <img src="${imgUrl}" alt="Hình minh họa ${item.ma_cau}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tim+thay+file+anh';">
-                            </div>
-                        `;
-                    }
-                }
-
-                html += khoiDoiDang(index, dangCauHoi) + `<div id="khu_tra_loi_${index}">` + interactiveControlHtml + `</div>`;
-
-                html += `
                     <div class="space-y-2 pt-2">
-                        <div class="text-xs font-semibold text-sky-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-book-open-reader"></i> LỜI GIẢI CHI TIẾT:
+                        <div class="flex justify-between items-center text-xs font-semibold text-sky-300">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-book-open-reader"></i> LỜI GIẢI CHI TIẾT:</span>
+                            <button type="button" onclick="batSuaLoiGiai(${index})" id="nut_sua_lg_${index}" class="text-[11px] text-sky-400 hover:text-white underline cursor-pointer">Sửa văn bản LaTeX</button>
                         </div>
-                        <textarea id="loi_giai_${index}" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-600 leading-relaxed">${hienCongThuc(item.loi_giai || 'Nhập hoặc chỉnh sửa lời giải chi tiết...')}</textarea>
+                        <div id="xem_loi_giai_${index}" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white leading-relaxed overflow-x-auto min-h-[90px]">
+                            ${hienCongThuc(item.loi_giai || 'Chưa có lời giải chi tiết...')}
+                        </div>
+                        <textarea id="loi_giai_${index}" rows="4" onblur="dongSuaLoiGiai(${index})" class="hidden w-full bg-slate-950 border border-sky-500/40 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 leading-relaxed font-mono">${escSua(item.loi_giai || '')}</textarea>
                     </div>
                 `;
-
-                html += `
-                    <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-800/80">
-                        <button type="button" onclick="chuanHoaCongThucCau(${index}, '${item.ma_cau}', this)" title="Sửa dấu phẩy thập phân, ký hiệu, dấu $ trong nội dung, phương án, lời giải" class="mr-auto px-4 py-2 rounded-xl bg-violet-600/20 hover:bg-violet-600 text-violet-300 hover:text-white text-xs font-semibold transition flex items-center gap-2 border border-violet-500/30 cursor-pointer">
-                            <i class="fa-solid fa-square-root-variable"></i> Chuẩn hóa công thức
-                        </button>
-                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'Loại', this, ${index})" class="px-4 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-semibold transition flex items-center gap-2 border border-rose-500/30 cursor-pointer">
-                            <i class="fa-solid fa-xmark"></i> Loại bỏ
-                        </button>
-                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'AI duyệt', this, ${index})" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer">
-                            <i class="fa-solid fa-check"></i> Duyệt (AI Duyệt)
-                        </button>
-                    </div>
-                `;
-
                 card.innerHTML = html;
                 container.appendChild(card);
             });
 
             veCongThuc(container);
-
-            const log = document.getElementById('terminal-log');
-            if (log) {
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã tải thành công ${dsHienThi.length} câu hỏi.</div>`;
-            }
-        }
-
-        async function thucThiTacVu() {
-            const agent = document.getElementById('select-agent').value;
-            const task = document.getElementById('select-task').value;
-            const inputVal = document.getElementById('task-input').value;
-            const log = document.getElementById('terminal-log');
-
-            if (!task && !inputVal) {
-                alert("Thầy vui lòng chọn tác vụ chuyên sâu hoặc nhập nội dung yêu cầu!");
-                return;
-            }
-
-            log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đang gửi lệnh thực thi Agent #${agent} (Tác vụ: ${task || 'Tùy chỉnh'}) tới Google Sheet...</div>`;
-
-            try {
-                await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'execute_task', agent: agent, task: task, detail: inputVal })
-                });
-                alert(`Đã gửi lệnh thực thi tác vụ cho Agent #${agent} về Google Sheet thành công!`);
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã ghi nhận lệnh điều phối Agent #${agent} vào Google Sheet Kho chung.</div>`;
-                if (task === 'chuan_hoa_cong_thuc') log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Kho chung đang chuẩn hóa công thức; kết quả ghi ở tab AgentLogs. Sau 1–2 phút bấm "Đồng bộ dữ liệu" để thấy bản mới.</div>`;
-            } catch (err) {
-                console.error(err);
-                alert("Lỗi kết nối tới Apps Script!");
-            }
-        }
-
-        async function xuLyDuyetCau(maCau, trangThaiMoi, buttonElement, index) {
-            const card = buttonElement.closest('.question-card');
-            const loiGiaiElem = document.getElementById(`loi_giai_${index}`);
-            const loiGiaiMoi = loiGiaiElem ? loiGiaiElem.value : '';
-
-            const noiDungElem = document.getElementById(`noi_dung_${index}`);
-            const noiDungMoi = noiDungElem ? noiDungElem.value : undefined;
-            let phuongAnMoi = undefined;
-            if (card) {
-                const cacOPA = card.querySelectorAll(`.pa-input-${index}`);
-                if (cacOPA.length > 0) {
-                    phuongAnMoi = Array.from(cacOPA).map(o => o.value.trim()).filter(v => v !== '').join('\n');
-                }
-            }
-
-            const selDang = document.getElementById(`dang_cau_${index}`);
-            let dangMoi = undefined, dapAnMoi = undefined;
-            if (selDang && selDang.value !== selDang.dataset.goc) {
-                dangMoi = CAC_DANG_CAU[Number(selDang.value)].gt;
-                if (Number(selDang.value) >= 2) phuongAnMoi = '';
-            }
-            const oNgan = document.getElementById(`short_ans_${index}`);
-            if (oNgan && oNgan.value.trim() !== '') dapAnMoi = oNgan.value.trim();
-
-            if (card) {
-                card.style.transition = "all 0.3s ease";
-                card.style.opacity = "0";
-                card.style.transform = "translateY(-10px)";
-                setTimeout(() => { card.remove(); }, 300);
-            }
-
-            const log = document.getElementById('terminal-log');
-            if (log) {
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đang cập nhật câu [${maCau}] thành "${trangThaiMoi}" lên Google Sheet...</div>`;
-            }
-
-            try {
-                await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi, dang: dangMoi, dap_an: dapAnMoi })
-                });
-                if (log) {
-                    log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Google Sheet đã cập nhật thành công câu [${maCau}].</div>`;
-                }
-            } catch (err) {
-                console.error("Lỗi cập nhật Sheet:", err);
-            }
         }
     </script>
 </body>
