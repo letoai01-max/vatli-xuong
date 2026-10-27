@@ -22,6 +22,14 @@
         .glow-blue { box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
         .agent-card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(51, 65, 85, 0.6); transition: all 0.2s ease; }
         .agent-card:hover { border-color: rgba(56, 189, 248, 0.5); transform: translateY(-2px); }
+        /* TRẠNG THÁI AGENT: chỉ 2 mức. Đổi class tt-tot <-> tt-chua-tot và chữ "Tốt" <-> "Chưa tốt" */
+        .tt { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; margin-top: 2px; }
+        .tt .cham { width: 6px; height: 6px; border-radius: 9999px; flex-shrink: 0; }
+        .tt-tot { color: #34d399; }
+        .tt-tot .cham { background: #34d399; }
+        .tt-chua-tot { color: #fb7185; }
+        .tt-chua-tot .cham { background: #fb7185; }
+        .agent-card.chua-tot { border-color: rgba(251, 113, 133, 0.5); }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-6">
@@ -96,8 +104,8 @@
         <!-- MAIN LAYOUT -->
         <div class="space-y-6">
 
-            <!-- 10 AGENTS HEALTH GRID -->
-            <div class="glass-panel rounded-xl p-5 space-y-4">
+            <!-- 10 AGENTS HEALTH GRID (ĐÃ THU GỌN: chỉ Tốt / Chưa tốt) -->
+            <div class="glass-panel rounded-xl p-5 space-y-3">
                 <div class="flex justify-between items-center">
                     <div>
                         <h2 class="text-base font-bold text-white flex items-center gap-2">
@@ -107,17 +115,18 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#0</div><div class="text-xs font-bold text-white truncate mt-1">0. Kho Chung</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> An toàn</div></div>
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#1</div><div class="text-xs font-bold text-white truncate mt-1">1. Khảo Thí</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#2</div><div class="text-xs font-bold text-white truncate mt-1">2. Kế Hoạch Bài Dạy</div><div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Hoạt động</div></div>
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#3</div><div class="text-xs font-bold text-white truncate mt-1">3. Bồi Dưỡng HSG</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#4</div><div class="text-xs font-bold text-white truncate mt-1">4. Thu Thập Tài Liệu</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Trực tuyến</div></div>
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#5</div><div class="text-xs font-bold text-white truncate mt-1">5. STEM & Thí Nghiệm</div><div class="text-[11px] text-emerald-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Tiêu chuẩn</div></div>
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#6</div><div class="text-xs font-bold text-white truncate mt-1">6. Bảo Vệ & Sao Lưu</div><div class="text-[11px] text-indigo-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Đã bảo vệ</div></div>
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#7</div><div class="text-xs font-bold text-white truncate mt-1">7. Meta-Agent</div><div class="text-[11px] text-amber-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Ổn định</div></div>
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#8</div><div class="text-xs font-bold text-white truncate mt-1">8. Nghiên Cứu & SKKN</div><div class="text-[11px] text-purple-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Độc lập</div></div>
-                    <div class="agent-card rounded-lg p-3"><div class="text-[10px] text-slate-400 font-mono">#9</div><div class="text-xs font-bold text-white truncate mt-1">9. Video Bài Giảng</div><div class="text-[11px] text-sky-400 flex items-center gap-1.5 mt-2"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Sẵn sàng</div></div>
+                <!-- Muốn báo agent "Chưa tốt": thêm class chua-tot vào agent-card, đổi tt-tot thành tt-chua-tot và chữ Tốt thành Chưa tốt -->
+                <div class="grid grid-cols-5 lg:grid-cols-10 gap-2">
+                    <div class="agent-card rounded-md px-2 py-1.5" title="0. Kho Chung"><div class="text-[10px] font-semibold text-white truncate">0. Kho Chung</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="1. Khảo Thí"><div class="text-[10px] font-semibold text-white truncate">1. Khảo Thí</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="2. Kế Hoạch Bài Dạy"><div class="text-[10px] font-semibold text-white truncate">2. Kế Hoạch Bài Dạy</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="3. Bồi Dưỡng HSG"><div class="text-[10px] font-semibold text-white truncate">3. Bồi Dưỡng HSG</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="4. Thu Thập Tài Liệu"><div class="text-[10px] font-semibold text-white truncate">4. Thu Thập Tài Liệu</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="5. STEM & Thí Nghiệm"><div class="text-[10px] font-semibold text-white truncate">5. STEM & Thí Nghiệm</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="6. Bảo Vệ & Sao Lưu"><div class="text-[10px] font-semibold text-white truncate">6. Bảo Vệ & Sao Lưu</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="7. Meta-Agent"><div class="text-[10px] font-semibold text-white truncate">7. Meta-Agent</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="8. Nghiên Cứu & SKKN"><div class="text-[10px] font-semibold text-white truncate">8. Nghiên Cứu & SKKN</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
+                    <div class="agent-card rounded-md px-2 py-1.5" title="9. Video Bài Giảng"><div class="text-[10px] font-semibold text-white truncate">9. Video Bài Giảng</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
                 </div>
             </div>
 
@@ -275,6 +284,37 @@
             document.getElementById('select-agent').dispatchEvent(new Event('change'));
         });
 
+        // [MỚI] Thoát ký tự để nội dung có dấu ngoặc kép, <, > vẫn đưa vào ô sửa được an toàn
+        function escSua(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // [MỚI] Hiện / ẩn ô sửa nội dung câu hỏi
+        function batSuaNoiDung(index) {
+            const o = document.getElementById(`noi_dung_${index}`);
+            const nut = document.getElementById(`nut_sua_${index}`);
+            if (!o) return;
+            const dangAn = o.classList.contains('hidden');
+            o.classList.toggle('hidden');
+            if (nut) nut.innerHTML = dangAn
+                ? '<i class="fa-solid fa-check mr-1"></i> Xong'
+                : '<i class="fa-solid fa-pen mr-1"></i> Sửa nội dung';
+            if (dangAn) { o.focus(); } else { capNhatXemTruoc(index); }
+        }
+
+        // [MỚI] Cập nhật phần hiển thị (kèm công thức MathJax) theo nội dung vừa sửa
+        function capNhatXemTruoc(index) {
+            const o = document.getElementById(`noi_dung_${index}`);
+            const xem = document.getElementById(`xem_noi_dung_${index}`);
+            if (!o || !xem) return;
+            xem.innerHTML = o.value;
+            if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+                MathJax.typesetPromise([xem]);
+            }
+        }
+
         async function taiCauHoiCanDuyet(chiCanDuyet = true) {
             const container = document.getElementById('danh-sach-cau-hoi');
             container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu câu hỏi từ questions.json...</div>`;
@@ -311,13 +351,16 @@
                 
                 let interactiveControlHtml = '';
 
+                // [MỚI] Lớp chung cho ô sửa phương án
+                const lopOSuaPA = "pa-input-" + index + " flex-1 bg-transparent border border-transparent hover:border-slate-700 focus:border-sky-500 rounded-md px-2 py-1 text-xs text-white focus:outline-none placeholder-slate-600";
+
                 if (dangCauHoi.includes('nhiều lựa chọn') || dangCauHoi.includes('trắc nghiệm') || (!dangCauHoi.includes('đúng sai') && !dangCauHoi.includes('ngắn'))) {
                     let optionsList = ["A", "B", "C", "D"];
                     let optHtml = optionsList.map(opt => `
                         <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
-                            <div class="flex items-center gap-3 text-xs text-white">
+                            <div class="flex items-center gap-3 text-xs text-white w-full">
                                 <input type="radio" name="ans_${index}" value="${opt}" class="accent-sky-500 w-4 h-4">
-                                <span>${opt}. Phương án tương ứng</span>
+                                <input type="text" class="${lopOSuaPA}" value="" placeholder="${opt}. Nhập phương án ${opt}...">
                             </div>
                         </label>
                     `).join('');
@@ -329,9 +372,9 @@
                                 let optChar = ["A", "B", "C", "D"][idx] || (idx + 1);
                                 return `
                                     <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
-                                        <div class="flex items-center gap-3 text-xs text-white">
+                                        <div class="flex items-center gap-3 text-xs text-white w-full">
                                             <input type="radio" name="ans_${index}" value="${optChar}" class="accent-sky-500 w-4 h-4">
-                                            <span>${line}</span>
+                                            <input type="text" class="${lopOSuaPA}" value="${escSua(line)}">
                                         </div>
                                     </label>
                                 `;
@@ -343,24 +386,34 @@
                         <div class="space-y-2 pt-2">
                             <div class="text-xs font-semibold text-sky-400 flex items-center gap-1.5">
                                 <i class="fa-solid fa-list-check"></i> PHƯƠNG ÁN & TÍCH CHỌN ĐÁP ÁN ĐÚNG:
+                                <span class="text-[10px] font-normal text-slate-500">(bấm vào chữ phương án để sửa)</span>
                             </div>
                             <div class="space-y-2">${optHtml}</div>
                         </div>
                     `;
                 } else if (dangCauHoi.includes('đúng sai')) {
+                    // Mặc định giữ ý a) như cũ; nếu có phương án thì mỗi dòng là một ý sửa được
+                    let cacY = phuongAnRaw.split('\n').filter(l => l.trim() !== '');
+                    if (cacY.length === 0) cacY = ['Ý a) Phát biểu kiểm định tương ứng'];
+                    let yHtml = cacY.map((y, idx) => {
+                        let kyTu = ["a", "b", "c", "d"][idx] || (idx + 1);
+                        return `
+                                <div class="flex items-center justify-between gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-200">
+                                    <input type="text" class="${lopOSuaPA}" value="${escSua(y)}">
+                                    <div class="flex gap-4 font-semibold shrink-0">
+                                        <label class="cursor-pointer text-emerald-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Đúng" class="accent-emerald-500"> Đúng</label>
+                                        <label class="cursor-pointer text-rose-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Sai" class="accent-rose-500"> Sai</label>
+                                    </div>
+                                </div>`;
+                    }).join('');
+
                     interactiveControlHtml = `
                         <div class="space-y-2.5 pt-2">
                             <div class="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
                                 <i class="fa-solid fa-circle-check"></i> TÍCH CHỌN ĐÚNG / SAI CHO TỪNG Ý:
+                                <span class="text-[10px] font-normal text-slate-500">(bấm vào chữ của ý để sửa)</span>
                             </div>
-                            <div class="space-y-2">
-                                <div class="flex items-center justify-between bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-200">
-                                    <span>Ý a) Phát biểu kiểm định tương ứng</span>
-                                    <div class="flex gap-4 font-semibold">
-                                        <label class="cursor-pointer text-emerald-400 flex items-center gap-1.5"><input type="radio" name="tf_a_${index}" value="Đúng" class="accent-emerald-500"> Đúng</label>
-                                        <label class="cursor-pointer text-rose-400 flex items-center gap-1.5"><input type="radio" name="tf_a_${index}" value="Sai" class="accent-rose-500"> Sai</label>
-                                    </div>
-                                </div>
+                            <div class="space-y-2">${yHtml}
                             </div>
                         </div>
                     `;
@@ -382,8 +435,14 @@
                         <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} ${item.dang ? '· ' + item.dang : ''}</span>
                         <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${item.trang_thai || 'Cần người xem'}</span>
                     </div>
-                    <div class="text-xs text-white leading-relaxed">
-                        <strong class="text-sky-300">Nội dung:</strong> ${item.noi_dung}
+                    <div class="text-xs text-white leading-relaxed space-y-2">
+                        <div class="flex items-start justify-between gap-3">
+                            <div><strong class="text-sky-300">Nội dung:</strong> <span id="xem_noi_dung_${index}">${item.noi_dung}</span></div>
+                            <button type="button" id="nut_sua_${index}" onclick="batSuaNoiDung(${index})" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-pen mr-1"></i> Sửa nội dung
+                            </button>
+                        </div>
+                        <textarea id="noi_dung_${index}" rows="4" onblur="capNhatXemTruoc(${index})" class="hidden w-full bg-slate-950 border border-sky-500/40 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 leading-relaxed font-mono">${escSua(item.noi_dung)}</textarea>
                     </div>
                 `;
 
@@ -480,6 +539,17 @@
             const loiGiaiElem = document.getElementById(`loi_giai_${index}`);
             const loiGiaiMoi = loiGiaiElem ? loiGiaiElem.value : '';
 
+            // [MỚI] Lấy nội dung câu hỏi và phương án đã sửa (đọc trước khi thẻ bị xóa)
+            const noiDungElem = document.getElementById(`noi_dung_${index}`);
+            const noiDungMoi = noiDungElem ? noiDungElem.value : undefined;
+            let phuongAnMoi = undefined;
+            if (card) {
+                const cacOPA = card.querySelectorAll(`.pa-input-${index}`);
+                if (cacOPA.length > 0) {
+                    phuongAnMoi = Array.from(cacOPA).map(o => o.value.trim()).filter(v => v !== '').join('\n');
+                }
+            }
+
             // Ẩn câu hỏi trên giao diện ngay lập tức
             if (card) {
                 card.style.transition = "all 0.3s ease";
@@ -499,7 +569,7 @@
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi })
+                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi })
                 });
                 if (log) {
                     log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Google Sheet đã cập nhật thành công câu [${maCau}].</div>`;
