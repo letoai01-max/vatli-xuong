@@ -12,7 +12,8 @@
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-            svg: { fontCache: 'global' }
+            svg: { fontCache: 'global' },
+            startup: { typeset: false }
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
@@ -328,6 +329,49 @@
                 .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
+        // [SỬA LỖI CÔNG THỨC] Chuẩn bị chuỗi để MathJax vẽ đúng:
+        //  - Dấu phẩy thập phân trong công thức: 1,2 → 1{,}2 (không bị tách thành "1, 2")
+        //  - Dấu < đứng lẻ (vd $x<2$) không bị trình duyệt hiểu nhầm là thẻ HTML
+        function hienCongThuc(s) {
+            s = String(s == null ? '' : s);
+            s = s.replace(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g, (m, k, d) => {
+                const t = (k !== undefined ? k : d).replace(/(\d),(?=\d)/g, '$1{,}');
+                return k !== undefined ? '$$' + t + '$$' : '$' + t + '$';
+            });
+            return s.replace(/<(?![a-zA-Z\/!])/g, '&lt;');
+        }
+
+        // [SỬA LỖI CÔNG THỨC] Vẽ công thức; nếu MathJax chưa tải xong thì đợi rồi vẽ
+        function veCongThuc(el, lan = 0) {
+            if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+                (MathJax.startup && MathJax.startup.promise ? MathJax.startup.promise : Promise.resolve())
+                    .then(() => MathJax.typesetPromise(el ? [el] : undefined)).catch(err => console.warn('MathJax:', err));
+            } else if (lan < 50) {
+                setTimeout(() => veCongThuc(el, lan + 1), 200);
+            }
+        }
+
+        // [SỬA LỖI CÔNG THỨC] Bấm vào phương án đã vẽ công thức → hiện ô sửa chữ gốc
+        function suaPhuongAn(xem, e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            const o = xem.nextElementSibling;
+            if (!o) return;
+            xem.classList.add('hidden');
+            o.classList.remove('hidden');
+            o.focus();
+        }
+
+        // [SỬA LỖI CÔNG THỨC] Sửa xong → vẽ lại công thức của phương án
+        function xongSuaPhuongAn(o) {
+            const xem = o.previousElementSibling;
+            if (!xem) return;
+            xem.innerHTML = o.value.trim() !== '' ? hienCongThuc(o.value)
+                : '<span class="text-slate-500">' + escSua(o.getAttribute('placeholder') || 'Bấm để nhập phương án') + '</span>';
+            o.classList.add('hidden');
+            xem.classList.remove('hidden');
+            veCongThuc(xem);
+        }
+
         // [MỚI] Hiện / ẩn ô sửa nội dung câu hỏi
         function batSuaNoiDung(index) {
             const o = document.getElementById(`noi_dung_${index}`);
@@ -346,10 +390,8 @@
             const o = document.getElementById(`noi_dung_${index}`);
             const xem = document.getElementById(`xem_noi_dung_${index}`);
             if (!o || !xem) return;
-            xem.innerHTML = o.value;
-            if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
-                MathJax.typesetPromise([xem]);
-            }
+            xem.innerHTML = hienCongThuc(o.value);
+            veCongThuc(xem);
         }
 
         async function taiCauHoiCanDuyet(chiCanDuyet = true) {
@@ -383,21 +425,24 @@
                 const card = document.createElement('div');
                 card.className = "question-card bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-4 shadow-lg";
 
-                let dangCauHoi = (item.dang || item.loai_cau_hoi || 'Trắc nghiệm').toLowerCase();
+                let dangCauHoi = (item.dang || item.loai_cau_hoi || 'Trắc nghiệm').toLowerCase().replace(/[\/\-–—_|]+/g, ' ').replace(/\s+/g, ' ');
                 let phuongAnRaw = item.phuong_an || '';
                 
                 let interactiveControlHtml = '';
 
                 // [MỚI] Lớp chung cho ô sửa phương án
-                const lopOSuaPA = "pa-input-" + index + " flex-1 bg-transparent border border-transparent hover:border-slate-700 focus:border-sky-500 rounded-md px-2 py-1 text-xs text-white focus:outline-none placeholder-slate-600";
+                const lopOSuaPA = "pa-input-" + index + " bg-transparent border border-transparent hover:border-slate-700 focus:border-sky-500 rounded-md px-2 py-1 text-xs text-white focus:outline-none placeholder-slate-600";
 
-                if (dangCauHoi.includes('nhiều lựa chọn') || dangCauHoi.includes('trắc nghiệm') || (!dangCauHoi.includes('đúng sai') && !dangCauHoi.includes('ngắn'))) {
+                if (!dangCauHoi.includes('đúng sai') && !dangCauHoi.includes('ngắn') && !dangCauHoi.includes('tự luận')) {
                     let optionsList = ["A", "B", "C", "D"];
                     let optHtml = optionsList.map(opt => `
                         <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
                             <div class="flex items-center gap-3 text-xs text-white w-full">
                                 <input type="radio" name="ans_${index}" value="${opt}" class="accent-sky-500 w-4 h-4">
-                                <input type="text" class="${lopOSuaPA}" value="" placeholder="${opt}. Nhập phương án ${opt}...">
+                                <div class="flex-1 min-w-0">
+                                                <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)"><span class="text-slate-500">${opt}. Nhập phương án ${opt}...</span></div>
+                                                <input type="text" class="${lopOSuaPA} hidden w-full" value="" placeholder="${opt}. Nhập phương án ${opt}..." onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
+                                            </div>
                             </div>
                         </label>
                     `).join('');
@@ -411,7 +456,10 @@
                                     <label class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 cursor-pointer transition">
                                         <div class="flex items-center gap-3 text-xs text-white w-full">
                                             <input type="radio" name="ans_${index}" value="${optChar}" class="accent-sky-500 w-4 h-4">
-                                            <input type="text" class="${lopOSuaPA}" value="${escSua(line)}">
+                                            <div class="flex-1 min-w-0">
+                                                <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)">${hienCongThuc(line)}</div>
+                                                <input type="text" class="${lopOSuaPA} hidden w-full" value="${escSua(line)}" onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
+                                            </div>
                                         </div>
                                     </label>
                                 `;
@@ -436,7 +484,10 @@
                         let kyTu = ["a", "b", "c", "d"][idx] || (idx + 1);
                         return `
                                 <div class="flex items-center justify-between gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs text-slate-200">
-                                    <input type="text" class="${lopOSuaPA}" value="${escSua(y)}">
+                                    <div class="flex-1 min-w-0">
+                                                <div class="pa-xem cursor-text px-2 py-1 rounded-md border border-transparent hover:border-slate-700 leading-relaxed" title="Bấm để sửa" onclick="suaPhuongAn(this, event)">${hienCongThuc(y)}</div>
+                                                <input type="text" class="${lopOSuaPA} hidden w-full" value="${escSua(y)}" onblur="xongSuaPhuongAn(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}" onclick="event.stopPropagation()">
+                                            </div>
                                     <div class="flex gap-4 font-semibold shrink-0">
                                         <label class="cursor-pointer text-emerald-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Đúng" class="accent-emerald-500"> Đúng</label>
                                         <label class="cursor-pointer text-rose-400 flex items-center gap-1.5"><input type="radio" name="tf_${kyTu}_${index}" value="Sai" class="accent-rose-500"> Sai</label>
@@ -474,7 +525,7 @@
                     </div>
                     <div class="text-xs text-white leading-relaxed space-y-2">
                         <div class="flex items-start justify-between gap-3">
-                            <div><strong class="text-sky-300">Nội dung:</strong> <span id="xem_noi_dung_${index}">${item.noi_dung}</span></div>
+                            <div><strong class="text-sky-300">Nội dung:</strong> <span id="xem_noi_dung_${index}">${hienCongThuc(item.noi_dung)}</span></div>
                             <button type="button" id="nut_sua_${index}" onclick="batSuaNoiDung(${index})" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 <i class="fa-solid fa-pen mr-1"></i> Sửa nội dung
                             </button>
@@ -531,9 +582,7 @@
                 container.appendChild(card);
             });
 
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
+            veCongThuc(container);
 
             const log = document.getElementById('terminal-log');
             if (log) {
