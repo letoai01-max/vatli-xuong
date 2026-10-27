@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHYSICS AGENT COMMANDER - THPT Thủy Sơn</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax cho hiển thị công thức Vật lí -->
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
@@ -20,13 +23,15 @@
         .glow-blue { box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
         .agent-card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(51, 65, 85, 0.6); transition: all 0.2s ease; }
         .agent-card:hover { border-color: rgba(56, 189, 248, 0.5); transform: translateY(-2px); }
-        textarea { resize: vertical; min-height: 140px; }
+        /* TRẠNG THÁI AGENT: chỉ 2 mức. Đổi class tt-tot <-> tt-chua-tot và chữ "Tốt" <-> "Chưa tốt" */
         .tt { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; margin-top: 2px; }
         .tt .cham { width: 6px; height: 6px; border-radius: 9999px; flex-shrink: 0; }
         .tt-tot { color: #34d399; }
         .tt-tot .cham { background: #34d399; }
         .tt-chua-tot { color: #fb7185; }
         .tt-chua-tot .cham { background: #fb7185; }
+        .agent-card.chua-tot { border-color: rgba(251, 113, 133, 0.5); }
+        /* BIỂU TƯỢNG LOGO CHUYỂN ĐỘNG: nguyên tử quay chậm + khung phát sáng nhịp nhàng */
         .logo-quay { display: inline-block; animation: nguyenTuQuay 6s linear infinite; }
         .logo-khung { animation: khungPhatSang 2.4s ease-in-out infinite; }
         @keyframes nguyenTuQuay { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -34,10 +39,14 @@
             0%, 100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.35); }
             50% { box-shadow: 0 0 24px rgba(56, 189, 248, 0.75); }
         }
+        @media (prefers-reduced-motion: reduce) { .logo-quay, .logo-khung { animation: none; } }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-6">
+
     <div class="max-w-7xl mx-auto space-y-6">
+
+        <!-- HEADER TITLE -->
         <header class="glass-panel rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-4 glow-blue">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center logo-khung">
@@ -49,127 +58,53 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 cursor-pointer">
+                <span class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Trực tuyến: 10/10 Agent
+                </span>
+                <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
                     <i class="fa-solid fa-rotate"></i> Đồng bộ dữ liệu
                 </button>
             </div>
         </header>
 
-        <div class="space-y-6">
-            <div id="can-duyet-section" class="glass-panel rounded-xl p-5 space-y-4 border-amber-500/30">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-clipboard-check text-amber-400"></i> Quản Lý & Duyệt Câu Hỏi
-                    </h2>
-                    <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition cursor-pointer">
-                        <i class="fa-solid fa-eye"></i> Hiện ~20 câu cần duyệt
-                    </button>
-                </div>
-                <div id="danh-sach-cau-hoi" class="space-y-4 pt-2">
-                    <div class="text-center py-8 text-slate-500 text-xs">Bấm nút "Hiện ~20 câu cần duyệt" ở trên để tải danh sách.</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec";
-
-        function escSua(s) {
-            return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
-
-        function hienCongThuc(s) {
-            if (!s) return "";
-            s = String(s);
-            s = s.replace(/\\\\/g, '\\').replace(/\{,\}/g, ',');
-            s = s.replace(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g, (m, k, d) => {
-                const t = (k !== undefined ? k : d).replace(/(\d),(?=\d)/g, '$1{,}');
-                return k !== undefined ? '$$' + t + '$$' : '$' + t + '$';
-            });
-            return s.replace(/<(?![a-zA-Z\/!])/g, '&lt;');
-        }
-
-        function veCongThuc(el, lan = 0) {
-            if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
-                (MathJax.startup && MathJax.startup.promise ? MathJax.startup.promise : Promise.resolve())
-                    .then(() => MathJax.typesetPromise(el ? [el] : undefined)).catch(err => console.warn('MathJax:', err));
-            } else if (lan < 50) {
-                setTimeout(() => veCongThuc(el, lan + 1), 200);
-            }
-        }
-
-        function batSuaLoiGiai(index) {
-            const xem = document.getElementById(`xem_loi_giai_${index}`);
-            const ta = document.getElementById(`loi_giai_${index}`);
-            const nut = document.getElementById(`nut_sua_lg_${index}`);
-            if (!xem || !ta) return;
-            xem.classList.add('hidden');
-            ta.classList.remove('hidden');
-            ta.focus();
-            if (nut) nut.textContent = "Xong (Xem lại)";
-        }
-
-        function dongSuaLoiGiai(index) {
-            const xem = document.getElementById(`xem_loi_giai_${index}`);
-            const ta = document.getElementById(`loi_giai_${index}`);
-            const nut = document.getElementById(`nut_sua_lg_${index}`);
-            if (!xem || !ta) return;
-            ta.classList.add('hidden');
-            xem.classList.remove('hidden');
-            xem.innerHTML = hienCongThuc(ta.value);
-            veCongThuc(xem);
-            if (nut) nut.textContent = "Sửa văn bản LaTeX";
-        }
-
-        async function taiCauHoiCanDuyet(chiCanDuyet = true) {
-            const container = document.getElementById('danh-sach-cau-hoi');
-            container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu câu hỏi từ questions.json...</div>`;
-
-            let data = [];
-            try {
-                const response = await fetch('questions.json?t=' + Date.now());
-                if (response.ok) { data = await response.json(); }
-            } catch (err) {
-                console.warn("Chưa đọc được questions.json:", err);
-            }
-
-            const dsHienThi = data.slice(0, 20);
-            if (!dsHienThi || dsHienThi.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Chưa có dữ liệu trong questions.json.</div>`;
-                return;
-            }
-
-            container.innerHTML = '';
-            dsHienThi.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = "question-card bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-4 shadow-lg";
-
-                let html = `
-                    <div class="flex justify-between items-center text-xs border-b border-slate-800 pb-3">
-                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}]</span>
-                        <span class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold">${item.trang_thai || 'Cần người xem'}</span>
-                    </div>
-                    <div class="text-xs text-white leading-relaxed space-y-2">
-                        <div><strong class="text-sky-300">Nội dung:</strong> <span>${hienCongThuc(item.noi_dung)}</span></div>
-                    </div>
-                    <div class="space-y-2 pt-2">
-                        <div class="flex justify-between items-center text-xs font-semibold text-sky-300">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-book-open-reader"></i> LỜI GIẢI CHI TIẾT:</span>
-                            <button type="button" onclick="batSuaLoiGiai(${index})" id="nut_sua_lg_${index}" class="text-[11px] text-sky-400 hover:text-white underline cursor-pointer">Sửa văn bản LaTeX</button>
-                        </div>
-                        <div id="xem_loi_giai_${index}" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white leading-relaxed overflow-x-auto min-h-[90px]">
-                            ${hienCongThuc(item.loi_giai || 'Chưa có lời giải chi tiết...')}
-                        </div>
-                        <textarea id="loi_giai_${index}" rows="4" onblur="dongSuaLoiGiai(${index})" class="hidden w-full bg-slate-950 border border-sky-500/40 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 leading-relaxed font-mono">${escSua(item.loi_giai || '')}</textarea>
-                    </div>
-                `;
-                card.innerHTML = html;
-                container.appendChild(card);
-            });
-
-            veCongThuc(container);
-        }
-    </script>
-</body>
-</html>
+        <!-- ===== CÁC AGENT CON: mỗi nút mở web app của một agent ===== -->
+        <section class="glass-panel rounded-xl p-5">
+            <h2 class="text-sm font-bold text-sky-400 uppercase tracking-wider mb-4">
+                <i class="fa-solid fa-rocket mr-2"></i>Mở Agent
+            </h2>
+            <div class="grid grid-cols-3 gap-2 max-w-3xl">
+                <a href="https://script.google.com/macros/s/AKfycbyS1giScN0BMr4iR1BdHxxLusZNs03HDSMVep5xNJmGdmzkhM2kZhbyV_NqNPaJDVJ9/exec?trang=dieukhien" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-sky-500/30 hover:border-sky-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-file-pen text-sky-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Tạo đề 45 phút</span>
+                    <span class="text-[10px] text-slate-400 truncate">Ma trận, đặc tả, đề</span>
+                </a>
+                <a href="https://script.google.com/macros/s/AKfycbx1vP4oedz8kXdCh65i9zRNtQO6Di23n-oQrQR-DlL6vMDIkg6Ww5g52SBI66i3370I/exec" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-emerald-500/30 hover:border-emerald-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-book-open text-emerald-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Giáo án</span>
+                    <span class="text-[10px] text-slate-400 truncate">KHBD Vật lí 10–11</span>
+                </a>
+                <a href="https://script.google.com/macros/s/AKfycbzdjB_KOLivcDVp5OHiLy0LDtRaxbkmcaYlKeBQctqL5SmQvqW0eolPWaxERr0R-Sf7/exec" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-amber-500/30 hover:border-amber-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Ôn thi HSG</span>
+                    <span class="text-[10px] text-slate-400 truncate">Chuyên đề, đề HSG</span>
+                </a>
+                <a href="https://script.google.com/macros/s/AKfycbwmDYjQx_GoFmHW7RbXZ-PSj4pgyib_D-P3jPwC0APURdgqmPGnie1b_RmgHBIl-yspiw/exec" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-teal-500/30 hover:border-teal-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-flask text-teal-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">STEM & Thí nghiệm</span>
+                    <span class="text-[10px] text-slate-400 truncate">Phiếu, mô phỏng</span>
+                </a>
+                <a href="https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-violet-500/30 hover:border-violet-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-database text-violet-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Kho chung</span>
+                    <span class="text-[10px] text-slate-400 truncate">Trung tâm điều hành</span>
+                </a>
+                <a href="https://script.google.com/macros/s/AKfycbyHffG8HN2H8XSNgCfU9a774gyV24vXRSXOEsM_flu_eyD06UsLgwpW5vccFJNi6LIr/exec?trang=dieukhien" target="_blank" rel="noopener"
+                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-pink-500/30 hover:border-pink-400 hover:-translate-y-0.5 transition">
+                    <i class="fa-solid fa-lightbulb text-pink-400 text-base"></i>
+                    <span class="font-semibold text-white text-xs truncate">Nghiên cứu & Sáng kiến</span>
+                    <span class="text-[10px] text-slate-400 truncate">SKKN, KHKT, đặt tên</span>
