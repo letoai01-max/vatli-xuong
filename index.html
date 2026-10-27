@@ -87,7 +87,7 @@
             <h2 class="text-sm font-bold text-sky-400 uppercase tracking-wider mb-4">
                 <i class="fa-solid fa-rocket mr-2"></i>Mở Agent
             </h2>
-            <div class="grid grid-cols-3 gap-2 max-w-3xl">
+            <div class="grid grid-cols-3 lg:grid-cols-5 gap-2 max-w-3xl lg:max-w-none">
                 <a href="https://script.google.com/macros/s/AKfycbyS1giScN0BMr4iR1BdHxxLusZNs03HDSMVep5xNJmGdmzkhM2kZhbyV_NqNPaJDVJ9/exec?trang=dieukhien" target="_blank" rel="noopener"
                    class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-sky-500/30 hover:border-sky-400 hover:-translate-y-0.5 transition">
                     <i class="fa-solid fa-file-pen text-sky-400 text-base"></i>
@@ -124,9 +124,9 @@
                     <span class="font-semibold text-white text-xs truncate">Nghiên cứu & Sáng kiến</span>
                     <span class="text-[10px] text-slate-400 truncate">SKKN, KHKT, đặt tên</span>
                 </a>
-                <!-- AGENT 4 - THU THẬP TÀI LIỆU: THẦY DÁN LINK WEB APP (/exec) VÀO CHỖ href="#" -->
+                <!-- AGENT 4 - THU THẬP TÀI LIỆU: chỉ hiện trên máy tính (điện thoại ẩn để xếp gọn 3 hàng) -->
                 <a href="https://script.google.com/macros/s/AKfycbyiA9RswTbLuC1bylYeeH6lr0kO_7yx6qQCKYrUEN9-DWaMaCBBzzp718najOwYZNVZEw/exec" target="_blank" rel="noopener" onclick="if(this.getAttribute('href')==='#'){alert('Thầy chưa dán link web app cho agent này trong code (href=&quot;#&quot;).');return false;}"
-                   class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 hover:-translate-y-0.5 transition">
+                   class="hidden lg:flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 hover:-translate-y-0.5 transition">
                     <i class="fa-solid fa-cloud-arrow-down text-cyan-400 text-base"></i>
                     <span class="font-semibold text-white text-xs truncate">Thu thập tài liệu</span>
                     <span class="text-[10px] text-slate-400 truncate">Đề HSG, TN THPT, học liệu</span>
@@ -304,6 +304,7 @@
         const danhSachTacVuTheoAgent = {
             "0": [
                 { value: "quet_anh", label: "Quét bù hình ảnh & đồ thị từ PDF gốc (Cột W)" },
+                { value: "loc_hinh", label: "Lọc hình đúng với nội dung câu (AI xem hình, bỏ hình của câu khác)" },
                 { value: "kiem_dinh", label: "Chạy kiểm định nội dung câu hỏi 5 tầng" },
                 { value: "xuat_de", label: "Xuất dữ liệu ngân hàng câu hỏi ra questions.json" }
             ],
