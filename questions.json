@@ -4,9 +4,9 @@
     "noi_dung": "Hình dưới biểu diễn sự thay đổi nhiệt độ theo thời gian của chất $X$ trong quá trình làm nguội. [Hình: Đồ thị t(°C) theo thời gian (phút), từ 160°C hạ xuống 120°C, nằm ngang ở 120°C (Khí -> Lỏng), hạ tiếp xuống 40°C, nằm ngang ở 40°C (Lỏng -> Rắn), rồi tiếp tục hạ nhiệt độ]",
     "phuong_an": "a) Nhiệt độ sôi của chất $X$ là $160^\\circ\\text{C}$.\nb) Nhiệt độ nóng chảy của chất $X$ là $40^\\circ\\text{C}$.\nc) Ở $120^\\circ\\text{C}$, chất $X$ có thể đồng thời tồn tại ở thể lỏng và thể khí.\nd) Ở $40^\\circ\\text{C}$, chất $X$ đồng thời tồn tại ở thể rắn, thể lỏng và thể hơi.",
     "dap_an": "",
-    "loi_giai": "",
+    "loi_giai": "Tóm tắt: $t_1 = 120^\\circ\\text{C}\\text{ (nhiệt độ ngưng tụ/sôi)}$; $t_2 = 40^\\circ\\text{C}\\text{ (nhiệt độ đông đặc/nóng chảy)}$.\nÝ a) Trên đồ thị làm nguội, đoạn nằm ngang ở $120^\\circ\\text{C}$ ứng với quá trình ngưng tụ (khí chuyển thành lỏng), do đó nhiệt độ sôi của chất $X$ là $120^\\circ\\text{C}$, không phải $160^\\circ\\text{C}$.\nÝ b) Đoạn nằm ngang ở $40^\\circ\\text{C}$ ứng với quá trình đông đặc (lỏng chuyển thành rắn), nên nhiệt độ đông đặc hay nhiệt độ nóng chảy của chất $X$ là $40^\\circ\\text{C}$.\nÝ c) Trong suốt quá trình ngưng tụ ở $120^\\circ\\text{C}$, chất $X$ tồn tại đồng thời ở cả thể khí và thể lỏng.\nÝ d) Tại $40^\\circ\\text{C}$, chất $X$ đang diễn ra quá trình đông đặc nên chỉ tồn tại đồng thời ở thể rắn và thể lỏng, không đồng thời tồn tại thể hơi.\nÝ a) Sai; Ý b) Đúng; Ý c) Đúng; Ý d) Sai.\nĐáp án: a) Sai; b) Đúng; c) Đúng; d) Sai.",
     "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q106_De_thi_thu_HSG_Vat_li_12_So_01_p4_img1.png, images/q106_De_thi_thu_HSG_Vat_li_12__p2_img2.png, images/q106_De_thi_thu_HSG_Vat_li_12__p2_img3.png, images/q106_De_thi_thu_HSG_Vat_li_12__p3_img3.jpeg, images/q106_De_thi_thu_HSG_Vat_li_12__p3_img4.jpeg, images/q106_De_thi_thu_HSG_Vat_li_12__p4_img1.png, images/q106_De_thi_thu_HSG_Vat_l_p4_img1.png"
+    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q106_De_thi_thu_HSG_Vat_li_12_So_01_p4_img1.png"
   },
   {
     "ma_cau": "C-1zcpbmq8-021",
@@ -24,7 +24,7 @@
     "dap_an": "",
     "loi_giai": "",
     "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q134_LOP12_CUMBINHGIANG-CAMGIANG-TH_p6_img2.png, images/q134_LOP12_CUMBINHGIANG-CAMGIA_p6_img2.png, images/q134_LOP12_CUMBINHGIANG-CAMGIA_p6_img3.png"
+    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q134_LOP12_CUMBINHGIANG-CAMGIANG-TH_p6_img2.png"
   },
   {
     "ma_cau": "C-14cLJcR_-021",
@@ -42,7 +42,7 @@
     "dap_an": "",
     "loi_giai": "",
     "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q164_vat-li-nghe-an_pdf_p1_img2.png, images/q164_vat-li-nghe-an_pdf_p1_img2.png, images/q164_vat-li-nghe-an_pdf_p1_img3.jpeg, images/q164_vat-li-nghe-an_pdf_p2_img2.png, images/q164_vat-li-nghe-an_pdf_p3_img4.jpeg"
+    "link_anh": "images/q164_vat-li-nghe-an_pdf_p3_img4.jpeg"
   },
   {
     "ma_cau": "C-1M3yVMDD-007",
@@ -69,7 +69,7 @@
     "dap_an": "",
     "loi_giai": "",
     "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q217_vat-li-thanh-hoa_pdf_p2_img1.png, images/q217_vat-li-thanh-hoa_pdf_p2_img1.png, images/q217_vat-li-thanh-hoa_pdf_p2_img3.jpeg, images/q217_vat-li-thanh-hoa_pdf_p3_img2.png, images/q217_vat-li-thanh-hoa_pdf_p3_img3.jpeg, images/q217_vat-li-thanh-hoa_pdf_p3_img4.jpeg, images/q217_vat-li-thanh-hoa_pdf_p4_img1.png, images/q217_vat-li-thanh-hoa_pdf_p4_img2.jpeg"
+    "link_anh": "images/q217_vat-li-thanh-hoa_pdf_p3_img2.png"
   },
   {
     "ma_cau": "C-1M3yVMDD-020",
