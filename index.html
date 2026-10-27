@@ -223,6 +223,9 @@
                         <p class="text-xs text-slate-400">Hiển thị danh sách câu hỏi kèm hình vẽ/đồ thị minh họa chuẩn xác tuyệt đối từ Cột W</p>
                     </div>
                     <div class="flex items-center gap-2">
+                        <button onclick="chuanHoaCongThucTatCa()" title="Chuẩn hóa công thức của mọi câu đang hiện (bấm Duyệt từng câu để lưu)" class="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-violet-600/20 cursor-pointer">
+                            <i class="fa-solid fa-square-root-variable"></i> Chuẩn hóa công thức
+                        </button>
                         <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
                             <i class="fa-solid fa-eye"></i> Hiện ~20 câu cần duyệt
                         </button>
@@ -260,7 +263,8 @@
             "0": [
                 { value: "quet_anh", label: "Quét bù hình ảnh & đồ thị từ PDF gốc (Cột W)" },
                 { value: "kiem_dinh", label: "Chạy kiểm định nội dung câu hỏi 5 tầng" },
-                { value: "xuat_de", label: "Xuất dữ liệu ngân hàng câu hỏi ra questions.json" }
+                { value: "xuat_de", label: "Xuất dữ liệu ngân hàng câu hỏi ra questions.json" },
+                { value: "chuan_hoa_cong_thuc", label: "Chuẩn hóa công thức toàn bộ ngân hàng câu hỏi (Sheet)" }
             ],
             "1": [
                 { value: "tao_de_kiem_tra", label: "Tạo đề kiểm tra 15p / 45p theo ma trận chuẩn" },
@@ -394,7 +398,93 @@
             veCongThuc(xem);
         }
 
-        // [ĐỔI DẠNG CÂU] Các dạng câu thầy có thể chuyển qua lại
+        // [MỚI] CHUẨN HÓA CÔNG THỨC – cùng quy tắc với hàm chCTChuoi_ trong CongThuc.gs và tgSachChu_/tgSachBT_ trong TuGiai.gs
+        //  - \( \) → $ $ ; \[ \] → $$ $$ ; trong công thức: 1,2 → 1{,}2, × · ÷ ± ≤ ≥ ≈ ≠ ° − → lệnh LaTeX
+        //  - ngoài công thức: bỏ [cite], **, __, `, \textbf{..}, \item
+        //  - số dấu $ lẻ hoặc lệnh LaTeX nằm ngoài $…$: KHÔNG đoán, chỉ cảnh báo để thầy xem tay
+        const BANG_KY_HIEU_CT = [
+            [/×/g, '\\times '], [/÷/g, '\\div '], [/·/g, '\\cdot '], [/≤/g, '\\le '], [/≥/g, '\\ge '],
+            [/≈/g, '\\approx '], [/≠/g, '\\ne '], [/±/g, '\\pm '], [/°/g, '^\\circ '], [/[−–]/g, '-']
+        ];
+        function chuanHoaCT(s) {
+            const canhBao = [];
+            let t = String(s == null ? '' : s)
+                .replace(/\\\[([\s\S]+?)\\\]/g, (m, x) => '$$' + x + '$$')
+                .replace(/\\\(([\s\S]+?)\\\)/g, (m, x) => '$' + x + '$');
+            const soDau = (t.replace(/\\\$/g, '').match(/\$/g) || []).length;
+            if (soDau % 2 === 1) return { text: t, canhBao: ['Số dấu $ lẻ (công thức chưa đóng)'] };
+            const parts = t.split(/(\$\$[\s\S]+?\$\$|\$[^$]+?\$)/g);
+            for (let i = 0; i < parts.length; i++) {
+                let p = parts[i];
+                if (i % 2 === 0) {
+                    p = p.replace(/\[\s*cite[^\]]*\]/gi, '').replace(/\*\*|__|`/g, '')
+                        .replace(/\\(?:textbf|textit|emph)\{([^{}]*)\}/g, '$1').replace(/\\item\s*/g, '');
+                    if (/\\[a-zA-Z]{2,}|[\^_]\{/.test(p) && !canhBao.includes('Có lệnh LaTeX nằm ngoài $…$')) canhBao.push('Có lệnh LaTeX nằm ngoài $…$');
+                } else {
+                    const dau = p.startsWith('$$') ? '$$' : '$';
+                    let x = p.slice(dau.length, p.length - dau.length).replace(/(\d),(?=\d)/g, '$1{,}');
+                    BANG_KY_HIEU_CT.forEach(([re, th]) => { x = x.replace(re, th); });
+                    p = dau + x.replace(/\s+/g, ' ').trim() + dau;
+                }
+                parts[i] = p;
+            }
+            return { text: parts.join(''), canhBao };
+        }
+
+        // Chuẩn hóa nội dung, phương án, lời giải của MỘT câu (chỉ sửa trên giao diện; bấm Duyệt mới lưu về Sheet)
+        function apDungChuanHoaCT(index) {
+            let soODoi = 0; const canhBao = [];
+            const xuLy = (el) => {
+                if (!el) return false;
+                const v = el.value;
+                if (v.trim() === '' || v.trim() === 'Nhập hoặc chỉnh sửa lời giải chi tiết...') return false;
+                const kq = chuanHoaCT(v);
+                kq.canhBao.forEach(c => { if (!canhBao.includes(c)) canhBao.push(c); });
+                if (kq.text === v) return false;
+                el.value = kq.text; soODoi++; return true;
+            };
+            const oND = document.getElementById(`noi_dung_${index}`);
+            xuLy(oND);
+            xuLy(document.getElementById(`loi_giai_${index}`));
+            const card = oND ? oND.closest('.question-card') : null;
+            if (card) card.querySelectorAll(`.pa-input-${index}`).forEach(o => { if (xuLy(o)) xongSuaPhuongAn(o); });
+            capNhatXemTruoc(index);
+            return { soODoi, canhBao };
+        }
+
+        function chuanHoaCongThucCau(index, maCau, nut) {
+            const kq = apDungChuanHoaCT(index);
+            const log = document.getElementById('terminal-log');
+            if (log) {
+                const gio = new Date().toLocaleTimeString();
+                log.innerHTML += `<div>[${gio}] Chuẩn hóa công thức câu [${maCau}]: ${kq.soODoi > 0 ? 'đã sửa ' + kq.soODoi + ' ô (bấm Duyệt để lưu về Sheet)' : 'không có gì cần sửa'}.</div>`;
+                if (kq.canhBao.length) log.innerHTML += `<div class="text-amber-400">[${gio}] Câu [${maCau}] cần xem lại bằng tay: ${kq.canhBao.join('; ')}.</div>`;
+            }
+            if (nut) {
+                const cu = nut.innerHTML;
+                nut.innerHTML = kq.soODoi > 0 ? `<i class="fa-solid fa-check"></i> Đã sửa ${kq.soODoi} ô` : '<i class="fa-solid fa-check"></i> Công thức đã chuẩn';
+                setTimeout(() => { nut.innerHTML = cu; }, 2500);
+            }
+        }
+
+        function chuanHoaCongThucTatCa() {
+            const cacCau = document.querySelectorAll('#danh-sach-cau-hoi .question-card');
+            if (cacCau.length === 0) { alert('Chưa có câu nào trên màn hình. Bấm "Hiện ~20 câu cần duyệt" trước.'); return; }
+            let tongO = 0, soCauDoi = 0, soCauXem = 0;
+            cacCau.forEach(card => {
+                const ta = card.querySelector('textarea[id^="noi_dung_"]');
+                if (!ta) return;
+                const kq = apDungChuanHoaCT(ta.id.replace('noi_dung_', ''));
+                tongO += kq.soODoi;
+                if (kq.soODoi > 0) soCauDoi++;
+                if (kq.canhBao.length) soCauXem++;
+            });
+            const log = document.getElementById('terminal-log');
+            if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Chuẩn hóa công thức: sửa ${tongO} ô ở ${soCauDoi}/${cacCau.length} câu; ${soCauXem} câu cần xem lại bằng tay. Bấm Duyệt từng câu để lưu về Sheet.</div>`;
+        }
+
+        
+// [ĐỔI DẠNG CÂU] Các dạng câu thầy có thể chuyển qua lại
         const CAC_DANG_CAU = [
             { gt: 'Trắc nghiệm nhiều lựa chọn', nhan: 'Trắc nghiệm 4 lựa chọn' },
             { gt: 'Trắc nghiệm đúng sai', nhan: 'Đúng / Sai (từng ý)' },
@@ -632,6 +722,9 @@
 
                 html += `
                     <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-800/80">
+                        <button type="button" onclick="chuanHoaCongThucCau(${index}, '${item.ma_cau}', this)" title="Sửa dấu phẩy thập phân, ký hiệu, dấu $ trong nội dung, phương án, lời giải" class="mr-auto px-4 py-2 rounded-xl bg-violet-600/20 hover:bg-violet-600 text-violet-300 hover:text-white text-xs font-semibold transition flex items-center gap-2 border border-violet-500/30 cursor-pointer">
+                            <i class="fa-solid fa-square-root-variable"></i> Chuẩn hóa công thức
+                        </button>
                         <button onclick="xuLyDuyetCau('${item.ma_cau}', 'Loại', this, ${index})" class="px-4 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-semibold transition flex items-center gap-2 border border-rose-500/30 cursor-pointer">
                             <i class="fa-solid fa-xmark"></i> Loại bỏ
                         </button>
@@ -676,6 +769,7 @@
                 });
                 alert(`Đã gửi lệnh thực thi tác vụ cho Agent #${agent} về Google Sheet thành công!`);
                 log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã ghi nhận lệnh điều phối Agent #${agent} vào Google Sheet Kho chung.</div>`;
+                if (task === 'chuan_hoa_cong_thuc') log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Kho chung đang chuẩn hóa công thức; kết quả ghi ở tab AgentLogs. Sau 1–2 phút bấm "Đồng bộ dữ liệu" để thấy bản mới.</div>`;
             } catch (err) {
                 console.error(err);
                 alert("Lỗi kết nối tới Apps Script!");
