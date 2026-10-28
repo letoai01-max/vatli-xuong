@@ -1,14 +1,5 @@
 [
   {
-    "ma_cau": "C-1zcpbmq8-021",
-    "noi_dung": "Cung cấp nhiệt lượng $Q = 1,5\\text{ J}$ cho một khối khí trong xilanh nằm ngang. Bỏ qua áp suất bên ngoài tác dụng lên pít-tông. Khí nở ra đẩy pít-tông đi $s = 6,0\\text{ cm}$. Lực ma sát giữa pít-tông và xilanh $F_{ms} = 20,0\\text{ N}$, diện tích tiết diện pít-tông $S = 1,0\\text{ cm}^2$. Pít-tông chuyển động thẳng đều.",
-    "phuong_an": "a) Công do khối khí thực hiện có độ lớn $1,2\\text{ J}$.\nb) Độ biến thiên nội năng của khối khí là $0,50\\text{ J}$.\nc) Trong quá trình dãn nở, áp suất của khối khí là $2,0\\cdot 10^5\\text{ Pa}$.\nd) Thể tích khí trong xilanh tăng $6,0\\text{ L}$.",
-    "dap_an": "a) Đúng; b) Sai; c) Đúng; d) Sai",
-    "loi_giai": "Tóm tắt: $Q = 1,5\\text{ J}$; $s = 6,0\\text{ cm} = 0,06\\text{ m}$; $F_{ms} = 20,0\\text{ N}$; $S = 1,0\\text{ cm}^2 = 1,0\\cdot 10^{-4}\\text{ m}^2$.\nÝ a) Pít-tông chuyển động thẳng đều nên lực do chất khí tác dụng lên pít-tông cân bằng với lực ma sát: $F_k = F_{ms} = 20,0\\text{ N}$. Công do khối khí thực hiện là:\n$$A' = F_k\\cdot s = 20,0\\cdot 0,06 = 1,2\\text{ J}$$\nÝ b) Khối khí nhận nhiệt lượng $Q = 1,5\\text{ J}$ và sinh công $A' = 1,2\\text{ J}$ (tức nhận công $A = -1,2\\text{ J}$). Độ biến thiên nội năng của khối khí là:\n$$\\Delta U = Q + A = 1,5 - 1,2 = 0,30\\text{ J}$$\nÝ c) Do bỏ qua áp suất bên ngoài, áp suất của khối khí trong xilanh cân bằng với áp lực do lực ma sát cản trở:\n$$p = \\frac{F_k}{S} = \\frac{20,0}{1,0\\cdot 10^{-4}} = 2,0\\cdot 10^5\\text{ Pa}$$\nÝ d) Độ tăng thể tích của khối khí trong xilanh là:\n$$\\Delta V = S\\cdot s = 1,0\\cdot 10^{-4}\\cdot 0,06 = 6,0\\cdot 10^{-6}\\text{ m}^3 = 6,0\\cdot 10^{-3}\\text{ L}$$\nÝ a) Đúng; Ý b) Sai; Ý c) Đúng; Ý d) Sai.\nĐáp án: a) Đúng; b) Sai; c) Đúng; d) Sai.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-14cLJcR_-020",
     "noi_dung": "Một khối khí đang ở trạng thái (1) có nhiệt độ 600 K được biến đổi theo chu trình như hình bên. Đường biểu diễn quá trình biến đổi từ trạng thái (1) sang trạng thái (2) là một phần của đường hyperbol [Hình: Đồ thị p-V biểu diễn chu trình khép kín: Trạng thái (1) có p = 6 atm, V = 2 L; quá trình (1)-(2) là hyperbol đến p = 2 atm; quá trình (2)-(3) là đoạn thẳng nằm ngang đến V = 2 L; quá trình (3)-(1) là đoạn thẳng đứng từ p = 2 atm lên 6 atm]",
     "phuong_an": "a) Quá trình từ trạng thái (1) sang trạng thái (2) là quá trình đẳng nhiệt\nb) Quá trình từ trạng thái (3) sang trạng thái (1) là quá trình đẳng tích có nhiệt độ tuyệt đối tăng 3 lần\nc) Ở trạng thái (2), khối khí có thể tích 6 lít và $T_2 - T_3 = 200\\text{ K}$ (với $T_2$ là nhiệt độ ở trạng thái (2) còn $T_3$ là nhiệt độ ở trạng thái (3))",
