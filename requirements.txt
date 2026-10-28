@@ -1,8 +1,6 @@
 gspread>=6.0
 google-api-python-client>=2.100
 google-auth>=2.23
-oauth2client
-google-generativeai
 requests>=2.31
 PyMuPDF>=1.22.0
 Pillow>=10.0.0
