@@ -10,7 +10,7 @@ on:
         required: false
         default: "150"
 concurrency:
-  group: duyet_cau
+  group: ngan_hang
   cancel-in-progress: false
 jobs:
   duyet:
