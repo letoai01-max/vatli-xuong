@@ -726,6 +726,7 @@
         // Một dòng phương án / ý: radio + input ẩn lưu mã + khung sửa trực quan + nút chèn công thức
         function taoDongPhuongAn(index, k, giaTri, goiY, phanChon) {
             const id = `pa_${index}_${k}`;
+            if (phanChon.sau) return taoDongYDungSai_(index, id, giaTri, goiY, phanChon);   // [MỚI] bố cục riêng cho ý Đúng – Sai
             return `
                 <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 transition text-xs text-white">
                     ${phanChon.truoc || ''}
@@ -735,6 +736,22 @@
                          class="xem-loi-giai flex-1 min-w-0 !min-h-0 px-2 py-1 rounded-md border border-transparent hover:border-slate-700 focus:border-sky-500 leading-relaxed"></div>
                     <button type="button" title="Chèn công thức" onmousedown="event.preventDefault()" onclick="chenCongThucVao(document.getElementById('xem_${id}'), false)" class="shrink-0 w-7 h-7 rounded-md bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white border border-slate-700 transition cursor-pointer"><i class="fa-solid fa-square-root-variable"></i></button>
                     ${phanChon.sau || ''}
+                </div>`;
+        }
+
+        // [MỚI] Một ý Đúng – Sai: máy tính 1 hàng như cũ; điện thoại: ý ở trên, hàng dưới là nút công thức + Đúng/Sai
+        function taoDongYDungSai_(index, id, giaTri, goiY, phanChon) {
+            return `
+                <div class="flex flex-wrap lg:flex-nowrap items-center gap-x-3 gap-y-2 p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 transition text-xs text-white">
+                    ${phanChon.truoc || ''}
+                    <input type="hidden" id="${id}" class="pa-input-${index}" value="${escSua(giaTri)}">
+                    <div id="xem_${id}" data-nguon="${id}" data-mot-dong="1" contenteditable="true" spellcheck="false" data-goi-y="${goiY}"
+                         oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)"
+                         class="xem-loi-giai basis-full lg:basis-auto flex-1 min-w-0 !min-h-0 px-2 py-1 rounded-md border border-transparent hover:border-slate-700 focus:border-sky-500 leading-relaxed"></div>
+                    <div class="flex w-full lg:w-auto items-center justify-between lg:justify-start gap-3 shrink-0">
+                        <button type="button" title="Chèn công thức" onmousedown="event.preventDefault()" onclick="chenCongThucVao(document.getElementById('xem_${id}'), false)" class="shrink-0 w-7 h-7 rounded-md bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white border border-slate-700 transition cursor-pointer"><i class="fa-solid fa-square-root-variable"></i></button>
+                        ${phanChon.sau || ''}
+                    </div>
                 </div>`;
         }
 
@@ -863,6 +880,9 @@
         }
         // [MỚI] ===== HẾT PHẦN DẠNG CÂU & ĐÁP ÁN =====
 
+        // [MỚI] Nhãn nút chuẩn hoá: điện thoại ghi gọn để 3 nút nằm trên 1 hàng
+        const NHAN_NUT_CHUAN_HOA = '<i class="fa-solid fa-wand-magic-sparkles mr-1"></i><span class="lg:hidden">Chuẩn hoá</span><span class="hidden lg:inline">Chuẩn hoá công thức</span>';
+
         // Nút "Chuẩn hoá công thức" của từng câu
         function chuanHoaLoiGiai(index, imLang = false) {
             const o = document.getElementById(`loi_giai_${index}`);
@@ -877,7 +897,7 @@
                 nut.innerHTML = doi
                     ? '<i class="fa-solid fa-check mr-1"></i> Đã chuẩn hoá'
                     : '<i class="fa-solid fa-check mr-1"></i> Đã chuẩn sẵn';
-                setTimeout(() => { nut.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Chuẩn hoá công thức'; }, 1800);
+                setTimeout(() => { nut.innerHTML = NHAN_NUT_CHUAN_HOA; }, 1800);
             }
             return doi;
         }
@@ -939,7 +959,12 @@
                     <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,24rem)] lg:grid-rows-[auto_1fr] gap-4 items-start">
                     <div class="min-w-0 lg:col-start-1 lg:row-start-1">
                     <div class="text-xs text-white leading-relaxed space-y-2">
-                        <div class="flex items-start justify-between gap-3">
+                        <!-- [MỚI] Điện thoại: sửa thẳng trên nội dung (gõ chữ trực tiếp, bấm vào công thức để sửa) -->
+                        <div class="lg:hidden space-y-1">
+                            <strong class="text-sky-300">Nội dung:</strong>
+                            <div id="xem_sua_nd_${index}" data-nguon="noi_dung_${index}" contenteditable="true" spellcheck="false" data-goi-y="Gõ nội dung câu hỏi..." oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)" class="xem-loi-giai text-xs text-white leading-relaxed bg-slate-950/60 border border-sky-500/20 rounded-xl p-3"></div>
+                        </div>
+                        <div class="hidden lg:flex items-start justify-between gap-3">
                             <div><strong class="text-sky-300">Nội dung:</strong> <span id="xem_noi_dung_${index}">${item.noi_dung}</span></div>
                             <button type="button" id="nut_sua_${index}" onclick="batSuaNoiDung(${index})" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 <i class="fa-solid fa-pen mr-1"></i> Sửa nội dung
@@ -962,17 +987,17 @@
                                 <i class="fa-solid fa-book-open-reader"></i> LỜI GIẢI CHI TIẾT:
                                 <span class="text-[10px] font-normal text-slate-500">(gõ chữ trực tiếp · bấm vào công thức để sửa)</span>
                             </div>
-                            <div class="flex flex-wrap items-center gap-2">
-                            <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, false)" title="Chèn công thức vào chỗ con trỏ, nằm trong dòng" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                            <div class="flex flex-nowrap lg:flex-wrap items-center gap-1.5 lg:gap-2 w-full lg:w-auto">
+                            <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, false)" title="Chèn công thức vào chỗ con trỏ, nằm trong dòng" class="flex-1 lg:flex-none whitespace-nowrap shrink-0 px-2 lg:px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 <i class="fa-solid fa-square-root-variable mr-1"></i> + Công thức
                             </button>
-                            <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, true)" title="Chèn công thức đứng riêng một dòng, căn giữa" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
-                                <i class="fa-solid fa-align-center mr-1"></i> + Công thức riêng dòng
+                            <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, true)" title="Chèn công thức đứng riêng một dòng, căn giữa" class="flex-1 lg:flex-none whitespace-nowrap shrink-0 px-2 lg:px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                <i class="fa-solid fa-align-center mr-1"></i><span class="lg:hidden">Riêng dòng</span><span class="hidden lg:inline">+ Công thức riêng dòng</span>
                             </button>
-                            <button type="button" id="nut_chuan_hoa_${index}" onclick="chuanHoaLoiGiai(${index})" title="Đưa công thức về chuẩn $...$ / $$...$$, số thập phân 0{,}05, dấu nhân \\cdot, đơn vị \\text{ cm}" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-violet-600 text-violet-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
-                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Chuẩn hoá công thức
+                            <button type="button" id="nut_chuan_hoa_${index}" onclick="chuanHoaLoiGiai(${index})" title="Đưa công thức về chuẩn $...$ / $$...$$, số thập phân 0{,}05, dấu nhân \\cdot, đơn vị \\text{ cm}" class="flex-1 lg:flex-none whitespace-nowrap shrink-0 px-2 lg:px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-violet-600 text-violet-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                                ${NHAN_NUT_CHUAN_HOA}
                             </button>
-                            <button type="button" id="nut_ma_${index}" onclick="batMaLatex(${index})" title="Hiện / ẩn mã LaTeX (chỉ khi cần)" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-600 text-slate-400 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                            <button type="button" id="nut_ma_${index}" onclick="batMaLatex(${index})" title="Hiện / ẩn mã LaTeX (chỉ khi cần)" class="hidden lg:inline-block shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-600 text-slate-400 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 <i class="fa-solid fa-code mr-1"></i> Hiện mã LaTeX
                             </button>
                             </div>
@@ -998,6 +1023,7 @@
                 container.appendChild(card);
                 capNhatXemLoiGiai(index, false); // [MỚI] đổ chữ lời giải vào khung xem (MathJax dựng chung ở dưới)
                 card.querySelectorAll(`#vung_tra_loi_${index} [data-nguon]`).forEach(ed => dungKhungTuMa(ed, false)); // [MỚI] phương án
+                dungKhungTuMa(document.getElementById(`xem_sua_nd_${index}`), false); // [MỚI] khung sửa nội dung trên điện thoại
                 khoiTaoAnh(card, index, item.link_anh); // [MỚI] hình vẽ: xem, xoá, thêm
             });
 
