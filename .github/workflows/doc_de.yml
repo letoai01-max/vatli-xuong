@@ -10,7 +10,7 @@ on:
         required: false
         default: "100"
 concurrency:
-  group: doc_de
+  group: ngan_hang
   cancel-in-progress: false
 jobs:
   doc:
