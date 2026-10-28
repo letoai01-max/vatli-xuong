@@ -90,15 +90,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-19Q7yfsn-005",
-    "noi_dung": "Để đo tốc độ trung bình của một viên bi, người ta bố trí thí nghiệm như hình vẽ. [Hình: Sơ đồ thí nghiệm đo tốc độ gồm đồng hồ đo thời gian, máng, bi thép, cổng quang điện].\na) Bạn An thực hiện thí nghiệm trên để đo tốc độ trung bình $v_{tb}$ của viên bi. Kết quả là:\n- Khoảng cách AB đo được: $d = 300 \\pm 1\\text{ mm}$.\n- Thời gian $t$ bi đi từ A đến B:\nLần đo: 1 | 2 | 3 | 4 | 5\nThời gian $t$ (s): 0,627 | 0,624 | 0,628 | 0,624 | 0,622\nBiết sai số của đồng hồ đo thời gian là $0,001\\text{ s}$.\na1) Tính giá trị trung bình của $t$, sai số tuyệt đối trung bình của $t$ và viết kết quả đo $t$.\na2) Tính giá trị trung bình của tốc độ trung bình $v_{tb}$ và viết kết quả đo tốc độ trung bình $v_{tb}$.\nb) Với cách bố trí thí nghiệm cố định như trên và có thêm một thước kẹp (thước cặp), bạn An cần đo tốc độ tức thời của viên bi khi đi qua A.\nb1) Em hãy giúp An đề xuất một phương án đo.\nb2) Nếu có thêm vài viên bi với đường kính khác nhau thì việc lựa chọn bi có đem lại kết quả đo tốc độ tức thời chuẩn xác hơn không? Vì sao?",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q231_de-thi-chon-hsg-thpt-cap-tinh-_p3_img1.jpeg"
-  },
-  {
     "ma_cau": "C-11vTqUwQ-002",
     "noi_dung": "Một máng trượt ở công viên nước gồm hai đoạn cong AB và BD lần lượt là các cung tròn có cùng bán kính $R$, có chung tiếp tuyến tại B là đường thẳng nằm ngang song song với mặt nước. Cung AB có điểm A có độ cao $h = 0,3R$ so với B, cung BD là $\\frac{1}{4}$ đường tròn [Hình: Máng trượt AB lồi hướng xuống dưới có tâm O1 phía trên, nối tiếp BD lõm xuống phía dưới có tâm O2 ở mặt nước].\nBạn Bình có khối lượng $m$, được coi như chất điểm, trượt từ đỉnh A của máng xuống dưới với vận tốc đầu bằng không, ma sát trượt giữa Bình và máng không đáng kể. Cho gia tốc trọng trường là $g$. Kết quả tính theo các đại lượng $m$, $g$, $R$.\na) Bình chạm nước với tốc độ bao nhiêu? Tính công của trọng lực tác dụng lên Bình khi Bình trượt từ A xuống đến mặt nước.\nb) Tính áp lực của Bình lên đoạn máng AB tại vị trí B.\nc) Ở vị trí có độ cao cách mặt nước bao nhiêu thì Bình bắt đầu rời khỏi máng trượt?\nd) Người ta cắt bỏ bớt một phần trên của máng từ điểm A xuống đến điểm M sao cho những người chơi như Bình nếu trượt không vận tốc đầu từ M thì quãng đường mà người chơi tiếp xúc với máng trên hai phần MB và BD là như nhau. Tính chiều dài đoạn cong AM bị cắt.",
     "phuong_an": "",
