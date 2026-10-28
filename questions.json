@@ -99,15 +99,6 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q231_de-thi-chon-hsg-thpt-cap-tinh-_p3_img1.jpeg"
   },
   {
-    "ma_cau": "C-11vTqUwQ-001",
-    "noi_dung": "Cho cơ hệ như hình vẽ [Hình: Cơ hệ gồm ròng rọc cố định, vật m1 trên sàn nằm ngang nối với m2 treo thẳng đứng bằng dây nhẹ vắt qua ròng rọc; dây hợp với phương ngang góc α]. Hai vật nặng có khối lượng lần lượt là $m_1$ và $m_2$ được nối với nhau bằng một sợi dây nhẹ, không dãn; dây nối được vắt qua một ròng rọc cố định; $m_1$ nằm trên mặt sàn nằm ngang, $m_2$ treo thẳng đứng. Biết $m_1 = 2m_2 = 20\\text{ kg}$, khối lượng của ròng rọc và ma sát ở trục quay coi như không đáng kể. Nếu hệ chuyển động thì dây không trượt trên ròng rọc. Lấy $g = 9,80\\text{ m/s}^2$.\nBan đầu, $m_1$ nằm yên cân bằng tại vị trí có dây nối hợp với phương ngang một góc $\\alpha = 30^\\circ$.\na) Tính độ lớn của các lực sau: lực căng dây tác dụng lên $m_1$ và $m_2$; áp lực của $m_1$ lên sàn; lực ma sát nghỉ tác dụng lên $m_1$.\nb) Tác dụng lực $\\vec{F}$ không đổi vào $m_1$ để kéo $m_2$ chuyển động lên trên cao. $\\vec{F}$ có phương song song với mặt sàn và nằm trong mặt phẳng thẳng đứng chứa dây nối. Độ lớn của $\\vec{F}$ bằng $100\\sqrt{3}\\text{ N}$. Hệ số ma sát trượt giữa $m_1$ và sàn là $\\mu = 0,1\\sqrt{3}$. Tính gia tốc của $m_1$ và gia tốc của $m_2$ ngay tại thời điểm các vật bắt đầu chuyển động.",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-11vTqUwQ-002",
     "noi_dung": "Một máng trượt ở công viên nước gồm hai đoạn cong AB và BD lần lượt là các cung tròn có cùng bán kính $R$, có chung tiếp tuyến tại B là đường thẳng nằm ngang song song với mặt nước. Cung AB có điểm A có độ cao $h = 0,3R$ so với B, cung BD là $\\frac{1}{4}$ đường tròn [Hình: Máng trượt AB lồi hướng xuống dưới có tâm O1 phía trên, nối tiếp BD lõm xuống phía dưới có tâm O2 ở mặt nước].\nBạn Bình có khối lượng $m$, được coi như chất điểm, trượt từ đỉnh A của máng xuống dưới với vận tốc đầu bằng không, ma sát trượt giữa Bình và máng không đáng kể. Cho gia tốc trọng trường là $g$. Kết quả tính theo các đại lượng $m$, $g$, $R$.\na) Bình chạm nước với tốc độ bao nhiêu? Tính công của trọng lực tác dụng lên Bình khi Bình trượt từ A xuống đến mặt nước.\nb) Tính áp lực của Bình lên đoạn máng AB tại vị trí B.\nc) Ở vị trí có độ cao cách mặt nước bao nhiêu thì Bình bắt đầu rời khỏi máng trượt?\nd) Người ta cắt bỏ bớt một phần trên của máng từ điểm A xuống đến điểm M sao cho những người chơi như Bình nếu trượt không vận tốc đầu từ M thì quãng đường mà người chơi tiếp xúc với máng trên hai phần MB và BD là như nhau. Tính chiều dài đoạn cong AM bị cắt.",
     "phuong_an": "",
