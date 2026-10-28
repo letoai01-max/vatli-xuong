@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: quet_bu_hinh_anh
+  group: ngan_hang
   cancel-in-progress: false
 
 jobs:
