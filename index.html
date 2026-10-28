@@ -696,6 +696,7 @@
         // Mã dạng dùng trên web: tn | ds | ngan | tuluan ; tên ghi về Sheet giống TEN_DANG trong ChucNang.gs
         const TEN_DANG_WEB = { tn: 'Nhiều lựa chọn', ds: 'Đúng/sai', ngan: 'Trả lời ngắn', tuluan: 'Tự luận' };
         const NHAN_NUT_DANG = { tn: 'Trắc nghiệm nhiều lựa chọn', ds: 'Đúng – Sai', ngan: 'Trả lời ngắn', tuluan: 'Tự luận' };
+        const NHAN_NUT_DANG_NGAN = { tn: 'TNNLC', ds: 'Đ-S', ngan: 'TLN', tuluan: 'TL' };   // [MỚI] nhãn gọn trên điện thoại
 
         // Nhận dạng câu (sửa lỗi cũ: "Đúng/sai", "Trắc nghiệm đúng sai" bị hiện như trắc nghiệm A–D)
         function nhanDang(dang, phuongAn) {
@@ -816,11 +817,11 @@
         // Thanh nút chuyển dạng câu
         function taoNutDang(index, dang) {
             return `
-                <div class="flex flex-wrap items-center gap-2 pt-1">
-                    <span class="text-[11px] text-slate-400"><i class="fa-solid fa-shuffle mr-1"></i> Dạng câu:</span>
+                <div class="flex flex-nowrap lg:flex-wrap items-center gap-1.5 lg:gap-2 pt-1">
+                    <span class="text-[11px] text-slate-400 whitespace-nowrap"><i class="fa-solid fa-shuffle mr-1"></i> Dạng câu:</span>
                     ${Object.keys(NHAN_NUT_DANG).map(k => `
-                        <button type="button" data-dang="${k}" onclick="doiDangCau(${index}, '${k}')"
-                            class="nut-dang-${index} px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition cursor-pointer ${k === dang ? 'bg-sky-600 text-white border-sky-500' : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-sky-500'}">${NHAN_NUT_DANG[k]}</button>`).join('')}
+                        <button type="button" data-dang="${k}" onclick="doiDangCau(${index}, '${k}')" title="${NHAN_NUT_DANG[k]}"
+                            class="nut-dang-${index} whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition cursor-pointer ${k === dang ? 'bg-sky-600 text-white border-sky-500' : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-sky-500'}"><span class="lg:hidden">${NHAN_NUT_DANG_NGAN[k]}</span><span class="hidden lg:inline">${NHAN_NUT_DANG[k]}</span></button>`).join('')}
                 </div>`;
         }
 
