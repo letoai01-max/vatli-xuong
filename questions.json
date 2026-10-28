@@ -27,15 +27,6 @@
     "link_anh": "images/q217_vat-li-thanh-hoa_pdf_p3_img2.png"
   },
   {
-    "ma_cau": "C-1M3yVMDD-020",
-    "noi_dung": "Một nhóm học sinh thực hiện thí nghiệm tìm hiểu về hiện tượng cảm ứng điện từ như sau: dùng một cuộn dây có hai đầu dây nối vào điện kế G, đặt một nam châm thẳng dọc theo trục của cuộn dây như hình vẽ [Hình: Thí nghiệm cảm ứng điện từ gồm cuộn dây quấn quanh ống hình trụ có hai đầu nối với điện kế G, thanh nam châm thẳng với các cực N, S đặt dọc theo trục cuộn dây].",
-    "phuong_an": "a) Nam châm di chuyển với tốc độ càng lớn thì độ lớn dòng điện cảm ứng càng lớn.\nb) Biết điện trở tổng cộng của cuộn dây và điện kế G là $3\\ \\Omega$. Cho nam châm dịch chuyển ra xa cuộn dây sao cho số chỉ của điện kế G không đổi và bằng $3\\text{ mA}$. Khi này, tốc độ biến thiên của từ thông qua cuộn dây là $9 \\cdot 10^{-3}\\text{ Wb/s}$ và dòng điện cảm ứng trong đoạn dây MN có chiều từ M đến N.\nc) Khi nam châm và cuộn dây đứng yên thì dòng điện cảm ứng xuất hiện trong cuộn dây luôn không đổi.\nd) Khi di chuyển nam châm ra xa hoặc lại gần cuộn dây thì trong cuộn dây xuất hiện một suất điện động cảm ứng.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "images/q218_vat-li-thanh-hoa_pdf_p3_img3.jpeg"
-  },
-  {
     "ma_cau": "C-1M3yVMDD-023",
     "noi_dung": "Một ống dây dẫn hình trụ dài gồm 1000 vòng dây, mỗi vòng có đường kính $10\\text{ cm}$, được đặt trong từ trường có các đường sức từ song song với trục ống dây [Hình: Ống dây hình trụ đặt trong từ trường $B$, nối với mạch chuyển mạch K có hai vị trí (1) đóng kín ống dây và (2) nối với tụ C]. Cảm ứng từ của từ trường biến thiên với tốc độ không đổi. Dây dẫn có tiết diện $0,4\\text{ mm}^2$ và điện trở suất $\\rho = 1,75 \\cdot 10^{-8}\\ \\Omega \\cdot \\text{m}$. Mạch điện gồm tụ điện $C = 10\\ \\mu\\text{F}$ và khóa chuyển mạch $K$. Ban đầu khóa $K$ ở vị trí (1), sau khi dòng điện đã ổn định, gọi $Q$ là nhiệt lượng ống dây tỏa ra trong thời gian $\\Delta t = 34,4\\ \\mu\\text{s}$. Sau đó chuyển khóa $K$ sang vị trí (2), tụ điện được tích điện đến trạng thái ổn định với năng lượng dự trữ là $W$. Tính thương số $W / Q$ (làm tròn kết quả đến chữ số hàng đơn vị).",
     "phuong_an": "",
