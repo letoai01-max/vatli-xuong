@@ -1,14 +1,5 @@
 [
   {
-    "ma_cau": "C-1zcpbmq8-020",
-    "noi_dung": "Hình dưới biểu diễn sự thay đổi nhiệt độ theo thời gian của chất $X$ trong quá trình làm nguội. [Hình: Đồ thị t(°C) theo thời gian (phút), từ 160°C hạ xuống 120°C, nằm ngang ở 120°C (Khí -> Lỏng), hạ tiếp xuống 40°C, nằm ngang ở 40°C (Lỏng -> Rắn), rồi tiếp tục hạ nhiệt độ]",
-    "phuong_an": "a) Nhiệt độ sôi của chất $X$ là $160^\\circ\\text{C}$.\nb) Nhiệt độ nóng chảy của chất $X$ là $40^\\circ\\text{C}$.\nc) Ở $120^\\circ\\text{C}$, chất $X$ có thể đồng thời tồn tại ở thể lỏng và thể khí.\nd) Ở $40^\\circ\\text{C}$, chất $X$ đồng thời tồn tại ở thể rắn, thể lỏng và thể hơi.",
-    "dap_an": "",
-    "loi_giai": "Tóm tắt: $t_1 = 120^\\circ\\text{C}\\text{ (nhiệt độ ngưng tụ/sôi)}$; $t_2 = 40^\\circ\\text{C}\\text{ (nhiệt độ đông đặc/nóng chảy)}$.\nÝ a) Trên đồ thị làm nguội, đoạn nằm ngang ở $120^\\circ\\text{C}$ ứng với quá trình ngưng tụ (khí chuyển thành lỏng), do đó nhiệt độ sôi của chất $X$ là $120^\\circ\\text{C}$, không phải $160^\\circ\\text{C}$.\nÝ b) Đoạn nằm ngang ở $40^\\circ\\text{C}$ ứng với quá trình đông đặc (lỏng chuyển thành rắn), nên nhiệt độ đông đặc hay nhiệt độ nóng chảy của chất $X$ là $40^\\circ\\text{C}$.\nÝ c) Trong suốt quá trình ngưng tụ ở $120^\\circ\\text{C}$, chất $X$ tồn tại đồng thời ở cả thể khí và thể lỏng.\nÝ d) Tại $40^\\circ\\text{C}$, chất $X$ đang diễn ra quá trình đông đặc nên chỉ tồn tại đồng thời ở thể rắn và thể lỏng, không đồng thời tồn tại thể hơi.\nÝ a) Sai; Ý b) Đúng; Ý c) Đúng; Ý d) Sai.\nĐáp án: a) Sai; b) Đúng; c) Đúng; d) Sai.",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q106_De_thi_thu_HSG_Vat_li_12_So_01_p4_img1.png"
-  },
-  {
     "ma_cau": "C-1zcpbmq8-021",
     "noi_dung": "Cung cấp nhiệt lượng $Q = 1,5\\text{ J}$ cho một khối khí trong xilanh nằm ngang. Bỏ qua áp suất bên ngoài tác dụng lên pít-tông. Khí nở ra đẩy pít-tông đi $s = 6,0\\text{ cm}$. Lực ma sát giữa pít-tông và xilanh $F_{ms} = 20,0\\text{ N}$, diện tích tiết diện pít-tông $S = 1,0\\text{ cm}^2$. Pít-tông chuyển động thẳng đều.",
     "phuong_an": "a) Công do khối khí thực hiện có độ lớn $1,2\\text{ J}$.\nb) Độ biến thiên nội năng của khối khí là $0,50\\text{ J}$.\nc) Trong quá trình dãn nở, áp suất của khối khí là $2,0\\cdot 10^5\\text{ Pa}$.\nd) Thể tích khí trong xilanh tăng $6,0\\text{ L}$.",
