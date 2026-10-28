@@ -301,6 +301,43 @@
         // THẦY THAY ĐƯỜNG DẪN WEB APP GOOGLE APPS SCRIPT CỦA MÌNH VÀO ĐÂY ĐỂ ĐỒNG BỘ 2 CHIỀU
         const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec";
 
+        // [MỚI] MÃ BÍ MẬT KHO CHUNG (API_SECRET): hỏi MỘT lần, lưu trên máy này, KHÔNG ghi vào tệp công khai.
+        const KHOA_MA_KHO_CHUNG = 'khoChung_apiSecret';
+        function layMaBiMat(hoiLai) {
+            let ma = '';
+            try { ma = localStorage.getItem(KHOA_MA_KHO_CHUNG) || ''; } catch (e) { }
+            if (!ma || hoiLai) {
+                ma = (prompt(hoiLai ? 'Mã bí mật chưa đúng. Nhập lại mã API_SECRET của Kho chung:'
+                                    : 'Nhập mã API_SECRET của Kho chung (chỉ hỏi một lần trên máy này):') || '').trim();
+                try { if (ma) localStorage.setItem(KHOA_MA_KHO_CHUNG, ma); else localStorage.removeItem(KHOA_MA_KHO_CHUNG); } catch (e) { }
+            }
+            return ma;
+        }
+        function quenMaBiMat() { try { localStorage.removeItem(KHOA_MA_KHO_CHUNG); } catch (e) { } }
+
+        // [MỚI] Gửi lệnh về Kho chung kèm mã và ĐỌC PHẢN HỒI THẬT (bản cũ gửi "mù" nên lỗi bị giấu, trang vẫn báo thành công).
+        // Không đặt header Content-Type: trình duyệt gửi dạng văn bản thường, Apps Script vẫn đọc được JSON trong thân.
+        // Sai mã → hỏi lại một lần rồi gửi lại.
+        async function guiVeKhoChung(duLieu) {
+            for (let lan = 0; lan < 2; lan++) {
+                const ma = layMaBiMat(lan > 0);
+                if (!ma) return { ok: false, tin: 'Chưa nhập mã bí mật nên lệnh chưa được gửi.' };
+                let kq;
+                try {
+                    const r = await fetch(GOOGLE_APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(Object.assign({}, duLieu, { secret: ma })) });
+                    kq = await r.json();
+                } catch (err) {
+                    console.error(err);
+                    return { ok: false, khongRo: true, tin: 'Không đọc được phản hồi của Apps Script. Lệnh có thể đã được ghi: mở Sheet để kiểm tra.' };
+                }
+                if (kq && kq.status === 'success') return { ok: true, kq: kq };
+                const tin = (kq && kq.message) || ('Apps Script trả về: ' + JSON.stringify(kq).slice(0, 120));
+                if (/mã bí mật/i.test(tin) && lan === 0) { quenMaBiMat(); continue; }
+                return { ok: false, tin: tin };
+            }
+            return { ok: false, tin: 'Mã bí mật chưa đúng nên lệnh chưa được gửi.' };
+        }
+
         const danhSachTacVuTheoAgent = {
             "0": [
                 { value: "quet_anh", label: "Quét bù hình ảnh & đồ thị từ PDF gốc (Cột W)" },
@@ -1050,18 +1087,13 @@
 
             log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đang gửi lệnh thực thi Agent #${agent} (Tác vụ: ${task || 'Tùy chỉnh'}) tới Google Sheet...</div>`;
 
-            try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'execute_task', agent: agent, task: task, detail: inputVal })
-                });
+            const kq = await guiVeKhoChung({ action: 'execute_task', agent: agent, task: task, detail: inputVal });
+            if (kq.ok) {
                 alert(`Đã gửi lệnh thực thi tác vụ cho Agent #${agent} về Google Sheet thành công!`);
                 log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã ghi nhận lệnh điều phối Agent #${agent} vào Google Sheet Kho chung.</div>`;
-            } catch (err) {
-                console.error(err);
-                alert("Lỗi kết nối tới Apps Script!");
+            } else {
+                alert(kq.tin);
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ⚠️ Lệnh cho Agent #${agent}: ${kq.tin}</div>`;
             }
         }
 
@@ -1217,7 +1249,8 @@
             }
             if (dangMoi && (dangHienTai === 'ngan' || dangHienTai === 'tuluan')) phuongAnMoi = ''; // máy chủ xoá phương án A–D cũ
 
-            // Ẩn câu hỏi trên giao diện ngay lập tức
+            // Ẩn câu hỏi trên giao diện ngay lập tức (nhớ vị trí để trả thẻ lại nếu Sheet không nhận)
+            const viTriThe = card ? { cha: card.parentNode, sau: card.nextSibling } : null;
             if (card) {
                 card.style.transition = "all 0.3s ease";
                 card.style.opacity = "0";
@@ -1231,18 +1264,23 @@
             }
 
             // Gửi dữ liệu ngầm về Google Apps Script để cập nhật Google Sheet
-            try {
-                await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi, dap_an: dapAnMoi, dang: dangMoi, link_anh: linkAnhMoi, anh_moi: anhMoi })
-                });
+            const kq = await guiVeKhoChung({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi, dap_an: dapAnMoi, dang: dangMoi, link_anh: linkAnhMoi, anh_moi: anhMoi });
+            const khongThayMa = kq.ok && kq.kq && kq.kq.updated === 0;
+            if (kq.ok && !khongThayMa) {
                 if (log) {
                     log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Google Sheet đã cập nhật thành công câu [${maCau}].</div>`;
                 }
-            } catch (err) {
-                console.error("Lỗi cập nhật Sheet:", err);
+            } else {
+                const tin = khongThayMa ? `Không tìm thấy mã câu ${maCau} trong NganHangCauHoi.` : kq.tin;
+                if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ⚠️ Câu [${maCau}]: ${tin}</div>`;
+                if (!kq.khongRo && card && viTriThe && viTriThe.cha) {      // Sheet chắc chắn chưa nhận: trả thẻ lại để thầy làm lại
+                    setTimeout(() => {
+                        viTriThe.cha.insertBefore(card, viTriThe.sau && viTriThe.sau.parentNode === viTriThe.cha ? viTriThe.sau : null);
+                        card.style.opacity = "1";
+                        card.style.transform = "none";
+                    }, 350);
+                }
+                alert(`Câu ${maCau} chưa được lưu: ${tin}`);
             }
         }
     </script>
