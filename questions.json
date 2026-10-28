@@ -1,14 +1,5 @@
 [
   {
-    "ma_cau": "C-14cLJcR_-020",
-    "noi_dung": "Một khối khí đang ở trạng thái (1) có nhiệt độ 600 K được biến đổi theo chu trình như hình bên. Đường biểu diễn quá trình biến đổi từ trạng thái (1) sang trạng thái (2) là một phần của đường hyperbol [Hình: Đồ thị p-V biểu diễn chu trình khép kín: Trạng thái (1) có p = 6 atm, V = 2 L; quá trình (1)-(2) là hyperbol đến p = 2 atm; quá trình (2)-(3) là đoạn thẳng nằm ngang đến V = 2 L; quá trình (3)-(1) là đoạn thẳng đứng từ p = 2 atm lên 6 atm]",
-    "phuong_an": "a) Quá trình từ trạng thái (1) sang trạng thái (2) là quá trình đẳng nhiệt\nb) Quá trình từ trạng thái (3) sang trạng thái (1) là quá trình đẳng tích có nhiệt độ tuyệt đối tăng 3 lần\nc) Ở trạng thái (2), khối khí có thể tích 6 lít và $T_2 - T_3 = 200\\text{ K}$ (với $T_2$ là nhiệt độ ở trạng thái (2) còn $T_3$ là nhiệt độ ở trạng thái (3))",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q134_LOP12_CUMBINHGIANG-CAMGIANG-TH_p6_img2.png"
-  },
-  {
     "ma_cau": "C-14cLJcR_-021",
     "noi_dung": "Đàn ghi ta điện có cấu tạo đặc, không có hộp cộng hưởng. Sở dĩ ta nghe được âm phát ra từ dây cảm ứng gắn vào đàn ở bên dưới sáu dây đàn này. Vì dây đàn bằng thép nên đoạn dây đàn nằm sát ngay bên trên nam châm của cuộn dây cảm ứng được từ hóa, nghĩa là nó trở thành một nam châm có cực từ được mô tả như hình vẽ. [Hình: Ảnh cây đàn guitar điện và sơ đồ cấu tạo cảm ứng bên dưới dây đàn gồm nam châm vĩnh cửu có cực N, S và cuộn cảm ứng nối với máy tăng âm]",
     "phuong_an": "a) Ghi-ta điện hoạt động dựa trên hiện tượng cảm ứng điện từ để biến đổi đao động cơ học trên dây đàn thành dao động điện\nb) Tần số của dao động điện bằng tần số của dao động cơ trên dây\nc) Biết dây đàn dài 60 cm, tốc độ truyền sóng trên dây là 300 m/s. Tần số của âm cơ bản (tần số âm nhỏ nhất dây này phát ra là 125 Hz\nd) Nếu một cuộn dây trong ghi-ta điện có 1000 vòng và từ thông qua mỗi vòng dây thay đổi với tốc độ $0,01\\text{ (Wb/s)}$ thì độ lớn suất điện động cảm ứng trong cuộn dây tương ứng lúc này là 1 V.",
