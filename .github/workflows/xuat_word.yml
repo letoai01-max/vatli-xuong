@@ -1,0 +1,33 @@
+# .github/workflows/xuat_word.yml – XUẤT WORD BẰNG PANDOC (gọi từ WordPandoc.gs, thử song song với bản Word cũ)
+name: xuat_word
+on:
+  workflow_dispatch:
+    inputs:
+      goi:
+        description: "File ID gói Word (goi_word_<mã>.json)"
+        required: true
+      dich:
+        description: "File ID tệp Word đích (… (pandoc).docx)"
+        required: true
+jobs:
+  word:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Cài pandoc và thư viện
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq pandoc > /dev/null
+          pip install -q -r requirements.txt
+      - name: Xuất Word
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GOI_ID: ${{ inputs.goi }}
+          DICH_ID: ${{ inputs.dich }}
+        run: python trung_tam.py xuat_word.py
