@@ -45,15 +45,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1M3yVMDD-028",
-    "noi_dung": "Một mẫu đá chứa chất phóng xạ $_{84}^{210}\\text{Po}$ (ký hiệu là chất $X$) phân rã $\\alpha$ và biến đổi thành hạt nhân $_{82}^{206}\\text{Pb}$ (ký hiệu là chất $Y$) bền. Chu kỳ bán rã của $X$ là $T = 138$ ngày. Tại thời điểm $t = 0$, trong mẫu đá đã có sẵn một lượng hạt nhân $Y$. Đồ thị hình bên mô tả sự phụ thuộc của số hạt nhân $X$ ($N_X$) và số hạt nhân $Y$ ($N_Y$) có trong mẫu đá theo thời gian $t$ [Hình: Đồ thị số hạt theo thời gian, đường cong của $N_X$ giảm dần và đường cong của $N_Y$ tăng dần, cắt nhau tại thời điểm $t_1$]. Tại thời điểm $t_1$, số hạt nhân $X$ bằng số hạt nhân $Y$. Tại thời điểm $t_2 = t_1 + 276$ ngày, tỉ số giữa khối lượng chất $Y$ và khối lượng chất $X$ trong mẫu đá là $m$. Giá trị của $m$ bằng bao nhiêu (làm tròn kết quả đến chữ số hàng phần mười)?",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "images/q226_vat-li-thanh-hoa_pdf_p2_img2.jpeg"
-  },
-  {
     "ma_cau": "C-19Q7yfsn-001",
     "noi_dung": "Một cửa hàng lắp đặt hệ thống biển quảng cáo như hình vẽ. [Hình: Thanh treo biển gắn tường, có dây treo và biển quảng cáo ở đầu]. Thanh treo biển là một thanh rắn đồng chất tiết diện đều, nặng $m_1 = 15\\text{ kg}$, có chiều dài $l_1 = 1,70\\text{ m}$, được gắn với một bản lề cố định trên tường, trục quay của thanh nằm ngang sát với tường. Thanh được giữ cân bằng nằm ngang nhờ một dây treo hợp với thanh một góc $35^o$, điểm neo dây trên thanh cách tường $1,35\\text{ m}$. Biển quảng cáo nặng $m_2 = 20\\text{ kg}$ được treo ở đầu ngoài của thanh. Bỏ qua trọng lượng của các dây treo, ma sát ở trục quay của thanh và lực tác động của không khí. Lấy $g = 10\\text{ m/s}^2$.\na) Trọng tâm G của thanh rắn cách tường một đoạn bao nhiêu?\nb) Tìm lực căng của dây treo thanh rắn (dây $35^o$).\nc) Không may, biển quảng cáo bị rơi và dây treo bị đứt cùng một lúc, thanh rắn quay với moment quán tính $I_1 = \\frac{1}{3}m_1l_1^2$.\nc1) Tính tốc độ góc và gia tốc góc của thanh khi thanh hợp với tường một góc $30^o$.\nc2) Ngay trước khi đập vào tường, thanh tác dụng lên bản lề một lực kéo bao nhiêu?",
     "phuong_an": "",
