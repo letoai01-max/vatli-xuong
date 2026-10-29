@@ -54,6 +54,15 @@ def authenticate():
     creds.refresh(google.auth.transport.requests.Request())
     return creds
 
+def tim_dung(page, chuoi):
+    """[29/10] Tìm chuỗi trên trang nhưng bỏ chỗ ngay sau là chữ số ("Câu 1" không khớp "Câu 12")."""
+    ra = []
+    for r in page.search_for(chuoi):
+        sau = page.get_textbox(fitz.Rect(r.x1, r.y0, r.x1 + 6, r.y1)).strip()
+        if not sau[:1].isdigit():
+            ra.append(r)
+    return ra
+
 def quet_drive_va_gan_anh():
     config = doc_trung_tam_config()
     sheet_cfg = config.get("SHEET_CONFIG", {})
@@ -73,19 +82,31 @@ def quet_drive_va_gan_anh():
         print("Bảng tính chưa có dữ liệu câu hỏi.")
         return
 
+    # [29/10] Tìm cột theo TÊN tiêu đề (không cố định G, P, R, U, W)
+    td = [str(t).strip() for t in all_values[0]]
+    ci = lambda ten, md: td.index(ten) if ten in td else md
+    C_MA, C_ND, C_TEN, C_ID, C_TT = ci("Mã câu", 0), ci("Nội dung", 6), ci("Tên file", 15), ci("File ID", 17), ci("Trạng thái duyệt", 20)
+    C_ANH = next((i for i, t in enumerate(td) if t.lower() == "link ảnh"), 22)
+    C_LOC = td.index("Lọc hình (AI)") if "Lọc hình (AI)" in td else None
+    so_cot = max(len(td), C_ANH + 1, 23)
+
     patterns = config.get("BO_LOC_KY_THUAT", {}).get("bieu_thuc_nhan_dien_hinh", [])
     RE_CAN_HINH = re.compile("|".join(patterns), re.IGNORECASE) if patterns else re.compile(r"Hình|Đồ thị|Mạch điện|Giản đồ|Sơ đồ|trục|vẽ", re.IGNORECASE)
 
     nhom_theo_file = {}
     for row_num, row_vals in enumerate(all_values[1:], start=2):
-        row_vals = (row_vals + [""] * 23)[:23]
-        nd = row_vals[6].strip()          # Cột G: Nội dung
-        ten_file_cau = row_vals[15].strip() # Cột P: Tên file
-        file_id = row_vals[17].strip()    # Cột R: File ID gốc
-        trang_thai = row_vals[20].strip() # Cột U: Trạng thái
-        link_cu = row_vals[22].strip()    # Cột W: Link ảnh
+        row_vals = (row_vals + [""] * so_cot)[:so_cot]
+        ma_cau = row_vals[C_MA].strip()
+        nd = row_vals[C_ND].strip()
+        ten_file_cau = row_vals[C_TEN].strip()
+        file_id = row_vals[C_ID].strip()
+        trang_thai = row_vals[C_TT].strip()
+        link_cu = row_vals[C_ANH].strip()
 
-        if trang_thai == "Loại" or not file_id:
+        if trang_thai == "Loại" or not file_id or not ma_cau:
+            continue
+        # [29/10] Câu đã được LocHinh (AI) xét hình thì tôn trọng kết luận đó, không gắn lại
+        if C_LOC is not None and row_vals[C_LOC].strip():
             continue
         
         # Kiểm tra nội dung câu hỏi có từ khóa yêu cầu hình ảnh
@@ -97,6 +118,7 @@ def quet_drive_va_gan_anh():
             so_cau = m_so.group(1).strip() if m_so else ""
             nhom_theo_file.setdefault(file_id, []).append({
                 "row": row_num,
+                "ma": ma_cau,
                 "snippet": snippet,
                 "so_cau": so_cau,
                 "link_cu": link_cu,
@@ -112,7 +134,7 @@ def quet_drive_va_gan_anh():
     min_w = config.get("BO_LOC_KY_THUAT", {}).get("min_width", 50)
     min_h = config.get("BO_LOC_KY_THUAT", {}).get("min_height", 50)
 
-    cap_nhat_sheet = []
+    ket_qua = {}          # [29/10] mã câu -> link ảnh; ghi theo Mã câu ở cuối (dòng có thể đã dịch trong lúc chạy)
     thay_doi_count = 0
 
     for file_id, ds_cau in nhom_theo_file.items():
@@ -155,9 +177,7 @@ def quet_drive_va_gan_anh():
                     page = pdf_document[page_index]
                     text_instances = page.search_for(snippet) if len(snippet) >= 8 else []
                     if not text_instances and so_cau:
-                        text_instances = page.search_for(f"Câu {so_cau}")
-                    if not text_instances and so_cau:
-                        text_instances = page.search_for(f"{so_cau}.")
+                        text_instances = tim_dung(page, f"Câu {so_cau}")   # [29/10] đúng nguyên số; bỏ nhánh "{so}." quá lỏng
 
                     if text_instances:
                         q_y = text_instances[0].y1
@@ -199,6 +219,9 @@ def quet_drive_va_gan_anh():
                                     "img_idx": img_index + 1
                                 })
 
+                    if text_instances:
+                        break   # [29/10] chỉ lấy hình ở trang đầu tiên tìm thấy câu
+
                 # Sắp xếp ứng viên theo khoảng cách gần dòng câu hỏi nhất lên đầu
                 ung_vien_hinh.sort(key=lambda x: x["distance"])
 
@@ -228,26 +251,23 @@ def quet_drive_va_gan_anh():
                 if danh_sach_link_anh:
                     final_link_str = ", ".join(danh_sach_link_anh)
                     if final_link_str != link_cu:
-                        cap_nhat_sheet.append({"range": f"W{row_num}", "values": [[final_link_str]]})
+                        ket_qua[item["ma"]] = final_link_str
                         thay_doi_count += 1
 
             pdf_document.close()
         except Exception as e:
             print(f"⚠️ Không đọc được PDF ({file_id[:10]}): {e}", flush=True)
 
-    if cap_nhat_sheet:
-        worksheet.batch_update(cap_nhat_sheet, value_input_option="RAW")
-
-    if thay_doi_count > 0:
-        try:
-            subprocess.run(["git", "config", "--global", "user.name", "agent-bot"], check=True)
-            subprocess.run(["git", "config", "--global", "user.email", "agent-bot@users.noreply.github.com"], check=True)
-            subprocess.run(["git", "add", "images/"], check=True)
-            subprocess.run(["git", "commit", "-m", f"Auto-update multi-layer verified physics images ({thay_doi_count} rows)"], check=True)
-            subprocess.run(["git", "push"], check=True)
-            print("✨ Đã đẩy toàn bộ ảnh chuẩn xác đa tầng lên GitHub thành công!")
-        except Exception as e:
-            print(f"⚠️ Lưu ý khi push Git: {e}")
+    if ket_qua:
+        ma_cot = worksheet.col_values(C_MA + 1)
+        vi_tri = {str(v).strip(): k + 1 for k, v in enumerate(ma_cot) if k > 0 and str(v).strip()}
+        cot = gspread.utils.rowcol_to_a1(1, C_ANH + 1).rstrip("1")
+        cap_nhat_sheet = [{"range": "%s%d" % (cot, vi_tri[m]), "values": [[v]]} for m, v in ket_qua.items() if m in vi_tri]
+        if cap_nhat_sheet:
+            worksheet.batch_update(cap_nhat_sheet, value_input_option="RAW")
+        if len(cap_nhat_sheet) < len(ket_qua):
+            print(f"⚠️ {len(ket_qua) - len(cap_nhat_sheet)} câu không còn trong bảng lúc ghi – bỏ qua.", flush=True)
+    # [29/10] Bỏ phần tự git push ở đây: workflow quet-anh-cron tự commit questions.json và images/
 
     print(f"✨ Hoàn tất! Đã kiểm soát đa tầng và làm sạch dữ liệu cho {thay_doi_count} câu hỏi.")
 
