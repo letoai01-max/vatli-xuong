@@ -1,0 +1,51 @@
+# .github/workflows/tu_giai.yml – XƯỞNG TỰ GIẢI HÀNG LOẠT (thay lịch tgChay của TuGiai.gs)
+# 10h30 và 16h30 giờ Việt Nam. Cùng nhóm ngan_hang với doc_de, duyet_cau, quet-anh nên không bao giờ chạy chồng.
+name: tu_giai
+on:
+  schedule:
+    - cron: "30 3 * * *"
+    - cron: "30 9 * * *"
+  workflow_dispatch:
+    inputs:
+      so_cau:
+        description: "Số câu tối đa cho lượt này"
+        required: false
+        default: "40"
+      phut:
+        description: "Số phút tối đa cho lượt này"
+        required: false
+        default: "60"
+concurrency:
+  group: ngan_hang
+  cancel-in-progress: false
+permissions:
+  contents: read
+  actions: write
+jobs:
+  giai:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+      - name: Tự giải câu chờ duyệt chưa có lời giải
+        id: tg
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          TOI_DA_CAU: ${{ inputs.so_cau || '40' }}
+          THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '60' }}
+        run: python trung_tam.py tu_giai.py
+      - name: Có lời giải mới → xuất lại questions.json cho trang duyệt
+        if: success() && steps.tg.outputs.da_ghi != '' && steps.tg.outputs.da_ghi != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run Xuat_de.yml --ref main
