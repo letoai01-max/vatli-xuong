@@ -47,8 +47,9 @@ def giai_doc_lap(goi_gemini, de_md, cac_cau, cac_model, model_soan):
     for k in range(0, len(cac_cau), LO):
         lo = [c["so"] for c in cac_cau[k:k + LO]]
         nguoi = ("Trong ĐỀ dưới đây, hãy giải các câu: " + ", ".join(lo) + ".\n"
-                 "Nhiều lựa chọn: xét LẦN LƯỢT A, B, C, D; ghi mọi phương án đúng vào phuong_an_dung; ghi phương án nào "
-                 "vô lí đến mức học sinh không thể chọn nhầm vào nhieu_vo_li. Đúng/sai: xét từng ý a, b, c, d. "
+                 "Nhiều lựa chọn: xét LẦN LƯỢT A, B, C, D; ghi mọi phương án đúng vào phuong_an_dung. nhieu_vo_li CHỈ ghi phương án "
+                 "VÔ LÍ VỀ VẬT LÍ (sai thứ nguyên / đơn vị, giá trị âm cho đại lượng luôn dương, vượt giới hạn vật lí như hiệu suất > 100%, "
+                 "v > c); phương án chỉ đơn giản là SAI thì KHÔNG ghi – phần lớn các câu nhieu_vo_li để mảng rỗng. Đúng/sai: xét từng ý a, b, c, d. "
                  "Trả lời ngắn / tự luận: đáp số cuối (số, dấu chấm thập phân) và đơn vị SI.\n"
                  "Mỗi phần tử: {\"so\": \"I.3\", \"phuong_an_dung\": [\"B\"], \"nhieu_vo_li\": [], "
                  "\"y_ds\": {\"a\": \"Đ\", \"b\": \"S\", \"c\": \"Đ\", \"d\": \"S\"}, \"dap_so\": 2.02, \"don_vi\": \"s\", "
@@ -88,7 +89,7 @@ def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
             "Mỗi câu được một model khác (%s), không xem đáp án, giải lại bằng code. Câu **đạt** khi đáp án của agent và lời giải "
             "bằng code khớp nhau, đúng một phương án đúng, đơn vị cùng thứ nguyên." % model_giai.replace("gemini-", ""), "",
             "| Câu | Đáp án của agent | Máy giải bằng code | Kết luận |", "|---|---|---|---|"]
-    tt = {"tong": 0, "dat": 0, "lech": 0, "nhieu_dap_an": 0, "chua_giai": 0, "luat": 0, "dinh_tinh": 0}
+    tt = {"tong": 0, "dat": 0, "lech": 0, "nhieu_dap_an": 0, "chua_giai": 0, "luat": 0, "dinh_tinh": 0, "goi_y": 0}
     bang_chung = []
     for c in cac_cau:
         so, loai = str(c["so"]).strip(), loai_dang(c.get("dang"))
@@ -116,8 +117,10 @@ def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
         if loai == "TN" and len(pa) > 1:
             tt["nhieu_dap_an"] += 1
             van_de.append("máy thấy %d phương án cùng đúng (%s)" % (len(pa), ", ".join(pa)))
+        goi_y = ""                                 # [29/10/2026] nhiễu dễ loại chỉ là GỢI Ý chất lượng, không làm câu "không đạt"
         if g and g.get("nhieu_vo_li"):
-            van_de.append("phương án nhiễu vô lí: " + ", ".join(map(str, g["nhieu_vo_li"])))
+            goi_y = "ℹ️ gợi ý: phương án %s có thể quá dễ loại" % ", ".join(map(str, g["nhieu_vo_li"]))
+            tt["goi_y"] += 1
         if not m:
             if not (loai == "TN" and len(pa) > 1):
                 tt["chua_giai"] += 1
@@ -136,12 +139,13 @@ def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
         dat = not van_de
         tt["dat"] += 1 if dat else 0
         dong.append("| %s | %s | %s | %s |" % (so, da or "–", m or (", ".join(pa) if pa else "–"),
-                                              "✔ đạt" if dat else "⚠️ " + "; ".join(van_de)))
+                                              ("✔ đạt" if dat else "⚠️ " + "; ".join(van_de)) + (" · " + goi_y if goi_y else "")))
         if not dat:
             bang_chung.append("- Câu %s: %s" % (so, "; ".join(van_de)))
     dong += ["", "**Kết quả: %d/%d câu đạt 2 bằng chứng độc lập**; %d câu lệch đáp án, %d câu nhiều phương án đúng, "
              "%d câu máy chưa giải được, %d câu vi phạm luật hình thức%s." % (tt["dat"], tt["tong"], tt["lech"], tt["nhieu_dap_an"],
                                                                        tt["chua_giai"], tt["luat"],
-                                                                       ", %d câu định tính (thầy xem)" % tt["dinh_tinh"] if tt["dinh_tinh"] else "")]
+                                                                       (", %d câu định tính (thầy xem)" % tt["dinh_tinh"] if tt["dinh_tinh"] else "") +
+                                                                       (", %d gợi ý về phương án nhiễu" % tt["goi_y"] if tt["goi_y"] else ""))]
     if loi_chung: dong.append("Lưu ý chung: " + "; ".join(loi_chung))
     return "\n".join(dong) + "\n", tt, "\n".join(bang_chung)
