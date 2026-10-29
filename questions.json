@@ -1245,8 +1245,8 @@
     "ma_cau": "C-19cN5bnL-025",
     "noi_dung": "Quá trình giãn nở của một lượng khí lí tưởng khối lượng $m$ ở áp suất $p$ được biểu diễn bằng đường (4) với các tỉ lệ như hình bên. Quá trình giãn nở của cùng một loại khí trên với khối lượng $4m$, áp suất $2p$ được biểu diễn bằng đường số mấy? [Hình: Đồ thị thể tích - nhiệt độ biểu diễn các quá trình (1), (2), (3), (4), (5)]",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "5",
+    "loi_giai": "Tóm tắt: $m_1 = m, p_1 = p, \\text{duong } (4)$; $m_2 = 4m, p_2 = 2p$.\nPhương trình trạng thái: Áp dụng phương trình trạng thái khí lí tưởng\n$$pV = \\frac{m}{\\mu}RT$$\nĐộ dốc của đường biểu diễn: Từ phương trình ta suy ra tỉ số giữa thể tích và nhiệt độ\n$$\\frac{V}{T} = \\frac{mR}{\\mu p}$$\nXác định hệ số của quá trình mới: Với khối lượng 4m và áp suất 2p, ta có độ dốc mới\n$$\\left(\\frac{V}{T}\\right)_2 = \\frac{4mR}{\\mu (2p)} = 2\\frac{mR}{\\mu p} = 2\\left(\\frac{V}{T}\\right)_1$$\nKết luận số đường: Độ dốc tăng gấp đôi nghĩa là góc hợp bởi đường biểu diễn và trục nhiệt độ lớn hơn, tương ứng với đường số (5)\nĐáp án: 5.",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q710_Giai-de-thi-thu-tot-nghiep-THPT-2026-mon-Vat-Li-so-GDDT-Ha-Tinh-Lan-1.pdf_p6_img2.jpeg"
   },
@@ -1488,8 +1488,8 @@
     "ma_cau": "C-1ZkQ321Q-004",
     "noi_dung": "Dao động điều hòa đổi chiều khi",
     "phuong_an": "A. lực tác dụng có độ lớn cực đại.\nB. lực tác dụng có độ lớn cực tiểu.\nC. lực tác dụng biến mất.\nD. không có lực nào tác dụng vào vật.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "A",
+    "loi_giai": "Phân tích dao động điều hòa: Khi vật dao động điều hòa đến các vị trí biên, vận tốc của vật bằng không và vật bắt đầu đổi chiều chuyển động.\n$$x = \\pm A \\implies v = 0$$\nLực tác dụng tại biên: Tại vị trí biên, li độ đạt độ lớn cực đại nên độ lớn lực kéo về (lực tác dụng) cũng đạt giá trị cực đại.\n$$F_{\\text{max}} = kA$$\nỞ vị trí biên, lực tác dụng có độ lớn cực đại.\nĐáp án: A.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
