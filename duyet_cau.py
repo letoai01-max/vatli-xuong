@@ -215,7 +215,7 @@ def doc_chi_muc(kho):
 
 def tang1_trung(x, chi_muc, vi_tri):
     for ma, chu, dang in chi_muc.get(x["ma"], []):
-        if vi_tri.get(ma, 10 ** 9) >= d or x.get("trung_voi") == ma:
+        if vi_tri.get(ma, 10 ** 9) >= x["dong"] or x.get("trung_voi") == ma:
             continue                                   # chỉ so với câu có từ trước; trùng hẳn đã xử lí ở tầng 1
         if chu >= 90:
             (x["nghi_van"] if TRUNG_CHE_DO == "chan" else x["ghi_chu"]).append("Gần như trùng câu %s (giống chữ %d%%)" % (ma, chu))
@@ -540,18 +540,18 @@ def main():
         except Exception as e:
             print("⚠️ File %s lỗi, để lượt sau: %s" % (fid, str(e)[:200]), flush=True)
             continue
-        # ghi kết quả file này
+        # ghi kết quả file này – tìm dòng theo MÃ CÂU ngay trước khi ghi (không dùng số dòng đã nhớ từ lúc đọc)
         cap = []
         ma_cot = tab.col_values(c["Mã câu"] + 1)
-        vi_tri = {v.strip(): i + 1 for i, v in enumerate(ma_cot) if i > 0 and v.strip()}
+        vt_hien_tai = {v.strip(): i + 1 for i, v in enumerate(ma_cot) if i > 0 and v.strip()}
         for x in ds:
-            d = vi_tri.get(x["ma"])
-            if not d:
-            continue
+            dong_hien_tai = vt_hien_tai.get(x["ma"])
+            if not dong_hien_tai:
+                continue
             tt = TT["LOAI"] if x["loi_nang"] else (TT["XEM"] if x["nghi_van"] else TT["AI"])
             ghi = "; ".join(x["loi_nang"] + x["nghi_van"] + x["ghi_chu"]) or "Đạt"
             kt = (x["kiem_tra_cu"] + " | " if x["kiem_tra_cu"] else "") + "[5 tầng %s] %s" % (ngay, ghi)
-            col = lambda t: gspread_a1(c[t] + 1, d)
+            col = lambda t, dh=dong_hien_tai: gspread_a1(c[t] + 1, dh)
             cap += [{"range": col("Trạng thái duyệt"), "values": [[tt]]}, {"range": col("Kiểm tra"), "values": [[kt[:45000]]]}]
             if "dap_an" in x["sua"]: cap.append({"range": col("Đáp án"), "values": [[x["sua"]["dap_an"]]]})
             if "ma" in x["sua"]:
