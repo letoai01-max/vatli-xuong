@@ -9,6 +9,13 @@ Làm ĐÚNG như bản Apps Script, chỉ khác là không còn giới hạn 6 p
   5. Ghi nhịp chạy vào tab Agent (dòng "Xưởng đọc đề (Python)") để Meta / canh gác theo dõi.
 Hết hạn mức Gemini → dừng lượt, lượt sau làm tiếp. Lỗi chung → lượt chạy GitHub báo đỏ và GitHub tự email.
 
+[29/10/2026] BỎ GIỚI HẠN CỦA BẢN APPS SCRIPT (quy trình, lời nhắc, schema, cách ghi giữ nguyên):
+  • File PDF/Word lớn hơn KICH_THUOC_TOI_DA (giới hạn gửi kèm của Gemini): nén lại bằng PyMuPDF; vẫn lớn thì CHIA THEO TRANG
+    thành nhiều phần, mỗi phần kèm 1 trang kế tiếp (đọc nốt câu vắt trang) và 2 trang cuối tài liệu (thường là đáp án / HDC).
+  • Tài liệu dài (Gemini hết chỗ trả lời): thay cho "chỉ lấy 40 câu đầu", đọc TIẾP THEO LÔ SO_CAU_MOI_LO câu cho đến hết
+    (tối đa SO_LO_TOI_DA lô mỗi phần). Mã câu đánh số liên tục; câu đã có mã trong ngân hàng thì không ghi lại.
+  • Mỗi lượt gọi Gemini được ghi vào tab Quota_SuDung (dòng "xưởng …") qua quota_xuong.py.
+
 Biến môi trường (GitHub Secrets): GOOGLE_CREDENTIALS (toàn bộ nội dung credentials.json), GEMINI_API_KEY,
 GEMINI_API_KEY_TRA_PHI (không bắt buộc): dùng khi khoá miễn phí HẾT LƯỢT trong ngày, tối đa TOI_DA_LUOT_TRA_PHI lượt gọi/lượt chạy.
 """
@@ -20,6 +27,11 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
+try:
+    import quota_xuong as Q          # ghi lượt dùng Gemini vào tab Quota_SuDung
+except Exception:
+    Q = None
+
 # ---------------- CẤU HÌNH (giống XuLyDe.gs) ----------------
 ID_KHO_CHUNG = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
 ID_BANG_DOWNLOAD = "1gL1q0LnOR4Ylr7ae-n-a20GBbo5nPkidrdEOnCZttio"   # "Download Agent - Quản lý"
@@ -29,7 +41,10 @@ MODEL_MAC_DINH, MODEL_DU_PHONG_MAC_DINH = "gemini-3.8-flash", ["gemini-3.5-flash
 THOI_GIAN_TOI_DA_PHUT = float(os.environ.get("THOI_GIAN_TOI_DA_PHUT", "100"))
 KICH_THUOC_TOI_DA = 12 * 1024 * 1024
 SO_LAN_THU = 3
-SO_CAU_KHI_QUA_DAI = 40
+SO_CAU_KHI_QUA_DAI = 40            # (bản cũ) chỉ còn dùng làm cỡ lô đầu tiên khi đọc tài liệu dài
+SO_CAU_MOI_LO = int(os.environ.get("SO_CAU_MOI_LO", "40"))
+SO_LO_TOI_DA = int(os.environ.get("SO_LO_TOI_DA", "10"))          # mỗi phần tối đa 10 lô (≈400 câu)
+GIOI_HAN_TAI_VE = 300 * 1024 * 1024                                # file quá lớn mới bỏ qua hẳn
 TZ = dt.timezone(dt.timedelta(hours=7))
 
 COT_XL = ["File ID", "Tên file", "Link", "Chủ đề tải", "Trạng thái", "Số câu", "Số lần thử",
@@ -130,6 +145,101 @@ def chuan_bi_tep(drive, file_id):
     return {"bo_qua": "Định dạng chưa hỗ trợ (%s)" % mime}
 
 
+def chuan_bi_tep_day_du(drive, file_id):
+    """Như chuan_bi_tep nhưng không bỏ qua file lớn: trả {"phan": [tệp, …]} (PDF lớn được nén / chia theo trang)."""
+    f = drive.files().get(fileId=file_id, fields="name,mimeType,size").execute()
+    mime, ten, co = f.get("mimeType", ""), f.get("name", ""), int(f.get("size") or 0)
+    if co > GIOI_HAN_TAI_VE:
+        return {"bo_qua": "File lớn hơn %d MB" % (GIOI_HAN_TAI_VE // 1048576)}
+    if mime == "application/pdf":
+        tep = {"data": tai_ve(drive, file_id), "mime": "application/pdf", "ten": ten}
+    elif re.match(r"^image/(png|jpeg|webp)$", mime):
+        if co > KICH_THUOC_TOI_DA:
+            return {"bo_qua": "Ảnh lớn hơn %d MB" % (KICH_THUOC_TOI_DA // 1048576)}
+        return {"phan": [{"data": tai_ve(drive, file_id), "mime": mime, "ten": ten}]}
+    elif mime == "application/vnd.google-apps.document":
+        tep = {"data": tai_ve(drive, file_id, xuat_pdf=True), "mime": "application/pdf", "ten": ten}
+    elif mime in ("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword") or re.search(r"\.docx?$", ten, re.I):
+        tep = {"data": word_sang_pdf(tai_ve(drive, file_id), ten), "mime": "application/pdf", "ten": ten}
+    else:
+        return {"bo_qua": "Định dạng chưa hỗ trợ (%s)" % mime}
+    if len(tep["data"]) <= KICH_THUOC_TOI_DA:
+        return {"phan": [tep]}
+    return {"phan": tach_pdf(tep["data"], ten)}
+
+
+def _trang_raster(doc, i, dpi=110):
+    """Một trang thành PDF ảnh JPEG (cho trang scan quá nặng)."""
+    try:
+        import pymupdf as fitz
+    except ImportError:
+        import fitz
+    from PIL import Image
+    pix = doc[i].get_pixmap(dpi=dpi)
+    img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+    buf = io.BytesIO()
+    img.save(buf, "JPEG", quality=70)
+    out = fitz.open()
+    trang = out.new_page(width=doc[i].rect.width, height=doc[i].rect.height)
+    trang.insert_image(trang.rect, stream=buf.getvalue())
+    return out.tobytes(garbage=4, deflate=True)
+
+
+def tach_pdf(du_lieu, ten):
+    """Nén PDF; vẫn quá KICH_THUOC_TOI_DA thì chia theo trang. Mỗi phần: các trang chính + 1 trang kế tiếp + 2 trang cuối tài liệu."""
+    try:
+        import pymupdf as fitz
+    except ImportError:
+        import fitz
+    doc = fitz.open(stream=du_lieu, filetype="pdf")
+    n = len(doc)
+    try:
+        nen = doc.tobytes(garbage=4, deflate=True, deflate_images=True, deflate_fonts=True)
+    except TypeError:
+        nen = doc.tobytes(garbage=4, deflate=True)
+    if len(nen) <= KICH_THUOC_TOI_DA:
+        print("  🗜️ Nén PDF %.1f MB → %.1f MB, gửi nguyên tài liệu." % (len(du_lieu) / 1048576, len(nen) / 1048576), flush=True)
+        return [{"data": nen, "mime": "application/pdf", "ten": ten}]
+    tran = KICH_THUOC_TOI_DA * 0.9
+    # mỗi trang một khối PDF riêng; trang scan quá nặng thì đổi thành ảnh JPEG
+    khoi = []
+    for i in range(n):
+        t = fitz.open(); t.insert_pdf(doc, from_page=i, to_page=i)
+        b = t.tobytes(garbage=4, deflate=True); t.close()
+        if len(b) > tran / 4:
+            b = _trang_raster(doc, i)
+        khoi.append(b)
+    cuoi = list(range(max(0, n - 2), n))
+    co_cuoi = sum(len(khoi[i]) for i in cuoi)
+    phan, i = [], 0
+    while i < n:
+        ngan_sach = tran - co_cuoi - (len(khoi[i + 1]) if i + 1 < n else 0)
+        j, tong = i, 0
+        while j < n and (j == i or tong + len(khoi[j]) <= ngan_sach):
+            tong += len(khoi[j]); j += 1
+        ghep = fitz.open()
+        for k in range(i, j):
+            ghep.insert_pdf(fitz.open(stream=khoi[k], filetype="pdf"))
+        so_chinh, phu = j - i, []
+        if j < n:
+            ghep.insert_pdf(fitz.open(stream=khoi[j], filetype="pdf")); phu.append("1 trang kế tiếp (trang %d)" % (j + 1))
+        them_cuoi = [c for c in cuoi if c > j]
+        for c in them_cuoi:
+            ghep.insert_pdf(fitz.open(stream=khoi[c], filetype="pdf"))
+        if them_cuoi:
+            phu.append("%d trang cuối tài liệu (trang %s, thường là đáp án / hướng dẫn chấm)" % (len(them_cuoi), ", ".join(str(c + 1) for c in them_cuoi)))
+        phan.append({"data": ghep.tobytes(garbage=4, deflate=True), "mime": "application/pdf", "ten": ten,
+                     "ghi_chu_phan": "Tài liệu gốc dài %d trang, được chia nhiều phần. Tệp đính kèm là PHẦN %%d/%%d: %d trang đầu của tệp "
+                                     "là trang CHÍNH (trang %d–%d của tài liệu gốc)%s. CHỈ tách các câu hỏi BẮT ĐẦU trong các trang chính; "
+                                     "các trang phụ chỉ để đọc nốt câu vắt trang và tra đáp án." % (n, so_chinh, i + 1, j,
+                                     (", sau đó là " + " và ".join(phu)) if phu else "")})
+        i = j
+    for k, p in enumerate(phan):
+        p["ghi_chu_phan"] = p["ghi_chu_phan"] % (k + 1, len(phan))
+    print("  ✂️ PDF %d trang, %.1f MB → chia %d phần." % (n, len(du_lieu) / 1048576, len(phan)), flush=True)
+    return phan
+
+
 # ---------------- GEMINI ----------------
 def doc_cau_hinh(kho):
     try:
@@ -151,7 +261,7 @@ def goi_gemini(payload, ds_model):
             if ten in TRANG_THAI_KHOA["het"]:
                 continue
             try:
-                return _goi_gemini_mot_khoa(payload, ds_model, k)
+                return _goi_gemini_mot_khoa(payload, ds_model, k, ten)
             except HetHanMuc:
                 TRANG_THAI_KHOA["het"].add(ten)
                 print("⏭️ %s hết lượt trong ngày, thử khoá tiếp theo." % ten)
@@ -162,10 +272,20 @@ def goi_gemini(payload, ds_model):
     if TRANG_THAI_KHOA["da_dung_tra_phi"] >= TOI_DA_LUOT_TRA_PHI:
         raise HetHanMuc("HET_HAN_MUC – đã dùng đủ %d lượt khoá trả phí trong lượt chạy này" % TOI_DA_LUOT_TRA_PHI)
     TRANG_THAI_KHOA["da_dung_tra_phi"] += 1
-    return _goi_gemini_mot_khoa(payload, ds_model, khoa_tp)
+    return _goi_gemini_mot_khoa(payload, ds_model, khoa_tp, "GEMINI_API_KEY_TRA_PHI")
 
 
-def _goi_gemini_mot_khoa(payload, ds_model, key):
+def _ghi_quota(model, ten_khoa, ma, data=None, treo=False):
+    if not Q:
+        return
+    try:
+        tk_vao, tk_ra = Q.token_gemini(data) if ma == 200 else (0, 0)
+        Q.ghi_luot(Q.nhan_gemini(model, ten_khoa), ma, tk_vao, tk_ra, treo)
+    except Exception:
+        pass
+
+
+def _goi_gemini_mot_khoa(payload, ds_model, key, ten_khoa=""):
     ds_model, ds_loi, co_loi_khac = list(ds_model), [], False
     m = 0
     while m < len(ds_model) and m < 6:
@@ -178,10 +298,14 @@ def _goi_gemini_mot_khoa(payload, ds_model, key):
                                   headers={"x-goog-api-key": key, "Content-Type": "application/json"},
                                   data=json.dumps(payload), timeout=600)
             except requests.RequestException as e:
+                _ghi_quota(model, ten_khoa, 0, treo=True)
                 ds_loi.append("%s: %s" % (model, str(e)[:120])); co_loi_khac = True
                 break
             if r.status_code == 200:
-                return r.json(), model
+                data = r.json()
+                _ghi_quota(model, ten_khoa, 200, data)
+                return data, model
+            _ghi_quota(model, ten_khoa, r.status_code)
             try:
                 msg = (r.json().get("error") or {}).get("message", r.text)[:220]
             except ValueError:
@@ -214,7 +338,7 @@ SCHEMA = {
     "properties": {
         "la_tai_lieu_vat_li": {"type": "BOOLEAN"},
         "loai_de": {"type": "STRING"}, "lop": {"type": "INTEGER"}, "don_vi": {"type": "STRING"},
-        "nam_hoc": {"type": "STRING"}, "ky_thi": {"type": "STRING"},
+        "nam_hoc": {"type": "STRING"}, "ky_thi": {"type": "STRING"}, "con_cau_sau": {"type": "BOOLEAN"},
         "cau_hoi": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
             "so_cau": {"type": "STRING"},
             "dang": {"type": "STRING", "enum": ["TN", "DS", "TLN", "TL"]},
@@ -229,15 +353,20 @@ SCHEMA = {
     "required": ["la_tai_lieu_vat_li", "cau_hoi"]}
 
 
-def gemini_doc_de(tep, viec, yccd, ds_model, gioi_han=0):
-    loi_nhan = (
+def gemini_doc_de(tep, viec, yccd, ds_model, gioi_han=0, pham_vi=None):
+    if pham_vi:
+        cach_tach = ("các câu hỏi thứ %d đến thứ %d (đếm theo thứ tự xuất hiện trong tài liệu, câu đầu tiên là câu thứ 1); "
+                     "ghi con_cau_sau = true nếu sau câu thứ %d vẫn còn câu hỏi" % (pham_vi[0], pham_vi[1], pham_vi[1]))
+    else:
+        cach_tach = str(gioi_han) + " câu hỏi ĐẦU TIÊN" if gioi_han else "TẤT CẢ câu hỏi"
+    loi_nhan = ((tep.get("ghi_chu_phan") + "\n") if tep.get("ghi_chu_phan") else "") + (
         "Bạn là giáo viên Vật lí THPT, đang xây ngân hàng câu hỏi theo chương trình GDPT 2018 (sách Kết nối tri thức).\n"
         "Tài liệu đính kèm: \"" + viec["ten"] + "\" (chủ đề tải về: " + (viec["chu_de"] or "không rõ") + ").\n\n"
         "NHIỆM VỤ\n"
         "1. Xác định đây có phải đề thi, đề kiểm tra hoặc tài liệu bài tập Vật lí có câu hỏi không (la_tai_lieu_vat_li).\n"
         "2. Ghi thông tin chung: loai_de (HSG / TN chính thức / TN minh hoạ / TN thi thử / KT giữa kì / KT cuối kì / "
         "Bài tập / Phiếu học tập / Khác), lop, don_vi (Sở, trường), nam_hoc, ky_thi.\n"
-        "3. Tách " + (str(gioi_han) + " câu hỏi ĐẦU TIÊN" if gioi_han else "TẤT CẢ câu hỏi") + ", mỗi câu một phần tử, đúng thứ tự trong đề:\n"
+        "3. Tách " + cach_tach + ", mỗi câu một phần tử, đúng thứ tự trong đề:\n"
         " - so_cau: số câu như trong đề (ví dụ \"1\", \"Câu 3\", \"Bài 2\").\n"
         " - dang: TN (nhiều lựa chọn), DS (đúng/sai, giữ các ý a, b, c, d trong cùng một câu), TLN (trả lời ngắn), TL (tự luận).\n"
         " - noi_dung: chép NGUYÊN VĂN đề bài; công thức viết LaTeX trong $...$; hình vẽ thay bằng [Hình: mô tả ngắn].\n"
@@ -268,7 +397,7 @@ def gemini_doc_de(tep, viec, yccd, ds_model, gioi_han=0):
     try:
         return {"du_lieu": json.loads(text), "model": model}
     except ValueError:
-        if not gioi_han:
+        if not gioi_han or pham_vi:
             return {"qua_dai": True}
         raise RuntimeError("Gemini trả JSON hỏng (finishReason %s)" % cand.get("finishReason"))
 
@@ -369,20 +498,68 @@ def xoa_cau_cua_file(kho, tab_nh, file_id):
                           "startIndex": d - 1, "endIndex": d}}} for d in sorted(dong, reverse=True)]})
 
 
+class HetThoiGian(Exception):
+    pass
+
+
+def doc_mot_phan(tep, viec, yccd, ds_model):
+    """Đọc một tệp (hoặc một phần): cả tài liệu trong 1 lượt; dài quá thì đọc tiếp theo lô cho đến hết.
+    Trả (thông tin chung, danh sách câu, còn sót?, số lượt gọi, model)."""
+    kq = gemini_doc_de(tep, viec, yccd, ds_model)
+    if not kq.get("qua_dai"):
+        d = kq["du_lieu"]
+        return d, d.get("cau_hoi") or [], False, 1, kq["model"]
+    print("  📚 Tài liệu dài: đọc theo lô %d câu…" % SO_CAU_MOI_LO, flush=True)
+    chung, cau, da_co, tu, co, so_lo, model = None, [], set(), 1, SO_CAU_MOI_LO, 0, ""
+    while True:
+        if so_lo >= SO_LO_TOI_DA:
+            return chung or {}, cau, True, so_lo + 1, model
+        if not con_thoi_gian(giay_du_tru=240):
+            raise HetThoiGian("Hết thời gian lượt chạy khi đang đọc câu %d" % tu)
+        kq = gemini_doc_de(tep, viec, yccd, ds_model, pham_vi=(tu, tu + co - 1))
+        if kq.get("qua_dai"):
+            if co > 10:
+                co //= 2; continue
+            raise RuntimeError("Lô câu %d–%d vẫn quá dài với Gemini" % (tu, tu + co - 1))
+        so_lo += 1
+        d, model = kq["du_lieu"], kq["model"]
+        if chung is None:
+            chung = d
+            if not d.get("la_tai_lieu_vat_li"):
+                return d, [], False, so_lo + 1, model
+        moi = []
+        for c in d.get("cau_hoi") or []:
+            k = (str(c.get("so_cau") or "").strip().lower(), bo_dau(c.get("noi_dung"))[:80])
+            if k not in da_co:
+                da_co.add(k); moi.append(c)
+        cau += moi
+        print("  … lô %d: câu %d–%d → %d câu mới" % (so_lo, tu, tu + co - 1, len(moi)), flush=True)
+        if not moi or d.get("con_cau_sau") is False or (d.get("con_cau_sau") is None and len(moi) < co):
+            return chung, cau, False, so_lo + 1, model
+        tu += len(moi)
+
+
 def xu_ly_mot_file(kho, drive, tab_xl, tab_nh, viec, yccd, ds_model):
     luc = bay_gio()
     try:
-        tep = chuan_bi_tep(drive, viec["id"])
+        tep = chuan_bi_tep_day_du(drive, viec["id"])
         if tep.get("bo_qua"):
             tab_xl.update(range_name="E%d:I%d" % (viec["dong"], viec["dong"]), values=[["Bỏ qua", 0, viec["lan_thu"], tep["bo_qua"], luc]],
                           value_input_option="USER_ENTERED")
             return 0
-        kq = gemini_doc_de(tep, viec, yccd, ds_model)
-        mot_phan = False
-        if kq.get("qua_dai"):
-            kq = gemini_doc_de(tep, viec, yccd, ds_model, SO_CAU_KHI_QUA_DAI)
-            mot_phan = True
-        d = kq["du_lieu"]
+        d, tat_ca, mot_phan, so_luot, model = None, [], False, 0, ""
+        for phan in tep["phan"]:
+            dp, cau, sot, n, model = doc_mot_phan(phan, viec, yccd, ds_model)
+            so_luot += n
+            mot_phan = mot_phan or sot
+            if dp.get("la_tai_lieu_vat_li") and (d is None or not d.get("la_tai_lieu_vat_li")):
+                d = dp
+            elif d is None:
+                d = dp
+            tat_ca += cau
+        d = dict(d or {})
+        d["cau_hoi"] = tat_ca
+        kq = {"model": model}
         if not d.get("la_tai_lieu_vat_li") or not d.get("cau_hoi"):
             tab_xl.update(range_name="E%d:I%d" % (viec["dong"], viec["dong"]),
                           values=[["Bỏ qua", 0, viec["lan_thu"] + 1, "Không phải đề/tài liệu Vật lí có câu hỏi", luc]],
@@ -391,14 +568,26 @@ def xu_ly_mot_file(kho, drive, tab_xl, tab_nh, viec, yccd, ds_model):
         if viec["trang_thai"] == "Lỗi":
             xoa_cau_cua_file(kho, tab_nh, viec["id"])
         dong = [tao_dong_cau_hoi(c, i, d, viec, yccd, luc) for i, c in enumerate(d["cau_hoi"])]
-        tab_nh.append_rows(dong, value_input_option="RAW", table_range="A1")
+        da_co = set(tab_nh.col_values(1))                    # câu đã có mã trong ngân hàng (file từng đọc một phần) → không ghi lại
+        dong = [r for r in dong if r[0] not in da_co]
+        if dong:
+            tab_nh.append_rows(dong, value_input_option="RAW", table_range="A1")
+        ghi_chu = []
+        if len(tep["phan"]) > 1:
+            ghi_chu.append("Tài liệu lớn: đọc theo %d phần" % len(tep["phan"]))
+        if so_luot > len(tep["phan"]):
+            ghi_chu.append("tài liệu dài: đọc theo lô (%d lượt Gemini)" % so_luot)
+        if mot_phan:
+            ghi_chu.append("chưa đọc hết: đã đủ %d lô/phần – tăng SO_LO_TOI_DA rồi đặt lại trạng thái \"Chờ\" để đọc tiếp" % SO_LO_TOI_DA)
+        if len(d["cau_hoi"]) > len(dong):
+            ghi_chu.append("%d câu đã có sẵn trong ngân hàng, không ghi lại" % (len(d["cau_hoi"]) - len(dong)))
         tab_xl.update(range_name="E%d:M%d" % (viec["dong"], viec["dong"]), values=[[
             "Đã xử lý (một phần)" if mot_phan else "Đã xử lý", len(dong), viec["lan_thu"] + 1,
-            "Tài liệu dài: chỉ lấy %d câu đầu" % SO_CAU_KHI_QUA_DAI if mot_phan else "", luc,
+            "; ".join(ghi_chu), luc,
             d.get("loai_de") or "", d.get("lop") or "", d.get("don_vi") or "", d.get("nam_hoc") or ""]], value_input_option="USER_ENTERED")
         print("✅ %s: %d câu (%s)" % (viec["ten"], len(dong), kq["model"]))
         return len(dong)
-    except HetHanMuc as e:
+    except (HetHanMuc, HetThoiGian) as e:
         tab_xl.update(range_name="H%d:I%d" % (viec["dong"], viec["dong"]), values=[[str(e)[:300], luc]], value_input_option="USER_ENTERED")
         raise
     except Exception as e:
@@ -452,10 +641,14 @@ def main():
     except HetHanMuc as e:
         het_han_muc = True
         print("⏸️ Hết hạn mức Gemini, lượt sau làm tiếp:", e)
+    except HetThoiGian as e:
+        print("⏸️ %s – file này để lượt sau đọc lại từ đầu." % e)
     tom_tat = "Lượt %s: %d file, %d câu mới%s%s." % (bay_gio(), so_file, so_cau,
         "; dùng khoá trả phí %d lượt" % TRANG_THAI_KHOA["da_dung_tra_phi"] if TRANG_THAI_KHOA["da_dung_tra_phi"] else "",
         " – dừng vì hết hạn mức Gemini" if het_han_muc else "")
     print("📊 " + tom_tat)
+    if Q:
+        Q.ghi_sheet(kho)
     ghi_nhip(kho, True, tom_tat)
 
 
@@ -463,6 +656,8 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as loi:
+        if Q:
+            Q.ghi_sheet()
         try:
             gc, _, _ = ket_noi()
             ghi_nhip(gc.open_by_key(ID_KHO_CHUNG), False, "Lỗi: " + str(loi))

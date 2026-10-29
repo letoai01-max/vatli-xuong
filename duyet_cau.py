@@ -17,10 +17,27 @@ LƯU Ý: tắt lịch duyệt cũ của Apps Script (tatDuyetTuDong trong Kho ch
 (Đã duyệt, Cần sửa, Loại…) không bị đụng tới. Mỗi thứ Hai ghi 10 câu "AI duyệt" ngẫu nhiên vào tab KiemTraNgauNhien
 để giáo viên kiểm tra và đo độ chính xác thật.
 Dùng lại các hàm của doc_de.py (kết nối Google, tải file gốc, gọi Gemini xoay vòng khoá miễn phí).
+
+[29/10/2026] TẦNG 4 THÊM LỜI GIẢI KHÁC HÃNG (Groq, groq_xuong.py), cũng KHÔNG cho xem đáp án:
+  • GROQ_CHE_DO = "ghi_chu" (mặc định): Groq chỉ THÊM bằng chứng. Khi máy giải Gemini không giải được hoặc chỉ có một model Gemini,
+    Groq khớp thì được tính là bằng chứng độc lập thứ hai. Groq giải khác thì chỉ ghi chú vào cột Kiểm tra, không đổi kết luận.
+  • GROQ_CHE_DO = "chan": Groq giải khác các bằng chứng còn lại → câu chuyển "Cần người xem".
+  • Không có GROQ_API_KEY hoặc Groq lỗi → chạy y như cũ.
+Mỗi lượt gọi Gemini / Groq được ghi vào tab Quota_SuDung (dòng "xưởng …").
 """
 import datetime as dt, json, os, random, re, sys, time
 
 import doc_de as X   # cùng thư mục: ket_noi, chuan_bi_tep, goi_gemini, doc_cau_hinh, doc_yccd, tu_khoa_ct_cu, CT_CU_MO_TA, HetHanMuc
+
+try:
+    import groq_xuong as G      # lời giải khác hãng ở tầng 4
+except Exception:
+    G = None
+try:
+    import quota_xuong as Q
+except Exception:
+    Q = None
+GROQ_CHE_DO = os.environ.get("GROQ_CHE_DO", "ghi_chu").strip().lower()
 
 TAB_NH, TAB_MAU = "NganHangCauHoi", "KiemTraNgauNhien"
 TT = {"CHUA": "Chưa duyệt", "DANG": "Đang duyệt (Python)", "AI": "AI duyệt", "XEM": "Cần người xem", "LOAI": "Loại"}
@@ -291,6 +308,17 @@ def tang4(ds, cac_model, model_tang2):
     return kq, model_dung
 
 
+def tang4_groq(ds):
+    """Groq (khác hãng) giải độc lập, không xem đáp án. Trả ({mã câu: đáp án}, model); không có khoá / lỗi → ({}, "")."""
+    if not G or not G.co_khoa():
+        return {}, ""
+    try:
+        return G.giai_lo([{"ma": x["ma"], "dang": loai_dang(x["dang"]), "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in ds])
+    except Exception as e:
+        print("  Groq lỗi (bỏ qua):", str(e)[:120], flush=True)
+        return {}, ""
+
+
 def dap_an_may(loai, g):
     if not g: return ""
     if loai == "TN":
@@ -306,8 +334,10 @@ def dap_an_may(loai, g):
 
 
 # ============================== QUYẾT ĐỊNH ==============================
-def quyet_dinh(x, g2, so_lieu, g4, model2, model4, yccd):
+def quyet_dinh(x, g2, so_lieu, g4, model2, model4, yccd, g5="", model5=""):
     loai = loai_dang(x["dang"])
+    gq = chuan(loai, g5) if g5 else ""                                     # đáp án Groq (khác hãng)
+    ten_g = (model5 or "groq").split("/")[-1]
     if not g2:
         x["nghi_van"].append("Gemini chưa đánh giá được câu này"); return
     if g2.get("loi_noi_dung"): x["loi_nang"].append("Lỗi nội dung: " + (g2.get("ghi_chu") or "đề không đọc được / thiếu dữ kiện"))
@@ -336,29 +366,54 @@ def quyet_dinh(x, g2, so_lieu, g4, model2, model4, yccd):
             x["nghi_van"].append("Đơn vị không cùng thứ nguyên: máy giải %s, đáp án ghi %s" % (g4["don_vi"], dv_ss))
     ss = SAI_SO_MAY_GIAI
     ten2 = " (%s + %s)" % (model2.replace("gemini-", ""), (model4 or "?").replace("gemini-", ""))
+    def groq_khop(ref): return bool(gq and ref and khop(loai, gq, ref, ss))
+    def groq_lech(ref): return bool(gq and ref and not khop(loai, gq, ref, ss))
+    def ghi_groq(ref):          # gọi khi kết luận đã có đủ bằng chứng; trả False nếu chế độ "chan" phải dừng
+        if groq_khop(ref):
+            x["ghi_chu"].append("Groq (%s, khác hãng) cũng ra %s" % (ten_g, ref)); return True
+        if groq_lech(ref):
+            if GROQ_CHE_DO == "chan":
+                x["nghi_van"].append("Groq (%s, khác hãng) giải %s, khác %s" % (ten_g, gq, ref)); return False
+            x["ghi_chu"].append("Groq (%s) giải %s – chỉ ghi chú" % (ten_g, gq))
+        return True
     if loai == "TL":
         if not hdc: x["nghi_van"].append("Câu tự luận không có hướng dẫn chấm gốc"); return
-        if may and khop("TLN", may, hdc, ss): x["ghi_chu"].append("HDC gốc và máy giải bằng code cùng đáp số" + ten2)
-        elif may: x["nghi_van"].append("Đáp số HDC %s, máy giải %s" % (hdc, may))
-        else: x["nghi_van"].append("Chỉ có HDC gốc, máy chưa giải được để đối chiếu")
+        if may and khop("TLN", may, hdc, ss):
+            if ghi_groq(hdc): x["ghi_chu"].append("HDC gốc và máy giải bằng code cùng đáp số" + ten2)
+        elif may: x["nghi_van"].append("Đáp số HDC %s, máy giải %s" % (hdc, may) + (", Groq %s" % gq if gq else ""))
+        elif gq and khop("TLN", gq, hdc, ss): x["ghi_chu"].append("HDC gốc và Groq (%s, khác hãng) cùng đáp số" % ten_g)
+        else: x["nghi_van"].append("Chỉ có HDC gốc, máy chưa giải được để đối chiếu" + (" (Groq ra %s)" % gq if gq else ""))
         return
     if hdc:                                    # bằng chứng 1 = HDC gốc; bằng chứng 2 = máy giải bằng code
         if may and khop(loai, may, hdc, ss):
+            if not ghi_groq(hdc): return
             if not khop(loai, hdc, x["dap_an"]):
                 x["sua"]["dap_an"] = hdc
                 x["ghi_chu"].append('Sửa đáp án "%s" → "%s": HDC gốc và máy giải cùng ra' % (x["dap_an"], hdc))
             else:
                 x["ghi_chu"].append("Đáp án khớp HDC gốc và máy giải bằng code" + ten2)
         elif may:
-            x["nghi_van"].append("HDC gốc %s, máy giải %s – cần xem" % (hdc, may))
+            x["nghi_van"].append("HDC gốc %s, máy giải %s – cần xem" % (hdc, may) + (" (Groq ra %s)" % gq if gq else ""))
+        elif groq_khop(hdc):                    # máy Gemini chưa giải được: Groq khác hãng là bằng chứng thứ hai
+            if not khop(loai, hdc, x["dap_an"]):
+                x["sua"]["dap_an"] = hdc
+                x["ghi_chu"].append('Sửa đáp án "%s" → "%s": HDC gốc và Groq (%s) cùng ra' % (x["dap_an"], hdc, ten_g))
+            else:
+                x["ghi_chu"].append("Đáp án khớp HDC gốc và Groq (%s, khác hãng)" % ten_g)
         else:
-            x["nghi_van"].append("Chỉ có HDC gốc (%s), máy chưa giải được để đối chiếu" % hdc)
+            x["nghi_van"].append("Chỉ có HDC gốc (%s), máy chưa giải được để đối chiếu" % hdc + (" (Groq ra %s)" % gq if gq else ""))
         return
     # không có HDC: bằng chứng 1 = model tầng 2 tự giải; bằng chứng 2 = máy giải bằng code (model khác)
     tu = chuan(loai, g2.get("tu_giai"))
-    if not (tu and may and khop(loai, tu, may, ss)):
-        x["nghi_van"].append('Không có HDC; hai lời giải độc lập chưa thống nhất (%s / %s)' % (tu or "?", may or "?")); return
-    if model4 == model2:
+    hai_gemini = bool(tu and may and khop(loai, tu, may, ss) and model4 != model2)
+    tu_va_groq = bool(tu and groq_khop(tu) and (not may or khop(loai, tu, may, ss)))
+    if hai_gemini:
+        if not ghi_groq(tu): return
+    elif tu_va_groq:                            # Gemini tầng 2 + Groq khác hãng cùng ra (máy giải trống hoặc cùng model)
+        ten2 = " (%s + groq %s)" % (model2.replace("gemini-", ""), ten_g)
+    elif not (tu and may and khop(loai, tu, may, ss)):
+        x["nghi_van"].append('Không có HDC; hai lời giải độc lập chưa thống nhất (%s / %s%s)' % (tu or "?", may or "?", " / Groq " + gq if gq else "")); return
+    else:
         x["nghi_van"].append("Không có HDC; chỉ kiểm được bằng một model"); return
     if not x["dap_an"]:
         x["sua"]["dap_an"] = tu; x["ghi_chu"].append('Không có đáp án gốc; 2 lời giải độc lập cùng ra "%s"%s' % (tu, ten2))
@@ -432,8 +487,10 @@ def main():
                 except X.HetHanMuc: raise
                 except Exception as e: print("  Tầng 3 lỗi (bỏ qua):", str(e)[:100])
                 g4, model4 = tang4(can_ai, cac_model, model2)
+                g5, model5 = tang4_groq(can_ai)
                 for x in can_ai:
-                    quyet_dinh(x, g2.get(x["ma"]), so_lieu.get(x["ma"], []), g4.get(x["ma"]), model2, model4, yccd)
+                    quyet_dinh(x, g2.get(x["ma"]), so_lieu.get(x["ma"], []), g4.get(x["ma"]), model2, model4, yccd,
+                               g5.get(x["ma"], ""), model5)
         except X.HetHanMuc as e:
             print("⏸️ Hết hạn mức Gemini – dừng, lượt sau duyệt tiếp:", str(e)[:150], flush=True)
             het_han_muc = True
@@ -463,6 +520,8 @@ def main():
     tom = "Lượt %s: %d AI duyệt, %d cần người xem, %d loại%s." % (X.bay_gio(), thong_ke["ai"], thong_ke["xem"], thong_ke["loai"],
                                                                  " – dừng vì hết hạn mức" if het_han_muc else "")
     print("📊 " + tom)
+    if Q:
+        Q.ghi_sheet(kho)
     ghi_nhip(kho, tom)
 
 
@@ -509,4 +568,9 @@ def ghi_nhip(kho, ghi_chu):
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        if Q:
+            Q.ghi_sheet()
+        raise
