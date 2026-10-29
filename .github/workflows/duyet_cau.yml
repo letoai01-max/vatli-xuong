@@ -31,5 +31,7 @@ jobs:
           GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
           GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
           GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_CHE_DO: "ghi_chu"
           THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '150' }}
         run: python trung_tam.py duyet_cau.py
