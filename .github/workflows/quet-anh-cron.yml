@@ -29,24 +29,33 @@ jobs:
       - name: Cài đặt các thư viện phụ trợ
         run: pip install -q -r requirements.txt
 
+      # [29/10/2026] Bỏ GEMINI_API_KEY, GEMINI_API_KEY_TRA_PHI: quet_bu_hinh_anh.py không gọi Gemini
       - name: Chạy script quét bù hình ảnh từ Google Drive
         env:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
         run: python trung_tam.py quet_bu_hinh_anh.py
 
-      - name: Tự động xuất lại questions.json và DeThi.docx sau khi quét ảnh
+      - name: Tự động xuất lại questions.json sau khi quét ảnh
         env:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           SHEET_ID: ${{ secrets.SHEET_ID }}
         run: python trung_tam.py xuat_de.py
 
-      - name: Commit and push generated files
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "🤖 Tự động cập nhật questions.json và hình ảnh mới nhất từ Kho chung"
-          branch: main
-          file_pattern: "questions.json DeThi.docx images/*"
+      # [29/10/2026] Bỏ DeThi.docx (không còn được tạo). Tự lấy bản mới nhất và thử đẩy lại tối đa 3 lần,
+      # để không bị từ chối khi Xuat_de vừa đẩy questions.json lên cùng lúc. Bản vừa xuất luôn được giữ.
+      - name: Commit và đẩy questions.json, hình ảnh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p images
+          git add questions.json images/
+          if git diff --cached --quiet; then echo "Không có thay đổi mới."; exit 0; fi
+          git commit -m "🤖 Tự động cập nhật questions.json và hình ảnh mới nhất từ Kho chung"
+          for lan in 1 2 3; do
+            if git pull --rebase -X theirs origin main && git push origin HEAD:main; then exit 0; fi
+            echo "Nhánh main vừa thay đổi, thử lại lần $lan sau 10 giây…"
+            sleep 10
+          done
+          exit 1
