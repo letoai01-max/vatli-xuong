@@ -24,6 +24,11 @@ Dùng lại các hàm của doc_de.py (kết nối Google, tải file gốc, g�
   • GROQ_CHE_DO = "chan": Groq giải khác các bằng chứng còn lại → câu chuyển "Cần người xem".
   • Không có GROQ_API_KEY hoặc Groq lỗi → chạy y như cũ.
 Mỗi lượt gọi Gemini / Groq được ghi vào tab Quota_SuDung (dòng "xưởng …").
+
+[29/10/2026] TẦNG 1 ĐỌC CHỈ MỤC CHỐNG TRÙNG (tab ChiMucTrung do chi_muc_trung.py dựng mỗi đêm, chỉ dùng khi cập nhật trong 3 ngày):
+  so câu đang duyệt với các câu ĐÃ CÓ TỪ TRƯỚC trong kho (dòng phía trên).
+  • Giống chữ ≥ 90% (gần như chép lại): TRUNG_CHE_DO = "ghi_chu" (mặc định) chỉ ghi chú; "chan" → "Cần người xem".
+  • Giống dạng ≥ 85% nhưng khác số liệu: luôn chỉ ghi chú "cùng dạng, khác số liệu" (câu đổi số vẫn có ích).
 """
 import datetime as dt, json, os, random, re, sys, time
 
@@ -38,6 +43,7 @@ try:
 except Exception:
     Q = None
 GROQ_CHE_DO = os.environ.get("GROQ_CHE_DO", "ghi_chu").strip().lower()
+TRUNG_CHE_DO = os.environ.get("TRUNG_CHE_DO", "ghi_chu").strip().lower()
 
 TAB_NH, TAB_MAU = "NganHangCauHoi", "KiemTraNgauNhien"
 TT = {"CHUA": "Chưa duyệt", "DANG": "Đang duyệt (Python)", "AI": "AI duyệt", "XEM": "Cần người xem", "LOAI": "Loại"}
@@ -185,6 +191,38 @@ def tang1(x, yccd):
     if (x["noi_dung"] + x["phuong_an"]).count("$") % 2: x["nghi_van"].append("Công thức $…$ không đóng mở đủ")
     if re.search(r"(?i)\b(hình vẽ|như hình|hình bên|đồ thị (như|ở) hình|hình \d)", x["noi_dung"]) and "[Hình" not in x["noi_dung"]:
         x["nghi_van"].append("Câu nhắc tới hình nhưng không có mô tả hình")
+
+
+def doc_chi_muc(kho):
+    """Tab ChiMucTrung → {mã câu: [(mã giống, % chữ, % dạng), …]}; tab thiếu hoặc cũ hơn 3 ngày → {}."""
+    try:
+        v = kho.worksheet("ChiMucTrung").get_all_values()[1:]
+    except Exception:
+        return {}
+    if not v:
+        return {}
+    m = re.search(r"(\d{1,2})/(\d{1,2})/(\d{4})", str((v[0] + [""] * 11)[10]))
+    if not m or (dt.datetime.now(X.TZ).replace(tzinfo=None) - dt.datetime(int(m[3]), int(m[2]), int(m[1]))).days > 3:
+        print("Chỉ mục chống trùng chưa có hoặc đã cũ – bỏ qua.", flush=True)
+        return {}
+    so = lambda s: float(str(s).replace(",", ".")) if re.match(r"^\s*[\d.,]+\s*$", str(s)) else 0
+    kq = {}
+    for r in v:
+        r = (r + [""] * 11)[:11]
+        kq[r[0].strip()] = [(r[k].strip(), so(r[k + 1]), so(r[k + 2])) for k in (1, 4, 7) if r[k].strip()]
+    return kq
+
+
+def tang1_trung(x, chi_muc, vi_tri):
+    for ma, chu, dang in chi_muc.get(x["ma"], []):
+        if vi_tri.get(ma, 10 ** 9) >= x["dong"] or x.get("trung_voi") == ma:
+            continue                                   # chỉ so với câu có từ trước; trùng hẳn đã xử lí ở tầng 1
+        if chu >= 90:
+            (x["nghi_van"] if TRUNG_CHE_DO == "chan" else x["ghi_chu"]).append("Gần như trùng câu %s (giống chữ %d%%)" % (ma, chu))
+            return
+        if dang >= 85:
+            x["ghi_chu"].append("Cùng dạng với câu %s, khác số liệu (giống dạng %d%%)" % (ma, dang))
+            return
 
 
 # ============================== TẦNG 2: HƯỚNG DẪN CHẤM ==============================
@@ -441,6 +479,8 @@ def main():
     print("Model:", ", ".join(cac_model), flush=True)
 
     da_gap, nhom = {}, {}
+    chi_muc = doc_chi_muc(kho)
+    vi_tri = {r[c["Mã câu"]].strip(): i for i, r in enumerate(d[1:], start=2) if len(r) > c["Mã câu"]}
     for i, r in enumerate(d[1:], start=2):
         r = r + [""] * (len(td) - len(r))
         tt = r[c["Trạng thái duyệt"]].strip() or TT["CHUA"]
@@ -466,7 +506,9 @@ def main():
         if not con_gio():
             print("⏸️ Hết thời gian lượt này.", flush=True); break
         t0 = time.time()
-        for x in ds: tang1(x, yccd)
+        for x in ds:
+            tang1(x, yccd)
+            if chi_muc: tang1_trung(x, chi_muc, vi_tri)
         can_ai = [x for x in ds if not x["loi_nang"]]
         try:
             if can_ai:
