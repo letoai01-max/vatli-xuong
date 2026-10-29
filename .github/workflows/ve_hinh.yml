@@ -1,0 +1,32 @@
+# .github/workflows/ve_hinh.yml – VẼ HÌNH CHO ĐỀ BẰNG CODE (gọi từ VeHinhXuong.gs của agent tạo đề)
+name: ve_hinh
+on:
+  workflow_dispatch:
+    inputs:
+      goi:
+        description: "File ID gói hình (goi_hinh_<mã>.json)"
+        required: true
+jobs:
+  ve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Cài phông chữ và thư viện
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-core > /dev/null
+          pip install -q -r requirements.txt
+      - name: Vẽ hình
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          GOI_ID: ${{ inputs.goi }}
+        run: python trung_tam.py ve_hinh.py
