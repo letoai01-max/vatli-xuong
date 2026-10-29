@@ -1,0 +1,25 @@
+# .github/workflows/chi_muc_trung.yml – CHỈ MỤC CHỐNG TRÙNG, 23h00 giờ Việt Nam (trước lượt duyệt câu 23h47)
+name: chi_muc_trung
+on:
+  schedule:
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+concurrency:
+  group: ngan_hang
+  cancel-in-progress: false
+jobs:
+  chi_muc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+      - name: Dựng chỉ mục câu gần trùng
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: python trung_tam.py chi_muc_trung.py
