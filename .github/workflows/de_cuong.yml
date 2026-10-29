@@ -1,11 +1,17 @@
+# .github/workflows/de_cuong.yml – SOẠN ĐỀ CƯƠNG BƯỚC 1–5 (gọi từ DeCuongOnTap.gs)
+# [29/10/2026] Sửa tên tham số cho KHỚP với Apps Script (ma, goi, ket_qua). Bản cũ khai báo goi_id, kq_id nên
+# GitHub từ chối lệnh (lỗi 422) và Apps Script luôn quay về tự soạn. Bỏ khoá trả phí: chỉ dùng khoá miễn phí.
 name: de_cuong
 on:
   workflow_dispatch:
     inputs:
-      goi_id:
+      ma:
+        description: "Mã đề cương"
+        required: false
+      goi:
         description: "File ID gói việc (goi_<mã>.json trên Drive)"
         required: true
-      kq_id:
+      ket_qua:
         description: "File ID kết quả (ket_qua_<mã>.json trên Drive)"
         required: true
 jobs:
@@ -24,7 +30,6 @@ jobs:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
-          GOI_ID: ${{ inputs.goi_id }}
-          KQ_ID: ${{ inputs.kq_id }}
+          GOI_ID: ${{ inputs.goi }}
+          KQ_ID: ${{ inputs.ket_qua }}
         run: python trung_tam.py de_cuong.py
