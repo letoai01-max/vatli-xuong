@@ -14,7 +14,7 @@ Trả về báo cáo Markdown, bảng tóm tắt và đoạn "bằng chứng" đ
 """
 import json, re
 
-from duyet_cau import loai_dang, tach_ds, khop, chuan, cung_thu_nguyen, json_cuoi
+from duyet_cau import loai_dang, tach_ds, khop, chuan, cung_thu_nguyen, json_cuoi, lay_so
 
 LO = 12
 SAI_SO = 0.02
@@ -88,7 +88,7 @@ def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
             "Mỗi câu được một model khác (%s), không xem đáp án, giải lại bằng code. Câu **đạt** khi đáp án của agent và lời giải "
             "bằng code khớp nhau, đúng một phương án đúng, đơn vị cùng thứ nguyên." % model_giai.replace("gemini-", ""), "",
             "| Câu | Đáp án của agent | Máy giải bằng code | Kết luận |", "|---|---|---|---|"]
-    tt = {"tong": 0, "dat": 0, "lech": 0, "nhieu_dap_an": 0, "chua_giai": 0, "luat": 0}
+    tt = {"tong": 0, "dat": 0, "lech": 0, "nhieu_dap_an": 0, "chua_giai": 0, "luat": 0, "dinh_tinh": 0}
     bang_chung = []
     for c in cac_cau:
         so, loai = str(c["so"]).strip(), loai_dang(c.get("dang"))
@@ -105,6 +105,13 @@ def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
         if not da:
             van_de.append("agent chưa ghi đáp án")
         if van_de: tt["luat"] += 1
+        # [29/10/2026] câu tự luận có đáp án bằng LỜI (không có số): không đem so với đáp số của máy
+        if loai == "TL" and da and lay_so(da) != lay_so(da):
+            tt["dinh_tinh"] += 1
+            dong.append("| %s | %s | %s | %s |" % (so, da, "–", "ℹ️ câu định tính – máy không đối chiếu bằng số, thầy xem" +
+                                                 ("; " + "; ".join(van_de) if van_de else "")))
+            bang_chung.append("- Câu %s: câu định tính, cần thầy xem" % so)
+            continue
         # tầng 3–4: so khớp
         if loai == "TN" and len(pa) > 1:
             tt["nhieu_dap_an"] += 1
@@ -118,6 +125,9 @@ def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
         elif da and not khop(loai, m, da, SAI_SO):
             tt["lech"] += 1
             van_de.append("LỆCH: agent %s, máy %s" % (da, m))
+            so_d = sum(1 for v in tach_ds(m).values() if v == "Đ") if loai == "DS" else 2
+            if so_d != 2:
+                van_de.append("nếu máy đúng thì câu có %d Đúng – %d Sai, phải sửa cả nội dung ý cho đủ 2Đ–2S" % (so_d, 4 - so_d))
         if loai in ("TLN", "TL") and g and g.get("don_vi") and c.get("don_vi"):
             if cung_thu_nguyen(g["don_vi"], c["don_vi"]) is False:
                 van_de.append("đơn vị không cùng thứ nguyên (%s / %s)" % (c["don_vi"], g["don_vi"]))
@@ -130,7 +140,8 @@ def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
         if not dat:
             bang_chung.append("- Câu %s: %s" % (so, "; ".join(van_de)))
     dong += ["", "**Kết quả: %d/%d câu đạt 2 bằng chứng độc lập**; %d câu lệch đáp án, %d câu nhiều phương án đúng, "
-             "%d câu máy chưa giải được, %d câu vi phạm luật hình thức." % (tt["dat"], tt["tong"], tt["lech"], tt["nhieu_dap_an"],
-                                                                       tt["chua_giai"], tt["luat"])]
+             "%d câu máy chưa giải được, %d câu vi phạm luật hình thức%s." % (tt["dat"], tt["tong"], tt["lech"], tt["nhieu_dap_an"],
+                                                                       tt["chua_giai"], tt["luat"],
+                                                                       ", %d câu định tính (thầy xem)" % tt["dinh_tinh"] if tt["dinh_tinh"] else "")]
     if loi_chung: dong.append("Lưu ý chung: " + "; ".join(loi_chung))
     return "\n".join(dong) + "\n", tt, "\n".join(bang_chung)
