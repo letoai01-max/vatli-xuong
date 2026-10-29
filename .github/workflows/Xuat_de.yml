@@ -10,9 +10,15 @@ on:
 permissions:
   contents: write
 
+# [29/10/2026] Không cho hai lượt xuất chạy chồng nhau (lượt sau đợi lượt trước xong)
+concurrency:
+  group: xuat_de
+  cancel-in-progress: false
+
 jobs:
   run-python-script:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,9 +39,18 @@ jobs:
           SHEET_ID: ${{ secrets.SHEET_ID }}
         run: python trung_tam.py xuat_de.py
 
+      # [29/10/2026] Lấy bản mới nhất trước khi commit, tránh bị từ chối khi quet-anh vừa đẩy ảnh lên
+      - name: Lấy bản mới nhất trước khi commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git stash --include-untracked
+          git pull --rebase origin main
+          git stash pop || true
+
       - name: Commit and push generated files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "🤖 Tự động cập nhật questions.json tức thì"
           branch: main
-          file_pattern: "questions.json DeThi.docx"
+          file_pattern: "questions.json"
