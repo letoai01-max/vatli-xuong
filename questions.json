@@ -615,8 +615,8 @@
     "ma_cau": "C-1zNZYNau-021",
     "noi_dung": "Người ta cung cấp nhiệt lượng Q để làm nóng chảy 200g nước đá ở $-20^{\\circ}\\text{C}$. Biết nhiệt nóng chảy riêng của nước đá là $3,34,10^5\\text{ J/kg}$ và nhiệt dung riêng của nước đá là $2,1,10^3\\text{ J/kg.K}$. Nhận định các phát biểu sau?",
     "phuong_an": "a) Nhiệt dung riêng của nước đá là $2,1,10^3\\text{ J/kg.K}$ có nghĩa ta cần cung cấp nhiệt lượng $2,1,10^3\\text{ J}$ cho 1kg nước đá thì nhiệt độ của nó tăng thêm 274K.\nb) Trong quá trình nóng chảy, nước đá toả nhiệt ra môi trường ngoài.\nc) Tính đến thời điểm nóng chảy, nhiệt độ khối nước đá giảm đi $20^{\\circ}\\text{C}$.\nd) Nhiệt lượng cần cung cấp cho khối nước đá trên để nó nóng chảy hoàn toàn là 752kJ.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "a) Sai; b) Sai; c) Sai; d) Sai",
+    "loi_giai": "Tóm tắt: $m = 200\\text{ g} = 0,2\\text{ kg}$; $t_1 = -20^\\circ\\text{C}$; $\\lambda = 3,34\\cdot 10^5\\text{ J/kg}$; $c_1 = 2,1\\cdot 10^3\\text{ J/kg.K}$.\nÝ a: Nhiệt dung riêng của nước đá là $2,1\\cdot 10^3\\text{ J/kg.K}$ có nghĩa là cần cung cấp nhiệt lượng $2,1\\cdot 10^3\\text{ J}$ để làm cho 1kg nước đá tăng thêm $1^\\circ\\text{C}$ (hoặc 1K). Phát biểu nói tăng thêm 274K là sai. $Q = m\\cdot c\\cdot \\Delta T$.\nÝ b: Trong quá trình nóng chảy, nước đá thu nhiệt từ môi trường ngoài để chuyển từ thể rắn sang thể lỏng, không phải tỏa nhiệt.\nÝ c: Khối nước đá có nhiệt độ ban đầu là $-20^\\circ\\text{C}$ và nóng chảy ở $0^\\circ\\text{C}$, do đó tính đến thời điểm nóng chảy, nhiệt độ của khối nước đá tăng lên $20^\\circ\\text{C}$, không phải giảm đi. $\\Delta T = 0 - (-20) = 20^\\circ\\text{C}$.\nÝ d: Nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn nước đá từ $-20^\\circ\\text{C}$ đến khi nóng chảy hoàn toàn ở $0^\\circ\\text{C}$ là $Q = m\\cdot c_1\\cdot \\Delta T + m\\cdot \\lambda = 0,2\\cdot 2,1\\cdot 10^3\\cdot 20 + 0,2\\cdot 3,34\\cdot 10^5 = 8400 + 66800 = 75200\\text{ J} = 75,2\\text{ kJ}$. Phát biểu nói 752kJ là sai.\n$$Q = 0,2\\cdot 2,1\\cdot 10^3\\cdot 20 + 0,2\\cdot 3,34\\cdot 10^5 = 75200\\text{ J}$$\nĐáp án: a) Sai; b) Sai; c) Sai; d) Sai.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -633,8 +633,8 @@
     "ma_cau": "C-1zNZYNau-023",
     "noi_dung": "Phổi có tác dụng trao đổi khí cho quá trình hô hấp... Trong quá trình hô hấp, thể tích phổi của một người trưởng thành trung bình tăng từ 3,0 lít lên 3,5 lít. Giả sử rằng nhiệt độ và số mol không khí không đổi. Hãy tính sự thay đổi áp suất bên trong phổi nếu áp suất ban đầu là 1,0 atm? (Kết quả tính theo đơn vị atm và làm tròn đến hàng phần trăm).",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "-0,14",
+    "loi_giai": "Tóm tắt: $V_1 = 3,0\\text{ lít}$; $V_2 = 3,5\\text{ lít}$; $p_1 = 1,0\\text{ atm}$; $T, n = \\text{const}$.\nÁp dụng định luật Boyle: Vì nhiệt độ và lượng khí không đổi, áp dụng định luật Boyle cho quá trình đẳng nhiệt ta có\n$$p_1\\text{ V}_1 = p_2\\text{ V}_2$$\nTính áp suất sau: Áp suất của không khí trong phổi sau khi thể tích tăng là\n$$p_2 = \\frac{p_1\\text{ V}_1}{V_2} = \\frac{1,0\\cdot 3,0}{3,5} \\approx 0,86\\text{ atm}$$\nSự thay đổi áp suất: Độ biến thiên áp suất bên trong phổi là\n$$\\Delta p = p_2 - p_1 = 0,86 - 1,0 = -0,14\\text{ atm}$$\nÁp suất bên trong phổi giảm đi 0,14 atm\nĐáp án: -0,14 atm.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
