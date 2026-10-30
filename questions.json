@@ -1,14 +1,5 @@
 [
   {
-    "ma_cau": "C-14cLJcR_-021",
-    "noi_dung": "Đàn ghi ta điện có cấu tạo đặc, không có hộp cộng hưởng. Sở dĩ ta nghe được âm phát ra từ dây cảm ứng gắn vào đàn ở bên dưới sáu dây đàn này. Vì dây đàn bằng thép nên đoạn dây đàn nằm sát ngay bên trên nam châm của cuộn dây cảm ứng được từ hóa, nghĩa là nó trở thành một nam châm có cực từ được mô tả như hình vẽ. [Hình: Ảnh cây đàn guitar điện và sơ đồ cấu tạo cảm ứng bên dưới dây đàn gồm nam châm vĩnh cửu có cực N, S và cuộn cảm ứng nối với máy tăng âm]",
-    "phuong_an": "a) Ghi-ta điện hoạt động dựa trên hiện tượng cảm ứng điện từ để biến đổi đao động cơ học trên dây đàn thành dao động điện\nb) Tần số của dao động điện bằng tần số của dao động cơ trên dây\nc) Biết dây đàn dài 60 cm, tốc độ truyền sóng trên dây là 300 m/s. Tần số của âm cơ bản (tần số âm nhỏ nhất dây này phát ra là 125 Hz\nd) Nếu một cuộn dây trong ghi-ta điện có 1000 vòng và từ thông qua mỗi vòng dây thay đổi với tốc độ $0{,}01\\text{ (Wb/s)}$ thì độ lớn suất điện động cảm ứng trong cuộn dây tương ứng lúc này là 1 V.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q135_LOP12_CUMBINHGIANG-CAMGIANG-TH_p6_img3.png, images/q135_LOP12_CUMBINHGIANG-CAMGIA_p6_img3.png, images/q135_LOP12_CUMBINHGIANG-C_p6_img3.png"
-  },
-  {
     "ma_cau": "C-1vdAbmXK-022",
     "noi_dung": "Khi tìm hiểu về quá trình tản nhiệt, một nhóm học sinh thảo luận và cho rằng: Công suất tản nhiệt từ vật ra môi trường tỷ lệ thuận với độ chênh lệch nhiệt độ giữa chúng. Để kiểm chứng nhận định đó, nhóm thực hiện thí nghiệm về sự truyền nhiệt của một cốc nước ra môi trường. Các bước thí nghiệm như sau:\nBước 1: Bố trí thí nghiệm theo sơ đồ như hình vẽ, điện trở chìm hoàn toàn trong nước. Ban đầu k ngắt, nhiệt kế chỉ $t_0$.\nBước 2: Đóng khóa k, điều chỉnh công suất đủ nhỏ để nước không sôi, theo dõi nhiệt độ của nước thì nhóm nhận thấy, với một công suất điện P nhất định, nhiệt độ của nước tăng đến một giá trị rồi ổn định. Nhóm ghi lại công suất P và nhiệt độ ổn định t.\nBước 3: Lặp lại thí nghiệm với các giá trị công suất khác nhau.\nCoi nhiệt độ môi trường không đổi, bỏ qua sự hóa hơi của nước.\n[Hình: Sơ đồ thí nghiệm đo công suất tỏa nhiệt của cốc nước với điện trở và oát kế]",
     "phuong_an": "a) Nhiệt độ môi trường là $t_0$.\nb) Nhiệt năng truyền từ điện trở sang nước và từ nước ra môi trường.\nc) Khi nhiệt độ ổn định, công suất tỏa nhiệt của điện trở cho nước và công suất tỏa nhiệt của nước cho môi trường bằng nhau.\nd) Nhóm vẽ đồ thị biểu diễn sự phụ thuộc của $\\Delta t = t - t_0$ vào P. Nếu đồ thị sau khi xử lí có dạng là đường thẳng đi qua gốc tọa độ thì nhận định ban đầu của nhóm là đúng.",
@@ -9841,6 +9832,15 @@
     "noi_dung": "Độ lớn lực từ tác dụng lên đoạn dây MN là $x \\cdot 10^{-3}\\text{ N}$. Giá trị của x là bao nhiêu?",
     "phuong_an": "",
     "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-001",
+    "noi_dung": "Một khung dây phẳng MNPQ có diện tích S, quay đều với tốc độ góc $\\omega$ quanh một trục OO' trùng với trục đối xứng của khung, vuông góc với các đường sức của một từ trường đều có cảm ứng từ $\\vec{B}$. Suất điện động cực đại của khung là",
+    "phuong_an": "E_0 = BS\\omega.\nE_0 = BS\\omega^2.\nE_0 = BS.\nE_0 = \\frac{BS}{\\omega}.",
+    "dap_an": "A",
     "loi_giai": "",
     "trang_thai": "Chưa duyệt",
     "link_anh": ""
