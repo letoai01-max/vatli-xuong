@@ -8602,5 +8602,1778 @@
     "loi_giai": "",
     "trang_thai": "Cần người xem",
     "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-004",
+    "noi_dung": "Trong những phương trình dưới đây, phương trình nào biểu diễn qui luật của chuyển động thẳng đều?",
+    "phuong_an": "A. x = 5t^2 (m, s).\nB. x = 12 – 3t^2 (m, s).\nC. x = -3t + 7 (m, s).\nD. v = 5 – t (m/s, s).",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-008",
+    "noi_dung": "Chọn công thức đúng của gia tốc hướng tâm trong chuyển động tròn đều",
+    "phuong_an": "A. a_{ht} = \\frac{r}{\\omega^2}\nB. a_{ht} = \\frac{4\\pi^2 r}{T^2}\nC. a_{ht} = r.v^2\nD. a_{ht} = \\frac{4\\pi^2 r}{f^2}",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-009",
+    "noi_dung": "Ở mặt nước có hai nguồn sóng dao động theo phương vuông góc với mặt nước, có cùng phương trình $u = A\\cos\\omega t$. Trong miền gặp nhau của hai sóng, những điểm mà ở đó các phần tử nước dao động với biên độ cực đại sẽ có hiệu đường đi của sóng từ hai nguồn đến đó bằng",
+    "phuong_an": "A. một số nguyên lần bước sóng.\nB. một số lẻ lần bước sóng.\nC. một số lẻ lần nửa bước sóng\nD. một số nguyên lần nửa bước sóng",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-014",
+    "noi_dung": "Một vật có m = 500g dao động điều hoà với phương trình dao động $x = 2\\sin(10\\pi t) (cm)$. Lấy $\\pi^2 \\approx 10$. Năng lượng dao động của vật là",
+    "phuong_an": "A. 0,1J.\nB. 0,01J.\nC. 0,02J.\nD. 0,1mJ.",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-018",
+    "noi_dung": "Cho một sóng ngang có phương trình sóng là $u = 8\\sin 2\\pi(\\frac{t}{0,1} - \\frac{x}{2}) (mm)$, trong đó x tính bằng cm, t tính bằng giây. Chu kì của sóng là",
+    "phuong_an": "A. T = 0,1 s.\nB. T = 50 s.\nC. T = 8 s.\nD. T = 1 s.",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-019",
+    "noi_dung": "Chọn câu trả lời sai: Một hành khách A đứng trong toa tàu và một hành khách B đứng trên sân ga. Khi tàu chuyển động thì hành khách B chạy trên sân ga với cùng vận tốc của tàu và theo chiều chuyển động của tàu",
+    "phuong_an": "A. Hành khách A đứng yên so với hành khách B\nB. Hành khách A chuyển động so với sân ga\nC. Hành khách B chuyển động so với sân ga\nD. Hành khách B chuyển động so với hành khách A",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-023",
+    "noi_dung": "Một vật chuyển động tròn đều với tốc độ góc là $\\pi$ rad/s. Hình chiếu của vật trên một đường kính dao động điều hòa với tần số góc, chu kì và tần số bằng bao nhiêu ?",
+    "phuong_an": "A. $\\pi$ rad/s ; 2 s ; 0,5 Hz\nB. $2\\pi$ rad/s ; 1 s ; 1 Hz\nC. $\\pi/2$ rad/s ; 4 s ; 0,25 Hz\nD. $2\\pi$ rad/s ; 0,5 s ; 2 Hz",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-024",
+    "noi_dung": "Phát biểu nào sau đây là đúng khi nói về sóng cơ?",
+    "phuong_an": "A. Bước sóng là khoảng cách giữa hai điểm trên cùng một phương truyền sóng mà dao động tại hai điểm đó cùng pha.\nB. Sóng cơ truyền trong chất lỏng luôn là sóng ngang.\nC. Bước sóng là khoảng cách giữa hai điểm gần nhau nhất trên cùng một phương truyền sóng mà dao động tại hai điểm đó cùng pha.\nD. Sóng cơ truyền trong chất rắn luôn là sóng dọc.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-029",
+    "noi_dung": "Một con lắc dao động tắt dần trong môi trường với lực ma sát rất nhỏ. Cứ sau mỗi chu kì, phần năng lượng của con lắc bị mất đi 8%. Trong một dao động toàn phần biên độ giảm đi bao nhiêu phần trăm?",
+    "phuong_an": "A. $2\\sqrt{2}\\%$.\nB. 6%.\nC. 4%.\nD. 1,6%.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-030",
+    "noi_dung": "Một con lắc đơn dao động với biên độ góc nhỏ ($\\alpha_0 < 15^o$). Câu nào sau đây là sai đối với chu kì của con lắc ?",
+    "phuong_an": "A. Chu kì phụ thuộc biên độ dao động\nB. Chu kì phụ thuộc gia tốc trọng trường nơi có con lắc\nC. Chu kì không phụ thuộc vào khối lượng của con lắc.\nD. Chu kì phụ thuộc chiều dài con lắc",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-033",
+    "noi_dung": "Một dây đàn hồi dài có đầu A dao động theo phương vuông góc với sợi dây. Tốc độ truyền sóng trên dây là 4m/s. Xét một điểm M trên dây và cách A một đoạn 40cm, người ta thấy M luôn luôn dao động lệch pha so với A một góc $\\Delta\\varphi = (k + 0,5)\\pi$ với k là số nguyên. Tính tần số, biết tần số f có giá trị trong khoảng từ 8 Hz đến 13 Hz.",
+    "phuong_an": "A. 8,5 Hz.\nB. 10Hz\nC. 12Hz.\nD. 12,5Hz",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-034",
+    "noi_dung": "Một sóng cơ học lan truyền trên mặt thoáng chất lỏng nằm ngang với tần số 10 Hz, tốc độ truyền sóng 1,2 m/s. Hai điểm M và N thuộc mặt thoáng, trên cùng một phương truyền sóng, cách nhau 26 cm (M nằm gần nguồn sóng hơn). Tại thời điểm t, điểm N hạ xuống thấp nhất. Khoảng thời gian ngắn nhất sau đó điểm M hạ xuống thấp nhất là",
+    "phuong_an": "A. 1/12s.\nB. 1/120s.\nC. 5/60s .\nD. 11/120s.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-036",
+    "noi_dung": "Một vật nhỏ có khối lượng 500g dao động điều hòa trên trục Ox, đồ thị động năng và thế năng của vật theo thời gian như hình vẽ. Biên độ dao động của vật là [Hình đồ thị Wt, Wd theo t]",
+    "phuong_an": "A. 1cm.\nB. 2cm.\nC. 4cm.\nD. 8cm.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1nWNVidt-037",
+    "noi_dung": "Một điện tích q chuyển động từ điểm M đến Q, đến N, đến P trong điện Trường đều như hình vẽ. Đáp án nào là sai khi nói về mối quan hệ giữa công của lực điện trường dịch chuyển điện tích trên các đoạn đường: [Hình M, N, P, Q]",
+    "phuong_an": "A. A_{QP} = A_{QN}\nB. A_{MQ} = A_{MP}\nC. A_{MQ} = - A_{QN}\nD. A_{MN} = A_{NP}",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-007",
+    "noi_dung": "Đo đường kính của một sợi dây đồng 5 lần, ta có các kết quả như sau: $d_1 = 0,75\\text{mm}$; $d_2 = 0,76\\text{mm}$; $d_3 = 0,74\\text{mm}$; $d_4 = 0,77\\text{mm}$; $d_5 = 0,74\\text{mm}$. Kết quả đường kính dây đồng là",
+    "phuong_an": "A. [Thiếu phương án]\nB. $d = (0,75 \\pm 0,01)\\text{mm}$.\nC. $d = (0,752 \\pm 0,01)\\text{mm}$.\nD. $d = (0,752 \\pm 0,02)\\text{mm}$.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-008",
+    "noi_dung": "Cho $x_1 = A_1 \\cos\\left(\\omega t + \\frac{\\pi}{3}\\right)\\text{cm}$ và $x_2 = A_2 \\cos\\left(\\omega t - \\frac{\\pi}{4}\\right)\\text{cm}$ là hai phương trình của hai dao động điều hòa cùng phương. Biết phương trình dao động tổng hợp là $x = 5\\cos(\\omega t + \\varphi)\\text{cm}$. Tổng biên độ của các dao động thành phần $A_1 + A_2$ có giá trị cực đại là",
+    "phuong_an": "A. $\\frac{5}{\\sin 37^0 5'}$\nB. $5\\text{cm}$\nC. $\\frac{5}{\\cos 37^0 5'}$\nD. $\\frac{5}{2\\sin 37^0 5'}$",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-010",
+    "noi_dung": "Với dòng điện xoay chiều, cường độ dòng điện cực đại $I_0$ liên hệ với cường độ dòng điện hiệu dụng $I$ theo công thức:",
+    "phuong_an": "A. $I_0 = I\\sqrt{2}$\nB. $I = I_0\\sqrt{2}$\nC. $I_0 = I/\\sqrt{2}$\nD. $I_0 = 2I$",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-015",
+    "noi_dung": "Sóng ngang có tần số $f$ truyền trên một sợi dây đàn hồi rất dài, với tốc độ $3\\text{ m/s}$. Xét hai điểm M và N nằm trên cùng một phương truyền sóng, cách nhau một khoảng $x$. Đồ thị biểu diễn li độ sóng của M và N cùng theo thời gian $t$ như hình vẽ. Khoảng cách giữa hai phần tử M và N vào thời điểm $t = 2,25\\text{ s}$ là: [Hình: Đồ thị li độ theo thời gian của M và N]",
+    "phuong_an": "A. $3\\text{ cm}$.\nB. $4\\text{ cm}$.\nC. $6\\text{ cm}$.\nD. $3\\sqrt{2}\\text{ cm}$",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-016",
+    "noi_dung": "Một mạch điện có hai điện trở $3\\Omega$ và $6\\Omega$ mắc song song được nối vào nguồn điện có điện trở trong $1\\Omega$. Hiệu suất của nguồn điện là:",
+    "phuong_an": "A. 1/9\nB. 2/3\nC. 10/3\nD. 1/6",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-018",
+    "noi_dung": "Một con lắc lò xo gồm vật có khối lượng $m = 100\\text{ g}$, lò xo có độ cứng $k = 100\\text{ N/m}$. Trong cùng một điều kiện về lực cản của môi trường thì biểu thức ngoại lực điều hòa nào sau đây làm cho con lắc dao động cưỡng bức với biên độ lớn nhất? (Cho $g = \\pi^2\\text{ m/s}^2$).",
+    "phuong_an": "A. $F_c = 1,5\\cos\\left(8\\pi t + \\frac{\\pi}{4}\\right)\\text{N}$\nB. $F_c = 2\\cos\\left(20\\pi t + \\frac{\\pi}{2}\\right)\\text{N}$\nC. $F_c = 1,5\\cos(10\\pi t)\\text{N}$\nD. $F_c = 2\\cos\\left(10\\pi t + \\frac{\\pi}{4}\\right)\\text{N}$",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-024",
+    "noi_dung": "Hai nguồn kết hợp A và B dao động theo phương vuông góc với bề mặt chất lỏng với phương trình $u_A = u_B = 4\\cos(40\\pi t)\\text{cm}$. Tốc độ truyền sóng là $50\\text{ cm/s}$. Biên độ sóng coi như không đổi. Tại điểm M trên bề mặt chất lỏng với $AM - BM = \\frac{10}{3}\\text{ cm}$, phần tử chất lỏng có tốc độ dao động cực đại bằng:",
+    "phuong_an": "A. $100\\pi\\text{ cm/s}$.\nB. $80\\pi\\text{ cm/s}$.\nC. $160\\pi\\text{ cm/s}$.\nD. $120\\pi\\text{ cm/s}$.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-026",
+    "noi_dung": "Người ta dùng một hạt X bắn phá hạt nhân $^{27}_{13}\\text{Al}$ gây ra phản ứng hạt nhân $X + ^{27}_{13}\\text{Al} \\rightarrow X' + ^{30}_{15}\\text{P} + n$. Hạt X là :",
+    "phuong_an": "A. êlectron.\nB. pôzitron.\nC. hạt $\\alpha$.\nD. proton.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-028",
+    "noi_dung": "So với hạt nhân $^{29}_{14}\\text{Si}$, hạt nhân $^{40}_{20}\\text{Ca}$ có nhiều hơn:",
+    "phuong_an": "A. 6 nơtrôn và 5 prôtôn.\nB. 11 nơtrôn và 6 prôtôn.\nC. 5 nơtrôn và 12 prôtôn.\nD. 5 nơtrôn và 6 prôtôn.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-030",
+    "noi_dung": "Người ta dùng một proton bắn phá hạt nhân X đang đứng yên tạo thành hai hạt $\\alpha$. Biết rằng các hạt $\\alpha$ bay ra với cùng tốc độ và các vectơ vận tốc của chúng hợp với nhau một góc $\\beta$. Góc $\\beta$ có thể nhận giá trị bằng :",
+    "phuong_an": "A. $120^0$.\nB. $90^0$.\nC. $30^0$.\nD. $140^0$.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-031",
+    "noi_dung": "Một vật nhỏ dao động điều hòa theo phương trình $x = \\cos(10\\pi t + 0,5\\pi)\\text{cm}$. ($t$ tính bằng s). Tần số dao động của vật là:",
+    "phuong_an": "A. $10\\pi\\text{ Hz}$.\nB. $5\\text{ Hz}$.\nC. $10\\text{ Hz}$.\nD. $5\\pi\\text{ Hz}$.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-032",
+    "noi_dung": "Một đoạn dây dẫn dài $1,5\\text{m}$ mang dòng điện không đổi có cường độ $10\\text{A}$, đặt vuông góc trong một từ trường đều có độ lớn cảm ứng từ là $1,2\\text{T}$. Nó chịu một lực tác dụng là:",
+    "phuong_an": "A. $18\\text{N}$\nB. $1800\\text{N}$\nC. $0\\text{N}$\nD. $1,8\\text{N}$",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-033",
+    "noi_dung": "Khoảng cách giữa hai điểm trên phương truyền sóng gần nhau nhất và dao động cùng pha với nhau gọi là:",
+    "phuong_an": "A. tần số sóng.\nB. tốc độ truyền sóng.\nC. chu kì sóng.\nD. bước sóng.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-036",
+    "noi_dung": "Trong dao động điều hòa, véc tơ gia tốc:",
+    "phuong_an": "A. đổi chiều ở vị trí biên.\nB. có hướng không thay đổi.\nC. luôn hướng về vị trí cân bằng khi li độ $x \\neq 0$.\nD. luôn cùng hướng với véc tơ vận tốc.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1JuzIycI-039",
+    "noi_dung": "Một sợi dây AB dài $120\\text{cm}$ căng ngang, hai đầu cố định. Trên dây có sóng dừng ổn định với 3 bụng sóng. Biết sóng truyền trên dây có tần số $100\\text{Hz}$. Tốc độ truyến sóng trên dây là:",
+    "phuong_an": "A. $60\\text{m/s}$\nB. $100\\text{m/s}$\nC. $120\\text{m/s}$\nD. $80\\text{m/s}$",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1XdAtmWX-010",
+    "noi_dung": "Khi nói về dao động cơ cưỡng bức, phát biểu nào sau đây sai?",
+    "phuong_an": "A. Dao động cưỡng bức có chu kì luôn bằng chu kì của lực cưỡng bức.\nB. Biên độ của dao động cưỡng bức phụ thuộc vào biên độ của lực cưỡng bức.\nC. Dao động cưỡng bức có tần số luôn bằng tần số riêng của hệ dao động.\nD. Biên độ của dao động cưỡng bức phụ thuộc vào tần số của lực cưỡng bức.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1XdAtmWX-011",
+    "noi_dung": "Cho các hạt nhân: $^{235}_{92}\\text{U}; ^{238}_{92}\\text{U}; ^{4}_{2}\\text{He}; ^{239}_{94}\\text{Pu}$. Hạt nhân không thể phân hạch là",
+    "phuong_an": "A. $^{238}_{92}\\text{U}$\nB. $^{239}_{94}\\text{Pu}$\nC. $^{4}_{2}\\text{He}$\nD. $^{235}_{92}\\text{U}$",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1XdAtmWX-015",
+    "noi_dung": "Một con lắc lò xo có $k = 40$ N/m và $m = 100$ g. Dao động riêng của con lắc này có tần số góc là",
+    "phuong_an": "A. $400$ rad/s.\nB. $0,1\\pi$ rad/s.\nC. $20$ rad/s.\nD. $0,2\\pi$ rad/s.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1XdAtmWX-023",
+    "noi_dung": "Để xác định suất điện động $\\mathcal{E}$ của một nguồn điện, một học sinh mắc mạch điện như hình bên (H1). Đóng khóa K và điều chỉnh con chạy C, kết quả đo được mô tả bởi đồ thị biểu diễn sự phụ thuộc của $\\frac{1}{I}$ (nghịch đảo số chỉ ampe kế A) vào giá trị R của biến trở như hình bên (H2). Giá trị trung bình của $\\mathcal{E}$ được xác định bởi thí nghiệm này là [Hình: Đồ thị 1/I theo R và sơ đồ mạch điện H1]",
+    "phuong_an": "A. $1,0$ V.\nB. $1,5$ V.\nC. $2,0$ V.\nD. $2,5$ V.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1XdAtmWX-024",
+    "noi_dung": "Cho mạch điện như hình bên. Biết $\\mathcal{E} = 12$ V; $r = 1\\;\\Omega$; $R_1 = 5\\;\\Omega$; $R_2 = R_3 = 10\\;\\Omega$. Bỏ qua điện trở của dây nối. Hiệu điện thế giữa hai đầu $R_1$ là [Hình: Sơ đồ mạch điện chứa nguồn và các điện trở]",
+    "phuong_an": "A. $10,2$ V.\nB. $4,8$ V.\nC. $9,6$ V.\nD. $7,6$ V.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1XdAtmWX-027",
+    "noi_dung": "Trong không khí, ba điện tích điểm $q_1, q_2, q_3$ lần lượt được đặt tại ba điểm A, B, C nằm trên cùng một đường thẳng. Biết $AC = 60$ cm, $q_1 = 4q_3$, lực điện do $q_1$ và $q_3$ tác dụng lên $q_2$ cân bằng nhau. B cách A và C lần lượt là",
+    "phuong_an": "A. $80$ cm và $20$ cm.\nB. $20$ cm và $40$ cm.\nC. $20$ cm và $80$ cm.\nD. $40$ cm và $20$ cm.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1XdAtmWX-030",
+    "noi_dung": "Dùng hạt $\\alpha$ có động năng $5,00$ MeV bắn vào hạt nhân $^{14}_{7}\\text{N}$ đứng yên gây ra phản ứng: $^{4}_{2}\\text{He} + ^{14}_{7}\\text{N} \\to ^{1}_{1}\\text{H} + \\text{X}$. Phản ứng này thu năng lượng $1,21$ MeV và không kèm theo bức xạ gamma. Lấy khối lượng các hạt nhân tính theo đơn vị u bằng số khối của chúng. Khi hạt nhân X bay ra theo hướng lệch với hướng chuyển động của hạt $\\alpha$ một góc lớn nhất thì động năng của hạt X có giá trị gần nhất với giá trị nào sau đây?",
+    "phuong_an": "A. $0,62$ MeV.\nB. $0,92$ MeV.\nC. $0,82$ MeV.\nD. $0,72$ MeV.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1XdAtmWX-037",
+    "noi_dung": "Hai vật $M_1$ và $M_2$ dao động điều hòa cùng tần số. Hình bên là đồ thị biểu diễn sự phụ thuộc của li độ x của $M_1$ và vận tốc $v_2$ của $M_2$ theo thời gian t. Hai dao động của $M_1$ và $M_2$ lệch pha nhau [Hình: Đồ thị li độ x1 và vận tốc v2 theo thời gian]",
+    "phuong_an": "A. $\\frac{\\pi}{3}$\nB. $\\frac{2\\pi}{3}$\nC. $\\frac{5\\pi}{6}$\nD. $\\frac{\\pi}{6}$",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1XdAtmWX-040",
+    "noi_dung": "Cho cơ hệ như hình bên. Vật m khối lượng $100$ g có thể chuyển động tịnh tiến, không ma sát trên mặt phẳng nằm ngang dọc theo trục lò xo có $k = 40$ N/m. Vật M khối lượng $300$ g có thể trượt trên m với hệ số ma sát $\\mu = 0,2$. Ban đầu, giữ m đứng yên ở vị trí lò xo dãn $4,5$ cm, dây D (mềm, nhẹ, không dãn) song song với trục lò xo. Biết M luôn ở trên m và mặt tiếp xúc giữa hai vật nằm ngang. Lấy $g = 10$ m/s$^2$. Thả nhẹ cho m chuyển động. Tính từ lúc thả đến khi lò xo trở về trạng thái có chiều dài tự nhiên lần thứ 3 thì tốc độ trung bình của m là [Hình: Cơ hệ gồm lò xo, vật m và vật M trên mặt phẳng ngang]",
+    "phuong_an": "A. $16,7$ cm/s.\nB. $23,9$ cm/s.\nC. $29,1$ cm/s.\nD. $8,36$ cm/s.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1yDKHy0j-010",
+    "noi_dung": "Tia nào sau đây không phải là tia phóng xạ?",
+    "phuong_an": "A. Tia $\\gamma$.\nB. Tia $\\beta^+$.\nC. Tia $\\alpha$.\nD. Tia X.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1yDKHy0j-012",
+    "noi_dung": "Một hạt nhân X đứng yên, phóng xạ $\\alpha$ và biến thành hạt nhân Y. Gọi $m_1$ và $m_2$, $v_1$ và $v_2$, $K_1$ và $K_2$ tương ứng là khối lượng, tốc độ, động năng của hạt $\\alpha$ và hạt nhân Y. Hệ thức nào sau đây là đúng?",
+    "phuong_an": "A. $\\frac{v_1}{v_2} = \\frac{m_1}{m_2} = \\frac{K_1}{K_2}$\nB. $\\frac{v_2}{v_1} = \\frac{m_2}{m_1} = \\frac{K_2}{K_1}$\nC. $\\frac{v_1}{v_2} = \\frac{m_2}{m_1} = \\frac{K_2}{K_1}$\nD. $\\frac{v_1}{v_2} = \\frac{m_2}{m_1} = \\frac{K_1}{K_2}$",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-003",
+    "noi_dung": "Biểu thức nào sau đây sai cho quá trình đẳng tích của một khối lượng khí lí tưởng xác định?",
+    "phuong_an": "A. $\\frac{p_1}{T_1} = \\frac{p_2}{T_2}$\nB. $\\frac{p_1}{p_2} = \\frac{T_1}{T_2}$\nC. $p_1 T_2 = p_2 T_1$\nD. $\\frac{p_1}{p_2} = \\frac{T_2}{T_1}$",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-005",
+    "noi_dung": "Hình 1.2 dưới là sơ đồ nguyên lí hoạt động của một máy làm nóng nước. Nước lạnh có nhiệt độ $t_1 = 20,2^\\circ\\text{C}$ được đưa vào máy từ ống dẫn nước lạnh với lưu lượng 2,5 kg trong mỗi phút, nước được làm nóng đến nhiệt độ $36,7^\\circ\\text{C}$. Nhiệt dung riêng của nước là $4180\\text{ J}/(\\text{kg}\\cdot\\text{K})$. Nhiệt lượng nước hấp thụ trong mỗi phút gần nhất với giá trị nào sau đây?",
+    "phuong_an": "A. 172,4 kJ.\nB. 17,24 kJ.\nC. 2873,75 J.\nD. 2873,75 kJ.",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-006",
+    "noi_dung": "Quá trình biến đổi trạng thái của một lượng khí xác định mà trong đó nhiệt độ được giữ không đổi gọi là quá trình",
+    "phuong_an": "A. đẳng tích.\nB. đoạn nhiệt.\nC. đẳng áp.\nD. đẳng nhiệt.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-008",
+    "noi_dung": "Biển báo nào dưới đây cảnh báo khu vực có nhiệt độ cao?",
+    "phuong_an": "A. Hình 1.\nB. Hình 4.\nC. Hình 2.\nD. Hình 3.",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-011",
+    "noi_dung": "Hình nào biểu diễn đúng hướng lực từ $\\vec{F}$ tác dụng lên một đoạn dây dẫn thẳng mang dòng điện I đặt trong từ trường đều với đường sức từ $\\vec{B}$ có hướng như hình vẽ?",
+    "phuong_an": "A. Hình 4.\nB. Hình 3.\nC. Hình 1.\nD. Hình 2.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-016",
+    "noi_dung": "Củ sạc của điện thoại di động, máy tính xách tay,… có thành phần thiết yếu là một máy biến áp có nhiệm vụ",
+    "phuong_an": "A. hạ áp điện áp một chiều.\nB. tăng áp điện áp xoay chiều.\nC. tăng áp điện áp một chiều.\nD. hạ áp điện áp xoay chiều.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-019",
+    "noi_dung": "Hình 2.1 là cấu tạo của một hệ đun nước bằng năng lượng mặt trời... [Hình: Hình 2.1]",
+    "phuong_an": "a) Nhiệt lượng mặt trời cần cung cấp để 180 lít nước trong bình tăng nhiệt độ trên là 191064 kJ.\nb) Hiệu suất của toàn hệ 15% có nghĩa là 85% năng lượng mặt trời bị mất khỏi hệ.\nc) Khi lắp đặt hệ đun nước nóng bằng năng lượng mặt trời cần quay dàn ống hấp thụ nhiệt về chính phía Nam để mang lại hiệu quả sử dụng tốt nhất.\nd) Nhiệt lượng mà mỗi lít nước trong bình chứa trên hấp thu để tăng nhiệt độ là 28659,6 kJ.",
+    "dap_an": "DDDS",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-020",
+    "noi_dung": "Túi khí xe ô tô là một phần của hệ thống an toàn... [Hình: Hình 2.2]",
+    "phuong_an": "a) Khi xảy ra va chạm, hệ thống túi khí sẽ phồng lên rất nhanh để tạo thành đệm hơi giúp làm giảm chấn thương cho người ngồi trong xe.\nb) Áp suất tối đa mà túi khí tiêu chuẩn chịu được có giá trị xấp xỉ 34,475 kPa.\nc) Cần sản sinh 0,5 mol khí $N_2$ để bơm căng túi khí này đến áp suất 5 psi ở nhiệt độ $25^\\circ\\text{C}$.\nd) Để bơm túi khí trên đến áp suất 3 psi ở nhiệt độ $27^\\circ\\text{C}$ cần tạo ra 13,94 gam khí $N_2$. Biết khối lượng mol của khí $N_2$ là 28 g/mol.",
+    "dap_an": "a) Đ, b) Đ, c) S, d) Đ",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-021",
+    "noi_dung": "Một khung dây cứng, phẳng có diện tích $25\\;\\text{cm}^2$, gồm 10 vòng dây... [Hình: Hình 2.3]",
+    "phuong_an": "a) Trong thời gian từ trường biến thiên, công suất tỏa nhiệt trung bình trên khung dây là $1,125\\;\\mu\\text{W}$. Biết khung dây có điện trở $R = 0,2\\;\\Omega$.\nb) Độ biến thiên của từ thông qua khung dây kể từ lúc t = 0 đến t = 0,4 s có độ lớn bằng 60 μWb.\nc) Trong khoảng thời gian từ 0 đến 0,4 s, dòng điện cảm ứng trong khung dây có chiều cùng chiều kim đồng hồ.\nd) Từ thông qua mỗi vòng dây tại thời điểm t = 0 có độ lớn là 60 μWb.",
+    "dap_an": "SDDS",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-022",
+    "noi_dung": "Hình 2.4 là sơ đồ thí nghiệm khảo sát sự phụ thuộc của áp suất p theo nhiệt độ t... [Hình: Hình 2.4]",
+    "phuong_an": "a) Quá trình biến đổi trạng thái của lượng khí trong bình được coi là quá trình đẳng tích.\nb) Số mol khí đã dùng trong thí nghiệm 0,00628 mol.\nc) Với kết quả thu được ở bảng bên, công thức liên hệ giữa áp suất và nhiệt độ tuyệt đối là p = kT (k là hệ số tỉ lệ), trong đó p (Pa) là áp suất và T (K) là nhiệt độ tuyệt đối. Hệ số tỉ lệ k có giá trị gần bằng 332.\nd) Đồ thị biểu diễn mối liên hệ giữa áp suất và nhiệt độ là một đường thẳng qua gốc tọa độ.",
+    "dap_an": "DSDS",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-024",
+    "noi_dung": "Một bơm tay có chiều cao h = 50 cm, đường kính d = 5 cm. Người ta dùng bơm này để đưa không khí có áp suất bằng áp suất khí quyển bằng $10^5\\text{ N/m}^2$ vào trong săm xe đạp (chưa có không khí). Biết thời gian mỗi lần bơm là 2,5 giây và trong khi bơm xem như nhiệt độ của không khí không đổi. Để đưa vào săm 7 lít khí có áp suất $5 \\cdot 10^5\\text{ N/m}^2$ thì thời gian bơm là bao nhiêu giây? (kết quả làm tròn đến chữ số hàng đơn vị)",
+    "phuong_an": "",
+    "dap_an": "89",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-026",
+    "noi_dung": "Để 1 kg nước tăng nhiệt độ thêm 1K thì cần truyền một nhiệt lượng là bao nhiêu Jun?",
+    "phuong_an": "",
+    "dap_an": "4180",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-19nJXqvz-027",
+    "noi_dung": "Một khung dây dẫn kín có 1000 vòng được đặt trong từ trường đều có độ lớn cảm ứng từ là 0,5 T. Diện tích mỗi vòng dây là $50\\text{ dm}^2$. Cho khung dây quay đều quanh trục vuông góc với vector cảm ứng từ với tốc độ góc là $\\frac{\\pi}{3}\\text{ (rad/s)}$. Ban đầu, vector cảm ứng từ cùng phương cùng chiều với vector đơn vị pháp tuyến của mặt phẳng khung dây. Độ lớn suất điện động cảm ứng trung bình sinh ra trong khung dây có giá trị là bao nhiêu vôn nếu xét trong 1 giây?",
+    "phuong_an": "",
+    "dap_an": "125",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-001",
+    "noi_dung": "Hình nào sau đây biểu diễn không đúng chiều của lực từ $\\vec{F}$ tác dụng lên dây dẫn mang dòng điện đặt trong từ trường đều? [Hình: 4 hình biểu diễn lực từ]",
+    "phuong_an": "Hình 1.\nHình 4.\nHình 2.\nHình 3.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-002",
+    "noi_dung": "Một lượng khí lý tưởng được nhốt trong một bình kín có mật độ phân tử là $\\mu$, động năng trung bình phân tử là $E_d$. Áp suất chất khí tác dụng lên thành bình theo mô hình động học phân tử là",
+    "phuong_an": "$p = \\frac{1}{3}\\mu E_d$.\n$p = \\frac{3}{2}\\mu E_d$.\n$p = \\frac{2}{3}\\mu E_d$.\n$p = \\frac{1}{3}E_d\\mu$.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-009",
+    "noi_dung": "Cung cấp năng lượng nhiệt cho một vật, công suất phụ thuộc thời gian như hình vẽ. Thời điểm vật nhận được nhiệt lượng 66 J tính từ thời điểm ban đầu là [Hình: Đồ thị P-t]",
+    "phuong_an": "6 s.\n5 s.\n4 s.\n8 s.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-010",
+    "noi_dung": "Nhiệt độ nóng chảy của chì là $327^{\\circ}\\text{C}$. Theo độ Kelvin thì nhiệt độ nóng chảy của chì là",
+    "phuong_an": "600 K.\n327 K.\n273 K.\n54 K.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-011",
+    "noi_dung": "Tàu đệm từ là một phương tiện giao thông hiện đại, tàu hoạt động nhờ cơ chế nâng, đẩy và dẫn đường của hệ thống các nam châm điện. Ở một thời điểm, nam châm điện trên đường ray và thân tàu có các cực như hình vẽ bên. Hợp lực của các lực từ tác dụng lên thân tàu có hướng [Hình: Tàu đệm từ]",
+    "phuong_an": "sang trái.\nlên trên.\nxuống dưới.\nsang phải.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-012",
+    "noi_dung": "Thiết bị nào dưới đây là ứng dụng của từ trường?",
+    "phuong_an": "Nồi cơm điện.\nBàn là điện.\nPin năng lượng mặt trời.\nNam châm điện.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-013",
+    "noi_dung": "Nhiệt lượng cần cung cấp cho 1 kg chất nóng chảy ở nhiệt độ nóng chảy gọi là",
+    "phuong_an": "nhiệt nóng chảy riêng.\nnhiệt dung riêng.\nnhiệt hóa hơi riêng.\nnhiệt độ sôi.",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-014",
+    "noi_dung": "Nhiệt độ lốp trước bên phải và lốp sau bên phải chênh lệch nhau [Dựa vào bảng thông tin cảm biến lốp ô tô]",
+    "phuong_an": "273K.\n2K.\n276K.\n3K.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-015",
+    "noi_dung": "Để các thông số của lốp sau bên phải giống với các lốp còn lại, người ta bơm thêm không khí vào lốp này. Coi thể tích lốp không thay đổi. Phần trăm số mol khí bơm thêm so với số mol khí ban đầu trong lốp là",
+    "phuong_an": "14,8%.\n3,3%.\n10%.\n4,3%.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-016",
+    "noi_dung": "Khi ô tô chuyển động, màn hình hiển thị nhiệt độ của lốp trước bên phải tăng lên $46^{\\circ}\\text{C}$, coi lượng khí và thể tích khí trong lốp không thay đổi, số chỉ của áp suất lốp lúc đó là",
+    "phuong_an": "2,7.\n2,3.\n2,5.\n2,6.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-017",
+    "noi_dung": "Cảm ứng từ do ống dây tạo ra trong lòng ống có hướng [Hình ống dây dẫn]",
+    "phuong_an": "sang trái.\nthẳng đứng xuống dưới.\nsang phải.\nthẳng đứng lên trên.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-018",
+    "noi_dung": "Nếu suất điện động của nguồn, điện trở của toàn mạch đều tăng hai lần thì độ lớn cảm ứng từ trong lòng ống dây sẽ",
+    "phuong_an": "tăng hai lần.\nkhông thay đổi.\ntăng bốn lần.\ngiảm hai lần.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-019",
+    "noi_dung": "Một bình tích áp được sử dụng trong máy lọc nước có hai phần: bóng chứa nước và bóng chứa khí như hình bên... [Hình bình tích áp]",
+    "phuong_an": "a) Khi nước được bơm vào bình, áp suất trong bóng khí tăng.\nb) Khi nước trong bình giảm, mật độ phân tử khí trong bóng khí tăng.\nc) Khi nước trong bình là 8 lít, áp suất trong túi khí là 600 kPa.\nd) Một người thợ đã giảm bớt khí trong bóng chứa khí nên khi nước trong bình giảm đến 6 lít rơ le đã đóng mạch để máy hoạt động trở lại. Lượng khí thoát ra chiếm 20% lượng khí ban đầu.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-020",
+    "noi_dung": "Một nhóm học sinh thực hiện thí nghiệm xác định độ lớn cảm ứng từ... [Hình thí nghiệm]",
+    "phuong_an": "a) Số chỉ của cân tăng lên chứng tỏ có một lực tác dụng lên nam châm theo phương thẳng đứng, chiều hướng xuống.\nb) Sợi dây chịu tác dụng của lực từ có độ lớn chính là số chỉ của cân theo đơn vị N.\nc) Chiều dòng điện là chiều từ C đến D.\nd) Từ bảng số liệu, giá trị trung bình của cảm ứng từ là B = 0,16 T.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-021",
+    "noi_dung": "Một nhóm học sinh thực hiện thí nghiệm đo nhiệt nóng chảy riêng của nước đá...",
+    "phuong_an": "a) Trong quá trình nước đá tan, nhiệt độ hỗn hợp không đổi.\nb) Trong quá trình nước đá tan, nội năng của hỗn hợp không đổi.\nc) Thực tế, trong quá trình nước đá tan, hỗn hợp nước và nước đá tỏa nhiệt ra môi trường xung quanh.\nd) Từ bảng số liệu của nhóm, tính được nhiệt nóng chảy riêng trung bình của nước đá là $3,44 \\cdot 10^5 \\text{ J/kg}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1H4HnuQl-022",
+    "noi_dung": "Một khinh khí cầu có tổng khối lượng (gồm khoang và hành khách) là 450 kg...",
+    "phuong_an": "a) Lực tối thiểu để nâng khoang lên khỏi mặt đất là 4410 N.\nb) Khinh khí cầu bay lên được là do áp suất khí trong khí cầu nhỏ hơn áp suất ngoài khí quyển.\nc) Coi không khí ở $25^{\\circ}\\text{C}$ là khí lý tưởng, số mol không khí trong khí cầu ở nhiệt độ $25^{\\circ}\\text{C}$ là 124,78 mol.\nd) Khi không khí trong khí cầu bị đốt nóng, nó bị giãn nở và một phần bị đẩy ra ngoài thông qua lỗ thoát khí phía trên khí cầu...",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-002",
+    "noi_dung": "Vôn trên mét (V/m) là đơn vị đo đại lượng vật lí nào sau đây?",
+    "phuong_an": "A. Điện tích.\nB. Từ thông.\nC. Điện dung.\nD. Cường độ điện trường.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-003",
+    "noi_dung": "Một con lắc đơn dao động điều hòa với phương trình li độ góc $\\alpha = \\alpha_0 \\cos(\\omega t + \\varphi)$ ($\\alpha_0$ và $\\omega$ là các hằng số dương). Đại lượng $\\omega$ được gọi là",
+    "phuong_an": "A. biên độ góc của dao động.\nB. chu kì của dao động.\nC. tần số góc của dao động.\nD. pha ban đầu của dao động.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-006",
+    "noi_dung": "Nguyên tắc hoạt động của máy biến áp là dựa trên",
+    "phuong_an": "A. hiện tượng cảm ứng điện từ.\nB. hiện tượng tự cảm.\nC. hiện tượng quang điện trong.\nD. hiện tượng quang điện ngoài.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-007",
+    "noi_dung": "Sóng âm có tần số $f = 13 \\text{ Hz}$ được gọi là",
+    "phuong_an": "A. tạp âm.\nB. siêu âm.\nC. hạ âm.\nD. âm thanh.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-008",
+    "noi_dung": "Số nơtron có trong hạt nhân nguyên tử $^{14}_{6}\\text{C}$ là",
+    "phuong_an": "A. 6.\nB. 14.\nC. 20.\nD. 8.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-010",
+    "noi_dung": "Một chất điểm dao động điều hòa dọc theo trục Ox với tần số góc $\\omega$. Vào thời điểm xác định, li độ của chất điểm là $x$. Gia tốc tức thời của chất điểm được xác định bằng công thức",
+    "phuong_an": "A. $a = \\omega x$\nB. $a = -\\omega^2 x$\nC. $a = -\\omega x$\nD. $a = \\omega^2 x$",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-013",
+    "noi_dung": "Sóng dừng hình thành trên một sợi dây đàn hồi với hai đầu cố định. Trên dây, các phần tử sóng thuộc cùng một bó thì dao động",
+    "phuong_an": "A. cùng pha với nhau.\nB. lệch pha nhau $\\frac{2\\pi}{3}$.\nC. lệch pha nhau $\\pi/2$.\nD. ngược pha với nhau.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-017",
+    "noi_dung": "Chọn phát biểu đúng khi nói về đồng vị của một nguyên tử.",
+    "phuong_an": "A. Các đồng vị có cùng tính chất vật lí.\nB. Các đồng vị có cùng tính chất hóa học.\nC. Các đồng vị có cùng cả tính chất vật lí lẫn tính chất hóa học.\nD. Các đồng vị không có cùng tính chất vật lí và tính chất hóa học.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-018",
+    "noi_dung": "Một con lắc lò xo đang dao động cưỡng bức với biểu thức của ngoại lực tuần hoàn là $F = F_0\\cos(5\\pi t)$ ($t$ tính bằng s). Chu kì dao động của con lắc là",
+    "phuong_an": "A. $2,5\\pi \\text{ s}$.\nB. $0,4 \\text{ s}$.\nC. $2,5 \\text{ s}$.\nD. $0,4\\pi \\text{ s}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-021",
+    "noi_dung": "Trên một sợi dây đang có sóng dừng với một đầu cố định và một đầu tự do. Sóng truyền trên dây có bước sóng $\\lambda$. Chiều dài $\\ell$ của sợi dây thỏa mãn",
+    "phuong_an": "A. $\\ell = k\\frac{\\lambda}{2}$ với $k = 1; 2; 3; \\dots$\nB. $\\ell = (2k + 1)\\frac{\\lambda}{4}$ với $k = 1; 2; 3; \\dots$\nC. $\\ell = k\\frac{\\lambda}{4}$ với $k = 1; 2; 3; \\dots$\nD. $\\ell = (2k + 1)\\frac{\\lambda}{2}$ với $k = 1; 2; 3; \\dots$",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-024",
+    "noi_dung": "Hai dao động điều hòa cùng phương, cùng tần số và vuông pha với nhau có biên độ lần lượt là $A_1$ và $A_2$. Dao động tổng hợp của hai dao động trên có biên độ là $A$. Hệ thức nào sau đây là đúng?",
+    "phuong_an": "A. $A = A_1 + A_2$.\nB. $A = \\sqrt{A_1^2 + A_2^2}$.\nC. $A = \\sqrt{A_1^2 - A_2^2}$.\nD. $A = |A_1 - A_2|$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-025",
+    "noi_dung": "Thí nghiệm giao thoa sóng trên mặt nước với hai nguồn kết hợp đặt tại A và B cách nhau $24,5 \\text{ cm}$, dao động cùng pha phát ra hai sóng lan truyền trên mặt nước với bước sóng $\\lambda$. Điểm M nằm trên đoạn thẳng AB thuộc vân cực đại bậc 3. Biết $MA = 8 \\text{ cm}$. Trên đoạn thẳng AB có vân cực tiểu giao thoa là",
+    "phuong_an": "A. 20.\nB. 14.\nC. 18.\nD. 16.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-027",
+    "noi_dung": "Hai nguồn điện có suất điện động $E_1 = E_2 = 2\\text{V}$ và có điện trở trong tương ứng là $r_1 = 0,4\\ \\Omega$ và $r_2 = 0,2\\ \\Omega$ được mắc với điện trở $R$ tạo thành mạch điện kín như sơ đồ hình bên. Biết rằng, khi đó hiệu điện thế giữa hai cực của một trong hai nguồn bằng 0. Giá trị của $R$ bằng [Hình: sơ đồ mạch điện gồm 2 nguồn mắc nối tiếp với điện trở R]",
+    "phuong_an": "A. $0,6\\ \\Omega$.\nB. $0,2\\ \\Omega$.\nC. $1,0\\ \\Omega$.\nD. $1,4\\ \\Omega$",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-028",
+    "noi_dung": "Ở cùng một nơi trên mặt đất, nếu con lắc đơn có chiều dài dây treo dao động điều hòa với chu kì $T = 2\\text{s}$ thì con lắc đơn có chiều dài dây treo $0,81\\ell$ sẽ dao động điều hòa với chu kì",
+    "phuong_an": "A. $1,62 \\text{ s}$.\nB. $2,47 \\text{ s}$.\nC. $1,80 \\text{ s}$.\nD. $1,50 \\text{ s}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-030",
+    "noi_dung": "Một khung dây dẫn kín hình chữ nhật ABCD đặt cạnh một dây dẫn thẳng rất dài, đang có dòng điện một chiều cường độ I chạy qua như hình vẽ bên. Kéo khung dây chuyển động đều ra xa dòng điện theo chiều của v thì trong khung [Hình: khung dây ABCD đặt cạnh dòng điện thẳng dài I]",
+    "phuong_an": "A. không xuất hiện dòng điện cảm ứng.\nB. xuất hiện dòng điện cảm ứng có chiều ABCDA.\nC. xuất hiện dòng điện cảm ứng có chiều ADCBA.\nD. xuất hiện dòng điện xoay chiều hình sin.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-032",
+    "noi_dung": "Dao động của một con lắc lò xo treo thẳng đứng là tổng hợp của hai dao động điều hòa cùng phương. Chọn chiều dương hướng xuống. Hình bên là đồ thị biểu diễn sự phụ thuộc của vận tốc $v_1$ và $v_2$ của hai dao động thành phần theo thời gian $t$. Biết độ lớn lực đàn hồi tác dụng lên vật nặng của con lắc vào thời điểm $t = 0,4\\text{ s}$ là $0,3\\text{ N}$. Lấy $g = \\pi^2 \\text{ (m/s}^2\\text{)}$. Cơ năng của con lắc bằng . [Hình: đồ thị vận tốc v1, v2 theo thời gian]",
+    "phuong_an": "A. $0,085 \\text{ J}$.\nB. $0,194 \\text{ J}$.\nC. $0,162 \\text{ J}$.\nD. $0,117 \\text{ J}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-033",
+    "noi_dung": "Ở mặt nước, một nguồn sóng đặt tại O dao động điều hòa theo phương thẳng đứng. Sóng truyền trên mặt nước có bước sóng $\\lambda$. Hai điểm M và N trên mặt nước dao động ngược pha với nguồn. Không kể O, trên các đoạn thẳng OM và MN có số điểm dao động cùng pha với nguồn lần lượt là 6 và 7. Biết khoảng cách giữa hai điểm M và N luôn thỏa mãn $d_1 \\le MN < d_2$. Tổng $d_1 + d_2$ có giá trị gần nhất với giá trị nào sau đây? [Hình: các vòng tròn đồng tâm biểu diễn sóng nước]",
+    "phuong_an": "A. $18,9\\lambda$.\nB. $21,6\\lambda$.\nC. $19,8\\lambda$.\nD. $20,7\\lambda$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-036",
+    "noi_dung": "Trong khí quyển tồn tại đồng vị phóng xạ $^{14}_{6}\\text{C}$ với chu kì bán rã $5568\\text{ năm}$. Mọi thực vật trên Trái Đất hấp thụ cacbon từ khí quyển đều chứa một lượng $^{14}_{6}\\text{C}$ cân bằng. Khảo sát một cổ vật bằng gỗ mun, người ta thấy số hạt $^{14}_{6}\\text{C}$ phân rã trong mỗi giây là $112\\text{ hạt}$. Vật mới làm giống hệt, cùng loại gỗ, cùng khối lượng, có số hạt $^{14}_{6}\\text{C}$ phân rã trong mỗi giây là $216\\text{ hạt}$. Tuổi thọ của mẫu cổ vật là",
+    "phuong_an": "A. $4917 \\text{ năm}$.\nB. $5198 \\text{ năm}$.\nC. $5276 \\text{ năm}$.\nD. $5043 \\text{ năm}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-039",
+    "noi_dung": "Trong thí nghiệm giao thoa sóng trên mặt nước, hai nguồn kết hợp đặt tại A và B, dao động cùng pha theo phương thẳng đứng, phát ra hai sóng lan truyền trên mặt nước với bước sóng $\\lambda$. Hai điểm C và D trên vùng giao thoa sao cho ABCD là hình vuông. Trên cạnh CD có 8 điểm cực tiểu giao thoa, trong đó hai điểm cực tiểu xa nhất cách nhau một khoảng $d$. Trên cạnh BC có ba điểm cực đại giao thoa mà phần tử sóng tại những điểm đó đều dao động ngược pha với hai nguồn. Giá trị của $d$ gần nhất với giá trị nào sau đây?",
+    "phuong_an": "A. $7,9\\lambda$.\nB. $9,3\\lambda$.\nC. $8,4\\lambda$.\nD. $8,7\\lambda$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1AgVa186-040",
+    "noi_dung": "Một hệ dao động gồm hai vật chồng lên nhau, mỗi vật gắn với một lò xo, đầu còn lại của mỗi lò xo gắn vào giá đỡ như hình vẽ. Lò xo (1) có độ cứng $k_1 = 10\\text{ N/m}$, lò xo (2) có độ cứng $k_2 = 20\\text{ N/m}$. Các vật nặng A và B có khối lượng bằng nhau và bằng $m = 100\\text{ g}$. Hệ số ma sát nghỉ giữa vật B và sàn bằng không, giữa hai vật là $\\mu = 0,5$. Biết rằng ở vị trí cân bằng lò xo (1) dãn ra một đoạn bằng $2\\text{ cm}$. Để hai vật dao động giống như một vật thì biên độ dao động của chúng không vượt quá giá trị $A_{max}$. Biên độ $A_{max}$ gần nhất với giá trị nào sau đây? [Hình: hai vật chồng lên nhau gắn vào hai lò xo]",
+    "phuong_an": "A. $7,2 \\text{ cm}$.\nB. $6,8 \\text{ cm}$.\nC. $6,1 \\text{ cm}$.\nD. $8,0 \\text{ cm}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-001",
+    "noi_dung": "Đối tượng nghiên cứu của Vật lí học là",
+    "phuong_an": "A. Thế giới sinh vật gồm thực vật, động vật, vi sinh vật, nấm\nB. Các dạng vận động đơn giản, tổng quát nhất của vật chất và tương tác giữa chúng.\nC. Thành phần cấu trúc, tính chất và sự biến đối của các đơn chất và hợp chất.\nD. Các dạng vận động của vật chất.",
+    "dap_an": "B",
+    "loi_giai": "Đối tượng nghiên cứu của Vật lí học là các dạng vận động đơn giản, tổng quát nhất của vật chất và tương tác giữa chúng.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-002",
+    "noi_dung": "Nội dung nào dưới đây không thuộc các bước của tiến trình tìm hiểu tự nhiên dưới góc độ vật lí?",
+    "phuong_an": "A. Để xuất vấn đề liên quan đến vật lí.\nB. Đưa ra phán đoán và xây dựng giả thuyết.\nC. Kiểm tra giả thuyết (hay dự đoán).\nD. Đánh giá được ảnh hưởng của một vấn đề thực tiễn.",
+    "dap_an": "D",
+    "loi_giai": "Đánh giá được ảnh hưởng của một vấn đề thực tiễn không thuộc các bước của tiến trình tìm hiểu tự nhiên dưới góc độ vật lí.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-003",
+    "noi_dung": "Một học sinh viết kết quả đo quãng đường chuyển động của viên bi là 0,314 m. Số 0,314 có mấy chữ số có nghĩa?",
+    "phuong_an": "A. 1.\nB. 2.\nC. 3.\nD. 4.",
+    "dap_an": "C",
+    "loi_giai": "Số 0,314 có 3 chữ số có nghĩa.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-004",
+    "noi_dung": "Một học sinh đo tốc độ trung bình của viên bi được giá trị v = (2,50 \\pm 0,04) m/s. Sai số tỉ đối của phép đo này là",
+    "phuong_an": "A. 1,6%.\nB. 2,5%.\nC. 62.5%.\nD. 4,0%.",
+    "dap_an": "A",
+    "loi_giai": "Sai số tỉ đối $\\delta A = \\frac{\\Delta A}{A}.100\\% = \\frac{0,04}{2,50}.100\\% = 1,6\\%$.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-005",
+    "noi_dung": "Một học sinh đo chiều dài của một chiếc bút chì bằng thước có độ chia nhỏ nhất là 0,1 cm. Kết quả của 5 lần đo lần lượt là 16,0 cm; 16,1 cm; 15,9 cm; 16,2 cm; 15,8 cm. Chiều dài của bút chì là",
+    "phuong_an": "A. (16,00 \\pm 0,12) cm.\nB. (16,0 \\pm 0,1) cm.\nC. (16,00 \\pm 0,22) cm.\nD. (16,0 \\pm 0,2) cm.",
+    "dap_an": "D",
+    "loi_giai": "Giá trị trung bình là 16,0 cm. Sai số tuyệt đối là 0,2 cm. Kết quả: (16,0 \\pm 0,2) cm.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-006",
+    "noi_dung": "Hai đại lượng nào sau đây là hai đại lượng vecto?",
+    "phuong_an": "A. Quãng đường và tốc độ.\nB. Độ dịch chuyển và vận tốc.\nC. Quãng đường và độ dịch chuyển.\nD. Tốc độ và vận tốc.",
+    "dap_an": "B",
+    "loi_giai": "Độ dịch chuyển, vận tốc là các đại lượng vecto.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-007",
+    "noi_dung": "Một mặt bàn hình chữ nhật ABCD có chiều dài AB = 0,8 m và chiều rộng BC = 0,6 m. Một con nhện bò dọc theo các cạnh của mặt bàn, từ A đến C. Độ dịch chuyển của con nhện là",
+    "phuong_an": "A. 1,0 m.\nB. 1,4 m.\nC. 0,2 m.\nD. 1,2 m.",
+    "dap_an": "A",
+    "loi_giai": "Độ dịch chuyển của con nhện là $AC = \\sqrt{AB^2 + BC^2} = \\sqrt{0,8^2 + 0,6^2} = 1,0 m$.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-008",
+    "noi_dung": "Một vật chuyển động trên một đường thẳng Ox, chiều dương là chiều Ox. Xét trong một khoảng thời gian xác định, phát biểu nào sau đây đúng?",
+    "phuong_an": "A. Vật chỉ chuyển động theo chiều dương, tốc độ trung bình nhỏ hơn vận tốc trung bình.\nB. Vật chỉ chuyển động theo chiều âm, tốc độ trung bình nhỏ hơn vận tốc trung bình.\nC. Vật chuyển động theo chiều dương và sau đó chuyển động theo chiều ngược lại, tốc độ trung bình lớn hơn vận tốc trung bình.\nD. Vật chuyển động theo chiều âm và sau đó chuyển động theo chiều ngược lại, tốc độ trung bình bằng vận tốc trung bình.",
+    "dap_an": "C",
+    "loi_giai": "Nếu vật đảo ngược chiều chuyển động thì độ dịch chuyển sẽ nhỏ hơn quãng đường đi được, khi đó độ lớn của vận tốc trung bình sẽ nhỏ hơn tốc độ trung bình, nghĩa là tốc độ trung bình lớn hơn vận tốc trung bình.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-009",
+    "noi_dung": "Dựa vào độ dốc của đồ thị độ dịch chuyển - thời gian có thể xác định đại lượng nào sau đây?",
+    "phuong_an": "A. Vận tốc.\nB. Gia tốc.\nC. Độ dịch chuyển.\nD. Khoảng thời gian.",
+    "dap_an": "A",
+    "loi_giai": "Dựa vào độ dốc của đồ thị độ dịch chuyển - thời gian có thể xác định vận tốc.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-010",
+    "noi_dung": "[Hình: Đồ thị độ dịch chuyển - thời gian gồm các đoạn 1, 2, 3, 4] Hình bên là đồ thị độ dịch chuyển - thời gian của ô tô chuyển động thẳng theo một hướng xác định. Tốc độ lớn nhất của ô tô tương ứng với đoạn nào trên đồ thị?",
+    "phuong_an": "A. 1.\nB. 2.\nC. 3.\nD. 4.",
+    "dap_an": "C",
+    "loi_giai": "Độ dốc lớn nhất tương ứng với tốc độ lớn nhất, đó là đoạn 3.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-011",
+    "noi_dung": "[Hình: Thông tin giờ đi và đến của các tàu SE7, SE5, SE3, SE19] Hình sau thể hiện giờ đi từ Hà Nội (02/01/2024) và giờ đến Vinh của các tàu SE7, SE5, SE3, SE19. Trong các tàu nói trên, tàu có tốc độ trung bình lớn nhất là",
+    "phuong_an": "A. SE3.\nB. SE5.\nC. SE7.\nD. SE19.",
+    "dap_an": "A",
+    "loi_giai": "Tàu SE3 có thời gian đi ngắn nhất nên tốc độ trung bình lớn nhất.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-012",
+    "noi_dung": "[Hình: Đồ thị d-t của xe ô tô đồ chơi] Một xe ô tô đồ chơi chuyển động trên đường thẳng có đồ thị độ dịch chuyển - thời gian như hình bên. Tốc độ của xe ô tô đồ chơi tại thời điểm 10 s là",
+    "phuong_an": "A. 0,7 m/s.\nB. 1,5 m/s.\nC. 0 m/s.\nD. 1 m/s.",
+    "dap_an": "B",
+    "loi_giai": "Giai đoạn từ t = 8s tới t = 12s, $v = \\frac{10-4}{12-8} = 1,5 m/s$.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-013",
+    "noi_dung": "Dựa vào độ dốc của đồ thị vận tốc - thời gian có thể xác định đại lượng nào sau đây?",
+    "phuong_an": "A. Vận tốc.\nB. Độ dịch chuyển.\nC. Quãng đường.\nD. Gia tốc.",
+    "dap_an": "D",
+    "loi_giai": "Độ dốc của đồ thị vận tốc - thời gian xác định gia tốc.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-014",
+    "noi_dung": "Khi rơi trong không khí, sự rơi của vật nào sau đây có thể coi là rơi tự do?",
+    "phuong_an": "A. Viên bi sắt.\nB. Tờ giấy.\nC. Quả bóng bàn.\nD. Chiếc cốc nhựa.",
+    "dap_an": "A",
+    "loi_giai": "Viên bi sắt nặng, chịu ảnh hưởng không đáng kể của sức cản không khí nên có thể coi là rơi tự do.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-015",
+    "noi_dung": "Khi vật được thả rơi tự do thì gia tốc của vật",
+    "phuong_an": "A. tăng lên.\nB. giảm đi.\nC. không đổi.\nD. giảm đi rồi tăng lên.",
+    "dap_an": "C",
+    "loi_giai": "Gia tốc rơi tự do không đổi tại một nơi.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-016",
+    "noi_dung": "Trong quá trình rơi tự do của viên bi sắt thì tốc độ của nó",
+    "phuong_an": "A. giảm đi.\nB. không thay đổi.\nC. lúc đầu không thay đổi, về sau giảm đi.\nD. tăng lên.",
+    "dap_an": "D",
+    "loi_giai": "Tốc độ trong quá trình rơi tự do tăng lên đều theo thời gian.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-017",
+    "noi_dung": "Một quả bóng được ném xiên góc xuống sàn, nó nảy lên theo phương hợp với phương nằm ngang một góc nào đó. Trong chuyển động nảy lên, thành phần vận tốc theo phương nằm ngang",
+    "phuong_an": "A. bị ảnh hưởng bởi trọng lực.\nB. không bị ảnh hưởng bởi trọng lực.\nC. có độ lớn tăng dần.\nD. bị ảnh hưởng của lực tiếp xúc với mặt sàn.",
+    "dap_an": "B",
+    "loi_giai": "Thành phần vận tốc theo phương ngang không bị ảnh hưởng bởi trọng lực.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-018",
+    "noi_dung": "Nếu bỏ qua sức cản của không khí, một vật được ném từ mặt đất sẽ đạt tầm xa cực đại khi góc giữa vận tốc ban đầu và phương nằm ngang là",
+    "phuong_an": "A. 30°.\nB. 37°.\nC. 90°.\nD. 45°.",
+    "dap_an": "D",
+    "loi_giai": "Tầm xa cực đại khi góc ném là 45 độ.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-019",
+    "noi_dung": "[Hình: Sân golf] Khi chơi gôn (golf), người chơi cần đánh quả bóng gôn từ điểm xuất phát (Tee) sao cho quả bóng gôn đến được lỗ (Hole) trong vùng xanh (Green). Biết điểm gần nhất của vùng xanh cách điểm xuất phát 250 m. Lấy g = 10 m/s^2.",
+    "phuong_an": "a) Chuyển động của quả bóng gôn là chuyển động thẳng.\nb) Bỏ qua sức cản của không khí, gia tốc của quả bóng gôn ở điểm cao nhất bằng gia tốc rơi tự do.\nc) Tốc độ của quả bóng gôn ở điểm cao nhất bằng không.\nd) Để quả bóng gôn từ điểm xuất phát đến được vùng xanh thì tốc độ ban đầu của nó không nhỏ hơn 50 m/s.",
+    "dap_an": "aS bĐ cS dĐ",
+    "loi_giai": "a) Sai vì là chuyển động ném xiên. b) Đúng. c) Sai vì tốc độ tại điểm cao nhất bằng vận tốc ngang. d) Đúng, v >= 50 m/s.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-020",
+    "noi_dung": "[Hình: 3 hình băng giấy] Một thiết bị tạo ra các chấm trên một băng giấy chuyển động với khoảng thời gian giữa 2 chấm liên tiếp là 0,02 s. Hình 1, Hình 2 và Hình 3 biểu diễn kết quả chuyển động thẳng của băng giấy. Mốc thời gian được chọn tại chấm 0.",
+    "phuong_an": "a) Kết quả ở Hình 1 chứng tỏ băng giấy chuyển động thẳng đều.\nb) Kết quả ở Hình 2 và Hình 3 chứng tỏ băng giấy chuyển động nhanh dần.\nc) Tốc độ trung bình của băng giấy ở Hình 1 và Hình 2 trong 0,1 s (tính từ mốc thời gian) là bằng nhau.\nd) Độ lớn gia tốc của băng giấy ở Hình 2 lớn hơn độ lớn gia tốc của băng giấy ở Hình 3.",
+    "dap_an": "aĐ bS cĐ dĐ",
+    "loi_giai": "a) Đúng, khoảng cách đều là chuyển động thẳng đều. b) Sai, hình 3 chậm dần. c) Đúng. d) Đúng.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-021",
+    "noi_dung": "[Hình: Đồ thị d-t của thủ môn] Trong một tình huống bóng đá, thủ môn xuất phát từ vạch ngang nối hai cột của khung thành chạy thẳng lên phía trước để bắt bóng. Hình bên là đồ thị độ dịch chuyển - thời gian của thủ môn. Điểm A tương ứng với điểm xuất phát, đoạn AB có dạng parabol, BC là đoạn thẳng.",
+    "phuong_an": "a) Trong khoảng thời gian từ 0 s đến 6 s thủ môn không đổi hướng chuyển động.\nb) Thủ môn tăng tốc trong khoảng thời gian từ 0 s đến 2 s.\nc) Tốc độ chuyển động của thủ môn từ điểm B đến điểm C là 10 m/s.\nd) Từ 4 giây đến 6 giây, vận tốc chuyển động của thủ môn có giá trị -10 m/s.",
+    "dap_an": "aS bĐ cĐ dĐ",
+    "loi_giai": "a) Sai vì thủ môn đổi chiều ở D. b) Đúng. c) Đúng, v = 10 m/s. d) Đúng, v = -10 m/s.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-022",
+    "noi_dung": "[Hình: Hình 4 và Hình 5 đồ thị v-t và d-t] Từ tầng cao của một tòa nhà tại nơi có gia tốc trọng trường là 9,80 m/s^2, một vật rơi tự do chạm mặt đất hết thời gian 3,00 s (lúc t = 0 vật bắt đầu rơi, chiều dương là chiều chuyển động).",
+    "phuong_an": "a) Đồ thị vận tốc - thời gian của vật rơi như Hình 4.\nb) Đồ thị độ dịch chuyển - thời gian của vật rơi như Hình 5.\nc) Tốc độ của vật khi chạm đất là 29,4 m/s.\nd) Quãng đường rơi của vật (trong 3,00 s) là 44,1 m.",
+    "dap_an": "aĐ bS cĐ dĐ",
+    "loi_giai": "a) Đúng, v = gt. b) Sai, d-t phải là nhánh parabol. c) Đúng, v = 29,4 m/s. d) Đúng, h = 44,1 m.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-023",
+    "noi_dung": "[Hình: Đồ thị v-t của viên bi] Chuyển động của một viên bi có đồ thị vận tốc - thời gian như hình bên. Ở thời điểm nào (tính bằng giây), vận tốc viên bi có giá trị bằng không?",
+    "phuong_an": "",
+    "dap_an": "2",
+    "loi_giai": "Từ đồ thị ta thấy vận tốc có giá trị bằng 0 tại thời điểm t = 2s.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-024",
+    "noi_dung": "[Hình: Đồng hồ tốc độ ô tô chỉ 60 km/h] Hình bên là ảnh chụp đồng hồ đo tốc độ trên ô tô đang chuyển động. Tốc độ của ô tô tại thời điểm chụp ảnh là bao nhiêu km/h?",
+    "phuong_an": "",
+    "dap_an": "60",
+    "loi_giai": "Tốc độ của ô tô tại thời điểm chụp ảnh là 60 km/h.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-025",
+    "noi_dung": "Một vận động viên chạy từ điểm xuất phát lên một quả đồi với tốc độ không đổi là 3 m/s. Khi chạy được 90 m thì vận động viên này lập tức chạy ngược lại theo đường cũ về điểm xuất phát với tốc độ không đổi là 6 m/s. Ở cả hành trình trên, tốc độ trung bình của vận động viên là bao nhiêu m/s?",
+    "phuong_an": "",
+    "dap_an": "4",
+    "loi_giai": "t1 = 30s, t2 = 15s. Tốc độ trung bình v = (90+90)/(30+15) = 4 m/s.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-026",
+    "noi_dung": "[Hình: Vectơ vận tốc và các thành phần] Một viên đạn chuyển động có các thành phần vận tốc theo hai trục vuông góc Ox và Oy với độ lớn lần lượt v_x = 10 m/s và v_y = 30 m/s. Góc tạo bởi vận tốc của viên đạn và phương Oy là \\alpha có tan\\alpha là bao nhiêu? (Kết quả lấy đến 2 chữ số có nghĩa).",
+    "phuong_an": "",
+    "dap_an": "0,33",
+    "loi_giai": "tan\\alpha = v_x / v_y = 10 / 30 = 0,33.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-027",
+    "noi_dung": "Một quả bóng rơi tự do từ độ cao h (so với mặt đất) với thời gian rơi là t. Độ cao của quả bóng tại thời điểm t/2 (từ lúc bắt đầu rơi) bằng bao nhiêu phần của độ cao h?",
+    "phuong_an": "",
+    "dap_an": "0,75",
+    "loi_giai": "Quãng đường đi được trong t/2 là h1 = 1/4 h. Độ cao còn lại h' = h - 1/4 h = 0,75h.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1ZJnFs62-028",
+    "noi_dung": "[Hình: Đồ thị v-t của hai viên bi B1, B2] Chuyển động của hai viên bi B1 và B2 có đồ thị vận tốc thời gian như hình bên. Gọi s1 và s2 là quãng đường đi được tương ứng của B1 và B2 trong cùng thời gian. Tỉ số s2/s1 là bao nhiêu? (Kết quả lấy đến 1 chữ số có nghĩa).",
+    "phuong_an": "",
+    "dap_an": "0,3",
+    "loi_giai": "Tỉ số s2/s1 = (tan 30 độ)/(tan 60 độ) = 0,3.",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-001",
+    "noi_dung": "Một khối khí lí tưởng đang được làm lạnh, nội năng của khối khí khi đó sẽ",
+    "phuong_an": "A. không đổi.\nB. giảm đi.\nC. tăng lên.\nD. tăng lên rồi giảm.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-002",
+    "noi_dung": "Để mở một nút chai bị kẹt, người ta hơ nóng quanh cổ chai. Nếu xem không khí bên trong chai là khí lí tưởng thì trong quá trình hơ nóng, đại lượng không thay đổi là",
+    "phuong_an": "A. thể tích khí bên trong chai.\nB. áp suất khí bên trong chai.\nC. nhiệt độ khí bên trong chai.\nD. nội năng của khí bên trong chai.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-003",
+    "noi_dung": "Gọi $n_R, n_L, n_K$ lần lượt là mật độ phân tử của một chất (không phải là nước) ở thể rắn, thể lỏng và thể khí. Thứ tự đúng là",
+    "phuong_an": "A. $n_R > n_K > n_L$.\nB. $n_R < n_K < n_L$.\nC. $n_R > n_L > n_K$.\nD. $n_R < n_L < n_K$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-004",
+    "noi_dung": "Hình vẽ nào dưới đây xác định đúng hướng của vectơ cảm ứng từ tại M gây ra bởi dòng điện trong dây dẫn thẳng dài vô hạn.",
+    "phuong_an": "A. [Hình: A]\nB. [Hình: B]\nC. [Hình: C]\nD. [Hình: D]",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-005",
+    "noi_dung": "Với p là áp suất và V là thể tích của một lượng khí lí tưởng xác định. Với định luật Boyle, đại lượng nào sau đây không đổi?",
+    "phuong_an": "A. V.\nB. p.\nC. $\\frac{p}{V}$.\nD. p.V.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-007",
+    "noi_dung": "Xạ phẫu gamma knife hay phẫu thuật sử dụng dao gamma là phương pháp điều trị sử dụng bức xạ. Phương pháp này sử dụng phần mềm lập kế hoạch điều trị trên máy vi tính giúp Bác sĩ xác định vị trí và chiếu xạ các mục tiêu nhỏ với độ chính xác rất cao. Sơ đồ nguyên lý xạ phẫu được mô tả như hình bên. Xạ phẫu gamma sử dụng tính chất nào của chùm tia gamma?",
+    "phuong_an": "A. Khả năng đâm xuyên và làm phát quang một số chất.\nB. Khả năng đâm xuyên và khả năng hủy diệt tế bào.\nC. Khả năng ion hóa không khí và khả năng đâm xuyên.\nD. Khả năng hủy diệt tế bào và làm phát quang một số chất.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-008",
+    "noi_dung": "Một thanh dẫn điện T trong từ trường đều, các đường sức từ nằm trong mặt phẳng hình vẽ MNPQRO và có phương, chiều trùng với PO như hình vẽ bên. Thanh dẫn điện T vuông góc với mặt phẳng MNPQRO. Xét bốn đoạn thẳng OQ, OP, ON, OM. Tịnh tiến thanh dẫn điện T theo đoạn nào thì trong thanh không sinh ra suất điện động cảm ứng?",
+    "phuong_an": "A. ON.\nB. OP.\nC. OQ.\nD. OM.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-009",
+    "noi_dung": "Cho rằng một hạt nhân Uranium $_{92}^{235}\\text{U}$ khi phân hạch thì tỏa ra năng lượng là 200 MeV. Năng lượng tỏa ra khi 2,35 g Uranium $_{92}^{235}\\text{U}$ phân hạch hết gần giá trị nào nhất sau đây?",
+    "phuong_an": "A. $19,3.10^{10} \\text{MeV}$.\nB. $6,02.10^{23} \\text{MeV}$.\nC. $12,4.10^{23} \\text{MeV}$.\nD. $16,4.10^{23} \\text{MeV}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-010",
+    "noi_dung": "Quá trình biến đổi trạng thái của một lượng khí lí tưởng xác định được biểu diễn như hình vẽ. Các thông số trạng thái áp suất p, thể tích V và nhiệt độ tuyệt đối T thay đổi như thế nào khi khí chuyển từ trạng thái (1) sang trạng thái (2)?",
+    "phuong_an": "A. V không đổi, p tăng và T tăng.\nB. p tăng, V tăng và T giảm.\nC. T không đổi, V tăng, p tăng.\nD. p tăng, V tăng và T tăng.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-011",
+    "noi_dung": "Hình vẽ bên cho biết biển cảnh báo nguy hiểm",
+    "phuong_an": "A. do phóng xạ.\nB. do từ trường mạnh.\nC. do chất độc hoá học.\nD. do điện thế cao.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-012",
+    "noi_dung": "Hạt A, B, C thoả mãn các phương trình sau a) $_{84}^{210}\\text{Po} \\rightarrow _{82}^{206}\\text{Pb} + \\text{A}$; b) $_{1}^{2}\\text{H} + _{1}^{2}\\text{H} \\rightarrow _{1}^{3}\\text{H} + \\text{B}$; c) $\\text{C} + _{5}^{10}\\text{B} \\rightarrow _{3}^{7}\\text{Li} + _{2}^{4}\\text{He}$. Cho các hạt A, B, C bay với cùng vận tốc (theo hướng mũi tên) vào một miền có từ trường đều mà vectơ cảm ứng từ vuông góc và hướng vào trong mặt phẳng trang giấy. Quỹ đạo của các hạt A, B, C trong từ trường lần lượt là các đường nào ở hình vẽ bên?",
+    "phuong_an": "A. (4), (5) và (3).\nB. (2), (1) và (3).\nC. (1), (2) và (3).\nD. (5), (4) và (3).",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-013",
+    "noi_dung": "Hạt nhân nguyên tử cấu tạo bởi",
+    "phuong_an": "A. proton và neutron.\nB. proton, neutron và electron.\nC. neutron và electron.\nD. proton và electron.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-014",
+    "noi_dung": "Cho ba bình kín chứa ba khối khí lí tưởng có thể tích và áp suất khác nhau. Bình (1) có chứa khí hydrogen, bình (2) chứa khí oxygen và bình (3) có chứa khí helium. Các bình được nung nóng ở cùng một nhiệt độ. Động năng tịnh tiến trung bình của các phân tử khí trong các bình này là",
+    "phuong_an": "A. lớn nhất với bình (1).\nB. lớn nhất với bình (3).\nC. lớn nhất với bình (2).\nD. bằng nhau.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-015",
+    "noi_dung": "Sóng điện từ và sóng cơ học không có chung tính chất nào dưới đây?",
+    "phuong_an": "A. Phản xạ.\nB. Truyền được trong chân không.\nC. Khúc xạ.\nD. Mang năng lượng.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-016",
+    "noi_dung": "Một bình kim loại chứa khí lí tưởng ở nhiệt độ $27^\\circ\\text{C}$ và áp suất $8.10^5\\text{ Pa}$. Nếu 25% lượng khí trong bình thoát ra và lượng khí còn lại trong bình có nhiệt độ $12^\\circ\\text{C}$ thì sẽ có áp suất là",
+    "phuong_an": "A. $2,85.10^5\\text{ Pa}$.\nB. $0,95.10^5\\text{ Pa}$.\nC. $5,7.10^5\\text{ Pa}$.\nD. $1,425.10^5\\text{ Pa}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-017",
+    "noi_dung": "Sử dụng để trả lời Câu 17 và Câu 18: Một ấm bằng đồng chứa 0,6 lít nước ở nhiệt độ ban đầu bằng $20^\\circ\\text{C}$. Sau thời gian $\\Delta t$, nước được đun sôi tới $100^\\circ\\text{C}$ và đã có 0,1 lít nước chuyển hoá thành hơi nước. Biết khối lượng của ấm đồng là 0,5 kg, nhiệt hoá hơi riêng của nước ở $100^\\circ\\text{C}$ là $2,3.10^6\\text{ J/kg}$, nhiệt dung riêng của nước là $4200\\text{ J/kg.K}$, nhiệt dung riêng của đồng là $380\\text{ J/kg.K}$, khối lượng riêng của nước ở $20^\\circ\\text{C}$ là $1\\text{g/ml}$, hiệu suất của ấm là 60%. Trong thời gian $\\Delta t$ đun ấm nước ở trên, nhiệt độ của nước trong ấm",
+    "phuong_an": "A. luôn không đổi.\nB. ban đầu tăng lên rồi sau đó không đổi.\nC. ban đầu tăng lên rồi sau đó giảm đi.\nD. luôn tăng.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-018",
+    "noi_dung": "Tổng năng lượng đã dùng để đun trong thời gian $\\Delta t$ gần giá trị nào nhất sau đây?",
+    "phuong_an": "A. 770 kJ.\nB. 447 kJ.\nC. 719 kJ.\nD. 431 kJ.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-019",
+    "noi_dung": "Khung dây gồm 200 vòng, có điện trở r = 1 Ohm, phần diện tích khung dây được đặt trong từ trường vuông góc với mặt phẳng trang giấy và hướng vào trong (như hình vẽ bên) là $0,3\\text{ m}^2$. Độ lớn cảm ứng thay đổi theo thời gian theo biểu thức: B = 0,05t (B tính theo T; t tính theo s). Khung dây mắc với điện trở R = 5 Ohm nằm trong bình cách nhiệt nằm ngang có thể tích bình là 1,0 lít (ở miệng bình có vòng chặn). Piston nhẹ bịt kín một khối khí lí tưởng trong bình và có thể chuyển động không ma sát với thành bình. Lúc đầu t = 0, piston đứng yên ở vị trí chính giữa của bình, áp suất khí quyển là $10^5\\text{ Pa}$ và nhiệt độ khí là 250 K. Kể từ t = 0, khí được làm nóng từ từ và piston chuyển động chậm. Tại t = $\\tau$, piston dừng lại khi vừa chạm vào vòng chặn, nội năng của khí trong bình tăng thêm 100 J và nhiệt độ khí trong bình là T. Coi toàn bộ nhiệt lượng do R tỏa ra được khí hấp thụ.",
+    "phuong_an": "a) Độ lớn cường độ dòng điện cảm ứng chạy qua mạch là 0,5 A.\nb) Dòng điện cảm ứng chạy trong phần vòng dây tròn cùng chiều kim đồng hồ.\nc) Giá trị T = 500 K.\nd) Tại t = 160 s, nhiệt độ của khí trong bình là T' = 600 K.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-020",
+    "noi_dung": "Thí nghiệm đo nhiệt nóng chảy riêng của nước đá được mô tả như hình vẽ. Dây đun (dây điện trở) có công suất 480 W dùng để làm nóng chảy nước đá trong thùng chứa. Sau 120 s, số chỉ của cân điện tử giảm đi 0,172 kg. Cho biết chỉ có sự trao đổi nhiệt giữa nước đá và dây đun.",
+    "phuong_an": "a) Khối lượng nước đá đã tan trong thời gian đun là 0,172 kg.\nb) Việc đọc số liệu trên cân điện tử phải được thực hiện khi nguồn điện còn đang bật và ống thoát nước vẫn mở để tăng độ chính xác.\nc) Nhiệt lượng cần thiết để làm tan nước đá ở thí nghiệm trên là 57600 J.\nd) Nhiệt nóng chảy riêng của nước đá đo được ở thí nghiệm này lớn hơn $3,4.10^5\\text{ J/kg}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-021",
+    "noi_dung": "Trong vật lý hạt nhân, máy đo bức xạ (máy đếm/ống đếm) Geiger-Muller được sử dụng rộng rãi trong việc đo số lượng hạt $\\alpha, \\beta$ bằng cách ứng dụng khả năng ion hoá của các tia bức xạ này. Số tín hiệu máy đếm được tỉ lệ thuận với số lượng hạt nhân bị phân rã. Xét hai máy đếm Geiger-Muller giống nhau lần lượt được chiếu xạ bởi hai mẫu chất phóng xạ $_{84}^{210}\\text{Po}$ và $_{53}^{131}\\text{I}$ (mỗi hạt nhân khi phân rã chỉ phát ra một tia phóng xạ). Biết rằng các mẫu chất phóng xạ được đặt ở cùng một khoảng cách so với các máy đếm tại hai phòng khác nhau. Cho khối lượng của từng mẫu phóng xạ tại thời điểm ban đầu đều là 1,5 g. Lấy khối lượng của các hạt nhân gần bằng số khối của chúng tính theo amu; chu kì bán rã của $_{84}^{210}\\text{Po}$ và $_{53}^{131}\\text{I}$ lần lượt là 138,4 ngày và 8,02 ngày",
+    "phuong_an": "a) Số lượng hạt nhân $_{53}^{131}\\text{I}$ đã phân rã trong vòng 1 ngày đầu tiên xấp xỉ bằng $6,3.10^{21}$ hạt.\nb) Sau 1 ngày đầu tiên, máy đo bức xạ ứng với mẫu chất chứa $_{53}^{131}\\text{I}$ đếm được nhiều tín hiệu hơn.\nc) Độ phóng xạ của hạt nhân $_{84}^{210}\\text{Po}$ sau 1 ngày đầu tiên xấp xỉ bằng $2,14.10^{19}\\text{ Bq}$.\nd) Hạt $_{84}^{210}\\text{Po}$ sau khi phóng ra hạt $\\alpha$ thì biến thành hạt nhân $_{82}^{206}\\text{Pb}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-022",
+    "noi_dung": "Biết không khí trong môi trường sống có nhiệt độ $0^\\circ\\text{C}$ và thể tích mol 22,4 lít/mol, thể tích không khí mà vận động viên hít vào khi hít sâu là 2,73 lít. Nhiệt độ phổi của vận động viên luôn ở mức $37^\\circ\\text{C}$. Khi hít vào, không khí được đẩy vào phổi có nhiệt độ $37^\\circ\\text{C}$ sau khi qua mũi, họng, đồng thời nhanh chóng đạt được sự cân bằng áp suất bên trong và bên ngoài. Biết chênh lệch áp suất của không khí bên trong và bên ngoài phổi tối đa mà vận động viên chịu được là 150 mmHg.",
+    "phuong_an": "a) Độ chênh lệch nhiệt độ của không khí trong phổi và bên ngoài là 310 K.\nb) Tổng số phân tử không khí mà vận động viên hít vào khi hít sâu xấp xỉ là $7,34.10^{22}$.\nc) Thể tích không khí trong phổi của vận động viên sau khi hít sâu là 3,1 lít.\nd) Nếu sau khi hít sâu vào, vận động viên nín thở và phổi co lại thì giá trị nhỏ nhất của thể tích khí trong phổi vận động viên này đạt được có thể ít hơn 2,5 lít.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-023",
+    "noi_dung": "Một bình kín chứa khí lí tưởng ở nhiệt độ $27^\\circ\\text{C}$ và áp suất 2 atm. Nếu nung nóng đẳng tích khí tới nhiệt độ $87^\\circ\\text{C}$ thì áp suất của khí trong bình khi đó là bao nhiêu atm? (Kết quả làm tròn đến chữ số hàng phần mười).",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-024",
+    "noi_dung": "Một phương pháp điều trị được đề xuất cho người bị đột quỵ là ngâm mình trong bồn nước đá tại $0^\\circ\\text{C}$ để hạ nhiệt độ cơ thể, ngăn ngừa tổn thương não. Trong một loạt thử nghiệm, bệnh nhân được làm mát cho đến khi nhiệt độ bên trong của họ đạt tới nhiệt độ $32^\\circ\\text{C}$. Để điều trị cho một bệnh nhân nặng 70 kg, lượng đá tối thiểu ở $0^\\circ\\text{C}$ bác sĩ cần cho vào bồn tắm là bao nhiêu kilôgam để nhiệt độ của nó duy trì ở $0^\\circ\\text{C}$ ? (Kết quả làm tròn đến chữ số hàng phần trăm). Biết nhiệt dung riêng của cơ thể người là 3480 (J/kg.K), nhiệt nóng chảy riêng của nước đá là $334.10^3$ (J/kg), xem như nhiệt độ bình thường của cơ thể người là $37^\\circ\\text{C}$ và chỉ có trao đổi nhiệt giữa nước đá và cơ thể người.",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-025",
+    "noi_dung": "Một tượng cổ bằng gỗ có độ phóng xạ H. Một mảnh gỗ của cây vừa mới chặt, nếu có khối lượng tương đương sẽ có độ phóng xạ là 1,5H. Biết chu kì bán rã chất phóng xạ trong gỗ ($_6^{14}\\text{C}$) là 5700 năm. Tuổi của tượng cổ này là bao nhiêu năm? (Kết quả làm tròn đến chữ số hàng đơn vị).",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1IEw1VCk-026",
+    "noi_dung": "Một cột thủy ngân bịt kín một khối khí lí tưởng nhất định trong một ống thủy tinh đặt thẳng đứng có đầu trên hở. Phần ống thủy tinh lớn ở phía trên và nhỏ ở phía dưới (như hình bên). Tiết diện của phần ống lớn gấp ba lần phần ống nhỏ và phần trên đủ dài. Biết áp suất khí quyển là $p_0$. Ban đầu, áp suất của cột khí trong ống nhỏ là $2p_0$ và chiều dài cột thủy ngân bằng chiều dài của cột khí, nhiệt độ của khí là 300 K. Đun nóng chậm khí trong phần ống nhỏ cho đến khi cột thủy ngân vừa bị đẩy hết vào phần ống lớn ở trên. Nhiệt độ của cột khí trong ống nhỏ lúc này là bao nhiêu Kelvin?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-001",
+    "noi_dung": "Phát biểu nào sau đây là đúng khi nói về sự phân rã phóng xạ?",
+    "phuong_an": "A. Không thể biết hạt nhân nào sẽ phân rã trước.\nB. Phụ thuộc vào điều kiện nhiệt độ và áp suất của môi trường.\nC. Là quá trình con người có thể điều khiển được.\nD. Có thể dự đoán chính xác thời điểm từng hạt nhân phân rã.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-002",
+    "noi_dung": "Một khung dây dẫn hình chữ nhật MNPQ được đặt cố định trong từ trường đều. Hướng của từ trường $\\vec{B}$ vuông góc với mặt phẳng khung dây như hình bên [Hình: Khung dây MNPQ nằm trong từ trường vuông góc đi vào trong, dòng điện chạy cùng chiều kim đồng hồ]. Trong khung dây có dòng điện chạy cùng chiều kim đồng hồ. Lực từ tác dụng lên khung dây",
+    "phuong_an": "A. làm nén khung.\nB. làm dãn khung.\nC. làm khung chuyển động.\nD. làm khung dây quay.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-003",
+    "noi_dung": "Vòng dây dẫn hình tròn đặt trong một từ trường đều có cảm ứng từ phụ thuộc thời gian theo đồ thị như hình b. Trong giây thứ nhất, các đường sức từ có phương vuông góc và hướng vào trong mặt phẳng hình vẽ (hình a). Ở giây thứ hai dòng điện cảm ứng xuất hiện trong vòng dây có đặc điểm nào sau đây?\n[Hình: Vòng dây tròn và đồ thị B theo t, từ t = 0 đến 1s B âm đi lên 0, từ 1s đến 2s B dương đi lên]",
+    "phuong_an": "A. Dòng điện ngược chiều kim đồng hồ, cường độ có độ lớn tăng dần.\nB. Dòng điện cùng chiều kim đồng hồ, cường độ có độ lớn tăng dần.\nC. Dòng điện cùng chiều kim đồng hồ, cường độ không đổi.\nD. Dòng điện ngược chiều kim đồng hồ, cường độ không đổi.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-004",
+    "noi_dung": "Ở điều kiện nhiệt độ phòng $27^{\\circ}\\text{C}$ và áp suất khí quyển $1,0\\text{ atm}$, một phân tử oxygen có tốc độ trung bình $450\\text{ m/s}$ và quãng đường tự do trung bình (quãng đường đi giữa giữa hai lần va chạm liên tiếp) là $1,1.10^{-7}\\text{ m}$. Trung bình mỗi giây, một phân tử oxy thực hiện khoảng bao nhiêu va chạm?",
+    "phuong_an": "A. $8,2.10^9$ lần.\nB. $4,1.10^9$ lần.\nC. $2,0.10^9$ lần.\nD. $5,0.10^9$ lần.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-005",
+    "noi_dung": "Năm 1911, Ernest Rutherford tiến hành thí nghiệm tán xạ hạt alpha ($\\alpha$) lên lá vàng mỏng. Kết quả thí nghiệm có thể được minh họa như hình bên. Nhận định nào sau đây không đúng với kết quả thí nghiệm?\n[Hình: Mô hình thí nghiệm tán xạ hạt alpha qua các lớp nguyên tử vàng]",
+    "phuong_an": "A. Một số ít hạt $\\alpha$ bị lệch khỏi phương ban đầu với những góc lệch khác nhau.\nB. Một tỉ lệ khá lớn hạt $\\alpha$ bị lệch khỏi hướng ban đầu với góc lệch lớn hơn $90^{\\circ}$.\nC. Một số hạt $\\alpha$ bị lệch phương chuyển động khi đến gần hạt nhân.\nD. Phần lớn hạt $\\alpha$ xuyên thẳng qua lá vàng mỏng mà không bị lệch.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-006",
+    "noi_dung": "Nội dung nào sau đây thể hiện tầm quan trọng của công nghiệp hạt nhân trong thế kỷ XXI?",
+    "phuong_an": "A. Góp phần đảm bảo an ninh năng lượng, phát triển y học và bảo vệ môi trường.\nB. Tạo ra vật liệu nổ phục vụ quốc phòng và khai thác khoáng sản.\nC. Làm nguồn chính cung cấp năng lượng cho phương tiện giao thông cá nhân.\nD. Tăng sản lượng khai thác than và dầu khí để đáp ứng nhu cầu năng lượng.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-007",
+    "noi_dung": "Hai bình cách nhiệt A và B, mỗi bình đều chứa hỗn hợp nước và các viên nước đá nhỏ như hình bên. Nhiệt độ của hỗn hợp trong 2 bình có giá trị không đổi lần lượt là $t_A$ và $t_B$, mối quan hệ giữa hai giá trị nhiệt độ là\n[Hình: Hai bình A và B chứa hỗn hợp nước và nước đá]",
+    "phuong_an": "A. $t_A < t_B$.\nB. $t_A = t_B$.\nC. $t_A > t_B$.\nD. $t_A = 5t_B$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-008",
+    "noi_dung": "Các thông số trạng thái của một lượng khí lí tưởng xác định gồm",
+    "phuong_an": "A. khối lượng, nhiệt độ, thể tích.\nB. áp suất, nhiệt độ, khối lượng.\nC. khối lượng, áp suất, thể tích.\nD. áp suất, nhiệt độ, thể tích.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-009",
+    "noi_dung": "Gọi p, V và T lần lượt là áp suất, thể tích và nhiệt độ tuyệt đối của khối khí lí tưởng xác định. Hình bên biểu diễn quá trình biến đổi trạng thái của khối khí trong hệ tọa độ (V-T).\nĐồ thị ở hình nào dưới đây biểu diễn đúng quá trình biến đổi trên trong hệ tọa độ (p-T)?\n[Hình: Đồ thị V-T biểu diễn đường thẳng kéo dài qua gốc tọa độ từ (1) đến (2)]",
+    "phuong_an": "A. Hình 2.\nB. Hình 3.\nC. Hình 4.\nD. Hình 1.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-010",
+    "noi_dung": "Hình bên mô tả khoảng cách, sự sắp xếp và chuyển động của phân tử ở thể rắn; hình cầu là phân tử, mũi tên là hướng chuyển động của phân tử. Phát biểu nào sau đây không đúng về cấu trúc của chất rắn?\n[Hình: Mô hình sắp xếp trật tự của các phân tử chất rắn]",
+    "phuong_an": "A. Các phân tử chất rắn dao động quanh các vị trí cân bằng xác định.\nB. Trong chất rắn, các phân tử ở rất gần nhau.\nC. Lực tương tác giữa các phân tử chất rắn mạnh giữ cho các phân tử sắp xếp có trật tự.\nD. Các phân tử chất rắn chiếm toàn bộ bình chứa.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-011",
+    "noi_dung": "Giải pháp nào sau đây là một ứng dụng vật lí trong việc khai thác năng lượng nhằm góp phần giảm ô nhiễm môi trường?",
+    "phuong_an": "A. Sử dụng than đá để sưởi ấm và nấu ăn trong gia đình.\nB. Sử dụng năng lượng mặt trời để sản xuất điện.\nC. Sử dụng nhiên liệu hóa thạch để sản xuất điện.\nD. Sử dụng xăng để vận hành ô tô, xe máy,...",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-012",
+    "noi_dung": "Gọi c là tốc độ ánh sáng trong chân không. Một vật có khối lượng $m_0$ ở trạng thái nghỉ sẽ có năng lượng nghỉ $E_0 = m_0c^2$ thì khi chuyển động vật có khối lượng $m$ và năng lượng của vật khi đó gọi là năng lượng toàn phần E bằng",
+    "phuong_an": "A. $mc^2 - m_0c^2$.\nB. $m_0c^2 + mc^2$.\nC. $mc^2$.\nD. $m^2c$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-013",
+    "noi_dung": "Máy phát điện ra đời, mở đầu cho kỉ nguyên sử dụng điện năng của nhân loại nhờ vào nhà vật lí Faraday khám phá ra hiện tượng nào sau đây?",
+    "phuong_an": "A. Hiện tượng cảm ứng điện từ.\nB. Sự nở vì nhiệt của vật rắn.\nC. Hiện tượng biến dạng cơ của vật rắn.\nD. Hiện tượng hóa hơi.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-014",
+    "noi_dung": "Nguyên lý hoạt động của bếp từ được mô tả như hình bên. Bếp từ làm nóng nồi kim loại bằng cách nào sau đây?\n[Hình: Sơ đồ hoạt động của bếp từ hiển thị cuộn dây phát từ, đường sức từ và dòng điện xoáy ở đáy nồi kim loại]",
+    "phuong_an": "A. Tạo ra dòng điện xoáy làm nóng trực tiếp đáy nồi kim loại.\nB. Tạo ra đường sức từ trên mặt kính bếp rồi truyền nhiệt lên đáy nồi.\nC. Làm nóng trực tiếp mặt kính bếp rồi truyền nhiệt lên đáy nồi.\nD. Làm nóng cuộn dây phát từ rồi truyền nhiệt qua mặt kính đến đáy nồi.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-015",
+    "noi_dung": "Nhiệt hóa hơi riêng của nước ở nhiệt độ $100^{\\circ}\\text{C}$ là $2,3.10^6\\text{ J/kg}$ có nghĩa là",
+    "phuong_an": "A. $1\\text{ kg}$ nước sẽ tỏa ra một lượng nhiệt là $2,3.10^6\\text{ J}$ để bay hơi hoàn toàn ở nhiệt độ $100^{\\circ}\\text{C}$.\nB. $1\\text{ kg}$ nước cần thu một lượng nhiệt là $2,3.10^6\\text{ J}$ để bay hơi hoàn toàn ở nhiệt độ $100^{\\circ}\\text{C}$.\nC. $1\\text{ m}^3$ nước bất kì sẽ tỏa ra một lượng nhiệt là $2,3.10^6\\text{ J}$ để hóa hơi hoàn toàn.\nD. $1\\text{ m}^3$ nước bất kì cần thu một lượng nhiệt là $2,3.10^6\\text{ J}$ để hóa hơi hoàn toàn.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-016",
+    "noi_dung": "Hình bên là mô hình sự lan truyền sóng điện từ hình sin. Trong quá trình lan truyền, tại một điểm, vectơ cường độ điện trường $\\vec{E}$ và vectơ cảm ứng từ $\\vec{B}$ luôn\n[Hình: Sơ đồ lan truyền sóng điện từ biểu diễn vector E và vector B vuông góc nhau và cùng pha]",
+    "phuong_an": "A. dao động ngược pha, vuông góc với nhau và hợp với phương truyền sóng điện từ góc $45^{\\circ}$.\nB. dao động cùng pha, vuông góc với nhau và hợp với phương truyền sóng điện từ góc $45^{\\circ}$.\nC. dao động ngược pha, vuông góc với nhau và vuông góc với phương truyền sóng điện từ.\nD. dao động cùng pha, vuông góc với nhau và vuông góc với phương truyền sóng điện từ.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-017",
+    "noi_dung": "Hình bên là một bộ thí nghiệm thực hành được sử dụng đo tần số sóng âm. Dao động kí điện tử (1) có vai trò\n[Hình: Bộ thí nghiệm đo tần số sóng âm gồm dao động kí điện tử (1), micro (2), bộ khuếch đại (3), âm thoa (4)]",
+    "phuong_an": "A. Tạo ra sóng âm có tần số xác định.\nB. Khuếch đại tín hiệu điện từ micro.\nC. Thu sóng âm, chuyển thành tín hiệu điện.\nD. Hiển thị tín hiệu điện dưới dạng sóng.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-018",
+    "noi_dung": "Một mạch điện kín gồm nguồn điện với mạch ngoài là điện trở. Suất điện động của nguồn điện được xác định bằng",
+    "phuong_an": "A. năng lượng dịch chuyển các điện tích ở mạch ngoài của mạch điện.\nB. năng lượng dịch chuyển một điện tích đơn vị ở mạch ngoài của mạch điện.\nC. năng lượng dịch chuyển một điện tích đơn vị theo vòng kín của mạch điện.\nD. năng lượng dịch chuyển các điện tích ở trong nguồn điện của mạch điện.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-019",
+    "noi_dung": "Một nhóm học sinh thực hiện thí nghiệm thực hành đo nhiệt hóa hơi riêng của nước. Họ lựa chọn phương án sử dụng ấm siêu tốc có vỏ cách nhiệt tốt để đun sôi nước. Họ tiến hành các bước như sau:\n- Lấy 1 lượng nước vào ấm, đặt ấm lên cân điện tử và bắt bầu đun. Khi nước trong ấm sôi, mở nắp để hơi nước thoát ra ngoài.\n- Đọc số chỉ của cân ở các thời điểm khác nhau theo thời gian. Biết ấm có công suất $P = 1,50.10^3\\text{ W}$; cân điện tử có độ chính xác là $1\\text{ g}$; số chỉ của cân ở thời điểm mốc $t_0 = 0,00\\text{ s}$ là $m_0 = 1,873\\text{ kg}$. Kết quả thu được như bảng bên.\n\\begin{array}{|c|c|c|}\n\\hline\n\\text{Lần đo} & m(\\text{kg}) & t(\\text{s}) \\\\\n\\hline\n1 & 1,773 & 162,05 \\\\\n2 & 1,673 & 323,09 \\\\\n3 & 1,573 & 480,18 \\\\\n4 & 1,473 & 645,25 \\\\\n5 & 1,373 & 805,22 \\\\\n\\hline\n\\end{array}",
+    "phuong_an": "a) Số chỉ của cân là khối lượng của nước chứa trong ấm.\nb) Sai số dụng cụ đo khối lượng (cân điện tử) trong thí nghiệm trên là 0,5 g.\nc) Khối lượng nước hóa hơi trong thời gian 162,05 s (kể từ $t_0 = 0,00\\text{ s}$ ) là 0,100 kg.\nd) Giá trị trung bình của nhiệt hóa hơi riêng của nước đo được bởi nhóm học sinh này là $L = 2,42.10^6\\text{ J/kg}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-020",
+    "noi_dung": "Nhiên liệu phân hạch trong các lò phản ứng hạt nhân thường là $^{235}_{92}\\text{U}$ và $^{239}_{94}\\text{Pu}$. Uranium tự nhiên có hai đồng vị chính: $^{238}_{92}\\text{U}(99,3\\%)$ và $^{235}_{92}\\text{U}(0,7\\%)$ nhưng chỉ $^{235}_{92}\\text{U}$ có thể phân hạch khi hấp thụ neutron. Hạt nhân $^{238}_{92}\\text{U}$ hấp thụ neutron, xảy ra chuỗi phản ứng sau:\nPhản ứng 1: $^{238}_{92}\\text{U} + ^1_0\\text{n} \\rightarrow \\text{X}$ (X là chất phóng xạ $\\beta^-$ với chu kì bán rã $T_1 = 23$ phút)\nPhản ứng 2: $\\text{X} \\rightarrow ^0_{-1}\\text{e} + ^{239}_{93}\\text{Np} + ^0_0\\tilde{\\nu}$ (Np là chất phóng xạ $\\beta^-$ với chu kì bán rã $T_2 = 2,3$ ngày)\nPhản ứng 3: $^{239}_{93}\\text{Np} \\rightarrow ^0_{-1}\\text{e} + ^{239}_{94}\\text{Pu} + ^0_0\\tilde{\\nu}$\nPlutonium $^{239}_{94}\\text{Pu}$ phân hạch và có tính phóng xạ với chu kì bán rã $T_3 = 2,4.10^4$ năm.",
+    "phuong_an": "a) Tia $\\beta^-$ là dòng các hạt electron nên được phóng ra từ lớp vỏ electron của nguyên tử.\nb) Hạt nhân X là $^{239}_{92}\\text{U}$.\nc) U238 chiếm tỉ lệ lớn trong Uranium tự nhiên, tuy không phân hạch trực tiếp, vẫn có thể sử dụng làm nhiên liệu hạt nhân.\nd) Một lò phản ứng hạt nhân sử dụng 985,0 kg nhiên liệu Uranium đã làm giàu đến 4,2% U-235 (phần còn lại là U-238). Trong quá trình vận hành, khoảng 1,0% lượng U-238 đã hấp thụ neutron và chuyển hóa thành Pu − 239. Khối lượng Pu − 239 tạo ra là 9,4 kg.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-021",
+    "noi_dung": "Một nhóm học sinh chế tạo \"cân từ\" để xác định trọng lượng của các vật nhỏ bằng mạch điện như hình bên. Vật khối lượng m treo tại trọng tâm của thanh dẫn siêu nhẹ, dài $L = 65\\text{ cm}$ đặt nằm ngang, nằm trong từ trường đều $B = 1,5\\text{ T}$ có phương vuông góc mặt phẳng hình vẽ (hướng vào trong). Thanh nối với nguồn điện không đổi qua hai dây dẫn mảnh thẳng đứng và điện trở $R = 55\\,\\Omega$; phần còn lại của mạch điện có điện trở không đáng kể. \"Cân từ\" hoạt động theo nguyên tắc như sau: khi lực từ chưa cân bằng với trọng lực tác dụng lên vật, \"cảm biến phản hồi lực\" dựa vào sự sai lệch đó, tự động điều chỉnh hiệu điện thế U của nguồn điện để làm thay đổi cường độ dòng điện I qua thanh sao cho độ lớn lực từ bằng đúng trọng lượng của vật để hệ đạt trạng thái cân bằng. Biết U có giá trị cực đại là $17,5\\text{ V}$; lấy $g = 9,8\\text{ m/s}^2$.\n[Hình: Mạch điện cân từ gồm nguồn điện hai cực A, B nối với biến trở/điện trở và thanh dẫn treo vật m trong từ trường]",
+    "phuong_an": "a) Trọng lượng của vật được xác định bằng biểu thức mg = BIL.\nb) Điểm B được nối với cực dương, điểm A được nối với cực âm của nguồn điện.\nc) Nếu đảo chiều từ trường $\\vec{B}$ thì để \"cân từ\" hoạt động được, phải đảo hai cực A, B của nguồn điện.\nd) Khối lượng lớn nhất mà thiết bị này có thể cân được là 32 g.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-022",
+    "noi_dung": "Để khảo sát mối liên hệ giữa chuyển động phân tử và áp suất khí lý tưởng, người ta xét một mô hình đơn giản trong đó các phân tử khí chuyển động không bị giới hạn bởi thành bình (hình a). Giả sử tất cả phân tử đều có cùng tốc độ v và chuyển động chỉ theo các phương của hệ trục tọa độ vuông góc OXYZ (hình b). Trong không gian khí, đặt tấm chắn A có khối lượng lớn, mặt tấm vuông góc với trục OX. Xét hình hộp chữ nhật H có đáy thuộc mặt tấm A, diện tích đáy $\\Delta S$, chiều dài theo trục OX là $v.\\Delta t$. Trong hình hộp có N phân tử, khối lượng mỗi phân tử là m, mật độ phân tử là n.\n[Hình: Mô hình va chạm phân tử khí lên thành phẳng diện tích Delta S theo trục Ox]",
+    "phuong_an": "a) Trong thời gian $\\Delta t$ chỉ những phân tử có vận tốc $\\vec{v}$ cùng hướng với trục OX và nằm trong hình hộp H đập vào diện tích $\\Delta S$.\nb) Do tính hỗn loạn của chuyển động, tính trung bình số phân tử khí chứa trong hình hộp H vẫn giữ nguyên, những quá trình trái ngược nhau (về lượng) tính trung bình cũng cân bằng nhau.\nc) Xung lượng của lực do các phân tử trong hình hộp H truyền cho phần đáy (có diện tích $\\Delta S$ ) của tấm A trong thời gian $\\Delta t$ là $\\frac{Nmv}{6}$. Áp suất khí tác dụng lên đáy $\\Delta S$ là $\\frac{1}{3}nmv^2$.\nd) Thực tế các phân tử chuyển động hỗn loạn nên có tốc độ khác nhau, do đó áp suất khí bằng $\\frac{1}{3}nm\\overline{v^2}$ ( $\\overline{v^2}$ là giá trị trung bình của bình phương tốc độ của tất cả các phân tử).",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-023",
+    "noi_dung": "Trong quá trình lập trình máy thở, một kỹ sư cần xác định khối lượng không khí có trong phổi bệnh nhân tại thời điểm hít vào. Biết dung tích phổi là 5,9 lít, áp suất khí là $1,01.10^5\\text{ Pa}$, nhiệt độ cơ thể là $37^{\\circ}\\text{C}$. Không khí là khí lý tưởng có khối lượng mol trung bình $29\\text{ g/mol}$. Khối lượng không khí trong phổi tại thời điểm đó bằng bao nhiêu gam (làm tròn kết quả đến chữ số hàng phần mười)?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-024",
+    "noi_dung": "Nam cần dùng một chai thủy tinh chứa khí ở điều kiện phòng (áp suất $1,0.10^5\\text{ Pa}$, nhiệt độ $17^{\\circ}\\text{C}$ ) nhưng nút chai bị kẹt do ma sát hoặc co cứng. Nam hơ nóng chai để tăng áp suất khí bên trong, nút chai bật ra khi chênh lệch áp suất trong và ngoài đạt tối thiểu $0,2.10^5\\text{ Pa}$. Biết thể tích khí trong chai không đổi trong quá trình nung. Hỏi nhiệt độ của khí trong chai bằng bao nhiêu K để nút bật ra (làm tròn kết quả đến chữ số hàng đơn vị)?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-025",
+    "noi_dung": "Một xe điện sử dụng hệ thống phanh tái sinh để thu hồi năng lượng khi giảm tốc. Trong lúc hãm phanh, bánh xe quay với tốc độ góc $\\omega = 40,0\\text{ rad/s}$ và động cơ điện hoạt động như một máy phát điện xoay chiều. Biết rằng cuộn dây của động cơ có $N = 987$ vòng, diện tích mỗi vòng $S = 20,0.10^{-3}\\text{ m}^2$; đặt trong từ trường đều $B = 925\\text{ mT}$. Suất điện động xoay chiều qua bộ chuyển đổi và tạo ra dòng một chiều để nạp vào ắc quy. Biết $80,0\\%$ năng lượng điện tạo ra ở máy phát được nạp vào ắc quy $400,0\\text{ V}$. Điện trở toàn mạch là $4,00\\,\\Omega$.\nSuất điện động được tạo ra trong quá trình phanh có giá trị cực đại là bao nhiêu vôn (V) (làm tròn kết quả đến chữ số hàng đơn vị)?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-027",
+    "noi_dung": "Đồng vị phóng xạ Cobalt ($^{60}\\text{Co}$) phát ra tia gamma năng lượng cao có khả năng tiêu diệt tế bào ung thư khi chiếu đúng liều. Một máy xạ trị sử dụng nguồn $^{60}\\text{Co}$ có độ phóng xạ $6750\\text{ Ci}$ ($1\\text{ Ci} = 3,70.10^{10}\\text{ Bq}$) để điều trị ung thư. Biết $^{60}\\text{Co}$ có chu kỳ bán rã là 5,27 năm (1 năm = 365,25 ngày) và khối lượng mol là $59,9\\text{ g/mol}$.\nKhối lượng $^{60}\\text{Co}$ cần để đạt được độ phóng xạ 6750 Ci là bao nhiêu gam (làm tròn đến chữ số hàng phần trăm)?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1-slrPC6-028",
+    "noi_dung": "Đồng vị phóng xạ Cobalt ($^{60}\\text{Co}$) phát ra tia gamma năng lượng cao có khả năng tiêu diệt tế bào ung thư khi chiếu đúng liều. Một máy xạ trị sử dụng nguồn $^{60}\\text{Co}$ có độ phóng xạ $6750\\text{ Ci}$ ($1\\text{ Ci} = 3,70.10^{10}\\text{ Bq}$) để điều trị ung thư. Biết $^{60}\\text{Co}$ có chu kỳ bán rã là 5,27 năm (1 năm = 365,25 ngày) và khối lượng mol là $59,9\\text{ g/mol}$.\nNếu giới hạn sử dụng an toàn là khi độ phóng xạ giảm còn 1450 Ci thì sau bao nhiêu năm phải thay nguồn (làm tròn đến chữ số hàng phần mười)?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-001",
+    "noi_dung": "Một khối khí lý tưởng thực hiện biến đổi trạng thái theo chu trình như hình vẽ. Trạng thái có nhiệt độ lớn nhất là [Hình: Đồ thị p-V biểu diễn chu trình khép kín của khí lí tưởng với 4 trạng thái (1), (2), (3), (4)]",
+    "phuong_an": "A. (1).\nB. (4).\nC. (3).\nD. (2).",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-002",
+    "noi_dung": "Trong quy trình đúc đồng, người thợ đun nóng các thỏi đồng đến nhiệt độ nóng chảy để chúng hoá lỏng hoàn toàn. Nhiệt lượng cần cung cấp để làm cho 1 kg đồng nóng chảy hoàn toàn ở nhiệt độ nóng chảy được gọi là",
+    "phuong_an": "A. công suất tỏa nhiệt của lò đúc.\nB. nhiệt nóng chảy riêng của đồng.\nC. nhiệt hóa hơi riêng của đồng.\nD. nhiệt dung riêng của đồng.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-003",
+    "noi_dung": "Một nhóm học sinh làm thí nghiệm xác định nhiệt dung riêng của một viên bi thép, sau khi lấy viên bi ra khỏi nước sôi, họ cần thả nhanh viên bi vào bình nhiệt lượng kế. Mục đích chính của việc thực hiện nhanh thao tác này là để",
+    "phuong_an": "A. làm cho nước trong nhiệt lượng kế sôi lên nhanh chóng.\nB. làm tăng nhiệt hóa hơi của lượng nước có trong bình.\nC. giảm thiểu nhiệt lượng viên bi toả ra môi trường.\nD. tránh việc viên bi bị biến dạng do thay đổi nhiệt độ đột ngột.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-004",
+    "noi_dung": "Khi xoa cồn vào da, ta cảm thấy vùng da đó bị lạnh. Nguyên nhân chính của hiện tượng này là gì?",
+    "phuong_an": "A. Cồn có nhiệt độ thấp hơn da.\nB. Cồn tỏa nhiệt cho da và bay hơi.\nC. Cồn thu nhiệt từ da và bay hơi.\nD. Xảy ra phản ứng hóa học thu nhiệt của cồn.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-005",
+    "noi_dung": "Trong thí nghiệm tạo từ phổ của nam châm thẳng, một học sinh thực hiện các thao tác sau: đặt nam châm dưới tấm bìa nằm ngang, rắc mạt sắt lên trên và gõ nhẹ lên tấm bìa. Nhận định nào sau đây không đúng?",
+    "phuong_an": "A. Càng gần các cực của nam châm, các đường mạt sắt càng dày.\nB. Trong từ trường, các mạt sắt bị nhiễm điện trở thành điện tích thử.\nC. Từ phổ cho ta thấy hình ảnh trực quan của từ trường.\nD. Việc gõ nhẹ lên tấm bìa để giảm ma sát giữa mạt sắt và tấm bìa.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-006",
+    "noi_dung": "Trong hệ SI, đơn vị của cảm ứng từ là",
+    "phuong_an": "A. vêbe (Wb).\nB. tesla (T).\nC. vôn (V).\nD. niutơn (N).",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-007",
+    "noi_dung": "Một đoạn dây dẫn mang dòng điện đặt nằm ngang trong một từ trường đều. Biết dòng điện có chiều hướng Nam - Bắc, cảm ứng từ có phương thẳng đứng, chiều trên xuống dưới. Lực từ tác dụng lên đoạn dây có hướng về phía",
+    "phuong_an": "A. Tây.\nB. Đông.\nC. Nam.\nD. Bắc.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-008",
+    "noi_dung": "Khinh khí cầu có một lỗ hở ở phía dưới để trao đổi khí với môi trường xung quanh, có thể tích không đổi. Để khí cầu bay lên, người ta cần đốt nóng không khí trong khí cầu. Khi nhiệt độ của không khí trong khí cầu tăng đến một giá trị nhất định thì khí cầu bắt đầu bay lên. Khi đó khí trong khí cầu có",
+    "phuong_an": "A. khối lượng riêng nhỏ hơn khí quyển bên ngoài.\nB. áp suất lớn hơn khí quyển bên ngoài.\nC. khối lượng riêng lớn hơn khí quyển bên ngoài.\nD. áp suất nhỏ hơn khí quyển bên ngoài.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-009",
+    "noi_dung": "Thiết bị nào sau đây hoạt động dựa trên ứng dụng của tương tác từ?",
+    "phuong_an": "A. Bóng đèn sợi đốt.\nB. Nhiệt kế điện tử.\nC. Bàn là điện.\nD. La bàn.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-010",
+    "noi_dung": "Để giữ ấm cơ thể vào mùa lạnh, chúng ta thường uống nước ấm. Khi nước ấm vào cơ thể, nội năng của cơ thể tăng lên chủ yếu thông qua quá trình",
+    "phuong_an": "A. thực hiện công.\nB. truyền nhiệt.\nC. hóa hơi.\nD. ngưng tụ.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-011",
+    "noi_dung": "Đối với một khối khí lí tưởng xác định, trong quá trình đẳng áp, thương số giữa thể tích và nhiệt độ tuyệt đối là một hằng số. Giá trị của hằng số này không phụ thuộc vào",
+    "phuong_an": "A. thể tích của khối khí.\nB. số mol của khối khí.\nC. áp suất của khối khí.\nD. khối lượng của khối khí.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-012",
+    "noi_dung": "Tương tác nào sau đây là tương tác từ?",
+    "phuong_an": "A. Tương tác giữa hai điện tích đứng yên.\nB. Tương tác giữa dòng điện với điện tích đứng yên.\nC. Tương tác giữa nam châm với dòng điện.\nD. Tương tác giữa nam châm với điện tích đứng yên.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-013",
+    "noi_dung": "Động năng trung bình của phân tử khí được xác định bằng hệ thức",
+    "phuong_an": "A. $E_\\text{đ} = \\frac{2}{3}kT$.\nB. $E_\\text{đ} = \\frac{1}{3}kT$.\nC. $E_\\text{đ} = 3kT$.\nD. $E_\\text{đ} = \\frac{3}{2}kT$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-014",
+    "noi_dung": "Trong sơ đồ như hình vẽ bên, nếu đặt một kim châm tại điểm O thì cực bắc của kim nam châm chỉ về phía [Hình: Sơ đồ mạch điện và ống dây có dòng điện cùng các điểm N, T, Đ, B]",
+    "phuong_an": "A. điểm N.\nB. điểm T.\nC. điểm Đ.\nD. điểm B.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-015",
+    "noi_dung": "Khi nhiệt độ của một vật giảm $5^\\circ\\text{C}$ thì theo thang nhiệt độ Kelvin, nhiệt độ của vật này giảm",
+    "phuong_an": "A. 310 K.\nB. 278 K.\nC. 268 K.\nD. 5 K.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-016",
+    "noi_dung": "Một xilanh chứa lượng khí lí tưởng xác định ở nhiệt độ không đổi. Nếu thể tích của khối khí tăng lên hai lần thì áp suất của khối khí sẽ",
+    "phuong_an": "A. tăng bốn lần.\nB. tăng gấp đôi.\nC. không thay đổi.\nD. giảm một nửa.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-017",
+    "noi_dung": "Đèn sợi đốt hoạt động dựa trên tác dụng nhiệt của dòng điện làm sợi đốt nóng sáng. Coi thể tích của bóng đèn không đổi. So với lúc chưa phát sáng, khối khí bên trong bóng đèn khi đang phát sáng có",
+    "phuong_an": "A. áp suất tăng do nhiệt độ giảm.\nB. áp suất giảm do nhiệt độ tăng.\nC. áp suất và nhiệt độ không đổi.\nD. áp suất tăng do nhiệt độ tăng.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-018",
+    "noi_dung": "Quan sát chuyển động của các hạt khói trong ống thủy tinh bằng kính hiển vi, ta có thể rút ra kết luận nào sau đây về chuyển động của các phân tử khí?",
+    "phuong_an": "A. Các phân tử khí dao động quanh vị trí nhất định.\nB. Các phân tử khí chuyển động hỗn loạn không ngừng.\nC. Các phân tử khí chuyển động do tác dụng của trọng lực.\nD. Các phân tử khí chỉ chuyển động khi va chạm.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-019",
+    "noi_dung": "Một nhóm học sinh thực hiện thí nghiệm kiểm chứng định luật Charles. Bộ thí nghiệm gồm các dụng cụ lắp đặt như hình vẽ. Ống thuỷ tinh đầu dưới bịt kín, đầu trên hở, bên trong có giọt acid sulfuric ngăn khí trong ống không thoát ra ngoài. Nhóm tiến hành đo chiều cao của cột khí trong ống ở các nhiệt độ khác nhau và ghi lại kết quả [Hình: Sơ đồ thí nghiệm khảo sát định luật Charles với ống thủy tinh chứa cột không khí và giọt acid sulfuric]",
+    "phuong_an": "a) Khi giọt acid sulfuric đứng yên ở các vị trí khác nhau, áp suất cột khí trong các trường hợp bằng nhau.\nb) Trong phạm vi sai số cho phép, kết quả thu được phù hợp với định luật Charles.\nc) Khi nhiệt độ tăng, ứng với $1^\\circ\\text{C}$ thì chiều cao cột khí tăng thêm các khoảng bằng nhau.\nd) Khi chiều cao cột khí tăng gấp đôi thì tốc độ căn quân phương của các phân tử khí trong đó tăng hai lần.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-020",
+    "noi_dung": "Một nhóm học sinh thực hiện thí nghiệm khảo sát lực từ tác dụng lên đoạn dây dẫn thẳng mang dòng điện có sơ đồ như hình vẽ. Khung dây hình chữ nhật được treo vào lực kế và đặt sao cho chỉ có cạnh PQ nằm trong từ trường đều giữa hai cực của nam châm, các đường sức từ có phương ngang, dây dẫn đưa dòng điện vào khung dây mềm, không tác dụng lực lên khung dây khi thao tác. Ban đầu đặt sao cho PQ nằm ngang vuông góc với các đường sức từ và lọt hoàn toàn trong từ trường. Khi chưa có dòng điện, lực kế chỉ giá trị $F_0$. Khi có dòng điện không đổi chạy qua khung dây thì lực kế chỉ giá trị $F_1$ với $F_1 > F_0$ [Hình: Sơ đồ thí nghiệm khảo sát lực từ tác dụng lên khung dây treo vào lực kế trong từ trường]",
+    "phuong_an": "a) Đường sức từ giữa hai cực của nam châm có chiều từ cực N đến cực S.\nb) Dòng điện qua đoạn PQ có chiều từ P đến Q.\nc) Chiều dài và cường độ dòng điện qua PQ là L và I. Cảm ứng từ tính theo công thức: $B = \\frac{F_1 - F_0}{I \\cdot L}$.\nd) Từ trạng thái ban đầu, quay khung dây quanh trục chứa dây treo góc $\\alpha$ với $\\cos\\alpha = 0,8$ thì số chỉ của lực kế là $F = 0,2F_0 + 0,8F_1$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-021",
+    "noi_dung": "Đông trùng hạ thảo tươi có hàm lượng nước chiếm từ 85% đến 90% khối lượng. Sau quy trình chế biến, độ ẩm thành phẩm được đưa về mức 5% đến 8%. Để giữ dược tính của đông trùng hạ thảo thì có hai phương pháp phổ biến được áp dụng là sấy lạnh và sấy thăng hoa... [Hình: Sơ đồ hệ thống sấy thăng hoa gồm buồng sấy, bộ gia nhiệt, bơm hút khí, bộ ngưng tụ]",
+    "phuong_an": "a) Trong phương pháp sấy lạnh, nước ở thể lỏng chuyển thành thể hơi (khí).\nb) Nếu giữ nhiệt độ buồng sấy không đổi thì nhiệt lượng của bộ gia nhiệt cung cấp cho buồng sấy bằng 0.\nc) Nhiệt lượng cần cung cấp cho 1 kg nước hóa hơi nhỏ hơn nhiệt lượng cần cung cấp cho 1 kg nước đá thăng hoa.\nd) Nếu áp suất được giữ không đổi và nhiệt độ tăng thì số phân tử nước bị hút khỏi buồng sấy (bao gồm số phân tử hút qua bơm hút và số phân tử đi vào bộ ngưng tụ) nhỏ hơn số phân tử nước thoát ra khỏi sản phẩm.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-022",
+    "noi_dung": "Khi lấy nước từ một bình đang nút kín, ta chỉ lấy được một ít dù trong bình vẫn còn nhiều nước. Từ hiện tượng đó, một học sinh đã nảy ra ý tưởng thực hiện thí nghiệm xác định áp suất khí quyển bằng các dụng cụ đơn giản sau: Một ống thủy tinh hình trụ trong suốt có nút kín ở trên (N) và vòi nhỏ có khóa (k) ở đáy, thước đo chiều dài...",
+    "phuong_an": "a) Trong quá trình nước chảy ra ở vòi, lượng không khí trong ống thực hiện quá trình đẳng nhiệt.\nb) Ban đầu áp suất của khí trong ống bằng áp suất khí quyển.\nc) Khi nước trong ống không chảy ra nữa dù vẫn mở khóa k thì áp suất ở đáy nhỏ hơn áp suất khí quyển.\nd) Áp suất khí quyển tính theo công thức: $p = \\frac{D g L_2 (L_0 - L_1)}{L_1 - L_2}$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-023",
+    "noi_dung": "Trong nuôi trồng thủy sản, việc sục khí để hòa tan oxygen ($O_2$) vào nước là công đoạn quan trọng. Tại một bể nuôi cá giống, không khí được sục từ độ sâu $h = 2,50\\text{ m}$. Các bọt khí khi bắt đầu rời đầu sục có bán kính $R = 4,80\\text{ mm}$. Giả thiết nhiệt độ nước trong bể ổn định và đồng đều, áp suất khí quyển tương đương với áp suất của cột nước có độ cao $h = 10,0\\text{ m}$. Nếu lượng khí trong bọt khí không đổi, khi thoát khỏi mặt nước, bán kính bọt khí là mấy mm (kết quả lấy đến hàng phần trăm)?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-024",
+    "noi_dung": "Trên thực tế, một lượng không khí đã hòa tan vào nước. Biết rằng trong không khí ban đầu khí $N_2$ chiếm 80,0% và khí $O_2$ chiếm 20,0% về số mol. Khi hòa tan, khí $N_2$ tan với số mol gấp 2,00 lần khí $O_2$. Bọt khí khi thoát khỏi mặt nước có bán kính là $5,10\\text{ mm}$. Lượng khí $O_2$ trong bọt khí hòa tan vào nước chiếm mấy phần trăm (%) so với lượng $O_2$ ban đầu (kết quả lấy đến hàng phần mười)?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-025",
+    "noi_dung": "Một nhóm học sinh thực hiện thí nghiệm xác định nhiệt nóng chảy riêng của nước đá. Nhóm cung cấp nhiệt năng cho một lượng nước đá với công suất không đổi, theo dõi nhiệt độ (t) theo thời gian ($\\theta$) thu được đồ thị như hình vẽ [Hình: Đồ thị biểu diễn sự phụ thuộc của nhiệt độ t vào thời gian $\\theta$ khi đun nóng nước đá từ $-32^\\circ\\text{C}$]. Nhiệt độ ban đầu của nước đá tính theo thang độ K là bao nhiêu (kết quả lấy đến hàng đơn vị)?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-026",
+    "noi_dung": "Biết rằng nhiệt dung riêng của nước đá là $2,10 \\cdot 10^3\\text{ J}/(\\text{kg}\\cdot\\text{K})$, thí nghiệm cho thấy $\\theta_2 = 6\\theta_1$, nhiệt nóng chảy riêng của nước đá mà nhóm đo được bằng $x \\cdot 10^5\\text{ J/kg}$. Giá trị của x là bao nhiêu (kết quả lấy đến hàng phần trăm)?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-027",
+    "noi_dung": "Một thanh dẫn đồng chất, tiết diện đều, trọng lượng P được uốn thành khung dây gấp khúc gồm ba đoạn bằng nhau $MN = NP = PQ = 12,0\\text{ cm}$. Khung dây được treo sao cho có thể quay quanh trục nằm ngang đi qua hai đầu M và Q. Hai đoạn MN và PQ song song với nhau và cùng vuông góc với đoạn NP. Đặt hệ thống vào một từ trường đều có vectơ cảm ứng từ hướng thẳng đứng lên trên, độ lớn $B = 0,60\\text{ T}$. Khi có dòng điện cường độ $I = 5,00\\text{ A}$ chạy qua khung dây thì khung dây lệch khỏi mặt phẳng thẳng đứng sao cho các đoạn MN, PQ hợp với phương thẳng đứng một góc $\\alpha$ với $\\cos\\alpha = 0,80$. Bỏ qua lực ma sát ở trục quay [Hình: Khung dây gấp khúc MNM/NP/PQ treo trong từ trường hướng thẳng đứng]",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-18S8FOXm-028",
+    "noi_dung": "Độ lớn lực từ tác dụng lên đoạn dây MN là $x \\cdot 10^{-3}\\text{ N}$. Giá trị của x là bao nhiêu?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
   }
 ]
