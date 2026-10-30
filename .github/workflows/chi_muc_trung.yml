@@ -4,9 +4,7 @@ on:
   schedule:
     - cron: "0 16 * * *"
   workflow_dispatch:
-concurrency:
-  group: ngan_hang
-  cancel-in-progress: false
+# [Mục 32] bỏ concurrency ngan_hang: chi_muc_trung.py chỉ đọc NganHangCauHoi, chỉ ghi tab ChiMucTrung nên chạy song song an toàn
 jobs:
   chi_muc:
     runs-on: ubuntu-latest
