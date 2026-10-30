@@ -1,14 +1,5 @@
 [
   {
-    "ma_cau": "C-1vdAbmXK-022",
-    "noi_dung": "Khi tìm hiểu về quá trình tản nhiệt, một nhóm học sinh thảo luận và cho rằng: Công suất tản nhiệt từ vật ra môi trường tỷ lệ thuận với độ chênh lệch nhiệt độ giữa chúng. Để kiểm chứng nhận định đó, nhóm thực hiện thí nghiệm về sự truyền nhiệt của một cốc nước ra môi trường. Các bước thí nghiệm như sau:\nBước 1: Bố trí thí nghiệm theo sơ đồ như hình vẽ, điện trở chìm hoàn toàn trong nước. Ban đầu k ngắt, nhiệt kế chỉ $t_0$.\nBước 2: Đóng khóa k, điều chỉnh công suất đủ nhỏ để nước không sôi, theo dõi nhiệt độ của nước thì nhóm nhận thấy, với một công suất điện P nhất định, nhiệt độ của nước tăng đến một giá trị rồi ổn định. Nhóm ghi lại công suất P và nhiệt độ ổn định t.\nBước 3: Lặp lại thí nghiệm với các giá trị công suất khác nhau.\nCoi nhiệt độ môi trường không đổi, bỏ qua sự hóa hơi của nước.\n[Hình: Sơ đồ thí nghiệm đo công suất tỏa nhiệt của cốc nước với điện trở và oát kế]",
-    "phuong_an": "a) Nhiệt độ môi trường là $t_0$.\nb) Nhiệt năng truyền từ điện trở sang nước và từ nước ra môi trường.\nc) Khi nhiệt độ ổn định, công suất tỏa nhiệt của điện trở cho nước và công suất tỏa nhiệt của nước cho môi trường bằng nhau.\nd) Nhóm vẽ đồ thị biểu diễn sự phụ thuộc của $\\Delta t = t - t_0$ vào P. Nếu đồ thị sau khi xử lí có dạng là đường thẳng đi qua gốc tọa độ thì nhận định ban đầu của nhóm là đúng.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": "images/q164_vat-li-nghe-an_pdf_p3_img4.jpeg"
-  },
-  {
     "ma_cau": "C-1M3yVMDD-019",
     "noi_dung": "Một lượng khí lí tưởng chuyển trạng thái $\\text{A} \\rightarrow \\text{B} \\rightarrow \\text{C} \\rightarrow \\text{D}$ được biểu diễn trên đồ thị $p - V$ như hình vẽ [Hình: Đồ thị $p - V$, điểm A ở $(2; 0{,}4)$, B ở $(4; 0{,}4)$, C ở $(4; 0{,}2)$, D ở $(3; 0{,}15)$ trên đường nối gốc O với C]. Ở trạng thái A, khí có nhiệt độ 400 K.",
     "phuong_an": "a) Nhiệt độ của khí ở trạng thái D là 450 K.\nb) Áp suất của khí ở trạng thái C là 0,2 Pa.\nc) Quá trình biến đổi của lượng khí từ trạng thái A đến trạng thái B là quá trình đẳng áp.\nd) Quá trình biến đổi của lượng khí từ trạng thái C đến trạng thái D có nhiệt độ giảm dần.",
