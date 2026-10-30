@@ -7,7 +7,7 @@ Apps Script (DeCuongOnTap.gs) dựng sẵn lời nhắc và ghi "gói việc" go
   2. KIỂM TRA SỐ BẰNG SYMPY: ở bước đáp án, Gemini ghi thêm biểu thức tính từng đáp số; xưởng tự tính lại bằng
      sympy, so với đáp số đã ghi (sai lệch > 2% là sai) và đưa bảng kết quả vào mục D (rà soát) của bản giáo viên.
   3. Ghi kết quả vào ket_qua_<mã>.json; Apps Script tự nhận và tạo Docs, Word, Form.
-Biến môi trường: GOOGLE_CREDENTIALS, GEMINI_API_KEY_TRA_PHI (nếu có, ưu tiên) hoặc GEMINI_API_KEY, GOI_ID, KQ_ID.
+Biến môi trường: GOOGLE_CREDENTIALS, GEMINI_API_KEY, GOI_ID, KQ_ID.
 """
 import datetime as dt, io, json, math, os, re, sys, time, base64
 
@@ -133,7 +133,8 @@ CHO_PHEP = {"sqrt": sympy.sqrt, "sin": sympy.sin, "cos": sympy.cos, "tan": sympy
 
 def tinh(bieu_thuc):
     s = str(bieu_thuc).replace("^", "**").replace("×", "*").replace("·", "*").replace(",", ".")
-    if re.search(r"[A-Za-z_]", re.sub(r"\b(sqrt|sin|cos|tan|asin|acos|atan|exp|log|ln|pi|deg|e)\b", "", s)):
+    kiem = re.sub(r"\d(?:\.\d+)?[eE][-+]?\d+", "0", re.sub(r"\b(sqrt|sin|cos|tan|asin|acos|atan|exp|log|ln|pi|deg|e)\b", "", s))  # [Mục 23] 1.6e-19 là số
+    if re.search(r"[A-Za-z_]", kiem):
         raise ValueError("có biến chữ")
     if len(s) > 300:
         raise ValueError("biểu thức quá dài")
