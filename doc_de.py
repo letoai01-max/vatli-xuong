@@ -23,6 +23,7 @@ import base64, datetime as dt, io, json, os, re, shutil, subprocess, sys, tempfi
 
 import gspread
 import requests
+import latex_chuan as L   # [Mục 24] chuẩn hoá LaTeX giống ChuanLatex.gs
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
@@ -483,7 +484,8 @@ def tao_dong_cau_hoi(c, i, d, viec, yccd, luc):
     so = re.sub(r"^câu\s*", "", str(c.get("so_cau") or i + 1).strip(), flags=re.I) or str(i + 1)
     return ["C-%s-%03d" % (str(viec["id"])[:8], i + 1), ", ".join(hop_le), ma_bai, lop,
             TEN_MUC.get(c.get("muc_do"), c.get("muc_do") or ""), TEN_DANG.get(c.get("dang"), c.get("dang") or ""),
-            c.get("noi_dung") or "", "\n".join(pa), c.get("dap_an") or "", c.get("loi_giai") or "", c.get("diem") or "",
+            L.chuan_hoa_latex(c.get("noi_dung") or ""), L.chuan_hoa_latex("\n".join(pa)), c.get("dap_an") or "",
+            L.chuan_hoa_latex(c.get("loi_giai") or ""), c.get("diem") or "",   # [Mục 24]
             d.get("loai_de") or "", d.get("don_vi") or "", d.get("nam_hoc") or "", d.get("ky_thi") or "",
             "%s (câu %s)" % (viec["ten"], so), viec["link"], viec["id"], viec["chu_de"], "; ".join(kiem_tra),
             "Loại" if ngoai else "Chưa duyệt", luc]
