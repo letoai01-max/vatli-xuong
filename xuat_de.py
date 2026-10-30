@@ -24,7 +24,8 @@ def main():
         sys.exit("Tab NganHangCauHoi trống hoặc không đủ dữ liệu.")
         
     td = [t.strip() for t in d[0]]
-    cot = lambda ten: td.index(ten) if ten in td else None
+    td_thap = [t.lower() for t in td]   # [Mục 22] so tên cột không phân biệt hoa thường ("Link Ảnh" / "Link ảnh")
+    cot = lambda ten: td_thap.index(ten.lower()) if ten.lower() in td_thap else None
     
     c = {
         "ma_cau": cot("Mã câu") if cot("Mã câu") is not None else 0,
