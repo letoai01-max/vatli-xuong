@@ -2343,8 +2343,8 @@
     "ma_cau": "C-159UHIlj-143",
     "noi_dung": "Công suất điện được đo bằng đơn vị nào sau đây?",
     "phuong_an": "A. Niu tơn (N).\nB. Jun (J).\nC. Oát (W).\nD. Cu lông (C).",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "C",
+    "loi_giai": "Đơn vị đo công suất điện: Trong hệ SI, công suất điện được đo bằng oát, kí hiệu là $\\text{W}$ ($1\\text{ W} = 1\\text{ J/s}$). Đơn vị niu tơn ($\\text{N}$) là đơn vị của lực, jun ($\\text{J}$) là đơn vị của công và năng lượng, cu-lông ($\\text{C}$) là đơn vị của điện tích.\nĐơn vị đo công suất điện là oát (W).\nĐáp án: C.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2352,8 +2352,8 @@
     "ma_cau": "C-159UHIlj-144",
     "noi_dung": "Đặt vào hai đầu điện trở R một hiệu điện thế U nhiệt lượng đoạn mạch toả ra khi dòng điện chạy qua đoạn mạch thuần điện trở được xác định bằng công thức",
     "phuong_an": "A. $Q = IR^2t$.\nB. $Q = \\frac{U^2}{R}t$.\nC. $Q = U^2Rt$.\nD. $Q = \\frac{U}{R^2}t$.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "B",
+    "loi_giai": "Tóm tắt: $R: \\text{điện trở}$; $U: \\text{hiệu điện thế}$; $t: \\text{thời gian dòng điện chạy qua}$.\nCông thức tính nhiệt lượng toả ra trên điện trở: Theo định luật Joule - Lenz, nhiệt lượng toả ra trên đoạn mạch thuần điện trở $R$ khi có dòng điện chạy qua trong thời gian $t$ được xác định bởi công thức\n$$Q = R I^2 t = U I t = \\frac{U^2}{R} t$$\nĐối chiếu các phương án: So sánh với các phương án đã cho, công thức đúng là $Q = \\frac{U^2}{R}t$, ứng với phương án B.\nNhiệt lượng đoạn mạch toả ra được xác định bằng công thức $Q = \\frac{U^2}{R}t$.\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2361,8 +2361,8 @@
     "ma_cau": "C-159UHIlj-145",
     "noi_dung": "Một bóng đèn sáng bình thường ở hiệu điện thế 220V với số chỉ ampe kế là 0,2A. Tính điện năng bóng đèn tiêu thụ trong 30 ngày biết rằng mỗi ngày trung bình đèn thắp sáng trong 4 giờ?",
     "phuong_an": "A. 5,28kWh\nB. 6kWh\nC. 6,5kWh\nD. 7kWh",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "A",
+    "loi_giai": "Tóm tắt: $U = 220\\text{ V}$; $I = 0{,}2\\text{ A}$; $t = 30\\cdot 4\\text{ h} = 120\\text{ h}$.\nCông suất tiêu thụ của bóng đèn: Công suất tiêu thụ của bóng đèn là\n$$P = U\\cdot I = 220\\cdot 0{,}2 = 44\\text{ W}$$\nĐiện năng tiêu thụ trong 30 ngày: Đổi công suất sang đơn vị kW và tính điện năng tiêu thụ trong thời gian t\n$$A = P\\cdot t = 0{,}044\\text{ kW}\\cdot 120\\text{ h} = 5{,}28\\text{ kWh}$$\nKết quả tính toán phù hợp với phương án A\nĐáp án: A.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2370,8 +2370,8 @@
     "ma_cau": "C-159UHIlj-146",
     "noi_dung": "Bóng đèn huỳnh quang công suất 40W chiếu sáng tương đương với bóng đèn dây tóc công suất 120W. Nếu trung bình một ngày thắp sáng 8 tiếng trong một tháng (30 ngày) sẽ tiết kiệm được bao nhiêu số điện?",
     "phuong_an": "A. 18,2kWh\nB. 19,2kWh\nC. 20,2kWh\nD. 21,2kWh",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "B",
+    "loi_giai": "Tóm tắt: $\\mathcal{P}_1 = 40\\text{ W} = 0{,}04\\text{ kW}$; $\\mathcal{P}_2 = 120\\text{ W} = 0{,}12\\text{ kW}$; $t = 8\\cdot 30 = 240\\text{ h}$.\nĐộ chênh lệch công suất: Hiệu công suất giữa đèn dây tóc và đèn huỳnh quang $\\Delta \\mathcal{P} = \\mathcal{P}_2 - \\mathcal{P}_1 = 120 - 40 = 80\\text{ W} = 0{,}08\\text{ kW}$.\nThời gian thắp sáng trong một tháng: Tổng thời gian thắp sáng trong 30 ngày $t = 8\\cdot 30 = 240\\text{ h}$.\nĐiện năng tiết kiệm được: Lượng điện năng tiết kiệm được trong một tháng\n$$\\Delta A = \\Delta \\mathcal{P}\\cdot t = 0{,}08\\cdot 240 = 19{,}2\\text{ kWh}$$\nLượng điện năng tiết kiệm được trong một tháng là 19,2 kWh, tương đương 19,2 số điện.\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2379,8 +2379,8 @@
     "ma_cau": "C-159UHIlj-147",
     "noi_dung": "Cho đoạn mạch gồm hai điện trở mắc nơi tiếp, trong đó hiệu điện thế hai đầu U=10V, $R_1 = 4\\Omega; R_2 = 5\\Omega$. Tính nhiệt lượng tỏa ra trên $R_2$ trong 2 phút?",
     "phuong_an": "A. 741J\nB. 841J\nC. 941J\nD. 641J",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "A",
+    "loi_giai": "Tóm tắt: $U = 10\\text{ V}$; $R_1 = 4\\,\\Omega$; $R_2 = 5\\,\\Omega$; $t = 2\\text{ ph\\acute{u}t} = 120\\text{ s}$.\nĐiện trở tương đương của đoạn mạch: Vì hai điện trở mắc nối tiếp nên điện trở tương đương là\n$$R_{td} = R_1 + R_2 = 4 + 5 = 9\\,\\Omega$$\nCường độ dòng điện trong mạch: Cường độ dòng điện chạy qua mạch và qua điện trở $R_2$ là\n$$I = \\frac{U}{R_{td}} = \\frac{10}{9}\\text{ A}$$\nNhiệt lượng tỏa ra trên điện trở R2: Nhiệt lượng tỏa ra trên điện trở $R_2$ trong thời gian 2 phút được tính theo định luật Joule - Lenz\n$$Q_2 = I^2 \\cdot R_2 \\cdot t = \\left(\\frac{10}{9}\\right)^2 \\cdot 5 \\cdot 120 \\approx 740{,}74\\text{ J} \\approx 741\\text{ J}$$\nNhiệt lượng tỏa ra trên $R_2$ trong 2 phút xấp xỉ bằng 741 J.\nĐáp án: A.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2388,8 +2388,8 @@
     "ma_cau": "C-159UHIlj-148",
     "noi_dung": "Cho đoạn mạch có điện trở là $12\\Omega$, hiệu điện thế hai đầu mạch là 18V. Trong 4 phút điện năng tiêu thụ của mạch là bao nhiêu?",
     "phuong_an": "A. 6000J\nB. 6180J\nC. 6380J\nD. 6480J",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "D",
+    "loi_giai": "Tóm tắt: $R = 12\\,\\Omega$; $U = 18\\text{ V}$; $t = 4\\text{ ph\\'ut} = 240\\text{ s}$.\nT\\u00ednh \\u0111i\\u1ec7n n\\u0103ng ti\\u00eau th\\u1ee5 c\\u1ee7a \\u0111o\\u1ea1n m\\u1ea1ch: \\u0110i\\u1ec7n n\\u0103ng ti\\u00eau th\\u1ee5 c\\u1ee7a \\u0111o\\u1ea1n m\\u1ea1ch trong th\\u1eddi gian $t$ l\\u00e0\n$$A = \\frac{U^2}{R}t = \\frac{18^2}{12}\\cdot 240 = 6480\\text{ J}$$\nV\\u1eady \\u0111i\\u1ec7n n\\u0103ng ti\\u00eau th\\u1ee5 c\\u1ee7a m\\u1ea1ch l\\u00e0 6480 J.\nĐáp án: D.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2397,8 +2397,8 @@
     "ma_cau": "C-159UHIlj-149",
     "noi_dung": "Để loại bóng đèn loại 120V-60W sáng bình thường ở mạng điện có hiệu điện thế 220V, người ta mắc nối tiếp với nó một điện trở phụ R. Xác định R?",
     "phuong_an": "A. 150Ω\nB. 200Ω\nC. 250Ω\nD. 300Ω",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "B",
+    "loi_giai": "Tóm tắt: $U_{\\text{đm}} = 120\\text{ V}$; $P_{\\text{đm}} = 60\\text{ W}$; $U = 220\\text{ V}$.\nCường độ dòng điện định mức của đèn: Để đèn sáng bình thường, cường độ dòng điện qua đèn phải bằng cường độ dòng điện định mức\n$$I = I_{\\text{đm}} = \\frac{P_{\\text{đm}}}{U_{\\text{đm}}} = \\frac{60}{120} = 0{,}5\\text{ A}$$\nHiệu điện thế giữa hai đầu điện trở phụ: Vì điện trở phụ $R$ mắc nối tiếp với bóng đèn nên hiệu điện thế hai đầu điện trở phụ là\n$$U_R = U - U_{\\text{đm}} = 220 - 120 = 100\\text{ V}$$\nGiá trị của điện trở phụ: Điện trở phụ $R$ có giá trị là\n$$R = \\frac{U_R}{I} = \\frac{100}{0{,}5} = 200\\text{ }\\Omega$$\nGiá trị của điện trở phụ là 200 Ω.\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2415,8 +2415,8 @@
     "ma_cau": "C-159UHIlj-154",
     "noi_dung": "Để bóng đèn loại 120V-60W sáng bình thường ở mạng điện có hiệu điện thế 220V, người ta mắc nối tiếp nó với một điện trở R có giá trị bằng",
     "phuong_an": "A. 120Ω.\nB. 180Ω.\nC. 200Ω.\nD. 240Ω.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "C",
+    "loi_giai": "Tóm tắt: $U_{dm} = 120\\text{ V}$; $P_{dm} = 60\\text{ W}$; $U = 220\\text{ V}$.\nĐiện trở của bóng đèn: Tính điện trở của bóng đèn khi sáng bình thường\n$$R_d = \\frac{U_{dm}^2}{P_{dm}} = \\frac{120^2}{60} = 240\\text{ \\Omega}$$\nCường độ dòng điện định mức: Tính cường độ dòng điện chạy qua đèn để đèn sáng bình thường\n$$I = \\frac{P_{dm}}{U_{dm}} = \\frac{60}{120} = 0{,}5\\text{ A}$$\nĐiện trở mắc nối tiếp: Vì mạch mắc nối tiếp nên cường độ dòng điện qua R bằng cường độ dòng điện định mức của đèn\n$$R = \\frac{U - U_{dm}}{I} = \\frac{220 - 120}{0{,}5} = 200\\text{ \\Omega}$$\nGiá trị của điện trở R là 200\\text{ \\Omega}\nĐáp án: C.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2424,8 +2424,8 @@
     "ma_cau": "C-159UHIlj-158",
     "noi_dung": "Nhiệt lượng đoạn mạch toả ra khi dòng điện chạy qua khi mạch thuần điện trở tỉ lệ",
     "phuong_an": "A. với cường độ dòng điện qua dây dẫn.\nB. nghịch với bình phương cường độ dòng điện qua dây dẫn.\nC. với bình phương điện trở của dây dẫn.\nD. với bình phương cường độ dòng điện qua dây dẫn.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "D",
+    "loi_giai": "Tóm tắt: $\\text{Đoạn mạch thuần điện trở } R$; $\\text{Thời gian dòng điện chạy qua } t$.\nĐịnh luật Joule - Lenz: Theo định luật Joule - Lenz, nhiệt lượng toả ra trên một đoạn mạch thuần điện trở $R$ khi có dòng điện cường độ $I$ chạy qua trong khoảng thời gian $t$ được xác định bởi công thức:\n$$Q = R \\cdot I^2 \\cdot t$$\nBiện luận kết quả: Từ công thức trên, nhiệt lượng toả ra tỉ lệ thuận với bình phương cường độ dòng điện chạy qua dây dẫn, tỉ lệ thuận với điện trở của dây dẫn và tỉ lệ thuận với thời gian dòng điện chạy qua.\nNhiệt lượng đoạn mạch toả ra tỉ lệ với bình phương cường độ dòng điện qua dây dẫn.\nĐáp án: D.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2433,8 +2433,8 @@
     "ma_cau": "C-159UHIlj-159",
     "noi_dung": "Số đếm của công tơ điện gia đình cho biết",
     "phuong_an": "A. công suất điện gia đình sử dụng.\nB. thời gian sử dụng điện của gia đình.\nC. năng lượng điện tiêu thụ của gia đình sử dụng.\nD. số dụng cụ, thiết bị gia đình sử dụng.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "C",
+    "loi_giai": "Xac dinh so dem cua cong to dien: So dem cua cong to dien gia dinh cho biet nang luong dien ma gia dinh da su dung\n$$A = P\\cdot t$$\nChon phuong an C vi so dem cua cong to dien do nang luong dien tieu thu\nĐáp án: C.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2442,8 +2442,8 @@
     "ma_cau": "C-159UHIlj-160",
     "noi_dung": "Trên nhãn của một ấm điện có ghi 220 V – 1000 W, ý nghĩa của các số ghi trên ấm nào sau đây là sai?",
     "phuong_an": "A. Khi sử dụng hiệu điện thế 220 V đặt vào ấm thì ấm hoạt động bình thường và ở trạng thái tốt nhất.\nB. Khi ấm hoạt động với hiệu điện thế định mức thì sẽ tiêu thụ một công suất là 1000 W.\nC. Khi sử dụng hiệu điện thế nhỏ hơn 220 V đặt vào ấm thì ấm hoạt động bình thường và ở trạng thái tốt nhất.\nD. Công suất định mức 1000 W là công suất tối đa mà ấm điện hoạt động liên tục mà không bị hỏng.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "C",
+    "loi_giai": "Tóm tắt: $U_{\\text{dm}} = 220\\text{ V}$; $P_{\\text{dm}} = 1000\\text{ W}$.\nÝ nghĩa các số ghi trên ấm: Số 220 V là hiệu điện thế định mức và số 1000 W là công suất định mức của ấm điện.\n$$U = 220\\text{ V}, P = 1000\\text{ W}$$\nXét các phát biểu: Khi sử dụng hiệu điện thế nhỏ hơn 220 V thì ấm không hoạt động bình thường mà sẽ hoạt động yếu hơn công suất định mức. Do đó phát biểu C là sai. $U < 220\\text{ V} \\Rightarrow P < 1000\\text{ W}$.\nPhát biểu sai là khi sử dụng hiệu điện thế nhỏ hơn 220 V đặt vào ấm thì ấm hoạt động bình thường.\nĐáp án: C.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2451,8 +2451,8 @@
     "ma_cau": "C-159UHIlj-161",
     "noi_dung": "Hai vật dẫn được nối với cùng một hiệu điện thế. Vật A có điện trở gấp đôi điện trở vật B. Tỉ số công suất tiêu thụ điện của vật A và của vật B là",
     "phuong_an": "A. 2.\nB. 1/2.\nC. 1/4.\nD. 4.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "B",
+    "loi_giai": "Tóm tắt: $U_A = U_B = U$; $R_A = 2R_B$.\nCông thức công suất tiêu thụ: Công suất tiêu thụ điện của một vật dẫn khi biết hiệu điện thế và điện trở được xác định bởi công thức\n$$\\mathcal{P} = \\frac{U^2}{R}$$\nLập tỉ số công suất tiêu thụ: Vì hai vật dẫn được nối vào cùng một hiệu điện thế nên tỉ số công suất tiêu thụ của vật A và vật B là\n$$\\frac{\\mathcal{P}_A}{\\mathcal{P}_B} = \\frac{\\frac{U^2}{R_A}}{\\frac{U^2}{R_B}} = \\frac{R_B}{R_A} = \\frac{R_B}{2R_B} = \\frac{1}{2}$$\nTỉ số công suất tiêu thụ điện của vật A và của vật B là 1/2.\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2469,8 +2469,8 @@
     "ma_cau": "C-159UHIlj-163",
     "noi_dung": "Một đoạn mạch có hiệu điện thế 2 đầu không đổi. Khi chỉnh điện trở của nguồn là 100 Ω thì công suất điện của mạch là 20 W. Khi chỉnh điện trở của mạch là 50 Ω thì công suất điện của mạch là",
     "phuong_an": "A. 10 W.\nB. 5 W.\nC. 40 W.\nD. 80 W.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "C",
+    "loi_giai": "Tóm tắt: $U = \\text{const}$; $R_1 = 100\\ \\Omega$; $\\mathcal{P}_1 = 20\\text{ W}$; $R_2 = 50\\ \\Omega$.\nCông thức công suất điện: Công suất tiêu thụ của đoạn mạch khi hiệu điện thế không đổi được xác định bởi công thức\n$$\\mathcal{P} = \\frac{U^2}{R}$$\nLập tỉ số và tính công suất: Vì hiệu điện thế $U$ không đổi nên công suất điện tỉ lệ nghịch với điện trở của đoạn mạch\n$$\\frac{\\mathcal{P}_2}{\\mathcal{P}_1} = \\frac{R_1}{R_2} \\Rightarrow \\mathcal{P}_2 = \\mathcal{P}_1 \\cdot \\frac{R_1}{R_2} = 20 \\cdot \\frac{100}{50} = 40\\text{ W}$$\nCông suất điện của mạch khi điện trở là 50 Ω là 40 W.\nĐáp án: C.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2478,8 +2478,8 @@
     "ma_cau": "C-159UHIlj-164",
     "noi_dung": "Để bóng đèn 120 V – 60 W sáng bình thường ở mạng điện có hiệu điện thế là 220V, người ta phải mắc nối tiếp với nó một điện trở phụ R có giá trị là",
     "phuong_an": "A. 410 Ω.\nB. 80 Ω.\nC. 200 Ω.\nD. 100 Ω.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "C",
+    "loi_giai": "Tóm tắt: $U_{dh} = 120\\text{ V}$; $P_{dh} = 60\\text{ W}$; $U = 220\\text{ V}$.\nCường độ dòng điện định mức của đèn: Cường độ dòng điện chạy qua đèn khi sáng bình thường là\n$$I_{dm} = \\frac{P_{dh}}{U_{dh}} = \\frac{60}{120} = 0{,}5\\text{ A}$$\nĐiện trở của đèn: Điện trở của bóng đèn là\n$$R_d = \\frac{U_{dh}^2}{P_{dh}} = \\frac{120^2}{60} = 240\\text{ \\Omega}$$\nĐiện trở tương đương của mạch: Điện trở toàn mạch khi mắc nối tiếp đèn và điện trở phụ R là\n$$R_{tm} = \\frac{U}{I_{dm}} = \\frac{220}{0{,}5} = 440\\text{ \\Omega}$$\nGiá trị điện trở phụ: Giá trị của điện trở phụ R là\n$$R = R_{tm} - R_d = 440 - 240 = 200\\text{ \\Omega}$$\nGiá trị của điện trở phụ là 200 \\Omega, tương ứng với phương án C\nĐáp án: C.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2487,8 +2487,8 @@
     "ma_cau": "C-159UHIlj-165",
     "noi_dung": "Một ampe kế và một vôn kế được mắc nối tiếp với một pin. Khi đó, số chỉ của chúng lần lượt là I và U. Giữ nguyên các thành phần của mạch, mắc một điện trở R song song với vôn kế. Phát biểu nào sau đây là đúng?",
     "phuong_an": "A. I và U đều tăng.\nB. I và U đều giảm.\nC. I sẽ giảm, U sẽ tăng.\nD. I sẽ tăng, U sẽ giảm.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "D",
+    "loi_giai": "Tóm tắt: $Mạch ban đầu: pin nối tiếp ampe kế và vôn kế$; $Số chỉ ampe kế: I$; $Số chỉ vôn kế: U$; $Mắc thêm R song song với vôn kế$.\nPhân tích điện trở mạch: Khi mắc thêm điện trở $R$ song song với vôn kế, điện trở tương đương của đoạn mạch chứa vôn kế và $R$ sẽ giảm xuống.\n$$R_{v//R} < R_v$$\nCường độ dòng điện trong mạch: Điện trở toàn mạch giảm dẫn đến cường độ dòng điện mạch chính tăng lên.\n$$I' = \\frac{E}{R_{t\\dots} + r} > I$$\nSố chỉ vôn kế: Vôn kế đo hiệu điện thế giữa hai đầu bộ song song, giá trị này giảm do điện trở của bộ giảm.\n$$U' = I' \\cdot R_{v//R} < U$$\nCường độ dòng điện I tăng và hiệu điện thế U giảm.\nĐáp án: D.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2505,8 +2505,8 @@
     "ma_cau": "C-159UHIlj-167",
     "noi_dung": "Nối điện trở R với hai cực của một pin để có dòng điện chạy qua R. Hiệu điện thế giữa hai cực của pin là 1,6 V khi $R = 4{,}0\\Omega$ và là 1,8 V khi $R = 9{,}0\\Omega$. Suất điện động và điện trở trong của pin có giá trị lần lượt là",
     "phuong_an": "A. 1 V và 1Ω.\nB. 2 V và 1Ω.\nC. 2 V và 2Ω.\nD. 2,5 V và 0,50Ω.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "B",
+    "loi_giai": "Tóm tắt: $U_1 = 1{,}6\\text{ V}$; $R_1 = 4{,}0\\Omega$; $U_2 = 1{,}8\\text{ V}$; $R_2 = 9{,}0\\Omega$.\nÁp dụng định luật Ôm cho toàn mạch: Ta có công thức tính hiệu điện thế mạch ngoài\n$$U = I\\cdot R = \\frac{E}{R + r}\\cdot R$$\nLập hệ phương trình: Thay các giá trị của hai trường hợp vào phương trình\n$$\\begin{cases} 1{,}6 = \\frac{E}{4{,}0 + r}\\cdot 4{,}0 \\\\ 1{,}8 = \\frac{E}{9{,}0 + r}\\cdot 9{,}0 \\end{cases}$$\nGiải hệ phương trình: Giải hệ trên ta tìm được suất điện động và điện trở trong của nguồn\n$$E = 2\\text{ V}, r = 1\\Omega$$\nSuất điện động của pin là 2 V và điện trở trong là 1 Ω, trùng với phương án B.\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2514,8 +2514,8 @@
     "ma_cau": "C-159UHIlj-168",
     "noi_dung": "Một thiết bị tiêu thụ điện có công suất định mức 15 W với hiệu điện thế định mức 110 V mắc nối tiếp với bóng đèn có hiệu điện thế định mức 110 V. Cả hai được mắc vào hiệu điện thế của lưới điện là 220 V. Để cho dụng cụ trên làm việc bình thường thì công suất của đèn phải là",
     "phuong_an": "A. 510 W.\nB. 51 W.\nC. 150 W.\nD. 15 W.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "D",
+    "loi_giai": "Tóm tắt: $P_{dm} = 15\\text{ W}$; $U_{dm} = 110\\text{ V}$; $U = 220\\text{ V}$.\nCường độ dòng điện định mức: Cường độ dòng điện qua thiết bị tiêu thụ để nó hoạt động bình thường là\n$$I = \\frac{P_{dm}}{U_{dm}} = \\frac{15}{110}\\text{ A}$$\nHiệu điện thế và cường độ dòng điện qua bóng đèn: Vì thiết bị mắc nối tiếp với đèn vào lưới điện 220 V nên cường độ dòng điện qua đèn bằng cường độ dòng điện qua thiết bị và hiệu điện thế trên đèn là\n$$U_d = U - U_{dm} = 220 - 110 = 110\\text{ V}$$\nCông suất của đèn: Công suất định mức của đèn là\n$$P_d = U_d \\cdot I = 110 \\cdot \\frac{15}{110} = 15\\text{ W}$$\nCông suất của đèn để thiết bị làm việc bình thường là 15 W, tương ứng với phương án D.\nĐáp án: D.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2532,8 +2532,8 @@
     "ma_cau": "C-159UHIlj-170",
     "noi_dung": "Một nguồn điện một chiều có suất điện động e = 24V, điện trở trong của nguồn r = 2ῼ. Mạch ngoài là một biến trở Rx nối tiếp với một điện trở R = 1,5ῼ.",
     "phuong_an": "a/ Nếu dùng một dây dẫn có điện trở không đáng kể nối hai cực của nguồn lại thì xảy ra hiện tượng đoản mạch, dòng điện qua nguồn sẽ rất lớn có thể gây cháy nổ: Im = e/r\nb/ Biến trở là điện trở có giá trị thay đổi được\nc/ Nếu cho Rx = 4,5ῼ thì cường độ dòng điện qua mạch có giá trị là 4A\nd/ Với Rx = 0,5ῼ thì công suất tiêu thụ ở mạch ngoài là lớn nhất",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "a) Đúng; b) Đúng; c) Sai; d) Đúng",
+    "loi_giai": "Tóm tắt: $e = 24\\text{ V}$; $r = 2\\text{ \\Omega}$; $R = 1{,}5\\text{ \\Omega}$.\nÝ a: Khi đoản mạch, điện trở mạch ngoài bằng không, cường độ dòng điện cực đại tính theo công thức I_m = e/r\n$$I_m = \\frac{e}{r} = \\frac{24}{2} = 12\\text{ A}$$\nÝ b: Biến trở là điện trở có giá trị có thể thay đổi được để điều chỉnh cường độ dòng điện trong mạch\nÝ c: Khi R_x = 4,5\\text{ \\Omega}, cường độ dòng điện qua mạch là I = \\frac{e}{R_x + R + r}\n$$I = \\frac{24}{4{,}5 + 1{,}5 + 2} = \\frac{24}{8} = 3\\text{ A}$$\nÝ d: Công suất mạch ngoài đạt cực đại khi điện trở mạch ngoài bằng điện trở trong, tức R + R_x = r, suy ra R_x = r - R = 2 - 1,5 = 0,5\\text{ \\Omega}\n$$R_x = 0{,}5\\text{ \\Omega}$$\nĐáp án: a) Đúng; b) Đúng; c) Sai; d) Đúng.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2550,8 +2550,8 @@
     "ma_cau": "C-159UHIlj-172",
     "noi_dung": "Một nguồn điện có suất điện động 15V, điện trở trong $0{,}5\\Omega$ mắc với mạch ngoài có hai điện trở $R_1 = 20\\Omega$ và $R_2 = 30\\Omega$ mắc song song. Công suất của mạch ngoài là",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "17,28",
+    "loi_giai": "Tóm tắt: $E = 15\\text{ V}$; $r = 0{,}5\\text{ \\Omega}$; $R_1 = 20\\text{ \\Omega}$; $R_2 = 30\\text{ \\Omega}$.\nĐiện trở mạch ngoài: Điện trở tương đương của hai điện trở mắc song song là\n$$R_N = \\frac{R_1 R_2}{R_1 + R_2} = \\frac{20\\cdot 30}{20 + 30} = 12\\text{ \\Omega}$$\nCường độ dòng điện: Cường độ dòng điện toàn mạch là\n$$I = \\frac{E}{R_N + r} = \\frac{15}{12 + 0{,}5} = 1{,}2\\text{ A}$$\nCông suất mạch ngoài: Công suất tiêu thụ của mạch ngoài là\n$$P = I^2 R_N = 1{,}2^2 \\cdot 12 = 17{,}28\\text{ W}$$\nCông suất của mạch ngoài là 17,28 W\nĐáp án: 17,28 W.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2577,8 +2577,8 @@
     "ma_cau": "C-159UHIlj-175",
     "noi_dung": "Khi hai điện trở giống nhau mắc nối tiếp vào một nguồn điện U=const thì công suất tiêu thụ của chúng là 20W. Nếu các điện trở này được mắc song song và nối vào nguồn thì công suất tiêu thụ của chúng là bao nhiêu ?",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "80",
+    "loi_giai": "Tóm tắt: $R_1 = R_2 = R$; $P_{nt} = 20\\text{ W}$; $U = \\text{const}$.\nCông suất mắc nối tiếp: Công suất tiêu thụ của mạch nối tiếp là\n$$P_{nt} = \\frac{U^2}{2R} = 20$$\nCông suất mắc song song: Công suất tiêu thụ của mạch song song là\n$$P_{ss} = \\frac{U^2}{\\frac{R}{2}} = \\frac{2U^2}{R}$$\nTính công suất song song: Từ biểu thức trên ta suy ra\n$$P_{ss} = 4P_{nt} = 4\\cdot 20 = 80$$\nCông suất tiêu thụ khi mắc song song là\nĐáp án: 80 W.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2586,8 +2586,8 @@
     "ma_cau": "C-159UHIlj-176",
     "noi_dung": "Một bếp điện gồm hai dây điện trở R1, R2. Nếu dùng riêng R1 thì thời gian đun sôi ấm nước là t1 = 10 phút. Nếu dùng riêng R2 thì thời gian đun sôi ấm nước là t2 = 20 phút. Tính thời gian đun sôi ấm nước khi R1 mắc nối tiếp với R2 .",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "30",
+    "loi_giai": "Tóm tắt: $t_1 = 10\\text{ phút}$; $t_2 = 20\\text{ phút}$.\nCông suất đun sôi nước: Gọi $A$ là nhiệt lượng cần thiết để đun sôi ấm nước. Công suất của các dây điện trở khi dùng riêng lần lượt là $P_1 = \\frac{A}{t_1}$ và $P_2 = \\frac{A}{t_2}$\n$$P_1 = \\frac{A}{10}, P_2 = \\frac{A}{20}$$\nCông suất khi mắc nối tiếp: Khi hai điện trở mắc nối tiếp, điện trở tương đương là $R_{nt} = R_1 + R_2$. Công suất của mạch khi đó là\n$$P_{nt} = \\frac{U^2}{R_1 + R_2} = \\frac{1}{\\frac{R_1}{U^2} + \\frac{R_2}{U^2}} = \\frac{1}{\\frac{1}{P_1} + \\frac{1}{P_2}}$$\nThời gian đun sôi khi mắc nối tiếp: Thời gian đun sôi ấm nước lúc này là $t_{nt} = \\frac{A}{P_{nt}} = \\frac{A}{P_1} + \\frac{A}{P_2} = t_1 + t_2$\n$$t_{nt} = 10 + 20 = 30$$\nĐáp án: 30 phút.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2595,8 +2595,8 @@
     "ma_cau": "C-159UHIlj-177",
     "noi_dung": "Hãy xác định suất điện động và điện trở trong của một acquy, biết rằng nếu nó phát dòng điện có cường độ $I_1 = 15\\text{ A}$ thì công suất điện ở mạch ngoài $P_1 = 136\\text{ W}$, còn nếu nó phát dòng điện có cường độ $I_2 = 6\\text{ A}$ thì công suất điện ở mạch ngoài $P_2 = 64{,}8\\text{ W}$",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "12\\text{ V và }0,4\\text{ \\Omega}",
+    "loi_giai": "Tóm tắt: $I_1 = 15\\text{ A}$; $P_1 = 136\\text{ W}$; $I_2 = 6\\text{ A}$; $P_2 = 64{,}8\\text{ W}$.\nCông suất mạch ngoài: Công suất mạch ngoài tính theo cường độ dòng điện và điện trở trong là\n$$P = I(\\mathcal{E} - Ir)$$\nHệ phương trình: Thay số cho hai trường hợp ta được hệ phương trình\n$$\\begin{cases} 15\\mathcal{E} - 225r = 136 \\\\ 6\\mathcal{E} - 36r = 64{,}8 \\end{cases}$$\nGiải hệ phương trình: Giải hệ phương trình trên ta tìm được suất điện động và điện trở trong\n$$\\mathcal{E} = 12\\text{ V}; r = 0{,}4\\text{ \\Omega}$$\nSuất điện động và điện trở trong của acquy là 12 V và 0,4 \\Omega\nĐáp án: 12\\text{ V và }0,4\\text{ \\Omega}.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2604,8 +2604,8 @@
     "ma_cau": "C-159UHIlj-178",
     "noi_dung": "Cho sơ đồ mạch điện như hình vẽ $\\mathcal{E} = 12\\text{ V}, r = 1{,}1\\Omega, R_1 = 0{,}1\\Omega$. Tìm $R_2$ để cho công suất tiêu thụ ở mạch ngoài lớn nhất. Tính giá trị công suất đó. [Hình: Nguồn (E, r) nối tiếp với hai điện trở R1 và R2]",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "32,7",
+    "loi_giai": "Tóm tắt: $\\mathcal{E} = 12\\text{ V}$; $r = 1{,}1\\Omega$; $R_1 = 0{,}1\\Omega$.\nĐiện trở mạch ngoài: Mạch ngoài gồm hai điện trở mắc nối tiếp\n$$R_N = R_1 + R_2 = 0{,}1 + R_2$$\nCông suất mạch ngoài: Công suất tiêu thụ ở mạch ngoài được tính theo biểu thức\n$$P = I^2 R_N = \\frac{\\mathcal{E}^2}{(R_N + r)^2} R_N = \\frac{12^2}{(0{,}1 + R_2 + 1{,}1)^2} (0{,}1 + R_2) = \\frac{144(0{,}1 + R_2)}{(1{,}2 + R_2)^2}$$\nTìm R2 để công suất lớn nhất: Để công suất mạch ngoài lớn nhất thì điện trở mạch ngoài phải bằng điện trở trong của nguồn\n$$R_N = r \\implies 0{,}1 + R_2 = 1{,}1 \\implies R_2 = 1\\Omega$$\nTính giá trị công suất cực đại: Thay giá trị vừa tìm được vào biểu thức công suất\n$$P_{\\text{max}} = \\frac{\\mathcal{E}^2}{4r} = \\frac{12^2}{4\\cdot 1{,}1} = \\frac{144}{4{,}4} \\approx 32{,}7\\text{ W}$$\nR_2 = 1\\Omega và công suất cực đại là 32{,}7\\text{ W}\nĐáp án: 32,7 W.",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1027_212432923lý_11.pdf_p14_img7.jpeg, images/q1027_212432923l__11_pdf_p6_img4.png, images/q1027_212432923l__11_pdf_p14_img7.jpeg, images/q1027_212432923l__11_pdf_p14_img8.jpeg"
   },
@@ -2613,8 +2613,8 @@
     "ma_cau": "C-159UHIlj-179",
     "noi_dung": "Cho sơ đồ mạch điện như hình vẽ. Biết $\\mathcal{E} = 15\\text{ V}, r = 1\\Omega, R_1 = 2\\Omega$. Biết công suất tiêu thụ trên R lớn nhất. Hãy tính R và công suất lớn nhất đó. [Hình: Nguồn (E, r) nối tiếp với hai điện trở R1 và R]",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "14,06",
+    "loi_giai": "Tóm tắt: $\\mathcal{E} = 15\\text{ V}$; $r = 1\\Omega$; $R_1 = 2\\Omega$.\nĐiện trở mạch ngoài: Mạch ngoài gồm điện trở $R_1$ mắc nối tiếp với điện trở $R$, điện trở toàn mạch ngoài là $R_N = R_1 + R = 2 + R$ $R_N = 2 + R$.\nCông suất tiêu thụ trên R: Công suất tiêu thụ trên biến trở $R$ được tính theo biểu thức\n$$P = I^2 R = \\left(\\frac{\\mathcal{E}}{R_1 + R + r}\\right)^2 R = \\frac{15^2 R}{(2 + R + 1)^2} = \\frac{225 R}{(3 + R)^2}$$\nTìm giá trị của R: Biến đổi biểu thức công suất dạng $P = \\frac{225}{\\frac{9}{R} + 6 + R}$. Công suất $P$ đạt giá trị lớn nhất khi $\\frac{9}{R} + R$ đạt giá trị nhỏ nhất, suy ra $R = 9\\Omega$\n$$R = 9\\Omega$$\nTính công suất lớn nhất: Thay $R = 9\\Omega$ vào biểu thức tính công suất ta được\n$$P_{\\text{max}} = \\frac{225\\cdot 9}{(3 + 9)^2} = \\frac{2025}{144} = 14{,}0625\\text{ W}$$\nR = 9\\Omega và P_{\\text{max}} = 14,06\\text{ W}\nĐáp án: 14,06 W.",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1028_212432923lý_11.pdf_p14_img7.jpeg, images/q1028_212432923l__11_pdf_p6_img3.png, images/q1028_212432923l__11_pdf_p6_img4.png, images/q1028_212432923l__11_pdf_p7_img1.jpeg, images/q1028_212432923l__11_pdf_p7_img2.png, images/q1028_212432923l__11_pdf_p7_img4.png, images/q1028_212432923l__11_pdf_p7_img5.png, images/q1028_212432923l__11_pdf_p7_img6.png, images/q1028_212432923l__11_pdf_p7_img7.png, images/q1028_212432923l__11_pdf_p7_img8.png"
   },
@@ -2622,8 +2622,8 @@
     "ma_cau": "C-159UHIlj-182",
     "noi_dung": "Có thể mắc nối tiếp vôn kể với pin để tạo thành mạch kín mà không mắc nối tiếp mili ampe kế với pin để tạo thành mạch kín vì",
     "phuong_an": "A. Điện trở của vôn kế lớn nên dòng điện trong mạch kín nhỏ, không gây ảnh hưởng đến mạch. Còn miliampe kế có điện trở rất nhỏ, vì vậy gây ra dòng điện rất lớn làm hỏng mạch.\nB. Điện trở của miliampe kế rất nhỏ nên gây sai số lớn.\nC. Giá trị cần đo vượt quá thang đo của miliampe kế.\nD. Kim của miliampe kế sẽ quay liên tục và không đọc được giá trị cần đo.",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "A",
+    "loi_giai": "Tóm tắt: $R_V \\text{ rất lớn}$; $R_{mA} \\text{ rất nhỏ}$.\nPhân tích điện trở của dụng cụ đo: Vôn kế có điện trở rất lớn, khi mắc nối tiếp với nguồn sẽ làm cường độ dòng điện trong mạch rất nhỏ, không gây hỏng nguồn.\n$$R_V \\approx \\infty$$\nPhân tích điện trở của miliampe kế: Miliampe kế có điện trở rất nhỏ, nếu mắc trực tiếp vào hai cực của pin sẽ tạo ra dòng điện ngắn mạch rất lớn làm hỏng nguồn và dụng cụ.\n$$R_{mA} \\approx 0$$\nĐáp án: A.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2631,8 +2631,8 @@
     "ma_cau": "C-159UHIlj-184",
     "noi_dung": "Có thể sử dụng đồng hồ đo điện đa năng để đo trực tiếp suất điện động của nguồn điện và điện trở trong của nguồn không, vì sao ?",
     "phuong_an": "A. Không, vì có thể đo trực tiếp suất điện động do mạch hở nhưng không đo trực tiếp điện trở trong được\nB. Có, vì có thể đo trực tiếp suất điện động do mạch hở và đo trực tiếp điện trở trong được\nC. Không đủ cơ sở để khẳng định\nD. Không, vì đồng hồ đo điện đa năng không có chức năng này",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "A",
+    "loi_giai": "Suất điện động: Đồng hồ đo điện đa năng có thể đo trực tiếp suất điện động của nguồn điện khi mạch hở (chính là số chỉ của vôn kế khi không có dòng điện chạy qua mạch ngoài).\n$$U_{vh} = E$$\nĐiện trở trong: Đồng hồ đo điện đa năng không có chức năng đo trực tiếp điện trở trong của nguồn điện, vì điện trở trong không phải là một linh kiện độc lập có thể tách rời để đo bằng chức năng đo điện trở của đồng hồ.\nKết luận: Do đó không thể dùng đồng hồ đo điện đa năng để đo trực tiếp cả suất điện động và điện trở trong của nguồn.\nKhông thể sử dụng đồng hồ đo điện đa năng để đo trực tiếp suất điện động và điện trở trong của nguồn cùng một lúc vì không đo trực tiếp được điện trở trong.\nĐáp án: A.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2649,8 +2649,8 @@
     "ma_cau": "C-159UHIlj-186",
     "noi_dung": "Dụng cụ nào là cần có trong bộ dụng cụ thực hành đo suất điện động và điện trở trong của pin điện hóa ?",
     "phuong_an": "A. Pin điện hóa, biến trở, đồng hồ đo điện đa năng, dây nối, công tắc điện,điện trở bảo vệ, bảng lắp mạch điện\nB. Pin điện hóa, biến trở, đồng hồ đo điện đa năng, dây nối, công tắc điện,điện trở bảo vệ, thước dây\nC. Nguồn điện Acqui, biến trở, đồng hồ đo điện đa năng, dây nối, công tắc điện,điện trở bảo vệ, bảng lắp mạch điện\nD. Pin điện hóa, biến trở, đồng hồ đo thời gian, dây nối, công tắc điện,điện trở bảo vệ, bảng lắp mạch điện",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "A",
+    "loi_giai": "Tóm tắt: $\\text{Thí nghiệm: Đo suất điện động và điện trở trong của pin điện hóa}$.\nXác định các dụng cụ cần thiết: Theo bài thực hành đo suất điện động và điện trở trong của pin điện hóa (Bài 26 - Vật lí 11), bộ dụng cụ thực hành bao gồm: pin điện hóa (cần đo suất điện động và điện trở trong), biến trở, đồng hồ đo điện đa năng hiện số (dùng đo hiệu điện thế và cường độ dòng điện), điện trở bảo vệ, công tắc điện, dây nối và bảng lắp mạch điện.\nPhân tích các phương án: Phương án B sai vì chứa thước dây (không cần thiết). Phương án C sai vì đối tượng cần đo là pin điện hóa chứ không phải ắc quy. Phương án D sai vì chứa đồng hồ đo thời gian (không dùng trong bài này). Do đó, phương án A là chính xác.\nBộ dụng cụ cần có gồm: Pin điện hóa, biến trở, đồng hồ đo điện đa năng, dây nối, công tắc điện, điện trở bảo vệ, bảng lắp mạch điện.\nĐáp án: A.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2685,8 +2685,8 @@
     "ma_cau": "C-1_7nFKUi-020",
     "noi_dung": "a) Nguồn điện có suất điện động E = 12V và điện trở trong r được nối với mạch ngoài như hình vẽ bên. Biết $R_1 = 6\\text{ }\\Omega$, $R_2 = R_3 = 10\\text{ }\\Omega$. Bỏ qua điện trở của ampere kế và dây nối. Biết cường độ dòng điện chạy qua $R_3$ là 0,5 A.\n[Hình: Mạch điện gồm nguồn E, r nối tiếp với R1 rồi nối tiếp với đoạn song song (R2 // R3)]\n+ Tính điện trở của mạch ngoài và hiệu điện thế giữa 2 đầu điện trở $R_1$.\n+ Điện trở trong của nguồn điện có giá trị là bao nhiêu?\nb) Trường THPT Phan Châu Trinh có 93 phòng học, mỗi phòng sử dụng 4 bóng đèn loại 220V – 44W được mắc vào hiệu điện thế 220V, đèn sáng bình thường. Trung bình mỗi phòng học sử dụng điện 8 giờ mỗi ngày.\n+ Giải thích ý nghĩa các số liệu kĩ thuật ghi trên bóng đèn? Điện năng cung cấp cho bóng đèn hoạt động chủ yếu chuyển hoá thành dạng năng lượng chính nào?\n+ Do biến đổi khí hậu, nhà trường luôn tuyên truyền tiết kiệm điện đến các em học sinh. Các bạn học sinh đều có ý thức tiết kiệm điện rất tốt bằng cách tắt các thiết bị điện khi không sử dụng. Do đó, thời gian dùng các thiết bị điện ở mỗi phòng học chỉ còn 6 giờ mỗi ngày. Tính tiền điện mà trường Phan Châu Trinh đã tiết kiệm được trong một năm học (Biết 1 năm tất cả các phòng sử dụng 9 tháng, mỗi tháng 27 ngày). Biết giá điện là 2000 đồng/kW.h.",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "a) 11 \\Omega, 6 V, 1 \\Omega; b) 15 909 696 đồng",
+    "loi_giai": "Tóm tắt: $\\mathcal{E} = 12\\text{ V}$; $R_1 = 6\\text{ }\\Omega$; $R_2 = R_3 = 10\\text{ }\\Omega$; $I_3 = 0{,}5\\text{ A}$; $N = 93\\text{ ph\\`ong}$; $n = 4\\text{ b\\'{o}ng/ph\\`ong}$; $\\mathcal{P}_{\\text{đ}} = 44\\text{ W}$; $t_1 = 8\\text{ h/ng\\`ay}, t_2 = 6\\text{ h/ng\\`ay}$; $T = 9\\text{ th\\'{a}ng} \\cdot 27\\text{ ng\\`ay} = 243\\text{ ng\\`ay}$; $\\text{gi\\'{a} \\dj i\\^{e}n} = 2000\\text{ \\dj\\grave{\\ocirc}ng/(kW}\\cdot\\text{h)}$.\nĐiện trở tương đương của mạch ngoài: Đoạn mạch ngoài gồm $R_1$ mắc nối tiếp với đoạn $(R_2 \\parallel R_3)$.\n$$R_N = R_1 + \\frac{R_2 \\cdot R_3}{R_2 + R_3} = 6 + \\frac{10 \\cdot 10}{10 + 10} = 11\\text{ }\\Omega$$\nHiệu điện thế giữa hai đầu điện trở R1: Hiệu điện thế hai đầu cụm song song và dòng điện trong mạch chính là:\n$$U_{23} = I_3 \\cdot R_3 = 0{,}5 \\cdot 10 = 5\\text{ V} \\implies I = \\frac{U_{23}}{R_{23}} = \\frac{5}{5} = 1\\text{ A}$$\nTính hiệu điện thế U1: Hiệu điện thế giữa hai đầu $R_1$: $U_1 = I \\cdot R_1 = 1 \\cdot 6 = 6\\text{ V}$.\nĐiện trở trong của nguồn: Áp dụng định luật Ohm cho toàn mạch:\n$$I = \\frac{\\mathcal{E}}{R_N + r} \\implies r = \\frac{\\mathcal{E}}{I} - R_N = \\frac{12}{1} - 11 = 1\\text{ }\\Omega$$\nÝ nghĩa số liệu kĩ thuật và chuyển hóa năng lượng: Số liệu 220 V là hiệu điện thế định mức của đèn; 44 W là công suất định mức khi đèn hoạt động ở hiệu điện thế định mức. Năng lượng điện chủ yếu chuyển hoá thành quang năng (năng lượng ánh sáng).\nTiền điện tiết kiệm được: Công suất tổng cộng của các bóng đèn và thời gian giảm được trong một năm:\n$$\\mathcal{P}_{\\text{tổng}} = 93 \\cdot 4 \\cdot 44\\text{ W} = 16368\\text{ W} = 16{,}368\\text{ kW}$$\nTính điện năng và số tiền tiết kiệm: Thời gian tiết kiệm được và số tiền tương ứng:\n$$\\Delta t = (8 - 6) \\cdot 243 = 486\\text{ h} \\implies \\Delta A = 16{,}368 \\cdot 486 = 7954{,}848\\text{ kW}\\cdot\\text{h} \\implies M = 7954{,}848 \\cdot 2000 = 15909696\\text{ đồng}$$\na) Điện trở mạch ngoài là 11 $\\Omega$, hiệu điện thế $U_1 = 6$ V, điện trở trong $r = 1$ $\\Omega$. b) 220 V: hiệu điện thế định mức; 44 W: công suất định mức. Điện năng chủ yếu chuyển hoá thành quang năng. Tiền điện tiết kiệm được là 15 909 696 đồng.\nĐáp án: a) 11 \\Omega, 6 V, 1 \\Omega; b) 15 909 696 đồng.",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1055_OTCK2_2526_li11.pdf_p5_img2.png, images/q1055_OTCK2_2526_li11_pdf_p5_img2.png, images/q1055_OTCK2_2526_li11_pdf_p5_img3.png"
   },
@@ -2712,8 +2712,8 @@
     "ma_cau": "C-1_7nFKUi-039",
     "noi_dung": "Cho tụ điện gồm hai bản A, B là hai bản kim loại phẳng song song, cách nhau một khoảng 5 cm, giữa hai bản là chân không. Hai bản tụ được tích điện trái dấu sao cho điện trường giữa hai bản là điện trường đều có cường độ E = 1000 V/m, chiều đường sức điện hướng từ bản A sang bản B.\na. Tính hiệu điện thế $U_{AB}$ giữa hai bản tụ điện?\nb. Chọn gốc điện thế tại bản A, nếu giữ cố định điện tích $q = 10^{-3}\\text{ C}$ tại bản B, tìm thế năng điện của điện tích q đó?",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "a. 50 V; b. -0,05 J",
+    "loi_giai": "Tóm tắt: $d = 5\\text{ cm} = 0{,}05\\text{ m}$; $E = 1000\\text{ V/m}$; $q = 10^{-3}\\text{ C}$; $V_A = 0\\text{ V}$.\nTính hiệu điện thế giữa hai bản tụ: Hiệu điện thế giữa bản A và bản B được tính theo công thức liên hệ giữa cường độ điện trường và hiệu điện thế trong điện trường đều\n$$U_{AB} = E\\cdot d = 1000\\cdot 0{,}05 = 50\\text{ V}$$\nXác định điện thế tại bản B: Theo định nghĩa hiệu điện thế giữa hai điểm và với gốc điện thế chọn tại bản A ($V_A = 0\\text{ V}$)\n$$U_{AB} = V_A - V_B \\Rightarrow V_B = V_A - U_{AB} = 0 - 50 = -50\\text{ V}$$\nTính thế năng điện của điện tích q tại bản B: Thế năng của điện tích $q$ đặt tại bản B so với mốc tại bản A là\n$$W_B = q\\cdot V_B = 10^{-3}\\cdot (-50) = -0{,}05\\text{ J}$$\nHiệu điện thế giữa hai bản tụ là $U_{AB} = 50\\text{ V}$ và thế năng điện của điện tích q tại bản B là $W_B = -0{,}05\\text{ J}$.\nĐáp án: a. 50 V; b. -0,05 J.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2721,8 +2721,8 @@
     "ma_cau": "C-1_7nFKUi-040",
     "noi_dung": "a) Cho mạch điện gồm nguồn điện có suất điện động E = 12V, điện trở trong $r = 1\\text{ }\\Omega$, mạch ngoài gồm $R_1$ là biến trở con chạy, giá trị các điện trở $R_2 = 3\\text{ }\\Omega$, $R_3 = 2\\text{ }\\Omega$ như hình vẽ.\n[Hình: Mạch điện gồm nguồn E, r nối với cụm gồm (R1 // R2) nối tiếp R3]\n+ Điều chỉnh con chạy sao cho $R_1 = 6\\text{ }\\Omega$. Tìm cường độ dòng điện chạy trong mạch chính?\n+ Điều chỉnh $R_1$ sao cho công suất tiêu thụ trên điện trở $R_2$ và $R_3$ bằng nhau. Tìm giá trị $R_1$ lúc này?\nb) Một hộ gia đình sử dụng 2 máy điều hòa, mỗi máy có công suất 1500 W. Trung bình gia đình sử dụng 5 giờ mỗi ngày.\n+ Tính điện năng tiêu thụ của 2 máy điều hòa trong 1 tháng (30 ngày)?\n+ Biết 1 kWh có đơn giá là 1500 đồng, hỏi giá tiền hộ gia đình phải trả khi sử dụng 2 máy điều hòa này sau 1 tháng?",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "a) I = 2,4 A; R1 ≈ 13,35 Ω; b) A = 450 kWh; Tiền = 675000 đồng",
+    "loi_giai": "Tóm tắt: $E = 12\\text{ V}$; $r = 1\\text{ }\\Omega$; $R_2 = 3\\text{ }\\Omega$; $R_3 = 2\\text{ }\\Omega$; $\\text{Cấu trúc mạch ngoài: } (R_1 // R_2) \\text{ nt } R_3$; $\\text{Trường hợp 1: } R_1 = 6\\text{ }\\Omega$; $\\text{Trường hợp 2: } P_2 = P_3$; $\\text{Máy điều hòa: } n = 2,\\text{ } P_0 = 1500\\text{ W} = 1{,}5\\text{ kW}$; $t = 5\\text{ h/ngày},\\text{ } N = 30\\text{ ngày}$; $\\text{Đơn giá: } 1500\\text{ đồng/kWh}$.\nCường độ dòng điện mạch chính khi R1 = 6 ôm: Điện trở tương đương của đoạn mạch song song $R_{12}$ và điện trở toàn mạch ngoài $R_N$\n$$R_{12} = \\frac{R_1\\cdot R_2}{R_1 + R_2} = \\frac{6\\cdot 3}{6 + 3} = 2\\text{ }\\Omega \\implies R_N = R_{12} + R_3 = 2 + 2 = 4\\text{ }\\Omega$$\nCường độ dòng điện trong mạch chính: Áp dụng định luật Ôm cho toàn mạch\n$$I = \\frac{E}{R_N + r} = \\frac{12}{4 + 1} = 2{,}4\\text{ A}$$\nTìm R1 để công suất trên R2 và R3 bằng nhau: Ta có $I_3 = I$ là dòng điện qua $R_3$. Dòng điện qua $R_2$ là $I_2 = I\\cdot \\frac{R_1}{R_1 + R_2}$. Công suất trên $R_2$ và $R_3$ lần lượt là $P_2 = I_2^2\\cdot R_2$ và $P_3 = I^2\\cdot R_3$\n$$P_2 = P_3 \\iff I^2\\cdot \\left(\\frac{R_1}{R_1 + R_2}\\right)^2\\cdot R_2 = I^2\\cdot R_3$$\nGiải phương trình tìm R1: Rút gọn $I^2$ và thay số $R_2 = 3\\text{ }\\Omega, R_3 = 2\\text{ }\\Omega$\n$$\\left(\\frac{R_1}{R_1 + 3}\\right)^2\\cdot 3 = 2 \\iff \\frac{R_1}{R_1 + 3} = \\sqrt{\\frac{2}{3}} \\implies R_1 = \\frac{3\\sqrt{2}}{\\sqrt{3} - \\sqrt{2}} = 6 + 3\\sqrt{6} \\approx 13{,}35\\text{ }\\Omega$$\nĐiện năng tiêu thụ của 2 máy điều hòa trong 1 tháng: Tổng thời gian sử dụng trong 30 ngày là $t_{tong} = 5\\cdot 30 = 150\\text{ h}$. Tổng công suất của 2 máy là $P_{tong} = 2\\cdot 1{,}5 = 3\\text{ kW}$\n$$A = P_{tong}\\cdot t_{tong} = 3\\cdot 150 = 450\\text{ kWh}$$\nTiền điện phải trả: Nhân điện năng tiêu thụ với đơn giá\n$$T = A\\cdot 1500 = 450\\cdot 1500 = 675000\\text{ đồng}$$\na) Cường độ dòng điện mạch chính khi $R_1 = 6\\text{ }\\Omega$ là $2{,}4\\text{ A}$; giá trị của $R_1$ để $P_2 = P_3$ là $6 + 3\\sqrt{6}\\text{ }\\Omega\\approx 13{,}35\\text{ }\\Omega$. b) Điện năng tiêu thụ trong 1 tháng là $450\\text{ kWh}$, tiền điện phải trả là $675000\\text{ đồng}$.\nĐáp án: a) I = 2,4 A; R1 ≈ 13,35 Ω; b) A = 450 kWh; Tiền = 675000 đồng.",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1075_OTCK2_2526_li11_pdf_p7_img2.png, images/q1075_OTCK2_2526_li11_pdf_p7_img2.png"
   },
@@ -2775,8 +2775,8 @@
     "ma_cau": "C-1_7nFKUi-060",
     "noi_dung": "a) Cho mạch điện có sơ đồ như hình vẽ bên dưới (Hình 1). Trong đó nguồn điện có suất điện động $\\xi = 6\\text{ V}$ và điện trở trong $r = 2\\text{ }\\Omega$. Các điện trở $R_1 = 5\\text{ }\\Omega$, $R_2 = 10\\text{ }\\Omega$ và $R_3 = 3\\text{ }\\Omega$. Bỏ qua điện trở của dây dẫn. Tính:\n[Hình 1: Mạch điện gồm nguồn (ξ, r) nối tiếp R1, R2, R3 mắc nối tiếp]\n+ Cường độ dòng điện chạy trong mạch chính.\n+ Công suất tiêu thụ mạch ngoài.\nb) Cho mạch điện như hình vẽ bên dưới (Hình 2). Biết nguồn điện có suất điện động E = 12 V và có điện trở trong $r = 1\\text{ }\\Omega$, các điện trở $R_1= 3\\text{ }\\Omega$, $R_2= 5\\text{ }\\Omega$, $R_3 = 4\\text{ }\\Omega$, $R_4 = 4\\text{ }\\Omega$. Điện trở các dây nối không đáng kể.\n[Hình 2: Nguồn (E, r) nối với mạch cầu gồm hai nhánh: nhánh trên R1 nối tiếp R2, nhánh dưới R3 nối tiếp R4]\n+ Tính cường độ dòng điện I chạy trong mạch điện và hiệu điện thế $U_1$ giữa hai đầu điện trở $R_1$.\n+ Tính công suất toả nhiệt trên điện trở $R_2$.",
     "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
+    "dap_an": "a) I = 0,3 A; P_n = 1,62 W. b) I = 2,4 A; U_1 = 3,6 V; P_2 = 7,2 W.",
+    "loi_giai": "Tóm tắt: $\\text{Câu a: } \\xi = 6\\text{ V}, r = 2\\text{ }\\Omega, R_1 = 5\\text{ }\\Omega, R_2 = 10\\text{ }\\Omega, R_3 = 3\\text{ }\\Omega$; $\\text{Câu b: } \\mathcal{E} = 12\\text{ V}, r = 1\\text{ }\\Omega, R_1 = 3\\text{ }\\Omega, R_2 = 5\\text{ }\\Omega, R_3 = 4\\text{ }\\Omega, R_4 = 4\\text{ }\\Omega$.\nTính điện trở tương đương mạch ngoài ở câu a: Mạch ngoài gồm ba điện trở mắc nối tiếp: $R_{\\text{n}} = R_1 + R_2 + R_3$ $R_{\\text{n}} = 5 + 10 + 3 = 18\\text{ }\\Omega$.\nTính cường độ dòng điện mạch chính ở câu a: Áp dụng định luật Ohm cho toàn mạch:\n$$I_a = \\frac{\\xi}{R_{\\text{n}} + r} = \\frac{6}{18 + 2} = 0{,}3\\text{ A}$$\nTính công suất tiêu thụ mạch ngoài ở câu a: Công suất tiêu thụ của mạch ngoài:\n$$\\mathcal{P}_{\\text{n}} = I_a^2 \\cdot R_{\\text{n}} = 0{,}3^2 \\cdot 18 = 1{,}62\\text{ W}$$\nTính điện trở tương đương mạch ngoài ở câu b: Mạch ngoài gồm hai nhánh mắc song song: $(R_1\\text{ nt } R_2) \\parallel (R_3\\text{ nt } R_4)$ $R_{12} = R_1 + R_2 = 3 + 5 = 8\\text{ }\\Omega;\\quad R_{34} = R_3 + R_4 = 4 + 4 = 8\\text{ }\\Omega$.\nTính điện trở toàn mạch ngoài ở câu b: Điện trở tương đương của đoạn mạch AB:\n$$R_{\\text{AB}} = \\frac{R_{12} \\cdot R_{34}}{R_{12} + R_{34}} = \\frac{8 \\cdot 8}{8 + 8} = 4\\text{ }\\Omega$$\nTính cường độ dòng điện mạch chính ở câu b: Áp dụng định luật Ohm cho toàn mạch:\n$$I = \\frac{\\mathcal{E}}{R_{\\text{AB}} + r} = \\frac{12}{4 + 1} = 2{,}4\\text{ A}$$\nTính hiệu điện thế mạch ngoài và hai đầu R1: Hiệu điện thế giữa hai cực A và B: $U_{\\text{AB}} = I \\cdot R_{\\text{AB}} = 2{,}4 \\cdot 4 = 9{,}6\\text{ V}$.\nTính dòng điện qua nhánh 1 và hiệu điện thế U1: Dòng điện qua nhánh chứa $R_1, R_2$ và hiệu điện thế trên $R_1$:\n$$I_1 = \\frac{U_{\\text{AB}}}{R_{12}} = \\frac{9{,}6}{8} = 1{,}2\\text{ A} \\implies U_1 = I_1 \\cdot R_1 = 1{,}2 \\cdot 3 = 3{,}6\\text{ V}$$\nTính công suất toả nhiệt trên R2: Công suất toả nhiệt trên điện trở $R_2$:\n$$\\mathcal{P}_2 = I_1^2 \\cdot R_2 = 1{,}2^2 \\cdot 5 = 7{,}2\\text{ W}$$\na) $I = 0{,}3\\text{ A}$; $\\mathcal{P}_{\\text{n}} = 1{,}62\\text{ W}$. b) $I = 2{,}4\\text{ A}$; $U_1 = 3{,}6\\text{ V}$; $\\mathcal{P}_2 = 7{,}2\\text{ W}$.\nĐáp án: a) I = 0,3 A; P_n = 1,62 W. b) I = 2,4 A; U_1 = 3,6 V; P_2 = 7,2 W.",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1095_OTCK2_2526_li11.pdf_p9_img1.png, images/q1095_OTCK2_2526_li11_pdf_p9_img1.png"
   },
@@ -9228,163 +9228,37 @@
     "ma_cau": "C-1AgVa186-002",
     "noi_dung": "Vôn trên mét (V/m) là đơn vị đo đại lượng vật lí nào sau đây?",
     "phuong_an": "A. Điện tích.\nB. Từ thông.\nC. Điện dung.\nD. Cường độ điện trường.",
-    "dap_an": "",
+    "dap_an": "D",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-003",
-    "noi_dung": "Một con lắc đơn dao động điều hòa với phương trình li độ góc $\\alpha = \\alpha_0 \\cos(\\omega t + \\varphi)$ ($\\alpha_0$ và $\\omega$ là các hằng số dương). Đại lượng $\\omega$ được gọi là",
-    "phuong_an": "A. biên độ góc của dao động.\nB. chu kì của dao động.\nC. tần số góc của dao động.\nD. pha ban đầu của dao động.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-006",
-    "noi_dung": "Nguyên tắc hoạt động của máy biến áp là dựa trên",
-    "phuong_an": "A. hiện tượng cảm ứng điện từ.\nB. hiện tượng tự cảm.\nC. hiện tượng quang điện trong.\nD. hiện tượng quang điện ngoài.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1AgVa186-007",
     "noi_dung": "Sóng âm có tần số $f = 13 \\text{ Hz}$ được gọi là",
     "phuong_an": "A. tạp âm.\nB. siêu âm.\nC. hạ âm.\nD. âm thanh.",
-    "dap_an": "",
+    "dap_an": "C",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-008",
-    "noi_dung": "Số nơtron có trong hạt nhân nguyên tử $^{14}_{6}\\text{C}$ là",
-    "phuong_an": "A. 6.\nB. 14.\nC. 20.\nD. 8.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-010",
-    "noi_dung": "Một chất điểm dao động điều hòa dọc theo trục Ox với tần số góc $\\omega$. Vào thời điểm xác định, li độ của chất điểm là $x$. Gia tốc tức thời của chất điểm được xác định bằng công thức",
-    "phuong_an": "A. $a = \\omega x$\nB. $a = -\\omega^2 x$\nC. $a = -\\omega x$\nD. $a = \\omega^2 x$",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-013",
-    "noi_dung": "Sóng dừng hình thành trên một sợi dây đàn hồi với hai đầu cố định. Trên dây, các phần tử sóng thuộc cùng một bó thì dao động",
-    "phuong_an": "A. cùng pha với nhau.\nB. lệch pha nhau $\\frac{2\\pi}{3}$.\nC. lệch pha nhau $\\pi/2$.\nD. ngược pha với nhau.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-017",
-    "noi_dung": "Chọn phát biểu đúng khi nói về đồng vị của một nguyên tử.",
-    "phuong_an": "A. Các đồng vị có cùng tính chất vật lí.\nB. Các đồng vị có cùng tính chất hóa học.\nC. Các đồng vị có cùng cả tính chất vật lí lẫn tính chất hóa học.\nD. Các đồng vị không có cùng tính chất vật lí và tính chất hóa học.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-018",
-    "noi_dung": "Một con lắc lò xo đang dao động cưỡng bức với biểu thức của ngoại lực tuần hoàn là $F = F_0\\cos(5\\pi t)$ ($t$ tính bằng s). Chu kì dao động của con lắc là",
-    "phuong_an": "A. $2,5\\pi \\text{ s}$.\nB. $0,4 \\text{ s}$.\nC. $2,5 \\text{ s}$.\nD. $0,4\\pi \\text{ s}$.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1AgVa186-021",
     "noi_dung": "Trên một sợi dây đang có sóng dừng với một đầu cố định và một đầu tự do. Sóng truyền trên dây có bước sóng $\\lambda$. Chiều dài $\\ell$ của sợi dây thỏa mãn",
     "phuong_an": "A. $\\ell = k\\frac{\\lambda}{2}$ với $k = 1; 2; 3; \\dots$\nB. $\\ell = (2k + 1)\\frac{\\lambda}{4}$ với $k = 1; 2; 3; \\dots$\nC. $\\ell = k\\frac{\\lambda}{4}$ với $k = 1; 2; 3; \\dots$\nD. $\\ell = (2k + 1)\\frac{\\lambda}{2}$ với $k = 1; 2; 3; \\dots$",
-    "dap_an": "",
+    "dap_an": "B",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-024",
-    "noi_dung": "Hai dao động điều hòa cùng phương, cùng tần số và vuông pha với nhau có biên độ lần lượt là $A_1$ và $A_2$. Dao động tổng hợp của hai dao động trên có biên độ là $A$. Hệ thức nào sau đây là đúng?",
-    "phuong_an": "A. $A = A_1 + A_2$.\nB. $A = \\sqrt{A_1^2 + A_2^2}$.\nC. $A = \\sqrt{A_1^2 - A_2^2}$.\nD. $A = |A_1 - A_2|$.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-025",
-    "noi_dung": "Thí nghiệm giao thoa sóng trên mặt nước với hai nguồn kết hợp đặt tại A và B cách nhau $24,5 \\text{ cm}$, dao động cùng pha phát ra hai sóng lan truyền trên mặt nước với bước sóng $\\lambda$. Điểm M nằm trên đoạn thẳng AB thuộc vân cực đại bậc 3. Biết $MA = 8 \\text{ cm}$. Trên đoạn thẳng AB có vân cực tiểu giao thoa là",
-    "phuong_an": "A. 20.\nB. 14.\nC. 18.\nD. 16.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-027",
-    "noi_dung": "Hai nguồn điện có suất điện động $E_1 = E_2 = 2\\text{V}$ và có điện trở trong tương ứng là $r_1 = 0,4\\ \\Omega$ và $r_2 = 0,2\\ \\Omega$ được mắc với điện trở $R$ tạo thành mạch điện kín như sơ đồ hình bên. Biết rằng, khi đó hiệu điện thế giữa hai cực của một trong hai nguồn bằng 0. Giá trị của $R$ bằng [Hình: sơ đồ mạch điện gồm 2 nguồn mắc nối tiếp với điện trở R]",
-    "phuong_an": "A. $0,6\\ \\Omega$.\nB. $0,2\\ \\Omega$.\nC. $1,0\\ \\Omega$.\nD. $1,4\\ \\Omega$",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": "images/q2182_de-thi-minh-hoa-Vat-_p3_img1.png"
-  },
-  {
-    "ma_cau": "C-1AgVa186-028",
-    "noi_dung": "Ở cùng một nơi trên mặt đất, nếu con lắc đơn có chiều dài dây treo dao động điều hòa với chu kì $T = 2\\text{s}$ thì con lắc đơn có chiều dài dây treo $0,81\\ell$ sẽ dao động điều hòa với chu kì",
-    "phuong_an": "A. $1,62 \\text{ s}$.\nB. $2,47 \\text{ s}$.\nC. $1,80 \\text{ s}$.\nD. $1,50 \\text{ s}$.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-030",
-    "noi_dung": "Một khung dây dẫn kín hình chữ nhật ABCD đặt cạnh một dây dẫn thẳng rất dài, đang có dòng điện một chiều cường độ I chạy qua như hình vẽ bên. Kéo khung dây chuyển động đều ra xa dòng điện theo chiều của v thì trong khung [Hình: khung dây ABCD đặt cạnh dòng điện thẳng dài I]",
-    "phuong_an": "A. không xuất hiện dòng điện cảm ứng.\nB. xuất hiện dòng điện cảm ứng có chiều ABCDA.\nC. xuất hiện dòng điện cảm ứng có chiều ADCBA.\nD. xuất hiện dòng điện xoay chiều hình sin.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": "images/q2185_de-thi-minh-hoa-Vat-_p3_img2.png"
   },
   {
     "ma_cau": "C-1AgVa186-032",
     "noi_dung": "Dao động của một con lắc lò xo treo thẳng đứng là tổng hợp của hai dao động điều hòa cùng phương. Chọn chiều dương hướng xuống. Hình bên là đồ thị biểu diễn sự phụ thuộc của vận tốc $v_1$ và $v_2$ của hai dao động thành phần theo thời gian $t$. Biết độ lớn lực đàn hồi tác dụng lên vật nặng của con lắc vào thời điểm $t = 0,4\\text{ s}$ là $0,3\\text{ N}$. Lấy $g = \\pi^2 \\text{ (m/s}^2\\text{)}$. Cơ năng của con lắc bằng . [Hình: đồ thị vận tốc v1, v2 theo thời gian]",
     "phuong_an": "A. $0,085 \\text{ J}$.\nB. $0,194 \\text{ J}$.\nC. $0,162 \\text{ J}$.\nD. $0,117 \\text{ J}$.",
-    "dap_an": "",
+    "dap_an": "D",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q2187_de-thi-minh-hoa-Vat-_p4_img1.png"
-  },
-  {
-    "ma_cau": "C-1AgVa186-033",
-    "noi_dung": "Ở mặt nước, một nguồn sóng đặt tại O dao động điều hòa theo phương thẳng đứng. Sóng truyền trên mặt nước có bước sóng $\\lambda$. Hai điểm M và N trên mặt nước dao động ngược pha với nguồn. Không kể O, trên các đoạn thẳng OM và MN có số điểm dao động cùng pha với nguồn lần lượt là 6 và 7. Biết khoảng cách giữa hai điểm M và N luôn thỏa mãn $d_1 \\le MN < d_2$. Tổng $d_1 + d_2$ có giá trị gần nhất với giá trị nào sau đây? [Hình: các vòng tròn đồng tâm biểu diễn sóng nước]",
-    "phuong_an": "A. $18,9\\lambda$.\nB. $21,6\\lambda$.\nC. $19,8\\lambda$.\nD. $20,7\\lambda$.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1AgVa186-036",
-    "noi_dung": "Trong khí quyển tồn tại đồng vị phóng xạ $^{14}_{6}\\text{C}$ với chu kì bán rã $5568\\text{ năm}$. Mọi thực vật trên Trái Đất hấp thụ cacbon từ khí quyển đều chứa một lượng $^{14}_{6}\\text{C}$ cân bằng. Khảo sát một cổ vật bằng gỗ mun, người ta thấy số hạt $^{14}_{6}\\text{C}$ phân rã trong mỗi giây là $112\\text{ hạt}$. Vật mới làm giống hệt, cùng loại gỗ, cùng khối lượng, có số hạt $^{14}_{6}\\text{C}$ phân rã trong mỗi giây là $216\\text{ hạt}$. Tuổi thọ của mẫu cổ vật là",
-    "phuong_an": "A. $4917 \\text{ năm}$.\nB. $5198 \\text{ năm}$.\nC. $5276 \\text{ năm}$.\nD. $5043 \\text{ năm}$.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1AgVa186-039",
@@ -9392,7 +9266,7 @@
     "phuong_an": "A. $7,9\\lambda$.\nB. $9,3\\lambda$.\nC. $8,4\\lambda$.\nD. $8,7\\lambda$.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9401,107 +9275,8 @@
     "phuong_an": "A. $7,2 \\text{ cm}$.\nB. $6,8 \\text{ cm}$.\nC. $6,1 \\text{ cm}$.\nD. $8,0 \\text{ cm}$.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q2195_de-thi-minh-hoa-Vat-_p5_img2.png"
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-001",
-    "noi_dung": "Đối tượng nghiên cứu của Vật lí học là",
-    "phuong_an": "A. Thế giới sinh vật gồm thực vật, động vật, vi sinh vật, nấm\nB. Các dạng vận động đơn giản, tổng quát nhất của vật chất và tương tác giữa chúng.\nC. Thành phần cấu trúc, tính chất và sự biến đối của các đơn chất và hợp chất.\nD. Các dạng vận động của vật chất.",
-    "dap_an": "B",
-    "loi_giai": "Đối tượng nghiên cứu của Vật lí học là các dạng vận động đơn giản, tổng quát nhất của vật chất và tương tác giữa chúng.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-002",
-    "noi_dung": "Nội dung nào dưới đây không thuộc các bước của tiến trình tìm hiểu tự nhiên dưới góc độ vật lí?",
-    "phuong_an": "A. Để xuất vấn đề liên quan đến vật lí.\nB. Đưa ra phán đoán và xây dựng giả thuyết.\nC. Kiểm tra giả thuyết (hay dự đoán).\nD. Đánh giá được ảnh hưởng của một vấn đề thực tiễn.",
-    "dap_an": "D",
-    "loi_giai": "Đánh giá được ảnh hưởng của một vấn đề thực tiễn không thuộc các bước của tiến trình tìm hiểu tự nhiên dưới góc độ vật lí.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-003",
-    "noi_dung": "Một học sinh viết kết quả đo quãng đường chuyển động của viên bi là 0,314 m. Số 0,314 có mấy chữ số có nghĩa?",
-    "phuong_an": "A. 1.\nB. 2.\nC. 3.\nD. 4.",
-    "dap_an": "C",
-    "loi_giai": "Số 0,314 có 3 chữ số có nghĩa.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-004",
-    "noi_dung": "Một học sinh đo tốc độ trung bình của viên bi được giá trị v = (2,50 \\pm 0,04) m/s. Sai số tỉ đối của phép đo này là",
-    "phuong_an": "A. 1,6%.\nB. 2,5%.\nC. 62.5%.\nD. 4,0%.",
-    "dap_an": "A",
-    "loi_giai": "Sai số tỉ đối $\\delta A = \\frac{\\Delta A}{A}.100\\% = \\frac{0,04}{2,50}.100\\% = 1,6\\%$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-005",
-    "noi_dung": "Một học sinh đo chiều dài của một chiếc bút chì bằng thước có độ chia nhỏ nhất là 0,1 cm. Kết quả của 5 lần đo lần lượt là 16,0 cm; 16,1 cm; 15,9 cm; 16,2 cm; 15,8 cm. Chiều dài của bút chì là",
-    "phuong_an": "A. (16,00 \\pm 0,12) cm.\nB. (16,0 \\pm 0,1) cm.\nC. (16,00 \\pm 0,22) cm.\nD. (16,0 \\pm 0,2) cm.",
-    "dap_an": "D",
-    "loi_giai": "Giá trị trung bình là 16,0 cm. Sai số tuyệt đối là 0,2 cm. Kết quả: (16,0 \\pm 0,2) cm.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-006",
-    "noi_dung": "Hai đại lượng nào sau đây là hai đại lượng vecto?",
-    "phuong_an": "A. Quãng đường và tốc độ.\nB. Độ dịch chuyển và vận tốc.\nC. Quãng đường và độ dịch chuyển.\nD. Tốc độ và vận tốc.",
-    "dap_an": "B",
-    "loi_giai": "Độ dịch chuyển, vận tốc là các đại lượng vecto.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-007",
-    "noi_dung": "Một mặt bàn hình chữ nhật ABCD có chiều dài AB = 0,8 m và chiều rộng BC = 0,6 m. Một con nhện bò dọc theo các cạnh của mặt bàn, từ A đến C. Độ dịch chuyển của con nhện là",
-    "phuong_an": "A. 1,0 m.\nB. 1,4 m.\nC. 0,2 m.\nD. 1,2 m.",
-    "dap_an": "A",
-    "loi_giai": "Độ dịch chuyển của con nhện là $AC = \\sqrt{AB^2 + BC^2} = \\sqrt{0,8^2 + 0,6^2} = 1,0 m$.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-008",
-    "noi_dung": "Một vật chuyển động trên một đường thẳng Ox, chiều dương là chiều Ox. Xét trong một khoảng thời gian xác định, phát biểu nào sau đây đúng?",
-    "phuong_an": "A. Vật chỉ chuyển động theo chiều dương, tốc độ trung bình nhỏ hơn vận tốc trung bình.\nB. Vật chỉ chuyển động theo chiều âm, tốc độ trung bình nhỏ hơn vận tốc trung bình.\nC. Vật chuyển động theo chiều dương và sau đó chuyển động theo chiều ngược lại, tốc độ trung bình lớn hơn vận tốc trung bình.\nD. Vật chuyển động theo chiều âm và sau đó chuyển động theo chiều ngược lại, tốc độ trung bình bằng vận tốc trung bình.",
-    "dap_an": "C",
-    "loi_giai": "Nếu vật đảo ngược chiều chuyển động thì độ dịch chuyển sẽ nhỏ hơn quãng đường đi được, khi đó độ lớn của vận tốc trung bình sẽ nhỏ hơn tốc độ trung bình, nghĩa là tốc độ trung bình lớn hơn vận tốc trung bình.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-009",
-    "noi_dung": "Dựa vào độ dốc của đồ thị độ dịch chuyển - thời gian có thể xác định đại lượng nào sau đây?",
-    "phuong_an": "A. Vận tốc.\nB. Gia tốc.\nC. Độ dịch chuyển.\nD. Khoảng thời gian.",
-    "dap_an": "A",
-    "loi_giai": "Dựa vào độ dốc của đồ thị độ dịch chuyển - thời gian có thể xác định vận tốc.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-010",
-    "noi_dung": "[Hình: Đồ thị độ dịch chuyển - thời gian gồm các đoạn 1, 2, 3, 4] Hình bên là đồ thị độ dịch chuyển - thời gian của ô tô chuyển động thẳng theo một hướng xác định. Tốc độ lớn nhất của ô tô tương ứng với đoạn nào trên đồ thị?",
-    "phuong_an": "A. 1.\nB. 2.\nC. 3.\nD. 4.",
-    "dap_an": "C",
-    "loi_giai": "Độ dốc lớn nhất tương ứng với tốc độ lớn nhất, đó là đoạn 3.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": "images/q2205_de-tham-khao-thi-vat_p3_img2.jpeg"
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-011",
-    "noi_dung": "[Hình: Thông tin giờ đi và đến của các tàu SE7, SE5, SE3, SE19] Hình sau thể hiện giờ đi từ Hà Nội (02/01/2024) và giờ đến Vinh của các tàu SE7, SE5, SE3, SE19. Trong các tàu nói trên, tàu có tốc độ trung bình lớn nhất là",
-    "phuong_an": "A. SE3.\nB. SE5.\nC. SE7.\nD. SE19.",
-    "dap_an": "A",
-    "loi_giai": "Tàu SE3 có thời gian đi ngắn nhất nên tốc độ trung bình lớn nhất.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1ZJnFs62-012",
@@ -9509,71 +9284,8 @@
     "phuong_an": "A. 0,7 m/s.\nB. 1,5 m/s.\nC. 0 m/s.\nD. 1 m/s.",
     "dap_an": "B",
     "loi_giai": "Giai đoạn từ t = 8s tới t = 12s, $v = \\frac{10-4}{12-8} = 1,5 m/s$.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q2207_de-tham-khao-thi-vat_p4_img2.jpeg"
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-013",
-    "noi_dung": "Dựa vào độ dốc của đồ thị vận tốc - thời gian có thể xác định đại lượng nào sau đây?",
-    "phuong_an": "A. Vận tốc.\nB. Độ dịch chuyển.\nC. Quãng đường.\nD. Gia tốc.",
-    "dap_an": "D",
-    "loi_giai": "Độ dốc của đồ thị vận tốc - thời gian xác định gia tốc.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-014",
-    "noi_dung": "Khi rơi trong không khí, sự rơi của vật nào sau đây có thể coi là rơi tự do?",
-    "phuong_an": "A. Viên bi sắt.\nB. Tờ giấy.\nC. Quả bóng bàn.\nD. Chiếc cốc nhựa.",
-    "dap_an": "A",
-    "loi_giai": "Viên bi sắt nặng, chịu ảnh hưởng không đáng kể của sức cản không khí nên có thể coi là rơi tự do.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-015",
-    "noi_dung": "Khi vật được thả rơi tự do thì gia tốc của vật",
-    "phuong_an": "A. tăng lên.\nB. giảm đi.\nC. không đổi.\nD. giảm đi rồi tăng lên.",
-    "dap_an": "C",
-    "loi_giai": "Gia tốc rơi tự do không đổi tại một nơi.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-016",
-    "noi_dung": "Trong quá trình rơi tự do của viên bi sắt thì tốc độ của nó",
-    "phuong_an": "A. giảm đi.\nB. không thay đổi.\nC. lúc đầu không thay đổi, về sau giảm đi.\nD. tăng lên.",
-    "dap_an": "D",
-    "loi_giai": "Tốc độ trong quá trình rơi tự do tăng lên đều theo thời gian.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-017",
-    "noi_dung": "Một quả bóng được ném xiên góc xuống sàn, nó nảy lên theo phương hợp với phương nằm ngang một góc nào đó. Trong chuyển động nảy lên, thành phần vận tốc theo phương nằm ngang",
-    "phuong_an": "A. bị ảnh hưởng bởi trọng lực.\nB. không bị ảnh hưởng bởi trọng lực.\nC. có độ lớn tăng dần.\nD. bị ảnh hưởng của lực tiếp xúc với mặt sàn.",
-    "dap_an": "B",
-    "loi_giai": "Thành phần vận tốc theo phương ngang không bị ảnh hưởng bởi trọng lực.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-018",
-    "noi_dung": "Nếu bỏ qua sức cản của không khí, một vật được ném từ mặt đất sẽ đạt tầm xa cực đại khi góc giữa vận tốc ban đầu và phương nằm ngang là",
-    "phuong_an": "A. 30°.\nB. 37°.\nC. 90°.\nD. 45°.",
-    "dap_an": "D",
-    "loi_giai": "Tầm xa cực đại khi góc ném là 45 độ.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-019",
-    "noi_dung": "[Hình: Sân golf] Khi chơi gôn (golf), người chơi cần đánh quả bóng gôn từ điểm xuất phát (Tee) sao cho quả bóng gôn đến được lỗ (Hole) trong vùng xanh (Green). Biết điểm gần nhất của vùng xanh cách điểm xuất phát 250 m. Lấy g = 10 m/s^2.",
-    "phuong_an": "a) Chuyển động của quả bóng gôn là chuyển động thẳng.\nb) Bỏ qua sức cản của không khí, gia tốc của quả bóng gôn ở điểm cao nhất bằng gia tốc rơi tự do.\nc) Tốc độ của quả bóng gôn ở điểm cao nhất bằng không.\nd) Để quả bóng gôn từ điểm xuất phát đến được vùng xanh thì tốc độ ban đầu của nó không nhỏ hơn 50 m/s.",
-    "dap_an": "aS bĐ cS dĐ",
-    "loi_giai": "a) Sai vì là chuyển động ném xiên. b) Đúng. c) Sai vì tốc độ tại điểm cao nhất bằng vận tốc ngang. d) Đúng, v >= 50 m/s.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1ZJnFs62-020",
@@ -9581,7 +9293,7 @@
     "phuong_an": "a) Kết quả ở Hình 1 chứng tỏ băng giấy chuyển động thẳng đều.\nb) Kết quả ở Hình 2 và Hình 3 chứng tỏ băng giấy chuyển động nhanh dần.\nc) Tốc độ trung bình của băng giấy ở Hình 1 và Hình 2 trong 0,1 s (tính từ mốc thời gian) là bằng nhau.\nd) Độ lớn gia tốc của băng giấy ở Hình 2 lớn hơn độ lớn gia tốc của băng giấy ở Hình 3.",
     "dap_an": "aĐ bS cĐ dĐ",
     "loi_giai": "a) Đúng, khoảng cách đều là chuyển động thẳng đều. b) Sai, hình 3 chậm dần. c) Đúng. d) Đúng.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9590,7 +9302,7 @@
     "phuong_an": "a) Trong khoảng thời gian từ 0 s đến 6 s thủ môn không đổi hướng chuyển động.\nb) Thủ môn tăng tốc trong khoảng thời gian từ 0 s đến 2 s.\nc) Tốc độ chuyển động của thủ môn từ điểm B đến điểm C là 10 m/s.\nd) Từ 4 giây đến 6 giây, vận tốc chuyển động của thủ môn có giá trị -10 m/s.",
     "dap_an": "aS bĐ cĐ dĐ",
     "loi_giai": "a) Sai vì thủ môn đổi chiều ở D. b) Đúng. c) Đúng, v = 10 m/s. d) Đúng, v = -10 m/s.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9599,7 +9311,7 @@
     "phuong_an": "a) Đồ thị vận tốc - thời gian của vật rơi như Hình 4.\nb) Đồ thị độ dịch chuyển - thời gian của vật rơi như Hình 5.\nc) Tốc độ của vật khi chạm đất là 29,4 m/s.\nd) Quãng đường rơi của vật (trong 3,00 s) là 44,1 m.",
     "dap_an": "aĐ bS cĐ dĐ",
     "loi_giai": "a) Đúng, v = gt. b) Sai, d-t phải là nhánh parabol. c) Đúng, v = 29,4 m/s. d) Đúng, h = 44,1 m.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9608,7 +9320,7 @@
     "phuong_an": "",
     "dap_an": "2",
     "loi_giai": "Từ đồ thị ta thấy vận tốc có giá trị bằng 0 tại thời điểm t = 2s.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9617,34 +9329,7 @@
     "phuong_an": "",
     "dap_an": "60",
     "loi_giai": "Tốc độ của ô tô tại thời điểm chụp ảnh là 60 km/h.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-025",
-    "noi_dung": "Một vận động viên chạy từ điểm xuất phát lên một quả đồi với tốc độ không đổi là 3 m/s. Khi chạy được 90 m thì vận động viên này lập tức chạy ngược lại theo đường cũ về điểm xuất phát với tốc độ không đổi là 6 m/s. Ở cả hành trình trên, tốc độ trung bình của vận động viên là bao nhiêu m/s?",
-    "phuong_an": "",
-    "dap_an": "4",
-    "loi_giai": "t1 = 30s, t2 = 15s. Tốc độ trung bình v = (90+90)/(30+15) = 4 m/s.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-026",
-    "noi_dung": "[Hình: Vectơ vận tốc và các thành phần] Một viên đạn chuyển động có các thành phần vận tốc theo hai trục vuông góc Ox và Oy với độ lớn lần lượt v_x = 10 m/s và v_y = 30 m/s. Góc tạo bởi vận tốc của viên đạn và phương Oy là \\alpha có tan\\alpha là bao nhiêu? (Kết quả lấy đến 2 chữ số có nghĩa).",
-    "phuong_an": "",
-    "dap_an": "0,33",
-    "loi_giai": "tan\\alpha = v_x / v_y = 10 / 30 = 0,33.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1ZJnFs62-027",
-    "noi_dung": "Một quả bóng rơi tự do từ độ cao h (so với mặt đất) với thời gian rơi là t. Độ cao của quả bóng tại thời điểm t/2 (từ lúc bắt đầu rơi) bằng bao nhiêu phần của độ cao h?",
-    "phuong_an": "",
-    "dap_an": "0,75",
-    "loi_giai": "Quãng đường đi được trong t/2 là h1 = 1/4 h. Độ cao còn lại h' = h - 1/4 h = 0,75h.",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9653,34 +9338,7 @@
     "phuong_an": "",
     "dap_an": "0,3",
     "loi_giai": "Tỉ số s2/s1 = (tan 30 độ)/(tan 60 độ) = 0,3.",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1IEw1VCk-001",
-    "noi_dung": "Một khối khí lí tưởng đang được làm lạnh, nội năng của khối khí khi đó sẽ",
-    "phuong_an": "A. không đổi.\nB. giảm đi.\nC. tăng lên.\nD. tăng lên rồi giảm.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1IEw1VCk-002",
-    "noi_dung": "Để mở một nút chai bị kẹt, người ta hơ nóng quanh cổ chai. Nếu xem không khí bên trong chai là khí lí tưởng thì trong quá trình hơ nóng, đại lượng không thay đổi là",
-    "phuong_an": "A. thể tích khí bên trong chai.\nB. áp suất khí bên trong chai.\nC. nhiệt độ khí bên trong chai.\nD. nội năng của khí bên trong chai.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1IEw1VCk-003",
-    "noi_dung": "Gọi $n_R, n_L, n_K$ lần lượt là mật độ phân tử của một chất (không phải là nước) ở thể rắn, thể lỏng và thể khí. Thứ tự đúng là",
-    "phuong_an": "A. $n_R > n_K > n_L$.\nB. $n_R < n_K < n_L$.\nC. $n_R > n_L > n_K$.\nD. $n_R < n_L < n_K$.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9689,34 +9347,25 @@
     "phuong_an": "A. [Hình: A]\nB. [Hình: B]\nC. [Hình: C]\nD. [Hình: D]",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1IEw1VCk-005",
-    "noi_dung": "Với p là áp suất và V là thể tích của một lượng khí lí tưởng xác định. Với định luật Boyle, đại lượng nào sau đây không đổi?",
-    "phuong_an": "A. V.\nB. p.\nC. $\\frac{p}{V}$.\nD. p.V.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1IEw1VCk-007",
     "noi_dung": "Xạ phẫu gamma knife hay phẫu thuật sử dụng dao gamma là phương pháp điều trị sử dụng bức xạ. Phương pháp này sử dụng phần mềm lập kế hoạch điều trị trên máy vi tính giúp Bác sĩ xác định vị trí và chiếu xạ các mục tiêu nhỏ với độ chính xác rất cao. Sơ đồ nguyên lý xạ phẫu được mô tả như hình bên. Xạ phẫu gamma sử dụng tính chất nào của chùm tia gamma?",
     "phuong_an": "A. Khả năng đâm xuyên và làm phát quang một số chất.\nB. Khả năng đâm xuyên và khả năng hủy diệt tế bào.\nC. Khả năng ion hóa không khí và khả năng đâm xuyên.\nD. Khả năng hủy diệt tế bào và làm phát quang một số chất.",
-    "dap_an": "",
+    "dap_an": "B",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1IEw1VCk-008",
     "noi_dung": "Một thanh dẫn điện T trong từ trường đều, các đường sức từ nằm trong mặt phẳng hình vẽ MNPQRO và có phương, chiều trùng với PO như hình vẽ bên. Thanh dẫn điện T vuông góc với mặt phẳng MNPQRO. Xét bốn đoạn thẳng OQ, OP, ON, OM. Tịnh tiến thanh dẫn điện T theo đoạn nào thì trong thanh không sinh ra suất điện động cảm ứng?",
     "phuong_an": "A. ON.\nB. OP.\nC. OQ.\nD. OM.",
-    "dap_an": "",
+    "dap_an": "B",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q2231_LOP12_DETHITHUTOTNGH_p2_img3.png"
   },
   {
@@ -9725,7 +9374,7 @@
     "phuong_an": "A. $19,3.10^{10} \\text{MeV}$.\nB. $6,02.10^{23} \\text{MeV}$.\nC. $12,4.10^{23} \\text{MeV}$.\nD. $16,4.10^{23} \\text{MeV}$.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9734,7 +9383,7 @@
     "phuong_an": "A. V không đổi, p tăng và T tăng.\nB. p tăng, V tăng và T giảm.\nC. T không đổi, V tăng, p tăng.\nD. p tăng, V tăng và T tăng.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q2233_LOP12_DETHITHUTOTNGH_p2_img4.png"
   },
   {
@@ -9743,7 +9392,7 @@
     "phuong_an": "A. do phóng xạ.\nB. do từ trường mạnh.\nC. do chất độc hoá học.\nD. do điện thế cao.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q2234_LOP12_DETHITHUTOTNGH_p2_img1.png"
   },
   {
@@ -9752,34 +9401,7 @@
     "phuong_an": "A. (4), (5) và (3).\nB. (2), (1) và (3).\nC. (1), (2) và (3).\nD. (5), (4) và (3).",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1IEw1VCk-013",
-    "noi_dung": "Hạt nhân nguyên tử cấu tạo bởi",
-    "phuong_an": "A. proton và neutron.\nB. proton, neutron và electron.\nC. neutron và electron.\nD. proton và electron.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1IEw1VCk-014",
-    "noi_dung": "Cho ba bình kín chứa ba khối khí lí tưởng có thể tích và áp suất khác nhau. Bình (1) có chứa khí hydrogen, bình (2) chứa khí oxygen và bình (3) có chứa khí helium. Các bình được nung nóng ở cùng một nhiệt độ. Động năng tịnh tiến trung bình của các phân tử khí trong các bình này là",
-    "phuong_an": "A. lớn nhất với bình (1).\nB. lớn nhất với bình (3).\nC. lớn nhất với bình (2).\nD. bằng nhau.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1IEw1VCk-015",
-    "noi_dung": "Sóng điện từ và sóng cơ học không có chung tính chất nào dưới đây?",
-    "phuong_an": "A. Phản xạ.\nB. Truyền được trong chân không.\nC. Khúc xạ.\nD. Mang năng lượng.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9788,16 +9410,16 @@
     "phuong_an": "A. $2,85.10^5\\text{ Pa}$.\nB. $0,95.10^5\\text{ Pa}$.\nC. $5,7.10^5\\text{ Pa}$.\nD. $1,425.10^5\\text{ Pa}$.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1IEw1VCk-017",
     "noi_dung": "Sử dụng để trả lời Câu 17 và Câu 18: Một ấm bằng đồng chứa 0,6 lít nước ở nhiệt độ ban đầu bằng $20^\\circ\\text{C}$. Sau thời gian $\\Delta t$, nước được đun sôi tới $100^\\circ\\text{C}$ và đã có 0,1 lít nước chuyển hoá thành hơi nước. Biết khối lượng của ấm đồng là 0,5 kg, nhiệt hoá hơi riêng của nước ở $100^\\circ\\text{C}$ là $2,3.10^6\\text{ J/kg}$, nhiệt dung riêng của nước là $4200\\text{ J/kg.K}$, nhiệt dung riêng của đồng là $380\\text{ J/kg.K}$, khối lượng riêng của nước ở $20^\\circ\\text{C}$ là $1\\text{g/ml}$, hiệu suất của ấm là 60%. Trong thời gian $\\Delta t$ đun ấm nước ở trên, nhiệt độ của nước trong ấm",
     "phuong_an": "A. luôn không đổi.\nB. ban đầu tăng lên rồi sau đó không đổi.\nC. ban đầu tăng lên rồi sau đó giảm đi.\nD. luôn tăng.",
-    "dap_an": "",
+    "dap_an": "B",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9806,7 +9428,7 @@
     "phuong_an": "A. 770 kJ.\nB. 447 kJ.\nC. 719 kJ.\nD. 431 kJ.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9815,7 +9437,7 @@
     "phuong_an": "a) Độ lớn cường độ dòng điện cảm ứng chạy qua mạch là 0,5 A.\nb) Dòng điện cảm ứng chạy trong phần vòng dây tròn cùng chiều kim đồng hồ.\nc) Giá trị T = 500 K.\nd) Tại t = 160 s, nhiệt độ của khí trong bình là T' = 600 K.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9824,7 +9446,7 @@
     "phuong_an": "a) Khối lượng nước đá đã tan trong thời gian đun là 0,172 kg.\nb) Việc đọc số liệu trên cân điện tử phải được thực hiện khi nguồn điện còn đang bật và ống thoát nước vẫn mở để tăng độ chính xác.\nc) Nhiệt lượng cần thiết để làm tan nước đá ở thí nghiệm trên là 57600 J.\nd) Nhiệt nóng chảy riêng của nước đá đo được ở thí nghiệm này lớn hơn $3,4.10^5\\text{ J/kg}$.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9833,7 +9455,7 @@
     "phuong_an": "a) Số lượng hạt nhân $_{53}^{131}\\text{I}$ đã phân rã trong vòng 1 ngày đầu tiên xấp xỉ bằng $6,3.10^{21}$ hạt.\nb) Sau 1 ngày đầu tiên, máy đo bức xạ ứng với mẫu chất chứa $_{53}^{131}\\text{I}$ đếm được nhiều tín hiệu hơn.\nc) Độ phóng xạ của hạt nhân $_{84}^{210}\\text{Po}$ sau 1 ngày đầu tiên xấp xỉ bằng $2,14.10^{19}\\text{ Bq}$.\nd) Hạt $_{84}^{210}\\text{Po}$ sau khi phóng ra hạt $\\alpha$ thì biến thành hạt nhân $_{82}^{206}\\text{Pb}$.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9842,7 +9464,7 @@
     "phuong_an": "a) Độ chênh lệch nhiệt độ của không khí trong phổi và bên ngoài là 310 K.\nb) Tổng số phân tử không khí mà vận động viên hít vào khi hít sâu xấp xỉ là $7,34.10^{22}$.\nc) Thể tích không khí trong phổi của vận động viên sau khi hít sâu là 3,1 lít.\nd) Nếu sau khi hít sâu vào, vận động viên nín thở và phổi co lại thì giá trị nhỏ nhất của thể tích khí trong phổi vận động viên này đạt được có thể ít hơn 2,5 lít.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9851,7 +9473,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9860,16 +9482,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1IEw1VCk-025",
-    "noi_dung": "Một tượng cổ bằng gỗ có độ phóng xạ H. Một mảnh gỗ của cây vừa mới chặt, nếu có khối lượng tương đương sẽ có độ phóng xạ là 1,5H. Biết chu kì bán rã chất phóng xạ trong gỗ ($_6^{14}\\text{C}$) là 5700 năm. Tuổi của tượng cổ này là bao nhiêu năm? (Kết quả làm tròn đến chữ số hàng đơn vị).",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9878,16 +9491,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-001",
-    "noi_dung": "Phát biểu nào sau đây là đúng khi nói về sự phân rã phóng xạ?",
-    "phuong_an": "A. Không thể biết hạt nhân nào sẽ phân rã trước.\nB. Phụ thuộc vào điều kiện nhiệt độ và áp suất của môi trường.\nC. Là quá trình con người có thể điều khiển được.\nD. Có thể dự đoán chính xác thời điểm từng hạt nhân phân rã.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9896,7 +9500,7 @@
     "phuong_an": "A. làm nén khung.\nB. làm dãn khung.\nC. làm khung chuyển động.\nD. làm khung dây quay.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -9905,143 +9509,44 @@
     "phuong_an": "A. Dòng điện ngược chiều kim đồng hồ, cường độ có độ lớn tăng dần.\nB. Dòng điện cùng chiều kim đồng hồ, cường độ có độ lớn tăng dần.\nC. Dòng điện cùng chiều kim đồng hồ, cường độ không đổi.\nD. Dòng điện ngược chiều kim đồng hồ, cường độ không đổi.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1-slrPC6-004",
     "noi_dung": "Ở điều kiện nhiệt độ phòng $27^{\\circ}\\text{C}$ và áp suất khí quyển $1,0\\text{ atm}$, một phân tử oxygen có tốc độ trung bình $450\\text{ m/s}$ và quãng đường tự do trung bình (quãng đường đi giữa giữa hai lần va chạm liên tiếp) là $1,1.10^{-7}\\text{ m}$. Trung bình mỗi giây, một phân tử oxy thực hiện khoảng bao nhiêu va chạm?",
     "phuong_an": "A. $8,2.10^9$ lần.\nB. $4,1.10^9$ lần.\nC. $2,0.10^9$ lần.\nD. $5,0.10^9$ lần.",
-    "dap_an": "",
+    "dap_an": "B",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1-slrPC6-005",
     "noi_dung": "Năm 1911, Ernest Rutherford tiến hành thí nghiệm tán xạ hạt alpha ($\\alpha$) lên lá vàng mỏng. Kết quả thí nghiệm có thể được minh họa như hình bên. Nhận định nào sau đây không đúng với kết quả thí nghiệm?\n[Hình: Mô hình thí nghiệm tán xạ hạt alpha qua các lớp nguyên tử vàng]",
     "phuong_an": "A. Một số ít hạt $\\alpha$ bị lệch khỏi phương ban đầu với những góc lệch khác nhau.\nB. Một tỉ lệ khá lớn hạt $\\alpha$ bị lệch khỏi hướng ban đầu với góc lệch lớn hơn $90^{\\circ}$.\nC. Một số hạt $\\alpha$ bị lệch phương chuyển động khi đến gần hạt nhân.\nD. Phần lớn hạt $\\alpha$ xuyên thẳng qua lá vàng mỏng mà không bị lệch.",
-    "dap_an": "",
+    "dap_an": "B",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q2256_LOP12_DETHITHUTOTNGH_p2_img1.png"
-  },
-  {
-    "ma_cau": "C-1-slrPC6-006",
-    "noi_dung": "Nội dung nào sau đây thể hiện tầm quan trọng của công nghiệp hạt nhân trong thế kỷ XXI?",
-    "phuong_an": "A. Góp phần đảm bảo an ninh năng lượng, phát triển y học và bảo vệ môi trường.\nB. Tạo ra vật liệu nổ phục vụ quốc phòng và khai thác khoáng sản.\nC. Làm nguồn chính cung cấp năng lượng cho phương tiện giao thông cá nhân.\nD. Tăng sản lượng khai thác than và dầu khí để đáp ứng nhu cầu năng lượng.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-007",
-    "noi_dung": "Hai bình cách nhiệt A và B, mỗi bình đều chứa hỗn hợp nước và các viên nước đá nhỏ như hình bên. Nhiệt độ của hỗn hợp trong 2 bình có giá trị không đổi lần lượt là $t_A$ và $t_B$, mối quan hệ giữa hai giá trị nhiệt độ là\n[Hình: Hai bình A và B chứa hỗn hợp nước và nước đá]",
-    "phuong_an": "A. $t_A < t_B$.\nB. $t_A = t_B$.\nC. $t_A > t_B$.\nD. $t_A = 5t_B$.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": "images/q2258_LOP12_DETHITHUTOTNGH_p2_img2.jpeg"
-  },
-  {
-    "ma_cau": "C-1-slrPC6-008",
-    "noi_dung": "Các thông số trạng thái của một lượng khí lí tưởng xác định gồm",
-    "phuong_an": "A. khối lượng, nhiệt độ, thể tích.\nB. áp suất, nhiệt độ, khối lượng.\nC. khối lượng, áp suất, thể tích.\nD. áp suất, nhiệt độ, thể tích.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-009",
-    "noi_dung": "Gọi p, V và T lần lượt là áp suất, thể tích và nhiệt độ tuyệt đối của khối khí lí tưởng xác định. Hình bên biểu diễn quá trình biến đổi trạng thái của khối khí trong hệ tọa độ (V-T).\nĐồ thị ở hình nào dưới đây biểu diễn đúng quá trình biến đổi trên trong hệ tọa độ (p-T)?\n[Hình: Đồ thị V-T biểu diễn đường thẳng kéo dài qua gốc tọa độ từ (1) đến (2)]",
-    "phuong_an": "A. Hình 2.\nB. Hình 3.\nC. Hình 4.\nD. Hình 1.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-010",
-    "noi_dung": "Hình bên mô tả khoảng cách, sự sắp xếp và chuyển động của phân tử ở thể rắn; hình cầu là phân tử, mũi tên là hướng chuyển động của phân tử. Phát biểu nào sau đây không đúng về cấu trúc của chất rắn?\n[Hình: Mô hình sắp xếp trật tự của các phân tử chất rắn]",
-    "phuong_an": "A. Các phân tử chất rắn dao động quanh các vị trí cân bằng xác định.\nB. Trong chất rắn, các phân tử ở rất gần nhau.\nC. Lực tương tác giữa các phân tử chất rắn mạnh giữ cho các phân tử sắp xếp có trật tự.\nD. Các phân tử chất rắn chiếm toàn bộ bình chứa.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": "images/q2261_LOP12_DETHITHUTOTNGH_p3_img3.jpeg"
-  },
-  {
-    "ma_cau": "C-1-slrPC6-011",
-    "noi_dung": "Giải pháp nào sau đây là một ứng dụng vật lí trong việc khai thác năng lượng nhằm góp phần giảm ô nhiễm môi trường?",
-    "phuong_an": "A. Sử dụng than đá để sưởi ấm và nấu ăn trong gia đình.\nB. Sử dụng năng lượng mặt trời để sản xuất điện.\nC. Sử dụng nhiên liệu hóa thạch để sản xuất điện.\nD. Sử dụng xăng để vận hành ô tô, xe máy,...",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-012",
-    "noi_dung": "Gọi c là tốc độ ánh sáng trong chân không. Một vật có khối lượng $m_0$ ở trạng thái nghỉ sẽ có năng lượng nghỉ $E_0 = m_0c^2$ thì khi chuyển động vật có khối lượng $m$ và năng lượng của vật khi đó gọi là năng lượng toàn phần E bằng",
-    "phuong_an": "A. $mc^2 - m_0c^2$.\nB. $m_0c^2 + mc^2$.\nC. $mc^2$.\nD. $m^2c$.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-013",
-    "noi_dung": "Máy phát điện ra đời, mở đầu cho kỉ nguyên sử dụng điện năng của nhân loại nhờ vào nhà vật lí Faraday khám phá ra hiện tượng nào sau đây?",
-    "phuong_an": "A. Hiện tượng cảm ứng điện từ.\nB. Sự nở vì nhiệt của vật rắn.\nC. Hiện tượng biến dạng cơ của vật rắn.\nD. Hiện tượng hóa hơi.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-014",
-    "noi_dung": "Nguyên lý hoạt động của bếp từ được mô tả như hình bên. Bếp từ làm nóng nồi kim loại bằng cách nào sau đây?\n[Hình: Sơ đồ hoạt động của bếp từ hiển thị cuộn dây phát từ, đường sức từ và dòng điện xoáy ở đáy nồi kim loại]",
-    "phuong_an": "A. Tạo ra dòng điện xoáy làm nóng trực tiếp đáy nồi kim loại.\nB. Tạo ra đường sức từ trên mặt kính bếp rồi truyền nhiệt lên đáy nồi.\nC. Làm nóng trực tiếp mặt kính bếp rồi truyền nhiệt lên đáy nồi.\nD. Làm nóng cuộn dây phát từ rồi truyền nhiệt qua mặt kính đến đáy nồi.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1-slrPC6-015",
     "noi_dung": "Nhiệt hóa hơi riêng của nước ở nhiệt độ $100^{\\circ}\\text{C}$ là $2,3.10^6\\text{ J/kg}$ có nghĩa là",
     "phuong_an": "A. $1\\text{ kg}$ nước sẽ tỏa ra một lượng nhiệt là $2,3.10^6\\text{ J}$ để bay hơi hoàn toàn ở nhiệt độ $100^{\\circ}\\text{C}$.\nB. $1\\text{ kg}$ nước cần thu một lượng nhiệt là $2,3.10^6\\text{ J}$ để bay hơi hoàn toàn ở nhiệt độ $100^{\\circ}\\text{C}$.\nC. $1\\text{ m}^3$ nước bất kì sẽ tỏa ra một lượng nhiệt là $2,3.10^6\\text{ J}$ để hóa hơi hoàn toàn.\nD. $1\\text{ m}^3$ nước bất kì cần thu một lượng nhiệt là $2,3.10^6\\text{ J}$ để hóa hơi hoàn toàn.",
-    "dap_an": "",
+    "dap_an": "B",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1-slrPC6-016",
     "noi_dung": "Hình bên là mô hình sự lan truyền sóng điện từ hình sin. Trong quá trình lan truyền, tại một điểm, vectơ cường độ điện trường $\\vec{E}$ và vectơ cảm ứng từ $\\vec{B}$ luôn\n[Hình: Sơ đồ lan truyền sóng điện từ biểu diễn vector E và vector B vuông góc nhau và cùng pha]",
     "phuong_an": "A. dao động ngược pha, vuông góc với nhau và hợp với phương truyền sóng điện từ góc $45^{\\circ}$.\nB. dao động cùng pha, vuông góc với nhau và hợp với phương truyền sóng điện từ góc $45^{\\circ}$.\nC. dao động ngược pha, vuông góc với nhau và vuông góc với phương truyền sóng điện từ.\nD. dao động cùng pha, vuông góc với nhau và vuông góc với phương truyền sóng điện từ.",
-    "dap_an": "",
+    "dap_an": "D",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": "images/q2267_LOP12_DETHITHUTOTNGH_p4_img3.jpeg"
-  },
-  {
-    "ma_cau": "C-1-slrPC6-017",
-    "noi_dung": "Hình bên là một bộ thí nghiệm thực hành được sử dụng đo tần số sóng âm. Dao động kí điện tử (1) có vai trò\n[Hình: Bộ thí nghiệm đo tần số sóng âm gồm dao động kí điện tử (1), micro (2), bộ khuếch đại (3), âm thoa (4)]",
-    "phuong_an": "A. Tạo ra sóng âm có tần số xác định.\nB. Khuếch đại tín hiệu điện từ micro.\nC. Thu sóng âm, chuyển thành tín hiệu điện.\nD. Hiển thị tín hiệu điện dưới dạng sóng.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": "images/q2268_LOP12_DETHITHUTOTNGH_p4_img1.jpeg"
-  },
-  {
-    "ma_cau": "C-1-slrPC6-018",
-    "noi_dung": "Một mạch điện kín gồm nguồn điện với mạch ngoài là điện trở. Suất điện động của nguồn điện được xác định bằng",
-    "phuong_an": "A. năng lượng dịch chuyển các điện tích ở mạch ngoài của mạch điện.\nB. năng lượng dịch chuyển một điện tích đơn vị ở mạch ngoài của mạch điện.\nC. năng lượng dịch chuyển một điện tích đơn vị theo vòng kín của mạch điện.\nD. năng lượng dịch chuyển các điện tích ở trong nguồn điện của mạch điện.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1-slrPC6-019",
@@ -10049,16 +9554,7 @@
     "phuong_an": "a) Số chỉ của cân là khối lượng của nước chứa trong ấm.\nb) Sai số dụng cụ đo khối lượng (cân điện tử) trong thí nghiệm trên là 0,5 g.\nc) Khối lượng nước hóa hơi trong thời gian 162,05 s (kể từ $t_0 = 0,00\\text{ s}$ ) là 0,100 kg.\nd) Giá trị trung bình của nhiệt hóa hơi riêng của nước đo được bởi nhóm học sinh này là $L = 2,42.10^6\\text{ J/kg}$.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-020",
-    "noi_dung": "Nhiên liệu phân hạch trong các lò phản ứng hạt nhân thường là $^{235}_{92}\\text{U}$ và $^{239}_{94}\\text{Pu}$. Uranium tự nhiên có hai đồng vị chính: $^{238}_{92}\\text{U}(99,3\\%)$ và $^{235}_{92}\\text{U}(0,7\\%)$ nhưng chỉ $^{235}_{92}\\text{U}$ có thể phân hạch khi hấp thụ neutron. Hạt nhân $^{238}_{92}\\text{U}$ hấp thụ neutron, xảy ra chuỗi phản ứng sau:\nPhản ứng 1: $^{238}_{92}\\text{U} + ^1_0\\text{n} \\rightarrow \\text{X}$ (X là chất phóng xạ $\\beta^-$ với chu kì bán rã $T_1 = 23$ phút)\nPhản ứng 2: $\\text{X} \\rightarrow ^0_{-1}\\text{e} + ^{239}_{93}\\text{Np} + ^0_0\\tilde{\\nu}$ (Np là chất phóng xạ $\\beta^-$ với chu kì bán rã $T_2 = 2,3$ ngày)\nPhản ứng 3: $^{239}_{93}\\text{Np} \\rightarrow ^0_{-1}\\text{e} + ^{239}_{94}\\text{Pu} + ^0_0\\tilde{\\nu}$\nPlutonium $^{239}_{94}\\text{Pu}$ phân hạch và có tính phóng xạ với chu kì bán rã $T_3 = 2,4.10^4$ năm.",
-    "phuong_an": "a) Tia $\\beta^-$ là dòng các hạt electron nên được phóng ra từ lớp vỏ electron của nguyên tử.\nb) Hạt nhân X là $^{239}_{92}\\text{U}$.\nc) U238 chiếm tỉ lệ lớn trong Uranium tự nhiên, tuy không phân hạch trực tiếp, vẫn có thể sử dụng làm nhiên liệu hạt nhân.\nd) Một lò phản ứng hạt nhân sử dụng 985,0 kg nhiên liệu Uranium đã làm giàu đến 4,2% U-235 (phần còn lại là U-238). Trong quá trình vận hành, khoảng 1,0% lượng U-238 đã hấp thụ neutron và chuyển hóa thành Pu − 239. Khối lượng Pu − 239 tạo ra là 9,4 kg.",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -10067,61 +9563,34 @@
     "phuong_an": "a) Trọng lượng của vật được xác định bằng biểu thức mg = BIL.\nb) Điểm B được nối với cực dương, điểm A được nối với cực âm của nguồn điện.\nc) Nếu đảo chiều từ trường $\\vec{B}$ thì để \"cân từ\" hoạt động được, phải đảo hai cực A, B của nguồn điện.\nd) Khối lượng lớn nhất mà thiết bị này có thể cân được là 32 g.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-022",
-    "noi_dung": "Để khảo sát mối liên hệ giữa chuyển động phân tử và áp suất khí lý tưởng, người ta xét một mô hình đơn giản trong đó các phân tử khí chuyển động không bị giới hạn bởi thành bình (hình a). Giả sử tất cả phân tử đều có cùng tốc độ v và chuyển động chỉ theo các phương của hệ trục tọa độ vuông góc OXYZ (hình b). Trong không gian khí, đặt tấm chắn A có khối lượng lớn, mặt tấm vuông góc với trục OX. Xét hình hộp chữ nhật H có đáy thuộc mặt tấm A, diện tích đáy $\\Delta S$, chiều dài theo trục OX là $v.\\Delta t$. Trong hình hộp có N phân tử, khối lượng mỗi phân tử là m, mật độ phân tử là n.\n[Hình: Mô hình va chạm phân tử khí lên thành phẳng diện tích Delta S theo trục Ox]",
-    "phuong_an": "a) Trong thời gian $\\Delta t$ chỉ những phân tử có vận tốc $\\vec{v}$ cùng hướng với trục OX và nằm trong hình hộp H đập vào diện tích $\\Delta S$.\nb) Do tính hỗn loạn của chuyển động, tính trung bình số phân tử khí chứa trong hình hộp H vẫn giữ nguyên, những quá trình trái ngược nhau (về lượng) tính trung bình cũng cân bằng nhau.\nc) Xung lượng của lực do các phân tử trong hình hộp H truyền cho phần đáy (có diện tích $\\Delta S$ ) của tấm A trong thời gian $\\Delta t$ là $\\frac{Nmv}{6}$. Áp suất khí tác dụng lên đáy $\\Delta S$ là $\\frac{1}{3}nmv^2$.\nd) Thực tế các phân tử chuyển động hỗn loạn nên có tốc độ khác nhau, do đó áp suất khí bằng $\\frac{1}{3}nm\\overline{v^2}$ ( $\\overline{v^2}$ là giá trị trung bình của bình phương tốc độ của tất cả các phân tử).",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1-slrPC6-023",
     "noi_dung": "Trong quá trình lập trình máy thở, một kỹ sư cần xác định khối lượng không khí có trong phổi bệnh nhân tại thời điểm hít vào. Biết dung tích phổi là 5,9 lít, áp suất khí là $1,01.10^5\\text{ Pa}$, nhiệt độ cơ thể là $37^{\\circ}\\text{C}$. Không khí là khí lý tưởng có khối lượng mol trung bình $29\\text{ g/mol}$. Khối lượng không khí trong phổi tại thời điểm đó bằng bao nhiêu gam (làm tròn kết quả đến chữ số hàng phần mười)?",
     "phuong_an": "",
-    "dap_an": "",
+    "dap_an": "6,7",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1-slrPC6-024",
     "noi_dung": "Nam cần dùng một chai thủy tinh chứa khí ở điều kiện phòng (áp suất $1,0.10^5\\text{ Pa}$, nhiệt độ $17^{\\circ}\\text{C}$ ) nhưng nút chai bị kẹt do ma sát hoặc co cứng. Nam hơ nóng chai để tăng áp suất khí bên trong, nút chai bật ra khi chênh lệch áp suất trong và ngoài đạt tối thiểu $0,2.10^5\\text{ Pa}$. Biết thể tích khí trong chai không đổi trong quá trình nung. Hỏi nhiệt độ của khí trong chai bằng bao nhiêu K để nút bật ra (làm tròn kết quả đến chữ số hàng đơn vị)?",
     "phuong_an": "",
-    "dap_an": "",
+    "dap_an": "349",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
     "ma_cau": "C-1-slrPC6-025",
     "noi_dung": "Một xe điện sử dụng hệ thống phanh tái sinh để thu hồi năng lượng khi giảm tốc. Trong lúc hãm phanh, bánh xe quay với tốc độ góc $\\omega = 40,0\\text{ rad/s}$ và động cơ điện hoạt động như một máy phát điện xoay chiều. Biết rằng cuộn dây của động cơ có $N = 987$ vòng, diện tích mỗi vòng $S = 20,0.10^{-3}\\text{ m}^2$; đặt trong từ trường đều $B = 925\\text{ mT}$. Suất điện động xoay chiều qua bộ chuyển đổi và tạo ra dòng một chiều để nạp vào ắc quy. Biết $80,0\\%$ năng lượng điện tạo ra ở máy phát được nạp vào ắc quy $400,0\\text{ V}$. Điện trở toàn mạch là $4,00\\,\\Omega$.\nSuất điện động được tạo ra trong quá trình phanh có giá trị cực đại là bao nhiêu vôn (V) (làm tròn kết quả đến chữ số hàng đơn vị)?",
     "phuong_an": "",
-    "dap_an": "",
+    "dap_an": "730",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-027",
-    "noi_dung": "Đồng vị phóng xạ Cobalt ($^{60}\\text{Co}$) phát ra tia gamma năng lượng cao có khả năng tiêu diệt tế bào ung thư khi chiếu đúng liều. Một máy xạ trị sử dụng nguồn $^{60}\\text{Co}$ có độ phóng xạ $6750\\text{ Ci}$ ($1\\text{ Ci} = 3,70.10^{10}\\text{ Bq}$) để điều trị ung thư. Biết $^{60}\\text{Co}$ có chu kỳ bán rã là 5,27 năm (1 năm = 365,25 ngày) và khối lượng mol là $59,9\\text{ g/mol}$.\nKhối lượng $^{60}\\text{Co}$ cần để đạt được độ phóng xạ 6750 Ci là bao nhiêu gam (làm tròn đến chữ số hàng phần trăm)?",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1-slrPC6-028",
-    "noi_dung": "Đồng vị phóng xạ Cobalt ($^{60}\\text{Co}$) phát ra tia gamma năng lượng cao có khả năng tiêu diệt tế bào ung thư khi chiếu đúng liều. Một máy xạ trị sử dụng nguồn $^{60}\\text{Co}$ có độ phóng xạ $6750\\text{ Ci}$ ($1\\text{ Ci} = 3,70.10^{10}\\text{ Bq}$) để điều trị ung thư. Biết $^{60}\\text{Co}$ có chu kỳ bán rã là 5,27 năm (1 năm = 365,25 ngày) và khối lượng mol là $59,9\\text{ g/mol}$.\nNếu giới hạn sử dụng an toàn là khi độ phóng xạ giảm còn 1450 Ci thì sau bao nhiêu năm phải thay nguồn (làm tròn đến chữ số hàng phần mười)?",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
