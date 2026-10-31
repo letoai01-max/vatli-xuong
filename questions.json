@@ -1,34 +1,7 @@
 [
   {
-    "ma_cau": "C-1M3yVMDD-019",
-    "noi_dung": "Một lượng khí lí tưởng chuyển trạng thái $\\text{A} \\rightarrow \\text{B} \\rightarrow \\text{C} \\rightarrow \\text{D}$ được biểu diễn trên đồ thị $p - V$ như hình vẽ [Hình: Đồ thị $p - V$, điểm A ở $(2; 0{,}4)$, B ở $(4; 0{,}4)$, C ở $(4; 0{,}2)$, D ở $(3; 0{,}15)$ trên đường nối gốc O với C]. Ở trạng thái A, khí có nhiệt độ 400 K.",
-    "phuong_an": "a) Nhiệt độ của khí ở trạng thái D là 450 K.\nb) Áp suất của khí ở trạng thái C là 0,2 Pa.\nc) Quá trình biến đổi của lượng khí từ trạng thái A đến trạng thái B là quá trình đẳng áp.\nd) Quá trình biến đổi của lượng khí từ trạng thái C đến trạng thái D có nhiệt độ giảm dần.",
-    "dap_an": "a) Sai; b) Sai; c) Đúng; d) Sai",
-    "loi_giai": "Tóm tắt: $p_A = 0{,}4\\cdot 10^5\\text{ Pa}$; $V_A = 2\\text{ lit}$; $T_A = 400\\text{ K}$; $p_B = 0{,}4\\cdot 10^5\\text{ Pa}$; $V_B = 4\\text{ lit}$; $p_C = 0{,}2\\cdot 10^5\\text{ Pa}$; $V_C = 4\\text{ lit}$; $p_D = 0{,}15\\cdot 10^5\\text{ Pa}$; $V_D = 3\\text{ lit}$.\nÝ a) Nhiệt độ ở trạng thái D tính theo phương trình trạng thái khí lí tưởng\n$$T_D = \\frac{p_D V_D}{p_A V_A} T_A = \\frac{0{,}15\\cdot 3}{0{,}4\\cdot 2}\\cdot 400 = 225\\text{ K}$$\nÝ b) Quan sát đồ thị trục tung p đơn vị $10^5\\text{ Pa}$, ở trạng thái C áp suất là $0{,}2\\cdot 10^5\\text{ Pa} = 20000\\text{ Pa}$\n$$p_C = 0{,}2\\cdot 10^5\\text{ Pa}$$\nÝ c) Quá trình từ A đến B áp suất không đổi nên đây là quá trình đẳng áp\n$$p_A = p_B = 0{,}4\\cdot 10^5\\text{ Pa}$$\nÝ d) Đường biểu diễn C-D đi qua gốc tọa độ O nên đây là quá trình đẳng nhiệt\n$$T_C = T_D$$\nĐáp án: a) Sai; b) Sai; c) Đúng; d) Sai.",
-    "trang_thai": "Cần người xem",
-    "link_anh": "images/q217_vat-li-thanh-hoa_pdf_p3_img2.png"
-  },
-  {
     "ma_cau": "C-1M3yVMDD-025",
     "noi_dung": "Người ta dùng một chùm tia laze có công suất không đổi bằng 600 W để khoan thủng một cái lỗ vuông góc với bề mặt một tấm thép. Đường kính của chùm laze bằng $1\\text{ mm}$, bề dày của tấm thép là $2\\text{ mm}$, nhiệt độ ban đầu của tấm thép $27^\\circ\\text{C}$. Biết khối lượng riêng của thép là $7800\\text{ kg/m}^3$, nhiệt dung riêng của thép $448\\text{ J/(kg}\\cdot\\text{K)}$, nhiệt nóng chảy riêng của thép $270\\text{ kJ/kg}$, nhiệt độ nóng chảy của thép là $1535^\\circ\\text{C}$; lỗ khoan có đường kính bằng đường kính chùm tia laze và có ít nhất $85\\%$ năng lượng cung cấp của tia laze bị hao phí khi khoan (truyền nhiệt ra xung quanh, phản xạ trên bề mặt thép,...). Thời gian nhỏ nhất để khoan thép bằng bao nhiêu s (làm tròn kết quả đến chữ số hàng phần trăm)?",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-19Q7yfsn-001",
-    "noi_dung": "Một cửa hàng lắp đặt hệ thống biển quảng cáo như hình vẽ. [Hình: Thanh treo biển gắn tường, có dây treo và biển quảng cáo ở đầu]. Thanh treo biển là một thanh rắn đồng chất tiết diện đều, nặng $m_1 = 15\\text{ kg}$, có chiều dài $l_1 = 1{,}70\\text{ m}$, được gắn với một bản lề cố định trên tường, trục quay của thanh nằm ngang sát với tường. Thanh được giữ cân bằng nằm ngang nhờ một dây treo hợp với thanh một góc $35^o$, điểm neo dây trên thanh cách tường $1{,}35\\text{ m}$. Biển quảng cáo nặng $m_2 = 20\\text{ kg}$ được treo ở đầu ngoài của thanh. Bỏ qua trọng lượng của các dây treo, ma sát ở trục quay của thanh và lực tác động của không khí. Lấy $g = 10\\text{ m/s}^2$.\na) Trọng tâm G của thanh rắn cách tường một đoạn bao nhiêu?\nb) Tìm lực căng của dây treo thanh rắn (dây $35^o$).\nc) Không may, biển quảng cáo bị rơi và dây treo bị đứt cùng một lúc, thanh rắn quay với moment quán tính $I_1 = \\frac{1}{3}m_1l_1^2$.\nc1) Tính tốc độ góc và gia tốc góc của thanh khi thanh hợp với tường một góc $30^o$.\nc2) Ngay trước khi đập vào tường, thanh tác dụng lên bản lề một lực kéo bao nhiêu?",
-    "phuong_an": "",
-    "dap_an": "a) 0,85 m; b) 603,7 N; c1) 3,91 rad/s và 4,41 rad/s^2; c2) 375 N",
-    "loi_giai": "Tóm tắt: $m_1 = 15\\text{ kg}$; $l_1 = 1{,}70\\text{ m}$; $d_T = 1{,}35\\text{ m}$; $\\alpha = 35^\\circ$; $m_2 = 20\\text{ kg}$; $g = 10\\text{ m/s}^2$; $I_1 = \\frac{1}{3}m_1l_1^2$.\nVị trí trọng tâm của thanh: Do thanh đồng chất, tiết diện đều nên trọng tâm G nằm ở chính giữa thanh $d_G = \\frac{l_1}{2} = \\frac{1{,}70}{2} = 0{,}85\\text{ m}$.\nLực căng của dây treo: Áp dụng quy tắc moment lực đối với trục quay tại bản lề khi thanh cân bằng nằm ngang\n$$M_T = M_{P_1} + M_{P_2} \\Leftrightarrow T \\cdot d_T \\cdot \\sin 35^\\circ = m_1g \\cdot d_G + m_2g \\cdot l_1$$\nTính giá trị lực căng dây: Thay số ta được $T = \\frac{15\\cdot 10\\cdot 0{,}85 + 20\\cdot 10\\cdot 1{,}70}{1{,}35\\cdot \\sin 35^\\circ} \\approx 603{,}7\\text{ N}$.\nTốc độ góc khi thanh hợp với tường góc 30 độ: Chọn mốc thế năng tại vị trí nằm ngang của trọng tâm. Khi thanh hợp với tường một góc $30^\\circ$, trọng tâm G hạ thấp một khoảng $h = d_G \\cdot \\cos 30^\\circ$. Áp dụng định luật bảo toàn cơ năng\n$$m_1g \\cdot \\frac{l_1}{2}\\cos 30^\\circ = \\frac{1}{2}I_1\\omega^2 = \\frac{1}{2}\\left(\\frac{1}{3}m_1l_1^2\\right)\\omega^2 \\Rightarrow \\omega = \\sqrt{\\frac{3g\\cos 30^\\circ}{l_1}} = \\sqrt{\\frac{3\\cdot 10\\cdot \\cos 30^\\circ}{1{,}70}} \\approx 3{,}91\\text{ rad/s}$$\nGia tốc góc khi thanh hợp với tường góc 30 độ: Moment của trọng lực tác dụng lên thanh đối với trục quay bản lề khi thanh hợp với tường góc $30^\\circ$ (hợp với phương thẳng đứng góc $30^\\circ$)\n$$M = m_1g \\cdot \\frac{l_1}{2} \\sin 30^\\circ = I_1\\beta \\Rightarrow \\beta = \\frac{m_1g \\frac{l_1}{2}\\sin 30^\\circ}{\\frac{1}{3}m_1l_1^2} = \\frac{3g\\sin 30^\\circ}{2l_1} = \\frac{3\\cdot 10\\cdot \\sin 30^\\circ}{2\\cdot 1{,}70} \\approx 4{,}41\\text{ rad/s}^2$$\nLực tác dụng lên bản lề ngay trước khi đập vào tường: Khi thanh ở vị trí thẳng đứng (ngay trước khi chạm tường), góc hợp với tường bằng $0^\\circ$. Tốc độ góc lúc này là $\\omega_{\\text{max}} = \\sqrt{\\frac{3g\\cos 0^\\circ}{l_1}} = \\sqrt{\\frac{3g}{l_1}}$. Gia tốc hướng tâm của trọng tâm G là $a_{ht} = \\omega_{\\text{max}}^2 \\cdot \\frac{l_1}{2} = \\frac{3}{2}g$. Theo định luật II Newton cho chuyển động của khối tâm theo phương thẳng đứng\n$$F_b - m_1g = m_1a_{ht} = m_1\\left(\\frac{3}{2}g\\right) \\Rightarrow F_b = m_1g + \\frac{3}{2}m_1g = \\frac{5}{2}m_1g$$\nTính lực kéo tác dụng lên bản lề: Theo định luật III Newton, thanh tác dụng lên bản lề lực kéo có độ lớn bằng $F_b$ $F_{\\text{kéo}} = \\frac{5}{2}\\cdot 15\\cdot 10 = 375\\text{ N}$.\na) Trọng tâm cách tường 0,85 m. b) Lực căng dây khoảng 603,7 N. c1) Tốc độ góc khoảng 3,91 rad/s, gia tốc góc khoảng 4,41 rad/s^2. c2) Lực kéo tác dụng lên bản lề là 375 N.\nĐáp án: a) 0,85 m; b) 603,7 N; c1) 3,91 rad/s và 4,41 rad/s^2; c2) 375 N.",
-    "trang_thai": "Cần người xem",
-    "link_anh": "images/q227_de-thi-chon-hsg-thpt-cap-_p1_img2.png"
-  },
-  {
-    "ma_cau": "C-19Q7yfsn-002",
-    "noi_dung": "Cho $1{,}5\\text{ mol}$ khí lí tưởng lưỡng nguyên tử (phân tử khí có 2 nguyên tử) biến đổi theo chu trình 1-2-3-1 như hình vẽ. [Hình: Đồ thị chu trình 1-2-3-1 trong hệ tọa độ (V, p)]. Trong đó, đường 2-3 là đường cong hyperbol, đường 3-1 là đường cong parabol có đỉnh tại gốc tọa độ. Ở trạng thái 1, khí có nhiệt độ $T_1 = 450\\text{ K}$. Ở trạng thái 2, khí có áp suất $p_2 = 415{,}5\\text{ kPa}$. Thể tích $V_3 = 2V_2$. Cho hằng số khí lí tưởng $R = 8{,}31\\text{ J/mol.K}$.\na) Tìm áp suất $p_1$ của khí ở trạng thái 1 và các giá trị $V_1, p_3,\\text{ V}_3$.\nb) Ở mỗi quá trình, khí nhận hay thực hiện công một lượng bao nhiêu?\nc) Ở mỗi quá trình, khí nhận hay tỏa một nhiệt lượng bao nhiêu?",
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "",
@@ -43,24 +16,6 @@
     "loi_giai": "",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q229_de-thi-chon-hsg-thpt-cap-tinh-_p2_img1.png, images/q229_de-thi-chon-hsg-thpt-cap-_p2_img1.png, images/q229_de-thi-chon-hsg-thpt_p2_img1.png"
-  },
-  {
-    "ma_cau": "C-19Q7yfsn-004",
-    "noi_dung": "Trong y học hạt nhân, đồng vị phóng xạ $^{131}_{53}\\text{I}$ (Iodine-131) thường được sử dụng để điều trị các bệnh về tuyến giáp như cường giáp, ung thư tuyến giáp,... Sau khi uống vào cơ thể, tuyến giáp của người bệnh hấp thu mạnh chất phóng xạ $^{131}_{53}\\text{I}$, $^{131}_{53}\\text{I}$ phân rã và phát ra tia phóng xạ $\\beta^-$. Tia $\\beta^-$ là các electron $^0_{-1}\\text{e}$ có động năng lớn có tác dụng dùng để tiêu diệt các tế bào tuyến giáp, trong đó có tế bào bệnh.\nBiết rằng, sau khi phóng xạ $\\beta^-$, hạt nhân $^{131}_{53}\\text{I}$ biến thành hạt nhân Xenon Xe. Chu kì bán rã của $^{131}_{53}\\text{I}$ là 8 ngày đêm. Cho khối lượng nghỉ của electron là $m_e = 9{,}1 \\cdot 10^{-31}\\text{ kg}$; $1\\text{ eV} = 1{,}6 \\cdot 10^{-19}\\text{ J}$; các hằng số $h = 6{,}626 \\cdot 10^{-34}\\text{ Js}$, $c = 3 \\cdot 10^8\\text{ m/s}$.\na) Viết phương trình phân rã $\\beta^-$ của $^{131}_{53}\\text{I}$ và cho biết hạt nhân con Xe có bao nhiêu số neutron?\nb) Một bệnh nhân được bác sĩ chỉ định uống một liều phóng xạ $^{131}_{53}\\text{I}$. Ban đầu, tuyến giáp của bệnh nhân hấp thu được một lượng $^{131}_{53}\\text{I}$ có độ phóng xạ $35\\text{ mCi}$. Cần một khoảng thời gian bao lâu để độ phóng xạ của lượng $^{131}_{53}\\text{I}$ trên giảm xuống còn $30\\text{ mCi}$ để bệnh nhân có thể xuất viện về nhà? Bỏ qua sự bài tiết hay hấp thu thêm $^{131}_{53}\\text{I}$ của tuyến giáp trong thời gian này.\nc) Trong phân rã $\\beta^-$ của $^{131}_{53}\\text{I}$, hạt electron sinh ra có động năng trung bình $190\\text{ keV}$. Tính tốc độ trung bình của hạt electron này.\nd) Trong các hiện tượng phóng xạ, ngoài tia $\\beta^-$, còn có tia $\\beta^+$ và tia $\\gamma$. Tia $\\beta^+$ là hạt positron $^0_{+1}\\text{e}$ có khối lượng nghỉ bằng khối lượng nghỉ của electron và có điện tích bằng điện tích nguyên tố dương; tia $\\gamma$ là hạt photon ánh sáng có năng lượng cao.\nNgười ta phát hiện ra rằng, khi hai hạt electron và positron va chạm nhau với vận tốc nhỏ không đáng kể thì chúng có thể kết hợp nhau cùng biến mất, đồng thời sinh ra hai hạt photon $\\gamma$: $^0_{-1}\\text{e} + ^0_{+1}\\text{e} \\to 2\\gamma$. Trong trường hợp này, hai hạt photon $\\gamma$ sinh ra có hướng bay hợp nhau một góc bao nhiêu? Tính bước sóng và khoảng cách giữa chúng sau $5\\text{ ns}$ (nano giây) kể từ lúc sinh ra?",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-11vTqUwQ-002",
-    "noi_dung": "Một máng trượt ở công viên nước gồm hai đoạn cong AB và BD lần lượt là các cung tròn có cùng bán kính $R$, có chung tiếp tuyến tại B là đường thẳng nằm ngang song song với mặt nước. Cung AB có điểm A có độ cao $h = 0{,}3R$ so với B, cung BD là $\\frac{1}{4}$ đường tròn [Hình: Máng trượt AB lồi hướng xuống dưới có tâm O1 phía trên, nối tiếp BD lõm xuống phía dưới có tâm O2 ở mặt nước].\nBạn Bình có khối lượng $m$, được coi như chất điểm, trượt từ đỉnh A của máng xuống dưới với vận tốc đầu bằng không, ma sát trượt giữa Bình và máng không đáng kể. Cho gia tốc trọng trường là $g$. Kết quả tính theo các đại lượng $m$, $g$, $R$.\na) Bình chạm nước với tốc độ bao nhiêu? Tính công của trọng lực tác dụng lên Bình khi Bình trượt từ A xuống đến mặt nước.\nb) Tính áp lực của Bình lên đoạn máng AB tại vị trí B.\nc) Ở vị trí có độ cao cách mặt nước bao nhiêu thì Bình bắt đầu rời khỏi máng trượt?\nd) Người ta cắt bỏ bớt một phần trên của máng từ điểm A xuống đến điểm M sao cho những người chơi như Bình nếu trượt không vận tốc đầu từ M thì quãng đường mà người chơi tiếp xúc với máng trên hai phần MB và BD là như nhau. Tính chiều dài đoạn cong AM bị cắt.",
-    "phuong_an": "",
-    "dap_an": "a) v = \\sqrt{2,6gR}, A_P = 1,3mgR; b) 1,6mg; c) \\frac{13}{15}R; d) \\approx 0,152R",
-    "loi_giai": "Tóm tắt: $h = 0{,}3R$; $R_1 = R_2 = R$; $v_A = 0$; $\\mu = 0$; $\\text{BD là } \\frac{1}{4} \\text{ đường tròn có tâm } O_2\\text{ tại mặt nước}$.\nKiểm tra điều kiện rời máng trên đoạn BD: Chọn gốc thế năng tại B. Khi Bình trượt từ A đến vị trí C trên BD xác định bởi góc lệch $\\alpha$ so với phương thẳng đứng $O_2 B$, bảo toàn cơ năng cho vận tốc:\n$$v_C^2 = 2g(h + R - R\\cos\\alpha) = 2g(1{,}3R - R\\cos\\alpha)$$\nĐiều kiện rời máng trên BD: Phương trình định luật II Newton theo phương hướng tâm về tâm $O_2$:\n$$mg\\cos\\alpha - N = \\frac{m v_C^2}{R} \\Rightarrow N = mg\\cos\\alpha - \\frac{m v_C^2}{R}$$\nTìm vị trí Bình rời máng: Khi Bình rời máng thì $N = 0$, suy ra:\n$$g\\cos\\alpha = \\frac{v_C^2}{R} = 2g(1{,}3 - \\cos\\alpha) \\Rightarrow 3\\cos\\alpha = 2{,}6 \\Rightarrow \\cos\\alpha = \\frac{13}{15}$$\nĐộ cao khi Bình bắt đầu rời máng (câu c) Vì $\\cos\\alpha = \\frac{13}{15} < 1$ nên Bình rời máng trước khi đến điểm D. Độ cao của điểm rời máng so với mặt nước:\n$$y = R\\cos\\alpha = \\frac{13}{15}R \\approx 0{,}867R$$\nTốc độ khi chạm nước và công trọng lực (câu a) Vì ma sát không đáng kể và trong suốt quá trình (kể cả khi bay trong không khí sau khi rời máng) chỉ có trọng lực sinh công, bảo toàn cơ năng từ A đến mặt nước:\n$$v_{\\text{nước}} = \\sqrt{2g(h + R)} = \\sqrt{2g(0{,}3R + R)} = \\sqrt{2{,}6gR}$$\nCông của trọng lực khi trượt từ A xuống đến mặt nước: Công của trọng lực chỉ phụ thuộc vào hiệu độ cao giữa A và mặt nước:\n$$A_P = mg(h + R) = 1{,}3mgR$$\nÁp lực của Bình lên đoạn máng AB tại B (câu b) Tại B, bán kính cong hướng lên tâm $O_1$. Tốc độ tại B là $v_B = \\sqrt{2gh} = \\sqrt{0{,}6gR}$. Phương trình động lực học:\n$$N_B - mg = \\frac{m v_B^2}{R} \\Rightarrow N_B = mg + \\frac{m\\cdot 0{,}6gR}{R} = 1{,}6mg$$\nÁp lực tác dụng lên máng tại B: Theo định luật III Newton, áp lực của Bình lên máng tại B có độ lớn:\n$$F_{\\text{áp lực}} = N_B = 1{,}6mg$$\nXác định góc ở tâm của đoạn cong BD mà người chơi tiếp xúc: Nếu thả không vận tốc đầu từ M có góc ở tâm trên cung MB là $\\beta_0$ (tương ứng độ cao so với B là $h_M = R(1 - \\cos\\beta_0)$), khi trượt trên BD đến góc $\\alpha$ thì Bình rời máng khi:\n$$g\\cos\\alpha = \\frac{v^2}{R} = 2g(1 - \\cos\\beta_0 + 1 - \\cos\\alpha) \\Rightarrow 3\\cos\\alpha = 4 - 2\\cos\\beta_0$$\nĐiều kiện hai quãng đường tiếp xúc bằng nhau (câu d) Quãng đường tiếp xúc trên MB là $s_1 = R\\beta_0$, trên BD đến khi rời máng là $s_2 = R\\alpha$. Do $s_1 = s_2$ nên $\\alpha = \\beta_0$. Thay vào điều kiện rời máng:\n$$3\\cos\\beta_0 = 4 - 2\\cos\\beta_0 \\Rightarrow 5\\cos\\beta_0 = 4 \\Rightarrow \\cos\\beta_0 = 0{,}8 \\Rightarrow \\beta_0 = \\arccos(0{,}8) \\approx 0{,}6435\\text{ rad}$$\nChiều dài đoạn cong AM bị cắt: Góc ở tâm của điểm A ban đầu so với trục thẳng đứng qua $O_1$: $\\cos\\alpha_A = \\frac{R - h}{R} = 1 - 0{,}3 = 0{,}7 \\Rightarrow \\alpha_A = \\arccos(0{,}7) \\approx 0{,}7954\\text{ rad}$. Chiều dài đoạn AM:\n$$s_{AM} = R(\\alpha_A - \\beta_0) = R(\\arccos(0{,}7) - \\arccos(0{,}8)) \\approx 0{,}152R$$\na) Tốc độ chạm nước v = \\sqrt{2,6gR}, công của trọng lực A_P = 1,3mgR. b) Áp lực tại B là 1,6mg. c) Rời máng ở độ cao y = \\frac{13}{15}R so với mặt nước. d) Chiều dài đoạn AM bị cắt là s_{AM} = R(\\arccos(0,7) - \\arccos(0,8)) \\approx 0,152R.\nĐáp án: a) v = \\sqrt{2,6gR}, A_P = 1,3mgR; b) 1,6mg; c) \\frac{13}{15}R; d) \\approx 0,152R.",
-    "trang_thai": "Cần người xem",
-    "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q233_de-thi-chon-hsg-thpt-cap-tinh-_p1_img2.png"
   },
   {
     "ma_cau": "C-11vTqUwQ-003",
@@ -81,65 +36,11 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1Qte603Z-025",
-    "noi_dung": "Dùng thông tin sau cho câu 3 và câu 4: Trong các trạm không gian vũ trụ, cần thu hồi khí oxygen $\\text{O}_2$ từ khí carbon dioxide $\\text{CO}_2$ do các nhà du hành thở ra để tái sử dụng. Trong một phương pháp thu hồi, cứ $1{,}00\\text{ mol}$ $\\text{CO}_2$ tạo ra $1{,}00\\text{ mol}$ $\\text{O}_2$ và $1{,}00\\text{ mol}$ methane $\\text{CH}_4$. Sau một thời gian, lượng khí $\\text{CO}_2$ thu được là $0{,}550\\text{ kg}$. Khí $\\text{CH}_4$ và $\\text{O}_2$ tạo thành từ lượng $\\text{CO}_2$ nói trên được chứa trong hai bình khác nhau ban đầu đều chưa chứa khí. Khối lượng mol của $\\text{CO}_2$ và $\\text{O}_2$ lần lượt là $44{,}0\\text{ g/mol}$ và $32{,}0\\text{ g/mol}$. Coi các khí là khí lí tưởng.\nBình chứa khí $\\text{CH}_4$ có thể tích 164 lít và được duy trì ở nhiệt độ $-41\\text{ }^\\circ\\text{C}$. Áp suất của khí $\\text{CH}_4$ trong bình là $x \\cdot 10^5\\text{ Pa}$. Tìm $x$ (làm tròn kết quả đến chữ số hàng phần trăm).",
-    "phuong_an": "",
-    "dap_an": "1,47",
-    "loi_giai": "Tóm tắt: $m_{\\text{CO}_2} = 0{,}550\\text{ kg} = 550\\text{ g}$; $M_{\\text{CO}_2} = 44{,}0\\text{ g/mol}$; $n_{\\text{CH}_4} = n_{\\text{CO}_2}$; $V = 164\\text{ lít} = 164\\cdot 10^{-3}\\text{ m}^3$; $T = 273 - 41 = 232\\text{ K}$; $R = 8{,}31\\text{ J/(mol}\\cdot\\text{K)}$.\nSố mol khí CH4 tạo thành: Theo đề bài, số mol khí $\\text{CH}_4$ sinh ra bằng số mol $\\text{CO}_2$ phản ứng\n$$n_{\\text{CH}_4} = n_{\\text{CO}_2} = \\frac{m_{\\text{CO}_2}}{M_{\\text{CO}_2}} = \\frac{550}{44{,}0} = 12{,}5\\text{ mol}$$\nÁp suất của khí CH4 trong bình: Áp dụng phương trình trạng thái khí lí tưởng $p V = n R T$\n$$p = \\frac{n_{\\text{CH}_4} R T}{V} = \\frac{12{,}5\\cdot 8{,}31\\cdot 232}{164\\cdot 10^{-3}} \\approx 146942\\text{ Pa} = 1{,}46942\\cdot 10^5\\text{ Pa}$$\nXác định giá trị của x: So sánh với biểu thức $p = x\\cdot 10^5\\text{ Pa}$ $x \\approx 1{,}47$.\nGiá trị của $x$ là $1{,}47$.\nĐáp án: 1,47.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1Azftb88-001",
-    "noi_dung": "Kéo căng một sợi dây thép có chiều dài 5m, tiết diện thẳng $2{,}5\\text{ mm}^2$ bằng một lực $200\\text{ N}$, ta dây thép dài thêm $2\\text{ mm}$. Xác định suất đàn hồi của thép.",
-    "phuong_an": "",
-    "dap_an": "",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1Azftb88-002",
-    "noi_dung": "Một lò xo đàn hồi có treo một vật nặng khối lượng $200\\text{ g}$ làm cho nó dãn thêm $1{,}5\\text{ cm}$. lấy $g=10\\text{ m/s}^2$. Hệ số đàn hồi của lò xo đó là bao nhiêu?",
-    "phuong_an": "",
-    "dap_an": "133,3 N/m",
-    "loi_giai": "Tóm tắt: $m = 200\\text{ g} = 0{,}2\\text{ kg}$; $\\Delta l = 1{,}5\\text{ cm} = 0{,}015\\text{ m}$; $g = 10\\text{ m/s}^2$.\nĐộ lớn lực đàn hồi: Ở vị trí cân bằng, độ lớn lực đàn hồi của lò xo cân bằng với trọng lực của vật\n$$F_{dh} = P$$\nHệ số đàn hồi của lò xo: Áp dụng công thức tính lực đàn hồi k = P / \\Delta l\n$$k = \\frac{m \\cdot g}{\\Delta l} = \\frac{0{,}2 \\cdot 10}{0{,}015} \\approx 133{,}3$$\nHệ số đàn hồi của lò xo là khoảng 133,3 N/m\nĐáp án: 133,3 N/m N/m.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1Azftb88-003",
     "noi_dung": "Một thanh thép xây dựng có bán kính $R=9{,}5\\text{ mm}$ và độ dài $l=81\\text{ cm}$. Một lực $F=6{,}2\\cdot 10^4\\text{ N}$ kéo dãn nó theo trục. Độ dãn của thanh do tác dụng của lực này là bao nhiêu? Độ biến dạng tương đối là bao nhiêu? Cho biết suất Young là $2\\cdot 10^{11}\\text{Pa}$",
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1Azftb88-004",
-    "noi_dung": "Một thanh thép dài $11\\text{ m}$, tiết diện $4{,}4\\text{ cm}^2$. Phải tác dụng lên thanh thép một lực kéo bằng bao nhiêu để thanh dài thêm $2{,}5\\text{ mm}$? Có thể dùng thanh thép này để treo những vật có trọng lượng bằng bao nhiêu mà thanh không bị đứt? Biết suất Young và giới hạn bền của thép là $2\\cdot 10^{11}\\text{Pa}$ và $6{,}86\\cdot 10^8\\text{ Pa}$",
-    "phuong_an": "",
-    "dap_an": "Lực kéo là 20 kN; Trọng lượng tối đa là 301840 N",
-    "loi_giai": "Tóm tắt: $l_0 = 11\\text{ m}$; $S = 4{,}4\\text{ cm}^2 = 4{,}4\\cdot 10^{-4}\\text{ m}^2$; $\\Delta l = 2{,}5\\text{ mm} = 2{,}5\\cdot 10^{-3}\\text{ m}$; $E = 2\\cdot 10^{11}\\text{ Pa}$; $\\sigma_bh = 6{,}86\\text{ 10}^8\\text{ Pa}$.\nĐộ lớn lực kéo: Áp dụng công thức định luật Hooke cho sự biến dạng kéo của thanh rắn để tính lực kéo $F$\n$$F = \\frac{E \\cdot S \\cdot \\Delta l}{l_0} = \\frac{2\\cdot 10^{11} \\cdot 4{,}4\\cdot 10^{-4} \\cdot 2{,}5\\cdot 10^{-3}}{11}$$\nTính giá trị lực kéo: Thực hiện phép tính ta được lực kéo\n$$F = 20000\\text{ N} = 20\\text{ kN}$$\nTrọng lượng tối đa: Để thanh không bị đứt, lực kéo tác dụng tối đa bằng lực bền\n$$P_{max} = F_{bh} = \\sigma_{bh} \\cdot S = 6{,}86\\cdot 10^8 \\cdot 4{,}4\\cdot 10^{-4}$$\nTính giá trị trọng lượng tối đa: Thực hiện phép tính ta được trọng lượng tối đa\n$$P_{max} = 301840\\text{ N}$$\nĐáp án: Lực kéo là 20 kN; Trọng lượng tối đa là 301840 N N.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-14Ft1gDb-003",
-    "noi_dung": "Con lắc lò xo gồm vật nhỏ khối lượng 100g gắn với một lò xo nhẹ. Con lắc dao động điều hòa theo phương ngang với phương trình x = 10cos10\\pi t (cm). Mốc thế năng ở vị trí cân bằng. Lấy \\pi^2 = 10. Cơ năng của con lắc bằng",
-    "phuong_an": "A. 0,10 J.\nB. 0,05 J.\nC. 1,00 J.\nD. 0,50 J.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $m = 100\\text{ g} = 0{,}1\\text{ kg}$; $x = 10\\cos(10\\pi t)\\text{ cm} \\Rightarrow A = 10\\text{ cm} = 0{,}1\\text{ m}$; $\\omega = 10\\pi\\text{ rad/s}$; $\\pi^2 = 10$.\nĐộ cứng của lò xo: Tính độ cứng $k$ của lò xo theo tần số góc\n$$k = m \\cdot \\omega^2 = 0{,}1 \\cdot (10\\pi)^2 = 0{,}1 \\cdot 100 \\cdot 10 = 100\\text{ N/m}$$\nCơ năng của con lắc: Tính cơ năng của con lắc lò xo\n$$W = \\frac{1}{2} k \\cdot A^2 = \\frac{1}{2} \\cdot 100 \\cdot 0{,}1^2 = 0{,}5\\text{ J}$$\nCơ năng của con lắc bằng 0,50 J, ứng với phương án D.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-14Ft1gDb-006",
-    "noi_dung": "Một vật có m = 500 g dao động điều hoà với phương trình dao động $x = 2\\cos(10t + \\frac{\\pi}{3})$ (cm). Lấy \\pi^2 = 10. Tại thời điểm t = 0 thì động năng của vật bằng",
-    "phuong_an": "A. 15,0 mJ.\nB. 7,5 mJ.\nC. 2,5 mJ.\nD. 75,0 J.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $m = 500\\text{ g} = 0{,}5\\text{ kg}$; $x = 2\\cos(10t + \\frac{\\pi}{3})\\text{ cm}$; $A = 2\\text{ cm} = 0{,}02\\text{ m}$; $\\omega = 10\\text{ rad/s}$; $t = 0\\text{ s}$; $\\pi^2 = 10$.\nĐộ cứng của lò xo: Tính độ cứng $k$ của hệ dao động\n$$k = m\\omega^2 = 0{,}5 \\cdot 10^2 = 50\\text{ N/m}$$\nCơ năng của vật: Tính tổng cơ năng $W$ của vật\n$$W = \\frac{1}{2}kA^2 = \\frac{1}{2} \\cdot 50 \\cdot (0{,}02)^2 = 0{,}01\\text{ J} = 10\\text{ mJ}$$\nLi độ tại thời điểm t = 0: Thay $t = 0$ vào phương trình dao động để tìm li độ $x$\n$$x = 2\\cos(\\frac{\\pi}{3}) = 1\\text{ cm} = 0{,}01\\text{ m}$$\nThế năng tại thời điểm t = 0: Tính thế năng $W_t$\n$$W_t = \\frac{1}{2}kx^2 = \\frac{1}{2} \\cdot 50 \\cdot (0{,}01)^2 = 0{,}0025\\text{ J} = 2{,}5\\text{ mJ}$$\nĐộng năng tại thời điểm t = 0: Động năng bằng cơ năng trừ thế năng\n$$W_d = W - W_t = 10 - 2{,}5 = 7{,}5\\text{ mJ}$$\nĐộng năng của vật tại thời điểm t = 0 là 7,5 mJ\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -1278,15 +1179,6 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1075_OTCK2_2526_li11_pdf_p7_img2.png, images/q1075_OTCK2_2526_li11_pdf_p7_img2.png"
   },
   {
-    "ma_cau": "C-1_7nFKUi-043",
-    "noi_dung": "Điện trường đều là điện trường mà cường độ điện trường của nó",
-    "phuong_an": "A. có hướng như nhau tại mọi điểm.\nB. có hướng và độ lớn như nhau tại mọi điểm.\nC. có độ lớn như nhau tại mọi điểm.\nD. có độ lớn giảm dần theo thời gian.",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1_7nFKUi-046",
     "noi_dung": "Kết luận nào sau đây đúng. Trong điện trường đều người ta đo được hiệu điện thế giữa hai điểm M, N là 3V.",
     "phuong_an": "A. $V_M - V_N = 3\\text{ V}$.\nB. $V_M = 3\\text{ V}$.\nC. $V_N = -3\\text{ V}$.\nD. $V_N - V_M = 3\\text{ V}$.",
@@ -1404,15 +1296,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1XHtGuMf-042",
-    "noi_dung": "Hai điện tích điểm $q_1 = 8\\cdot 10^{-8}\\text{ C}, q_2 = -3\\cdot 10^{-8}\\text{ C}$ đặt trong không khí tại hai điểm A và B cách nhau $3\\text{ cm}$. Đặt điện tích điểm $q_0 = 10^{-8}\\text{ C}$ tại điểm M là trung điểm của AB biết $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2/\\text{C}^2$. Lực tĩnh điện tổng hợp do $q_1$ và $q_2$ tác dụng lên $q_0$ là bao nhiêu mili Newton?",
-    "phuong_an": "",
-    "dap_an": "44 mN",
-    "loi_giai": "Tóm tắt: $q_1 = 8\\cdot 10^{-8}\\text{ C}$; $q_2 = -3\\cdot 10^{-8}\\text{ C}$; $q_0 = 10^{-8}\\text{ C}$; $AB = 3\\text{ cm} = 0{,}03\\text{ m}$; $M là trung điểm AB nên MA = MB = 1{,}5\\text{ cm} = 0{,}015\\text{ m}$; $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2/\\text{C}^2$.\nĐộ lớn lực điện do q1 tác dụng lên q0: Áp dụng định luật Cu-lông\n$$F_{10} = k\\frac{|q_1 q_0|}{MA^2} = 9\\cdot 10^9\\frac{8\\cdot 10^{-8}\\cdot 10^{-8}}{(0{,}015)^2} = 0{,}032\\text{ N}$$\nĐộ lớn lực điện do q2 tác dụng lên q0: Áp dụng định luật Cu-lông\n$$F_{20} = k\\frac{|q_2 q_0|}{MB^2} = 9\\cdot 10^9\\frac{3\\cdot 10^{-8}\\cdot 10^{-8}}{(0{,}015)^2} = 0{,}012\\text{ N}$$\nLực tĩnh điện tổng hợp: Vì q1 và q2 trái dấu, các lực \\vec{F}_{10} và \\vec{F}_{20} cùng hướng chiều từ B sang A\n$$F = F_{10} + F_{20} = 0{,}032 + 0{,}012 = 0{,}044\\text{ N} = 44\\text{ mN}$$\nLực tĩnh điện tổng hợp tác dụng lên q0 là 44 mN\nĐáp án: 44 mN mN.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-043",
     "noi_dung": "Tại hai điểm A, B cách nhau 20 cm trong không khí, đặt hai điện tích điểm $q_1 = -3\\cdot 10^{-6}\\text{ C}, q_2 = 8\\cdot 10^{-6}\\text{ C}$. Đặt tại C một điện tích $q_3 = 2\\cdot 10^{-6}\\text{ C}$. Biết AC = 12 cm, BC = 16 cm. Lực điện trường do hai điện tích này tác dụng lên điện tích $q_3$ có độ lớn là bao nhiêu Newton?",
     "phuong_an": "",
@@ -1431,56 +1314,11 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1XHtGuMf-046",
-    "noi_dung": "Đơn vị của cường độ điện trường là",
-    "phuong_an": "A. N.\nB. N/m.\nC. V/m.\nD. V.m",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $Cường độ điện trường E = \\frac{F}{q}$; $Liên hệ giữa điện trường và hiệu điện thế U = E\\cdot d$.\nXac dinh don vi: Ta co cong thuc lien he giua cuong do dien truong va hieu dieu the la\n$$E = \\frac{U}{d}$$\nKet luan: Don vi cua hieu dieu the la von (V) va don vi cua chieu dai la met (m), do do don vi cua cuong do dien truong la V/m $1\\text{ V/m} = 1\\text{ N/C}$.\nDon vi cua cuong do dien truong la von tren met (V/m)\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-047",
-    "noi_dung": "Cường độ điện trường tại một điểm M trong điện trường bất kì là đại lượng",
-    "phuong_an": "A. vectơ, có phương, chiều và độ lớn phụ thuộc vào vị trí của điểm M.\nB. vectơ, chỉ có độ lớn phụ thuộc vào vị trí của điểm M.\nC. vô hướng, có giá trị luôn dương.\nD. vô hướng, có thể có giá trị âm hoặc dương.",
-    "dap_an": "A",
-    "loi_giai": "Định nghĩa cường độ điện trường: Cường độ điện trường tại một điểm là đại lượng đặc trưng cho tác dụng lực của điện trường tại điểm đó, được biểu diễn bằng một vectơ $\\vec{E}$.\n$$\\vec{E} = \\frac{\\vec{F}}{q}$$\nĐặc điểm của vectơ cường độ điện trường: Vectơ cường độ điện trường có phương, chiều và độ lớn phụ thuộc vào vị trí của điểm M đang xét trong điện trường.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-048",
     "noi_dung": "Đại lượng nào dưới đây không liên quan tới cường độ điện trường của một điện tích điểm Q gây ra tại điểm M trong chân không?",
     "phuong_an": "A. Lực điện tác dụng lên điện tích thử Q' đặt tại M.\nB. Khối lượng của điện tích Q.\nC. Độ lớn của điện tích thử Q' đặt tại M.\nD. Tất cả đáp án trên.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-049",
-    "noi_dung": "Trong công thức định nghĩa cường độ điện trường tại một điểm E = F/q thì",
-    "phuong_an": "A. F là tổng hợp các lực tác dụng lên điện tích thử, q là độ lớn của điện tích gây ra điện trường.\nB. F là tổng hợp các lực điện tác dụng lên điện tích thử, q là độ lớn của điện tích gây ra điện trường.\nC. F là tổng hợp các lực tác dụng lên điện tích thử, q là độ lớn của điện tích thử.\nD. F là tổng hợp các lực điện tác dụng lên điện tích thử, q là độ lớn của điện tích thử.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $E = \\frac{F}{q}$.\nXac dinh cac dai luong trong cong thuc: Trong cong thuc tinh cuong do dien truong tai mot diem, $F$ la tong hop cac luc dien tac dung len dien tích thu con $q$ la do lon cua dien tich thu duoc dat tai diem do.\n$$E = \\frac{F}{q}$$\nChon phuong an D.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-050",
-    "noi_dung": "Phát biểu nào sau đây về đường sức điện là không đúng?",
-    "phuong_an": "A. vectơ tiếp tuyến của đường sức điện tại 1 điểm trùng với hướng của véctơ cường độ điện trường $\\vec{E}$ tại một điểm đó.\nB. Tất cả các đường sức đều xuất phát từ điện tích dương và kết thúc ở điện tích âm\nC. Cũng có khi đường sức điện không xuất phát từ điện tích dương mà xuất phát từ vô cùng\nD. Các đường sức của một điện trường không cắt nhau.",
-    "dap_an": "B",
-    "loi_giai": "Đặc điểm của đường sức điện: Các đường sức điện là những đường vẽ sao cho hướng của vectơ tiếp tuyến tại mỗi điểm trùng với hướng của vectơ cường độ điện trường tại điểm đó. Các đường sức của điện trường tĩnh không khép kín: xuất phát từ điện tích dương và kết thúc ở điện tích âm, hoặc xuất phát từ vô cực và kết thúc ở vô cực. Qua mỗi điểm trong điện trường chỉ vẽ được một đường sức điện, do đó các đường sức không bao giờ cắt nhau.\nXét các phát biểu: Phát biểu B không đúng vì các đường sức điện có thể xuất phát từ vô cùng và kết thúc ở điện tích âm (trong trường hợp điện trường đều hoặc hệ điện tích khác), hoặc xuất phát từ điện tích dương và kết thúc ở vô cùng, chứ không phải tất cả đều xuất phát từ điện tích dương và kết thúc ở điện tích âm.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-051",
-    "noi_dung": "Công thức liên hệ giữa cường độ điện trường và hiệu điện thế là",
-    "phuong_an": "A. U = Ed\nB. U = A/q\nC. E = A/qd\nD. E = F/q",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $E: cuong do dien truong$; $U: hieu dien the$; $d: khoang cach giua hai diem$.\nXac dinh cong thuc lien he: Trong dien truong deu, moi quan he giua cuong do dien truong va hieu dien the giua hai diem cach nhau mot doan d theo phuong cua duong sức la\n$$U = Ed$$\nChon phuong an A.\nĐáp án: A.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -1494,69 +1332,6 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1147_LOP11_DECUONGONTAPGIUAKY2_TRUONGDONGANH.pdf_p4_img3.png, images/q1147_213636507___C__NG__N_T_P__p2_img1.png, images/q1147_213636507___C__NG__N_T_P__p2_img2.png, images/q1147_213636507___C__NG__N_T_P__p2_img3.png, images/q1147_213636507___C__NG__N_T_P__p2_img4.png, images/q1147_213636507___C__NG__N_T_P__p5_img1.png, images/q1147_213636507___C__NG__N_T_P__p5_img2.png, images/q1147_213636507___C__NG__N_T_P__p5_img3.png, images/q1147_213636507___C__NG__N_T_P__p5_img4.png, images/q1147_213636507___C__NG__N_T_P__p7_img1.jpeg, images/q1147_213636507___C__NG__N_T_P__p7_img2.jpeg, images/q1147_213636507___C__NG__N_T_P__p9_img1.png, images/q1147_213636507___C__NG__N_T_P__p14_img1.png, images/q1147_213636507___C__NG__N_T_P__p19_img1.png, images/q1147_213636507___C__NG__N_T_P__p19_img2.jpeg, images/q1147_213636507___C__NG__N_p5_img1.png"
   },
   {
-    "ma_cau": "C-1XHtGuMf-053",
-    "noi_dung": "Các đường sức điện trong điện trường đều",
-    "phuong_an": "A. chỉ có phương là không đổi.\nB. chỉ có chiều là không đổi.\nC. là các đường thẳng song song cách đều.\nD. là những đường thẳng đồng quy.",
-    "dap_an": "C",
-    "loi_giai": "Đặc điểm của điện trường đều: Điện trường đều là điện trường mà véctro cường độ điện trường tại mọi điểm đều bằng nhau. Do đó, các đường sức điện là những đường thẳng song song cách đều.\nCác đường sức điện trong điện trường đều là các đường thẳng song song cách đều.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-054",
-    "noi_dung": "Điện trường đều tồn tại ở",
-    "phuong_an": "A. xung quanh một vật hình cầu tích điện đều.\nB. xung quanh một vật hình cầu chỉ tích điện đều trên bề mặt.\nC. xung quanh hai bản kim loại phẳng, song song, có kích thước bằng nhau.\nD. trong một vùng không gian hẹp gần mặt đất.",
-    "dap_an": "C",
-    "loi_giai": "Khái niệm điện trường đều: Điện trường đều là điện trường mà vécto cường độ điện trường tại mọi điểm đều có cùng độ lớn, cùng phương và cùng chiều. Điện trường đều được tạo ra giữa hai bản kim loại phẳng, song song, tích điện trái dấu.\nPhân tích các phương án: Xung quanh vật tích điện đều (hình cầu) hoặc vùng không gian hẹp gần mặt đất (trọng trường đều), điện trường không đều. Chỉ có khoảng không gian giữa hai bản kim loại phẳng, song song là có điện trường đều.\nĐiện trường đều tồn tại ở xung quanh hai bản kim loại phẳng, song song, có kích thước bằng nhau.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-056",
-    "noi_dung": "Phát biểu nào sau đây là đúng?\n(1) cường độ điện trường do điện tích điểm gây ra tại một điểm phụ thuộc vào độ lớn điện tích thử đặt tại điểm đó\n(2) vectơ cường độ điện trường tại một điểm cùng chiều với lực tác dụng lên điện tích thử dương đặt tại điểm đó\n(3) cường độ điện trường tại một điểm đặc trưng cho tác dụng lực của điện trường tại điểm đó\n(4) các đường sức của cùng một điện trường có thể cắt nhau\n(5) điện trường do điện tích âm gây ra trong không gian là điện trường đều",
-    "phuong_an": "A. 2,4\nB. 1,3\nC. 2,3\nD. 3,4",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $E = \\frac{F}{|q|}$; $\\vec{E} = \\frac{\\vec{F}}{q}$.\nPhân tích ý 1: Cường độ điện trường do điện tích điểm gây ra tại một điểm được tính theo biểu thức $E = k\\frac{|Q|}{r^2}$, không phụ thuộc vào độ lớn điện tích thử $q$, nên ý (1) sai.\n$$E = k\\frac{|Q|}{r^2}$$\nPhân tích ý 2: Theo định nghĩa vectơ cường độ điện trường $\\vec{E} = \\frac{\\vec{F}}{q}$, khi $q > 0$ thì $\\vec{E}$ cùng chiều với $\\vec{F}$, nên ý (2) đúng.\n$$\\vec{E} = \\frac{\\vec{F}}{q}$$\nPhân tích ý 3: Cường độ điện trường tại một điểm đặc trưng cho tác dụng lực của điện trường tại điểm đó, nên ý (3) đúng. $E = \\frac{F}{|q|}$.\nPhân tích ý 4: Các đường sức điện không bao giờ cắt nhau, nên ý (4) sai.\nPhân tích ý 5: Điện trường do một điện tích điểm âm gây ra không phải là điện trường đều vì cường độ điện trường có độ lớn và hướng khác nhau tại các điểm khác nhau, nên ý (5) sai.\nCác phát biểu đúng là (2) và (3).\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-057",
-    "noi_dung": "Một điện tích điểm $Q < 0$ đặt trong chân không. Cường độ điện trường do điện tích $Q$ gây ra tại một điểm $M$ cách $Q$ một khoảng $r$ có phương là đường thẳng nối $Q$ với M và",
-    "phuong_an": "A. chiều hướng từ $M$ tới $Q$ với độ lớn bằng $\\frac{Q}{4\\pi\\varepsilon_0 r^2}$.\nB. chiều hướng từ $M$ ra xa khỏi $Q$ với độ lớn bằng $\\frac{Q}{4\\pi\\varepsilon_0 r^2}$.\nC. chiều hướng từ $M$ tới $Q$ với độ lớn bằng $\\frac{-Q}{4\\pi\\varepsilon_0 r^2}$.\nD. chiều hướng từ $M$ ra xa khỏi $Q$ với độ lớn bằng $\\frac{-Q}{4\\pi\\varepsilon_0 r^2}$.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $Q < 0$; $khoảng cách r$.\nXác định chiều cường độ điện trường: Vì điện tích Q âm nên vectơ cường độ điện trường hướng về phía điện tích Q, tức là có chiều hướng từ M tới Q.\nXác định độ lớn cường độ điện trường: Độ lớn của cường độ điện trường được tính bằng biểu thức\n$$E = \\frac{|Q|}{4\\pi\\varepsilon_0 r^2} = \\frac{-Q}{4\\pi\\varepsilon_0 r^2}$$\nPhương án có chiều hướng từ M tới Q và độ lớn bằng -Q chia cho (4\\pi\\varepsilon_0 r^2)\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-058",
-    "noi_dung": "Chọn câu trả lời đúng khi nói về véctơ cường độ điện trường",
-    "phuong_an": "A. Véctơ cường độ điện trường $\\vec{E}$ cùng phương và cùng chiều với lực $\\vec{F}$ tác dụng lên một điện tích thử đặt trong điện trường đó\nB. Véctơ cường độ điện trường $\\vec{E}$ cùng phương và ngược chiều với lực $\\vec{F}$ tác dụng lên một điện tích thử đặt trong điện trường đó\nC. Véctơ cường độ điện trường $\\vec{E}$ cùng phương và cùng chiều với lực $\\vec{F}$ tác dụng lên một điện tích thử dương đặt trong điện trường đó\nD. Véctơ cường độ điện trường $\\vec{E}$ cùng phương và cùng chiều với lực $\\vec{F}$ tác dụng lên một điện tích thử âm đặt trong điện trường đó",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $q > 0$.\nĐịnh nghĩa cường độ điện trường: Cường độ điện trường là đại lượng đặc trưng cho điện trường về độ mạnh yếu, được định nghĩa bằng thương số giữa lực điện tác dụng lên điện tích thử và độ lớn của điện tích đó\n$$\\vec{E} = \\frac{\\vec{F}}{q}$$\nChiều của véctơ cường độ điện trường: Đối với điện tích thử dương q > 0 thì lực điện tác dụng lên điện tích cùng chiều với véctơ cường độ điện trường\n$$\\vec{F} = q\\vec{E} \\text{ với } q > 0$$\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-059",
-    "noi_dung": "Một điện tích thử $1\\ \\mu\\text{C}$ được đặt tại điểm P mà điện trường do các điện tích khác gây ra theo hướng nằm ngang từ trái sang phải và có độ lớn $4\\cdot 10^6\\text{ N/C}$. Nếu thay điện tích thử bằng điện tích $-1\\mu\\text{C}$ thì cường độ điện trường tại P:",
-    "phuong_an": "A. giữ nguyên độ lớn nhưng thay đổi hướng\nB. Tăng độ lớn và thay đổi hướng\nC. giữ nguyên\nD. giảm độ lớn và đổi hướng",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $q_1 = 1\\ \\mu\\text{C}$; $E = 4\\cdot 10^6\\text{ N/C}$; $q_2 = -1\\ \\mu\\text{C}$.\nĐặc điểm cường độ điện trường: Cường độ điện trường tại một điểm là đại lượng đặc trưng cho điện trường về phương diện tác dụng lực, được định nghĩa là lực tác dụng lên một đơn vị điện tích thử đặt tại điểm đó và hoàn toàn không phụ thuộc vào độ lớn cũng như dấu của điện tích thử.\n$$\\vec{E} = \\frac{\\vec{F}}{q}$$\nXác định cường độ điện trường mới: Khi thay điện tích thử $1\\ \\mu\\text{C}$ bằng điện tích $-1\\ \\mu\\text{C}$, cường độ điện trường tại điểm P do hệ điện tích khác gây ra vẫn giữ nguyên cả về hướng và độ lớn.\nCường độ điện trường tại một điểm chỉ phụ thuộc vào điện tích gây ra điện trường đó, không phụ thuộc vào điện tích thử.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-060",
-    "noi_dung": "Giả sử đặt một electron và một proton riêng biệt trong một điện trường và hai điện trường này giống hệt nhau. Phát biểu nào sau đây là đúng?",
-    "phuong_an": "A. electron và proton chịu tác dụng của cùng một lực điện.\nB. lực điện tác dụng lên proton có độ lớn lớn hơn lực điện tác dụng lên electron nhưng ngược hướng\nC. lực điện tác dụng lên proton có độ lớn bằng lực điện tác dụng lên electron nhưng ngược hướng\nD. electron và proton có cùng gia tốc",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $Điện tích electron: q_e = -e$; $Điện tích proton: q_p = e$; $Cường độ điện trường: \\vec{E} \\text{ giống hệt nhau}$.\nXác định lực điện tác dụng lên hạt: Lực điện tác dụng lên điện tích đặt trong điện trường được tính theo công thức \\vec{F} = q\\vec{E}.\n$$\\vec{F}_e = -e\\vec{E}; \\vec{F}_p = e\\vec{E}$$\nSo sánh lực điện: Vì độ lớn điện tích của electron và proton bằng nhau ($e$) và đặt trong cùng một điện trường nên độ lớn lực điện tác dụng lên chúng là bằng nhau ($F_e = F_p$). Tuy nhiên, do mang điện tích trái dấu nên lực điện tác dụng lên chúng ngược hướng nhau.\n$$\\vec{F}_p = -\\vec{F}_e$$\nLực điện tác dụng lên proton và electron có cùng độ lớn nhưng ngược hướng do chúng có điện tích trái dấu và đặt trong cùng một điện trường.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-061",
     "noi_dung": "Sắp xếp độ lớn cường độ điện trường tại các điểm A, B và C trong hình 3.6 theo thứ tự giảm dần từ lớn nhất đến nhỏ nhất. [Hình 3.6: đường sức điện hội tụ về một phía]",
     "phuong_an": "A. A – B – C\nB. A – C – B\nC. C – A – B\nD. B – A – C",
@@ -1564,33 +1339,6 @@
     "loi_giai": "",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1156_213636507___C__NG__N_T_P_GK2-1_p1_img1.png, images/q1156_213636507___C__NG__N_T_P__p1_img1.png, images/q1156_213636507___C__NG__N_T_P__p1_img2.png, images/q1156_213636507___C__NG__N_T_P__p1_img3.jpeg, images/q1156_213636507___C__NG__N_T_P__p5_img1.png, images/q1156_213636507___C__NG__N_T_P__p5_img2.png, images/q1156_213636507___C__NG__N_T_P__p5_img3.png, images/q1156_213636507___C__NG__N_T_P__p5_img4.png, images/q1156_213636507___C__NG__N_T_P__p6_img1.jpeg, images/q1156_213636507___C__NG__N_T_P__p12_img1.png, images/q1156_213636507___C__NG__N_T_P__p14_img1.png, images/q1156_213636507___C__NG__N_T_P__p15_img2.png, images/q1156_213636507___C__NG__N_T_P__p17_img2.png, images/q1156_213636507___C__NG__N_p15_img2.png"
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-062",
-    "noi_dung": "Khi một điện tích chuyển động vào điện trường đều theo phương vuông góc với đường sức điện thì yếu tố nào sẽ luôn giữ không đổi?",
-    "phuong_an": "A. Gia tốc của chuyển động.\nB. Phương của chuyển động.\nC. Tốc độ của chuyển động.\nD. Độ dịch chuyển sau một đơn vị thời gian.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $\\vec{v}_0 \\perp \\vec{E}$.\nPhân tích chuyển động: Điện tích chuyển động vuông góc với điện trường đều giống như chuyển động ném ngang trong trọng trường, chịu lực điện tác dụng không đổi theo phương vuông góc với vận tốc ban đầu.\n$$\\vec{F} = q\\vec{E} = \\text{const}$$\nGia tốc của chuyển động: Gia tốc của điện tích hoàn toàn không đổi cả về độ lớn lẫn hướng\n$$a = \\frac{F}{m} = \\frac{|q|E}{m} = \\text{const}$$\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-063",
-    "noi_dung": "Khi một điện tích chuyển động vào điện trường đều theo phương vuông góc với đường sức điện thì điện trường sẽ không ảnh hưởng tới",
-    "phuong_an": "A. gia tốc của chuyển động.\nB. thành phần vận tốc theo phương vuông góc với đường sức điện.\nC. thành phần vận tốc theo phương song song với đường sức điện.\nD. quỹ đạo của chuyển động.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $\\vec{v}_0 \\perp \\vec{E}$.\nPhân tích chuyển động: Khi điện tích chuyển động vuông góc với đường sức điện trong điện trường đều, lực điện tác dụng lên điện tích có phương song song với đường sức điện.\n$$\\vec{F} = q\\vec{E}$$\nThành phần vận tốc: Theo phương vuông góc với đường sức điện, không có lực tác dụng nên gia tốc bằng không, thành phần vận tốc theo phương này được giữ nguyên không đổi.\n$$v_x = v_0 = \\text{const}$$\nĐiện trường chỉ gây ra gia tốc và làm thay đổi thành phần vận tốc theo phương song song với đường sức điện, do đó không ảnh hưởng tới thành phần vận tốc theo phương vuông góc với đường sức điện.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-064",
-    "noi_dung": "Quỹ đạo chuyển động của một điện tích điểm q bay vào một điện trường đều $\\vec{E}$ theo phương vuông góc với đường sức không phụ thuộc vào yếu tố nào sau đây?",
-    "phuong_an": "A. Độ lớn của điện tích q.\nB. Cường độ điện trường E.\nC. Vị trí của điện tích q bắt đầu bay vào điện trường.\nD. Khối lượng m của điện tích.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $Điện tích q bay vuông góc với đường sức điện trường đều E$; $Chuyển động của điện tích điểm trong điện trường đều tương tự như chuyển động ném ngang trong cơ học$.\nPhân tích chuyển động: Phương trình quỹ đạo của điện tích điểm được thiết lập bằng cách áp dụng định luật II Newton và các công thức động học. Theo phương vuông góc với điện trường, điện tích chuyển động đều với vận tốc ban đầu $v_0$. Theo phương song song với điện trường, điện tích chịu tác dụng của lực điện $F = |q|E$ và chuyển động nhanh dần đều với gia tốc $a = \\frac{|q|E}{m}$.\n$$y = \\frac{qE}{2mv_0^2}x^2$$\nBiện luận các yếu tố ảnh hưởng: Nhìn vào phương trình quỹ đạo, ta thấy quỹ đạo phụ thuộc vào độ lớn điện tích $q$, cường độ điện trường $E$, khối lượng $m$ và vận tốc ban đầu $v_0$. Quỹ đạo không phụ thuộc vào vị trí của điện tích bắt đầu bay vào điện trường (nếu chọn gốc tọa độ là điểm bắt đầu bay vào). Do đó, phương án C là yếu tố mà quỹ đạo không phụ thuộc.\nQuỹ đạo chuyển động của điện tích không phụ thuộc vào vị trí điện tích bắt đầu bay vào điện trường.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1XHtGuMf-065",
@@ -6432,6 +6180,15 @@
     "dap_an": "",
     "loi_giai": "",
     "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-001",
+    "noi_dung": "Ba con lắc đơn có cùng chiều dài dây treo, được cấu tạo từ 3 quả cầu đặc cùng kích thước, làm bằng 3 vật liệu khác nhau: một làm bằng chì, một làm bằng nhôm, một làm bằng gỗ. Ba con lắc được treo trên cùng một giá đỡ ở cạnh nhau. Bỏ qua lực cản của không khí. Cả 3 con lắc cùng được kéo lệch ra khỏi vị trí cân bằng góc $\\alpha_0$ rồi thả nhẹ thì",
+    "phuong_an": "con lắc nhôm về vị trí cân bằng đầu tiên.\ncon lắc chì về vị trí cân bằng đầu tiên.\ncon lắc gỗ về vị trí cân bằng đầu tiên.\ncả 3 con lắc về vị trí cân bằng cùng lúc.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
     "link_anh": ""
   }
 ]
