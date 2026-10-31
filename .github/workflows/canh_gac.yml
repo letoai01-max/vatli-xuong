@@ -5,6 +5,10 @@ on:
   schedule:
     - cron: "20 0 * * *"
   workflow_dispatch:
+# [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
+permissions:
+  contents: read
+
 jobs:
   kiem_tra:
     runs-on: ubuntu-latest
