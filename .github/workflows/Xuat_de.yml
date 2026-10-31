@@ -49,7 +49,7 @@ jobs:
           git stash pop || true
 
       - name: Commit and push generated files
-        uses: stefanzweifel/git-auto-commit-action@<40-ki-tu-SHA> # v5.x.x
+        uses: stefanzweifel/git-auto-commit-action@<b863ae1933cb653a53c021fe36dbb774e1fb9403> # v5.x.x
         with:
           commit_message: "🤖 Tự động cập nhật questions.json tức thì"
           branch: main
