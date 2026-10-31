@@ -5,6 +5,10 @@ on:
     - cron: "0 16 * * *"
   workflow_dispatch:
 # [Mục 32] bỏ concurrency ngan_hang: chi_muc_trung.py chỉ đọc NganHangCauHoi, chỉ ghi tab ChiMucTrung nên chạy song song an toàn
+# [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
+permissions:
+  contents: read
+
 jobs:
   chi_muc:
     runs-on: ubuntu-latest
