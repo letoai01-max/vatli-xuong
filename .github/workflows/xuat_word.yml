@@ -9,6 +9,10 @@ on:
       dich:
         description: "File ID tệp Word đích (… (pandoc).docx)"
         required: true
+# [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
+permissions:
+  contents: read
+
 jobs:
   word:
     runs-on: ubuntu-latest
