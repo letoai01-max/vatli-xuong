@@ -14,6 +14,10 @@ on:
       ket_qua:
         description: "File ID kết quả (ket_qua_<mã>.json trên Drive)"
         required: true
+# [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
+permissions:
+  contents: read
+
 jobs:
   soan_de_cuong:
     runs-on: ubuntu-latest
