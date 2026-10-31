@@ -12,6 +12,10 @@ on:
 concurrency:
   group: ngan_hang
   cancel-in-progress: false
+# [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
+permissions:
+  contents: read
+
 jobs:
   duyet:
     runs-on: ubuntu-latest
