@@ -2,6 +2,9 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <!-- [BẢO MẬT 31/10/2026] chặn <object>/<embed>, đổi <base>; không gửi địa chỉ trang đi nơi khác -->
+    <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHYSICS AGENT COMMANDER - THPT Thủy Sơn</title>
     <!-- Tailwind CSS CDN -->
@@ -430,7 +433,7 @@
             const o = document.getElementById(`noi_dung_${index}`);
             const xem = document.getElementById(`xem_noi_dung_${index}`);
             if (!o || !xem) return;
-            xem.innerHTML = o.value;
+            xem.innerHTML = escSua(o.value);   // [BẢO MẬT 31/10/2026] thoát ký tự: nội dung câu chỉ là chữ, không phải HTML
             if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
                 MathJax.typesetPromise([xem]);
             }
@@ -990,8 +993,8 @@
 
                 let html = `
                     <div class="flex flex-wrap justify-between items-center gap-2 text-xs border-b border-slate-800 pb-3">
-                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${item.ma_cau || 'N/A'}] ${item.lop ? '· Lớp ' + item.lop : ''} <span id="nhan_dang_${index}">${item.dang ? '· ' + item.dang : ''}</span></span>
-                        <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${item.trang_thai || 'Cần người xem'}</span>
+                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${escSua(item.ma_cau || 'N/A')}] ${item.lop ? '· Lớp ' + escSua(item.lop) : ''} <span id="nhan_dang_${index}">${item.dang ? '· ' + item.dang : ''}</span></span>
+                        <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${escSua(item.trang_thai || 'Cần người xem')}</span>
                     </div>
                     <!-- [MỚI] Nội dung câu cần duyệt nằm cạnh hình -->
                     <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,24rem)] lg:grid-rows-[auto_1fr] gap-4 items-start">
@@ -1003,7 +1006,7 @@
                             <div id="xem_sua_nd_${index}" data-nguon="noi_dung_${index}" contenteditable="true" spellcheck="false" data-goi-y="Gõ nội dung câu hỏi..." oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)" class="xem-loi-giai text-xs text-white leading-relaxed bg-slate-950/60 border border-sky-500/20 rounded-xl p-3"></div>
                         </div>
                         <div class="hidden lg:flex items-start justify-between gap-3">
-                            <div><strong class="text-sky-300">Nội dung:</strong> <span id="xem_noi_dung_${index}">${item.noi_dung}</span></div>
+                            <div><strong class="text-sky-300">Nội dung:</strong> <span id="xem_noi_dung_${index}">${escSua(item.noi_dung)}</span></div>
                             <button type="button" id="nut_sua_${index}" onclick="batSuaNoiDung(${index})" class="shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 <i class="fa-solid fa-pen mr-1"></i> Sửa nội dung
                             </button>
@@ -1048,10 +1051,10 @@
 
                 html += `
                     <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-800/80">
-                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'Loại', this, ${index})" class="px-4 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-semibold transition flex items-center gap-2 border border-rose-500/30 cursor-pointer">
+                        <button data-ma="${escSua(item.ma_cau)}" onclick="xuLyDuyetCau(this.dataset.ma, 'Loại', this, ${index})" class="px-4 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white text-xs font-semibold transition flex items-center gap-2 border border-rose-500/30 cursor-pointer">
                             <i class="fa-solid fa-xmark"></i> Loại bỏ
                         </button>
-                        <button onclick="xuLyDuyetCau('${item.ma_cau}', 'AI duyệt', this, ${index})" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer">
+                        <button data-ma="${escSua(item.ma_cau)}" onclick="xuLyDuyetCau(this.dataset.ma, 'AI duyệt', this, ${index})" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer">
                             <i class="fa-solid fa-check"></i> Duyệt (AI Duyệt)
                         </button>
                     </div>
@@ -1093,7 +1096,7 @@
                 log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã ghi nhận lệnh điều phối Agent #${agent} vào Google Sheet Kho chung.</div>`;
             } else {
                 alert(kq.tin);
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ⚠️ Lệnh cho Agent #${agent}: ${kq.tin}</div>`;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ⚠️ Lệnh cho Agent #${escSua(agent)}: ${escSua(kq.tin)}</div>`;
             }
         }
 
@@ -1149,7 +1152,7 @@
                 ? '<div class="py-6 text-xs text-slate-500 italic">Câu này chưa có hình.</div>'
                 : anh.map((x, i) => `
                     <div class="relative">
-                        <img src="${x.src}" alt="Hình ${i + 1}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tim+thay+file+anh';">
+                        <img src="${escSua(x.src)}" alt="Hình ${i + 1}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tim+thay+file+anh';">
                         ${x.moi ? '<span class="absolute top-1 left-1 px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-bold">Mới · bấm Duyệt để lưu</span>' : ''}
                         <button type="button" onclick="xoaAnh(${index}, ${i})" title="Xoá hình này" class="absolute top-1 right-1 px-2 py-1 rounded-md bg-rose-600/90 hover:bg-rose-500 text-white text-[10px] font-semibold cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Xoá</button>
                     </div>`).join('');
@@ -1260,7 +1263,7 @@
 
             const log = document.getElementById('terminal-log');
             if (log) {
-                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đang cập nhật câu [${maCau}] thành "${trangThaiMoi}" lên Google Sheet...</div>`;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đang cập nhật câu [${escSua(maCau)}] thành "${trangThaiMoi}" lên Google Sheet...</div>`;
             }
 
             // Gửi dữ liệu ngầm về Google Apps Script để cập nhật Google Sheet
@@ -1268,11 +1271,11 @@
             const khongThayMa = kq.ok && kq.kq && kq.kq.updated === 0;
             if (kq.ok && !khongThayMa) {
                 if (log) {
-                    log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Google Sheet đã cập nhật thành công câu [${maCau}].</div>`;
+                    log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Google Sheet đã cập nhật thành công câu [${escSua(maCau)}].</div>`;
                 }
             } else {
                 const tin = khongThayMa ? `Không tìm thấy mã câu ${maCau} trong NganHangCauHoi.` : kq.tin;
-                if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ⚠️ Câu [${maCau}]: ${tin}</div>`;
+                if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ⚠️ Câu [${escSua(maCau)}]: ${escSua(tin)}</div>`;
                 if (!kq.khongRo && card && viTriThe && viTriThe.cha) {      // Sheet chắc chắn chưa nhận: trả thẻ lại để thầy làm lại
                     setTimeout(() => {
                         viTriThe.cha.insertBefore(card, viTriThe.sau && viTriThe.sau.parentNode === viTriThe.cha ? viTriThe.sau : null);
