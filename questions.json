@@ -6183,10 +6183,253 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1Aq5Cimb-001",
-    "noi_dung": "Ba con lắc đơn có cùng chiều dài dây treo, được cấu tạo từ 3 quả cầu đặc cùng kích thước, làm bằng 3 vật liệu khác nhau: một làm bằng chì, một làm bằng nhôm, một làm bằng gỗ. Ba con lắc được treo trên cùng một giá đỡ ở cạnh nhau. Bỏ qua lực cản của không khí. Cả 3 con lắc cùng được kéo lệch ra khỏi vị trí cân bằng góc $\\alpha_0$ rồi thả nhẹ thì",
-    "phuong_an": "con lắc nhôm về vị trí cân bằng đầu tiên.\ncon lắc chì về vị trí cân bằng đầu tiên.\ncon lắc gỗ về vị trí cân bằng đầu tiên.\ncả 3 con lắc về vị trí cân bằng cùng lúc.",
+    "ma_cau": "C-1YaCpMty-002",
+    "noi_dung": "Hiện tượng cảm ứng điện từ xảy ra khi",
+    "phuong_an": "A. mạch kín được đặt trong một từ trường đều.\nB. dây dẫn được làm bằng vật liệu siêu dẫn.\nC. có sự biến thiên từ thông qua một mạch kín.\nD. dòng điện chạy qua một cuộn dây.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-003",
+    "noi_dung": "Trong hệ SI, đơn vị của từ thông là",
+    "phuong_an": "A. Weber (Wb).\nB. Tesla (T).\nC. Ampe (A).\nD. Volt (V).",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-004",
+    "noi_dung": "Hiện tượng phóng xạ là hiện tượng",
+    "phuong_an": "A. một hạt nhân không bền vững tự phát phân rã thành các hạt nhân khác và phát ra các tia phóng xạ.\nB. có thể được kiểm soát bằng cách đặt hạt nhân phóng xạ vào vùng không gian có điện trường và từ trường.\nC. một hạt nhân phát ra các tia phóng xạ khi bị bắn phá bởi các hạt có động năng lớn.\nD. một hạt nhân biến đổi thành một hạt nhân khác khi hấp thụ một neutron.",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-005",
+    "noi_dung": "Đại lượng đặc trưng cho mức độ bền vững của hạt nhân?",
+    "phuong_an": "A. Năng lượng liên kết riêng.\nB. Độ hụt khối.\nC. Năng lượng liên kết.\nD. Số khối.",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-006",
+    "noi_dung": "Một người đang dùng điện thoại di động để thực hiện cuộc gọi. Lúc này điện thoại phát ra",
+    "phuong_an": "A. sóng vô tuyến.\nB. tia Rơn-ghen.\nC. bức xạ gamma.\nD. tia tử ngoại.",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-007",
+    "noi_dung": "Hạt nhân nguyên tử có thể được cấu tạo từ",
+    "phuong_an": "A. neutron, electron.\nB. nucleon, electron.\nC. proton, electron.\nD. proton, neutron.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-008",
+    "noi_dung": "Tại mỗi điểm trong quá trình truyền sóng điện từ, vectơ cường độ điện trường $\\vec{E}$ và vectơ cảm ứng từ $\\vec{B}$",
+    "phuong_an": "A. tạo với nhau góc $45^0$.\nB. cùng chiều nhau.\nC. tạo với nhau góc $90^0$.\nD. ngược chiều nhau.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-009",
+    "noi_dung": "Khi nói về các tia phóng xạ, phát biểu nào sau đây đúng?",
+    "phuong_an": "A. Tia alpha (α) là dòng các hạt điện tích âm.\nB. Tia gamma (γ) có bản chất là sóng điện từ có bước sóng dài.\nC. Tia bêta trừ ($\\beta^-$) là các dòng hạt electron.\nD. Tia bêta (β) là các dòng hạt proton.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-010",
+    "noi_dung": "Khi nói về độ phóng xạ, phát biểu nào sau đây sai?\nA. Đơn vị đo độ phóng xạ là becơren.\nB. Độ phóng xạ của một lượng chất phóng xạ phụ thuộc vào nhiệt độ của lượng chất đó.\nC. Với mỗi lượng chất phóng xạ xác định thì độ phóng xạ tỉ lệ với số nguyên tử của lượng chất đó.\nD. Độ phóng xạ là đại lượng đặc trưng cho tính phóng xạ mạnh hay yếu của một lượng chất phóng xạ.",
+    "phuong_an": "A. Đơn vị đo độ phóng xạ là becơren.\nB. Độ phóng xạ của một lượng chất phóng xạ phụ thuộc vào nhiệt độ của lượng chất đó.\nC. Với mỗi lượng chất phóng xạ xác định thì độ phóng xạ tỉ lệ với số nguyên tử của lượng chất đó.\nD. Độ phóng xạ là đại lượng đặc trưng cho tính phóng xạ mạnh hay yếu của một lượng chất phóng xạ.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-011",
+    "noi_dung": "Dây dẫn mang dòng điện không tương tác với",
+    "phuong_an": "A. các điện tích đứng yên.\nB. nam châm đứng yên.\nC. các điện tích chuyển động.\nD. nam châm chuyển động.",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-012",
+    "noi_dung": "Các hạt nhân đồng vị có",
+    "phuong_an": "A. cùng số khối.\nB. cùng khối lượng.\nC. cùng số neutron.\nD. cùng điện tích.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-013",
+    "noi_dung": "Một nhóm học sinh làm thí nghiệm về hiện tượng cảm ứng điện từ và đưa ra các nhận định sau:",
+    "phuong_an": "a) Mỗi khi từ thông qua mặt giới hạn bởi mạch điện kín biến thiên theo thời gian thì trong mạch xuất hiện dòng điện cảm ứng.\nb) Độ lớn của suất điện động cảm ứng trong mạch điện kín tỉ lệ với tốc độ biến thiên của từ thông qua mạch kín đó.\nc) Độ lớn của từ thông qua một mạch kín càng lớn thì suất điện động cảm ứng trong mạch kín đó càng lớn.\nd) Khi một vòng dây dẫn phẳng có diện tích $S = 160\\text{ cm}^2$ được đặt vuông góc với cảm ứng từ trong một từ trường đồng nhất nhưng có độ lớn tăng đều với tốc độ 0,02 T/s thì độ lớn suất điện động cảm ứng trong vòng dây là 0,32 mV.",
+    "dap_an": "a) Đ, b) Đ, c) S, d) Đ",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-014",
+    "noi_dung": "Để so sánh tính bền vững cũng như năng lượng liên kết của hai hạt nhân $^{206}_{82}\\text{Pb}$ và $^{27}_{13}\\text{Al}$. Học sinh đưa ra các nhận định sau:",
+    "phuong_an": "a) Hạt nhân có số khối càng lớn thì càng bễn vững.\nb) Hạt nhân nào có độ hụt khối lớn hơn thì có năng lượng liên kết lớn hơn.\nc) Trong các hạt nhân có cùng năng lượng liên kết, hạt nhân nào có số khối càng lớn thì càng kém bền vững.\nd) Gọi R và A lần lượt là bán kính và số khối của hạt nhân, biết rằng $R \\sim A^{1/3}$. Bán kính hạt nhân $^{206}_{82}\\text{Pb}$ lớn hơn bán kính hạt nhân $^{27}_{13}\\text{Al}$ 7,63 lần.",
+    "dap_an": "a) S, b) Đ, c) Đ, d) S",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-015",
+    "noi_dung": "So với hạt nhân vàng $^{197}_{79}\\text{Au}$ thì hạt nhân bạc $^{107}_{47}\\text{Ag}$ có ít hơn $x\\text{ neutron}$. Giá trị của $x$ bao nhiêu?",
+    "phuong_an": "",
+    "dap_an": "58",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-016",
+    "noi_dung": "Cho phương trình phản ứng phân hạch: $^{235}_{92}\\text{U} + ^1_0\\text{ n} \\rightarrow ^{140}_{54}\\text{Xe} + ^{94}_{38}\\text{Sr} + k ^1_0\\text{ n}$. Giá trị của $k$ bao nhiêu?",
+    "phuong_an": "",
+    "dap_an": "2",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-017",
+    "noi_dung": "Một chất phóng xạ ban đầu có N0 hạt nhân. Sau 1 năm, còn lại một phần bốn số hạt nhân ban đầu. Hạt nhân có chu kì bán rã bao nhiêu năm? (viết kết quả đến chữ số hàng phần mười)",
+    "phuong_an": "",
+    "dap_an": "0.5",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-018",
+    "noi_dung": "Một đoạn dây dẫn dài 5 cm đặt trong từ trường đều vuông góc với vecttơ cảm ứng từ. Dòng điện có cường độ 0,75 A chạy qua dây dẫn thì lực từ tác dụng lên đoạn dây có độ lớn là $3\\cdot 10^{-3}\\text{ N}$. Cảm ứng của từ trường có giá trị bao nhiêu Tesla (T)? (viết kết quả đến chữ số hàng phần trăm)",
+    "phuong_an": "",
+    "dap_an": "0.08",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-019",
+    "noi_dung": "Thanh kim loại MN (đồng chất, khối lượng phân bố đều) có chiều dài $l = 20\\text{ cm}$, nặng 20 gam được treo nằm ngang bằng hai sợi dây mảnh, nhẹ, không dãn cách điện giống nhau. Thanh được đặt trong từ trường đều, biết cảm ứng từ có phương, chiều như hình vẽ bên [Hình: Khung dây treo thanh MN mang dòng điện I từ M sang N, vectơ B có hướng vuông góc đi ra ngoài dấu chấm tròn trong vòng tròn], có độ lớn $B = 0{,}8\\text{ T}$, cường độ dòng điện qua chạy qua thanh MN có $I = 2{,}5\\text{ A}$ có chiều từ M đến N. Lấy $g = 10\\text{ m/s}^2$.\na) Biểu diễn các lực tác dụng lên thanh MN.\nb) Tính độ lớn lực từ tác dụng lên thanh MN.\nc) Tính lực căng của mỗi sợi dây tác dụng lên thanh.",
+    "phuong_an": "",
     "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1YaCpMty-020",
+    "noi_dung": "Polonium $^{210}_{84}\\text{Po}$ là chất phóng xạ có chu kì bán rã 140 ngày. Hạt nhân polonium đứng yên phân rã (phóng xạ) ra một hạt alpha $\\alpha$ và biến thành hạt nhân X. Cho khối lượng của các hạt lần lượt như sau: $m_{\\text{Po}} = 209{,}9373\\text{ amu}$; $m_\\alpha = 4{,}0015\\text{ amu}$; $m_X = 205{,}9294\\text{ amu}$; $m_{\\text{proton}} = 1{,}0073\\text{ amu}$; $m_{\\text{neutron}} = 1{,}0087\\text{ amu}$; $1\\text{ amu} = 931{,}5\\text{ MeV}/c^2$.\na) Nêu cấu tạo của hạt nhân X?\nb) Chứng tỏ hạt nhân X bền vững hơn hạt nhân polonium $^{210}_{84}\\text{Po}$? (viết kết quả đến chữ số hàng phần trăm)\nc) Giả sử ban đầu có $12\\cdot 10^{20}$ số hạt nhân Polonium $^{210}_{84}\\text{Po}$. Tìm số hạt nhân Polonium $^{210}_{84}\\text{Po}$ bị phân rã sau 280 ngày?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-16c6ArsW-002",
+    "noi_dung": "Đặc điểm nào sau đây không phải là đặc điểm của các phân tử chất rắn?",
+    "phuong_an": "A. Dao động quanh vị trí cân bằng.\nB. Lực liên kết giữa các phân tử mạnh.\nC. Các phân tử sắp xếp có trật tự.\nD. Khoảng cách giữa các phân tử rất lớn.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-16c6ArsW-003",
+    "noi_dung": "Trong các hiện tượng sau đây, hiện tượng nào không liên quan đến sự đông đặc?",
+    "phuong_an": "A. Tuyết rơi.\nB. Đúc tượng đồng.\nC. Làm đá trong tủ lạnh.\nD. Rèn thép trong lò rèn",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-16c6ArsW-004",
+    "noi_dung": "Quy ước về dấu nào sau đây phù hợp với công thức $\\Delta U = A + Q$ định luật I của nhiệt động lực học?",
+    "phuong_an": "A. Vật nhận công: A < 0 ; vật nhận nhiệt: Q < 0.\nB. Vật nhận công: A > 0 ; vật nhận nhiệt: Q > 0.\nC. Vật thực hiện công: A < 0 ; vật truyền nhiệt: Q > 0.\nD. Vật thực hiện công: A > 0 ; vật truyền nhiệt: Q < 0.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-16c6ArsW-005",
+    "noi_dung": "Nhiệt lượng của vật bằng không khi:",
+    "phuong_an": "A. vật truyền nhiệt.\nB. vật nhận nhiệt\nC. vật không trao đổi nhiệt.\nD. vật trao đổi nhiệt.",
+    "dap_an": "C",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-16c6ArsW-006",
+    "noi_dung": "Nội năng của một vật là",
+    "phuong_an": "A. tổng động năng và thế năng của vật.\nB. tổng động năng và thế năng của các phân tử cấu tạo nên vật.\nC. tổng nhiệt lượng và cơ năng mà vật nhận được trong quá trình truyền nhiệt và thực hiện công.\nD. nhiệt lượng vật nhận được trong quá trình truyền nhiệt.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-16c6ArsW-007",
+    "noi_dung": "Khi ôtô đóng kín cửa để ngoài trời nắng nóng, nhiệt độ không khí trong xe tăng rất cao so với nhiệt độ bên ngoài, làm giảm tuổi thọ các thiết bị trong xe. Nguyên nhân gây ra sự tăng nhiệt độ này là",
+    "phuong_an": "A. do thể tích khối khí trong ôtô thay đổi nên nhiệt lượng mà khối khí trong ôtô nhận được chủ yếu làm tăng nội năng của khối khí.\nB. do thể tích khối khí trong ôtô không đổi nên nhiệt lượng mà khối khí trong ôtô nhận được chủ yếu làm giảm nội năng của khối khí.\nC. do thể tích khối khí trong ôtô thay đổi nên nhiệt lượng mà khối khí trong ôtô nhận được chủ yếu làm giảm nội giảm của khối khí.\nD. do thể tích khối khí trong ôtô không đổi nên nhiệt lượng mà khối khí trong ôtô nhận được chủ yếu làm tăng nội năng của khối khí.",
+    "dap_an": "D",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-16c6ArsW-008",
+    "noi_dung": "Người ta cung cấp một nhiệt lượng 1,5 J cho chất khí đựng trong một xilanh đặt nằm ngang. Khí nở ra đẩy pittông di chuyển đều một đoạn 5 cm. Biết lực ma sát giữa pittông và xilanh có độ lớn 20 N. Độ biến thiên nội năng của chất khí là",
+    "phuong_an": "A. 0,5 J.\nB. -0,5J.\nC. 2,5J.\nD. -2,5J.",
+    "dap_an": "B",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-16c6ArsW-009",
+    "noi_dung": "Khi hai vật có nhiệt độ chênh lệch tiếp xúc nhau thì nhiệt năng được truyền như thế nào?",
+    "phuong_an": "A. Truyền từ vật có nhiệt độ cao sang vật có nhiệt độ thấp.\nB. Truyền từ vật có nhiệt độ thấp sang vật có nhiệt độ cao.\nC. Không có sự truyền nhiệt năng giữa chúng.\nD. Vật ở trạng thái cân bằng nhiệt.",
+    "dap_an": "A",
+    "loi_giai": "",
+    "trang_thai": "Chưa duyệt",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-16c6ArsW-010",
+    "noi_dung": "Nhiệt độ không tuyệt đối là nhiệt độ tại đó",
+    "phuong_an": "A. nước đông đặc thành đá.\nB. tất cả các chất khí hóa lỏng.\nC. chuyển động nhiệt phân tử hầu như dừng lại.\nD. tất cả các chất khí hóa rắn.",
+    "dap_an": "C",
     "loi_giai": "",
     "trang_thai": "Chưa duyệt",
     "link_anh": ""
