@@ -846,7 +846,7 @@
                         ${laTuLuan ? '<span class="text-[10px] font-normal text-slate-500">(không bắt buộc · các bước giải và thang điểm ghi ở phần Lời giải)</span>' : ''}
                     </div>
                     <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800">
-                        <input type="text" id="short_ans_${index}" value="${escSua(dapAn)}" placeholder="${laTuLuan ? 'Ví dụ: v = 12 m/s' : 'Nhập đáp án số liệu...'}" class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-white w-64 max-w-full focus:outline-none focus:border-sky-500">
+                        <input type="hidden" id="short_ans_${index}" value="${escSua(dapAn)}">                         <div id="xem_short_ans_${index}" data-nguon="short_ans_${index}" data-mot-dong="1" contenteditable="true" spellcheck="false" data-goi-y="${laTuLuan ? 'Ví dụ: v = 12 m/s' : 'Nhập đáp án số liệu...'}"                              oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)"                              class="xem-loi-giai bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-white w-64 max-w-full !min-h-0 leading-relaxed"></div>                         <button type="button" title="Chèn công thức" onmousedown="event.preventDefault()" onclick="chenCongThucVao(document.getElementById('xem_short_ans_${index}'), false)" class="shrink-0 w-7 h-7 rounded-md bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white border border-slate-700 transition cursor-pointer"><i class="fa-solid fa-square-root-variable"></i></button>
                     </div>
                 </div>`;
         }
