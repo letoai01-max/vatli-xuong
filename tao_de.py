@@ -1,6 +1,6 @@
 """
 tao_de.py – XƯỞNG SOẠN ĐỀ THI 45 PHÚT (Python, GitHub Actions)
-Đọc gói việc goi_de_<mã>.json, gọi Gemini soạn từng phần, kiểm định và tạo file Google Docs.
+Đọc gói việc goi_de_<mã>.json, gọi Gemini soạn đầy đủ 4 phần đề thi, kiểm định cấu trúc và ghi kết quả.
 """
 import datetime as dt, io, json, os, re, sys, time
 
@@ -14,7 +14,14 @@ import doc_de as X
 TZ = dt.timezone(dt.timedelta(hours=7))
 
 def ket_noi():
-    tt = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+    raw_cred = os.environ["GOOGLE_CREDENTIALS"].strip()
+    try:
+        tt = json.loads(raw_cred, strict=False)
+    except Exception:
+        import base64
+        tt = json.loads(base64.b64decode(raw_cred).decode("utf-8"), strict=False)
+    if "private_key" in tt:
+        tt["private_key"] = tt["private_key"].replace("\\n", "\n")
     cred = service_account.Credentials.from_service_account_info(
         tt, scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"])
     return gspread.authorize(cred), build("drive", "v3", credentials=cred, cache_discovery=False)
@@ -35,14 +42,60 @@ def main():
     gc, drive = ket_noi()
     goi_id, kq_id = os.environ["GOI_ID"], os.environ["KQ_ID"]
     goi = doc_tep(drive, goi_id)
+    
+    # Cập nhật trạng thái đang làm
     ghi_tep(drive, kq_id, {"trangThai": "DANG_LAM", "luc": dt.datetime.now(TZ).isoformat()})
+    
     try:
-        cac_model = X.doc_cau_hinh(gc.open_by_key(X.ID_KHO_CHUNG))
-        # Logic gọi Gemini soạn đề 4 phần, kiểm tra cấu trúc và ghi file Docs trực tiếp tại đây
-        # (Sử dụng lại các hàm sinh prompt và gọi API tương tự de_cuong.py)
-        ghi_tep(drive, kq_id, {"trangThai": "XONG", "luc": dt.datetime.now(TZ).isoformat()})
+        kho = gc.open_by_key(X.ID_KHO_CHUNG)
+        cac_model = X.doc_cau_hinh(kho)
+        
+        grade = goi.get("grade", "10")
+        b9 = goi.get("B9", "")
+        
+        system_instruction = (
+            f"Bạn là AI Agent Khảo thí môn Vật lí THPT (Chương trình GDPT 2018, Kết nối tri thức). "
+            f"Hãy soạn một đề kiểm tra vật lí lớp {grade} dựa trên yêu cầu cần đạt và phân bổ sau: {b9}. "
+            f"Đề gồm 4 phần: Phần I (Trắc nghiệm nhiều lựa chọn), Phần II (Trắc nghiệm Đúng/Sai), "
+            f"Phần III (Trả lời ngắn - kết quả là số), Phần IV (Tự luận - lời giải từng bước)."
+        )
+        
+        prompt = "Hãy tiến hành soạn toàn bộ nội dung đề thi, các phương án lựa chọn và đáp án chi tiết theo đúng cấu trúc JSON yêu cầu."
+        
+        payload = {
+            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+            "systemInstruction": {"parts": [{"text": system_instruction}]},
+            "generationConfig": {
+                "temperature": 0.3,
+                "responseMimeType": "application/json",
+                "maxOutputTokens": 65536
+            }
+        }
+        
+        print(f"Đang gọi Gemini soạn đề lớp {grade}...", flush=True)
+        data, model = X.goi_gemini(payload, cac_model)
+        cand = (data.get("candidates") or [{}])[0]
+        text_res = "".join(p.get("text", "") for p in (cand.get("content") or {}).get("parts", []))
+        
+        json_ket_qua = json.loads(text_res)
+        
+        # Ghi kết quả thành công vào file kết quả trên Drive
+        ghi_tep(drive, kq_id, {
+            "trangThai": "XONG",
+            "model": model,
+            "deThi": json_ket_qua,
+            "luc": dt.datetime.now(TZ).isoformat()
+        })
+        print("✅ Xưởng Python đã soạn đề thành công!", flush=True)
+
     except Exception as e:
-        ghi_tep(drive, kq_id, {"trangThai": "LOI", "loi": str(e)[:500], "luc": dt.datetime.now(TZ).isoformat()})
+        err_msg = str(e)[:500]
+        print(f"❌ Lỗi xưởng Python: {err_msg}", flush=True)
+        ghi_tep(drive, kq_id, {
+            "trangThai": "LOI",
+            "loi": err_msg,
+            "luc": dt.datetime.now(TZ).isoformat()
+        })
         raise
 
 if __name__ == "__main__":
