@@ -1305,15 +1305,6 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1160_213636507ĐỀ_CƯƠNG_ÔN_TẬP_GK2-11-HS_(2025-2026).pdf_p7_img1.jpeg, images/q1160_213636507___C__NG__N_T_P__p2_img1.png, images/q1160_213636507___C__NG__N_T_P__p2_img2.png, images/q1160_213636507___C__NG__N_T_P__p2_img3.png, images/q1160_213636507___C__NG__N_T_P__p2_img4.png, images/q1160_213636507___C__NG__N_T_P__p7_img1.jpeg, images/q1160_213636507___C__NG__N_T_P__p7_img2.jpeg, images/q1160_213636507___C__NG__N_T_P__p15_img1.png, images/q1160_213636507___C__NG__N_T_P__p15_img2.png, images/q1160_213636507___C__NG__N_p7_img1.jpeg"
   },
   {
-    "ma_cau": "C-1XHtGuMf-066",
-    "noi_dung": "Đặt một điện tích âm, khối lượng nhỏ vào một điện trường đều rồi thả nhẹ. Điện tích này sẽ chuyển động",
-    "phuong_an": "A. dọc theo chiều của các đường sức điện trường\nB. ngược chiều đường sức điện trường\nC. vuông góc với đường sức điện trường\nD. theo một quỹ đạo bất kì",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $Điện tích âm q < 0$; $Đặt vào điện trường đều rồi thả nhẹ$.\nLực điện tác dụng: Lực điện tác dụng lên điện tích âm được xác định bởi biểu thức\n$$\\vec{F} = q\\vec{E}$$\nHướng chuyển động: Vì q < 0 nên lực điện ngược chiều với cường độ điện trường, do đó điện tích sẽ chuyển động ngược chiều đường sức điện trường.\n$$\\vec{F} \\uparrow\\downarrow \\vec{E}$$\nĐiện tích âm chịu lực điện ngược chiều đường sức nên chuyển động ngược chiều đường sức điện trường.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-067",
     "noi_dung": "Kết quả tán xạ của hạt electron ($q_1 = -1{,}6\\cdot 10^{-19}\\text{C}$) và positron ($q_2 = +1{,}6\\cdot 10^{-19}\\text{C}$) trong máy gia tốc ở năng lượng cao cho ra hai hạt. Để xác định điện tích và khối lượng của hai hạt này người ta cho chúng đi vào hai buồng đo có điện trường đều và cường độ điện trường $\\vec{E}$ như nhau theo phương vuông góc với đường sức. Hình ảnh quỹ đạo trong 1 s ngay sau quá trình tán xạ với cùng tỉ lệ kích thước như Hình 18.3. Hai quỹ đạo cho ta biết [Hình 18.3: hai buồng đo với quỹ đạo hạt (1) và (2)]",
     "phuong_an": "A. hạt (1) có điện tích âm, hạt (2) có điện tích dương, độ lớn hai điện tích khác nhau.\nB. hạt (1) có điện tích dương, hạt (2) có điện tích âm, độ lớn hai điện tích khác nhau.\nC. hạt (1) có điện tích âm, hạt (2) có điện tích dương, hai hạt khác nhau về khối lượng.\nD. hạt (1) có điện tích âm, hạt (2) có điện tích dương, độ lớn điện tích của hạt (2) lớn hơn độ lớn điện tích hạt (1).",
@@ -1321,15 +1312,6 @@
     "loi_giai": "",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1162_213636507ĐỀ_CƯƠNG_ÔN_TẬP_GK2-11-HS_(2025-2026).pdf_p7_img2.jpeg, images/q1162_213636507___C__NG__N_T_P__p2_img1.png, images/q1162_213636507___C__NG__N_T_P__p2_img2.png, images/q1162_213636507___C__NG__N_T_P__p2_img3.png, images/q1162_213636507___C__NG__N_T_P__p2_img4.png, images/q1162_213636507___C__NG__N_T_P__p7_img2.jpeg, images/q1162_213636507___C__NG__N_T_P__p17_img1.jpeg, images/q1162_213636507___C__NG__N_T_P__p19_img1.png, images/q1162_213636507___C__NG__N_T_P__p19_img3.png, images/q1162_213636507___C__NG__N_p2_img1.png"
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-068",
-    "noi_dung": "Cường độ điện trường do một điện tích q lớn gây ra tại một điểm M là $\\vec{E}$. Đặt một điện tích thử dương. Nếu ta thay điện tích thử ấy bằng một điện tích âm, độ lớn gấp 4 lần điện tích thử ban đầu thì cường độ điện trường tại M thay đổi như thế nào?",
-    "phuong_an": "A. độ lớn không đổi có chiều ngược chiều $\\vec{E}$\nB. độ lớn giảm 4 lần có chiều ngược chiều $\\vec{E}$\nC. độ lớn giảm 4 lần không đổi chiều\nD. không đổi",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $Điện tích gây ra điện trường: q$; $Điện tích thử ban đầu: q_1 > 0$; $Điện tích thử sau: q_2 = -4q_1$.\nĐặc điểm cường độ điện trường: Cường độ điện trường tại một điểm do một điện tích điểm gây ra chỉ phụ thuộc vào điện tích q gây ra điện trường và khoảng cách từ điểm đó đến điện tích, không phụ thuộc vào điện tích thử đặt tại điểm đó.\n$$E = k\\frac{|q|}{\\varepsilon r^2}$$\nKết luận: Khi thay đổi điện tích thử, cường độ điện trường tại M hoàn toàn không thay đổi về độ lớn lẫn hướng, do đó đáp án là không đổi. $\\vec{E}' = \\vec{E}$.\nCường độ điện trường tại một điểm không phụ thuộc vào điện tích thử nên khi thay đổi điện tích thử, cường độ điện trường tại M không đổi.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1XHtGuMf-069",
@@ -1341,74 +1323,11 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1XHtGuMf-071",
-    "noi_dung": "Điện tích điểm $q = -3\\ \\mu\\text{C}$ đặt tại điểm có cường độ điện trường $E = 12\\ 000\\text{ V/m}$, có phương thẳng đứng chiều từ trên xuống dưới. Xác định phương chiều và độ lớn của lực tác dụng lên điện tích q:",
-    "phuong_an": "A. $\\vec{F}$ có phương thẳng đứng, chiều từ trên xuống dưới, F = 0,36N\nB. $\\vec{F}$ có phương nằm ngang, chiều từ trái sang phải, F = 0,48N\nC. $\\vec{F}$ có phương thẳng đứng, chiều từ dưới lên trên, F = 0,36N\nD. $\\vec{F}$ có phương thẳng đứng, chiều từ dưới lên trên, F = 0,036N",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $q = -3\\cdot 10^{-6}\\text{ C}$; $E = 12\\ 000\\text{ V/m}$; $\\vec{E}\\text{ có phương thẳng đứng, chiều từ trên xuống dưới}$.\nĐộ lớn lực điện: Áp dụng công thức tính độ lớn lực điện tác dụng lên điện tích\n$$F = |q|\\cdot E = 3\\cdot 10^{-6}\\cdot 12\\ 000 = 0{,}036\\text{ N}$$\nPhương và chiều lực điện: Vì điện tích $q < 0$ nên vectơ lực điện $\\vec{F}$ ngược chiều với vectơ cường độ điện trường $\\vec{E}$. Do đó $\\vec{F}$ có phương thẳng đứng, chiều từ dưới lên trên $\\vec{F} = q\\vec{E}$.\nKết luận phương án: So sánh kết quả với các phương án ta thấy phù hợp với phương án D\nLực điện tác dụng lên điện tích có phương thẳng đứng, chiều từ dưới lên trên và độ lớn F = 0,036 N\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-072",
-    "noi_dung": "Một quả cầu kim loại bán kính 4cm mang điện tích $q = 5\\cdot 10^{-8}\\text{C}$. Tính cường độ điện trường tại điểm M cách tâm quả cầu 10cm:",
-    "phuong_an": "A. $36\\cdot 10^3\\text{ V/m}$\nB. $45\\cdot 10^3\\text{ V/m}$\nC. $67\\cdot 10^3\\text{ V/m}$\nD. $2{,}81\\cdot 10^3\\text{ V/m}$",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $R = 4\\text{ cm} = 0{,}04\\text{ m}$; $q = 5\\cdot 10^{-8}\\text{ C}$; $r = 10\\text{ cm} = 0{,}1\\text{ m}$; $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2\\text{ /C}^2$.\nCường độ điện trường: Áp dụng công thức tính cường độ điện trường do quả cầu tích điện coi như điện tích điểm tại điểm cách tâm một khoảng $r$\n$$E = \\frac{k\\cdot |q|}{r^2}$$\nTính toán: Thay số vào biểu thức trên để tính giá trị của $E$\n$$E = \\frac{9\\cdot 10^9\\cdot 5\\cdot 10^{-8}}{(0{,}1)^2} = 45\\cdot 10^3\\text{ V/m}$$\nCường độ điện trường tại điểm M là $45\\cdot 10^3\\text{ V/m}$, trùng với phương án B.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-073",
-    "noi_dung": "Trong một điện trường đều, nếu trên một đường sức, giữa hai điểm cách nhau 4 cm có hiệu điện thế 10 V, giữa hai điểm cách nhau 6 cm có hiệu điện thế là",
-    "phuong_an": "A. 8 V.\nB. 10 V.\nC. 15 V.\nD. 22,5 V.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $d_1 = 4\\text{ cm}$; $U_1 = 10\\text{ V}$; $d_2 = 6\\text{ cm}$.\nĐộ lớn cường độ điện trường: Cường độ điện trường đều trong điện trường được tính bằng biểu thức\n$$E = \\frac{U_1}{d_1} = \\frac{10}{0{,}04} = 250\\text{ V/m}$$\nHiệu điện thế giữa hai điểm cách nhau 6 cm: Hiệu điện thế giữa hai điểm cách nhau $6\\text{ cm}$ là\n$$U_2 = E \\cdot d_2 = 250 \\cdot 0{,}06 = 15\\text{ V}$$\nKết quả tính toán khớp với phương án C\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-074",
-    "noi_dung": "Hai điểm trên một đường sức trong một điện trường đều cách nhau 2m. Độ lớn cường độ điện trường là 1000 V/m. Hiệu điện thế giữa hai điểm đó là",
-    "phuong_an": "A. 500 V.\nB. 1000 V.\nC. 2000 V.\nD. chưa đủ dữ kiện để xác định.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $d = 2\\text{ m}$; $E = 1000\\text{ V/m}$.\nHiệu điện thế: Áp dụng công thức liên hệ giữa hiệu điện thế và cường độ điện trường trong điện trường đều\n$$U = E\\cdot d$$\nTính toán: Thay số vào công thức\n$$U = 1000\\cdot 2 = 2000\\text{ V}$$\nHiệu điện thế giữa hai điểm đó là 2000 V, tương ứng với phương án C.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-076",
-    "noi_dung": "Một electron chuyển động dọc theo một đường sức điện trong điện trường đều giữa hai bản kim loại tích điện trái dấu. Hiệu điện thế giữa hai bản là 120V. Biết rằng electron được đặt không vận tốc ban đầu cách bản điện tích dương 1,5cm. Khoảng cách giữa hai bản là 2cm. Điện tích của electron bằng $-1{,}6\\cdot 10^{-19}\\text{ C}$, khối lượng electron bằng $9{,}1\\cdot 10^{-31}\\text{ kg}$. Vận tốc của electron khi đến bản dương là:",
-    "phuong_an": "A. $2{,}425\\cdot 10^6\\text{ m/s}$\nB. $2{,}425\\cdot 10^5\\text{ m/s}$\nC. $5{,}625\\cdot 10^6\\text{ m/s}$\nD. $5{,}625\\cdot 10^5\\text{ m/s}$",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $U = 120\\text{ V}$; $d = 2\\text{ cm} = 0{,}02\\text{ m}$; $x = 1{,}5\\text{ cm} = 0{,}015\\text{ m}$; $q = -1{,}6\\cdot 10^{-19}\\text{ C}$; $m = 9{,}1\\text{ -31}\\text{ kg}$.\nĐộ lớn cường độ điện trường: Cường độ điện trường đều giữa hai bản kim loại là\n$$E = \\frac{U}{d} = \\frac{120}{0{,}02} = 6000\\text{ V/m}$$\nHiệu điện thế từ điểm thả đến bản dương: Electron được thả cách bản dương một khoảng x, hiệu điện thế từ điểm thả đến bản dương (nơi có điện thế cao hơn) là\n$$U' = E\\cdot x = 6000\\cdot 0{,}015 = 90\\text{ V}$$\nVận tốc của electron: Áp dụng định lý động năng cho chuyển động của electron từ lúc thả đến khi đến bản dương\n$$\\frac{1}{2}mv^2 - 0 = |q|U'$$\nTính giá trị vận tốc: Thay số vào biểu thức vận tốc ta được\n$$v = \\sqrt{\\frac{2|q|U'}{m}} = \\sqrt{\\frac{2\\cdot 1{,}6\\cdot 10^{-19}\\cdot 90}{9{,}1\\cdot 10^{-31}}} \\approx 5{,}625\\cdot 10^6\\text{ m/s}$$\nVận tốc của electron khi đến bản dương là 5{,}625\\cdot 10^6\\text{ m/s}\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-078",
     "noi_dung": "Quả cầu nhỏ $m = 0{,}5\\text{ g}$, mang điện tích $q_1$ treo trên một sợi dây mảnh trong điện trường đều có phương nằm ngang. Cường độ điện trường $E = 10^6\\text{ V/m}$. ($g = 10\\text{ m/s}^2$). Góc lệch của dây so với phương thẳng đứng là:",
     "phuong_an": "A. $15^\\circ$\nB. $30^\\circ$\nC. $45^\\circ$\nD. $60^\\circ$",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-079",
-    "noi_dung": "Cho các phát biểu sau về đường sức điện, phát biểu nào đúng, phát biểu nào sai?",
-    "phuong_an": "a. Các đường sức của cùng một điện trường có thể cắt nhau.\nb. Các đường sức của điện trường tĩnh là đường không khép kín.\nc. Hướng của đường sức điện tại mỗi điểm là hướng của vector cường độ điện trường tại điểm đó.\nd. Các đường sức là các đường không có hướng.",
-    "dap_an": "a) Sai; b) Đúng; c) Đúng; d) Sai",
-    "loi_giai": "Ý a: Các đường sức của cùng một điện trường không bao giờ cắt nhau.\nÝ b: Các đường sức của điện trường tĩnh là đường không khép kín (đi từ điện tích dương ra điện tích âm hoặc ra vô cực).\nÝ c: Hướng của đường sức điện tại mỗi điểm là hướng của vector cường độ điện trường tại điểm đó.\nÝ d: Các đường sức điện là các đường có hướng.\nĐáp án: a) Sai; b) Đúng; c) Đúng; d) Sai.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-080",
-    "noi_dung": "Cho các phát biểu sau về điện trường, phát biểu nào đúng, phát biểu nào sai?",
-    "phuong_an": "a. Điện trường tĩnh là do các hạt mang điện đứng yên sinh ra.\nb. Tính chất cơ bản của điện trường là nó tác dụng lực điện lên điện tích đặt trong nó.\nc. Vector cường độ điện trường tại một điểm luôn cùng phương, cùng chiều với vector lực điện tác dụng lên một điện tích đặt tại điểm đó trong điện trường.\nd. Vector cường độ điện trường tại một điểm luôn cùng phương, cùng chiều với vector lực điện tác dụng lên một điện tích dương đặt tại điểm đó trong điện trường.",
-    "dap_an": "a) Đúng; b) Đúng; c) Sai; d) Đúng",
-    "loi_giai": "Tóm tắt: $Điện trường tĩnh do hạt mang điện đứng yên sinh ra$; $Tính chất cơ bản tác dụng lực điện$; $Cường độ điện trường và lực điện$.\nÝ a) Điện trường tĩnh là điện trường do các hạt mang điện đứng yên sinh ra.\nÝ b) Tính chất cơ bản của điện trường là tác dụng lực điện lên điện tích đặt trong nó.\nÝ c) Vector cường độ điện trường cùng chiều với lực điện khi điện tích dương và ngược chiều khi điện tích âm.\nÝ d) Vector cường độ điện trường tại một điểm luôn cùng phương, cùng chiều với vector lực điện tác dụng lên một điện tích dương đặt tại điểm đó.\nĐáp án: a) Đúng; b) Đúng; c) Sai; d) Đúng.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -1512,137 +1431,11 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1XHtGuMf-092",
-    "noi_dung": "Công của lực điện không phụ thuộc vào",
-    "phuong_an": "A. vị trí điểm đầu và điểm cuối đường đi.\nB. cường độ của điện trường.\nC. hình dạng của đường đi.\nD. độ lớn điện tích bị dịch chuyển.",
-    "dap_an": "C",
-    "loi_giai": "Đặc điểm của công lực điện: Công của lực điện trong điện trường đều không phụ thuộc vào hình dạng của đường đi mà chỉ phụ thuộc vào vị trí điểm đầu và điểm cuối của đoạn đường dịch chuyển.\n$$A = qEd$$\nChọn phương án: Công lực điện phụ thuộc vào vị trí điểm đầu, điểm cuối, độ lớn điện tích và cường độ điện trường, nhưng không phụ thuộc vào hình dạng của đường đi.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-093",
-    "noi_dung": "Thế năng của điện tích trong điện trường đặc trưng cho",
-    "phuong_an": "A. khả năng tác dụng lực của điện trường.\nB. phương chiều của cường độ điện trường.\nC. khả năng sinh công của điện trường.\nD. độ lớn nhỏ của vùng không gian có điện trường.",
-    "dap_an": "C",
-    "loi_giai": "Khái niệm thế năng: Thế năng của điện tích trong điện trường đặc trưng cho khả năng sinh công của điện trường khi điện tích di chuyển trong điện trường đó.\n$$W_t = A_{\\text{M}\\infty}$$\nPhương án đúng là C\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-094",
     "noi_dung": "Nếu chiều dài đường đi của điện tích trong điện trường tăng 2 lần thì công của lực điện trường",
     "phuong_an": "A. chưa đủ dữ kiện để xác định.\nB. tăng 2 lần.\nC. giảm 2 lần.\nD. không thay đổi.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-095",
-    "noi_dung": "Công của lực điện trường khác 0 trong khi điện tích",
-    "phuong_an": "A. dịch chuyển giữa 2 điểm khác nhau cắt các đường sức.\nB. dịch chuyển vuông góc với các đường sức trong điện trường đều.\nC. dịch chuyển hết quỹ đạo là đường cong kín trong điện trường.\nD. dịch chuyển hết một quỹ đạo tròn trong điện trường.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $A = qEd$.\nCông thức tính công: Công của lực điện trường dịch chuyển điện tích trong điện trường đều được tính bằng công thức\n$$A = qEd$$\nPhân tích các phương án: Khi điện tích dịch chuyển cắt các đường sức điện, hình chiếu đường đi lên phương đường sức khác 0 nên $d \\neq 0$, dẫn đến công khác 0. Khi dịch chuyển vuông góc đường sức thì $d = 0$ nên công bằng 0. Khi dịch chuyển theo đường cong kín hoặc quỹ đạo tròn có điểm đầu và điểm cuối trùng nhau thì $d = 0$ nên công bằng 0.\nCông của lực điện trường khác 0 khi điện tích dịch chuyển giữa 2 điểm cắt các đường sức điện.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-096",
-    "noi_dung": "Khi điện tích dịch chuyển dọc theo một đường sức trong một điện trường đều, nếu quãng đường dịch chuyển tăng 2 lần thì công của lực điện trường",
-    "phuong_an": "A. tăng 4 lần.\nB. tăng 2 lần.\nC. không đổi.\nD. giảm 2 lần.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $d dịch chuyển dọc theo đường sức điện$; $quãng đường dịch chuyển tăng 2 lần$.\nBiểu thức công của lực điện: Công của lực điện trong điện trường đều được tính bằng biểu thức\n$$A = qEd$$\nXét sự phụ thuộc của công vào quãng đường: Vì điện tích q và cường độ điện trường E không đổi, công A tỉ lệ thuận với quãng đường dịch chuyển d. Khi d tăng 2 lần thì công A cũng tăng 2 lần. $A \\sim d$.\nCông của lực điện trường tăng 2 lần\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-097",
-    "noi_dung": "Nếu điện tích dịch chuyển trong điện trường sao cho thế năng của nó tăng thì công của lực điện trường",
-    "phuong_an": "A. âm.\nB. dương.\nC. bằng không.\nD. chưa đủ dữ kiện để xác định.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $W_{t} \\text{ tăng}$.\nMối liên hệ giữa công và thế năng: Công của lực điện trường bằng độ giảm thế năng của điện tích trong điện trường\n$$A_{MN} = W_{tM} - W_{tN}$$\nXác định dấu của công: Vì thế năng của điện tích tăng nên thế năng sau lớn hơn thế năng trước, dẫn đến hiệu thế năng mang giá trị âm, suy ra công của lực điện trường âm $A < 0$.\nCông của lực điện trường âm\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-098",
-    "noi_dung": "Công của lực điện trường dịch chuyển một điện tích $1\\mu\\text{C}$ dọc theo chiều một đường sức trong một điện trường đều 1000 V/m trên quãng đường dài 1 m là",
-    "phuong_an": "A. 1000 J.\nB. 1 J.\nC. 1 mJ.\nD. $1\\ \\mu\\text{J}$.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $q = 1\\mu\\text{C} = 10^{-6}\\text{ C}$; $E = 1000\\text{ V/m}$; $d = 1\\text{ m}$.\nCông của lực điện trường: Công của lực điện trường dịch chuyển điện tích dọc theo chiều đường sức trong điện trường đều được tính bằng công thức\n$$A = q\\cdot E\\cdot d$$\nTính toán: Thay số vào công thức ta được\n$$A = 10^{-6}\\cdot 1000\\cdot 1 = 10^{-3}\\text{ J} = 1\\text{ mJ}$$\nChọn phương án: Kết quả tính được là 1 mJ, trùng với phương án C\nCông của lực điện trường là 1 mJ.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-099",
-    "noi_dung": "Công của lực điện trường dịch chuyển một điện tích $-2\\mu\\text{C}$ ngược chiều một đường sức trong một điện trường đều 1000 V/m trên quãng đường dài 1 m là",
-    "phuong_an": "A. 2000 J.\nB. – 2000 J.\nC. 2 mJ.\nD. – 2 mJ.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $q = -2\\cdot 10^{-6}\\text{ C}$; $E = 1000\\text{ V/m}$; $d = -1\\text{ m}$.\nCông của lực điện trường: Công của lực điện trường dịch chuyển điện tích trong điện trường đều được tính theo công thức\n$$A = qEd$$\nTính toán: Thay số vào công thức ta được\n$$A = -2\\cdot 10^{-6}\\cdot 1000\\cdot (-1) = 2\\cdot 10^{-3}\\text{ J} = 2\\text{ mJ}$$\nVì công của lực điện trường tính được là 2 mJ nên ta chọn phương án C\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-101",
-    "noi_dung": "Cho điện tích $q = + 10^{-8}\\text{ C}$ dịch chuyển giữa 2 điểm cố định trong một điện trường đều thì công của lực điện trường là 60 mJ. Nếu một điện tích $q' = + 4\\cdot 10^{-9}\\text{ C}$ dịch chuyển giữa hai điểm đó thì công của lực điện trường khi đó là",
-    "phuong_an": "A. 24 mJ.\nB. 20 mJ.\nC. 240 mJ.\nD. 120 mJ.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $q = 10^{-8}\\text{ C}$; $A = 60\\text{ mJ} = 0{,}06\\text{ J}$; $q' = 4\\cdot 10^{-9}\\text{ C}$.\nHiệu điện thế giữa hai điểm: Hiệu điện thế giữa hai điểm trong điện trường đều được tính bằng công thức\n$$U = \\frac{A}{q} = \\frac{0{,}06}{10^{-8}} = 6\\cdot 10^6\\text{ V}$$\nCông của lực điện trường: Công của lực điện trường khi điện tích $q'$ dịch chuyển giữa hai điểm đó là\n$$A' = q' \\cdot U = 4\\cdot 10^{-9} \\cdot 6\\cdot 10^6 = 0{,}024\\text{ J} = 24\\text{ mJ}$$\nCông của lực điện trường là 24 mJ tương ứng với phương án A.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-102",
-    "noi_dung": "Công của lực điện trường dịch chuyển quãng đường 1 m một điện tích $10\\ \\mu\\text{C}$ vuông góc với các đường sức điện trong một điện trường đều cường độ $10^6\\text{ V/m}$ là",
-    "phuong_an": "A. 1 J.\nB. 1000 J.\nC. 1 mJ.\nD. 0 J.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $s = 1\\text{ m}$; $q = 10\\ \\mu\\text{C} = 10^{-5}\\text{ C}$; $\\alpha = 90^\\circ$; $E = 10^6\\text{ V/m}$.\nTính công của lực điện trường: Công của lực điện trường dịch chuyển một điện tích $q$ trong điện trường đều được xác định bởi biểu thức $A = qEs\\cos\\alpha$. Vì điện tích dịch chuyển vuông góc với các đường sức điện nên góc $\\alpha = 90^\\circ$, suy ra $\\cos\\alpha = 0$.\n$$A = qEs\\cos 90^\\circ = 0\\text{ J}$$\nCông của lực điện trường bằng 0 J.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-103",
-    "noi_dung": "Công của lực điện trường dịch chuyển một điện tích 10 mC song song với các đường sức trong một điện trường đều với quãng đường 10 cm là 1 J. Độ lớn cường độ điện trường đó là",
-    "phuong_an": "A. 10000 V/m.\nB. 1 V/m.\nC. 100 V/m.\nD. 1000 V/m.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $q = 10\\text{ mC} = 0{,}01\\text{ C}$; $d = 10\\text{ cm} = 0{,}1\\text{ m}$; $A = 1\\text{ J}$.\nĐộ lớn cường độ điện trường: Áp dụng công thức tính công của lực điện trường $A = qEd$, ta suy ra cường độ điện trường\n$$E = \\frac{A}{q d} = \\frac{1}{0{,}01 \\cdot 0{,}1} = 1000\\text{ V/m}$$\nGiá trị cường độ điện trường phù hợp với phương án D.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-104",
-    "noi_dung": "Khi điện tích dịch chuyển trong điện trường đều theo chiều đường sức thì nó nhận được một công 10 J. Khi dịch chuyển tạo với chiều đường sức $60^\\circ$ trên cùng độ dài quãng đường thì nó nhận được một công là",
-    "phuong_an": "A. 5 J.\nB. $5\\sqrt{3}/2\\text{ J}$.\nC. $5\\sqrt{2}\\text{ J}$.\nD. 7,5J.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $A_1 = 10\\text{ J}$; $\\alpha_1 = 0^\\circ$; $\\alpha_2 = 60^\\circ$.\nCông của lực điện: Công của lực điện trong điện trường đều được tính theo công thức\n$$A = qEd\\cos\\alpha = qEs\\cos\\alpha$$\nLập tỉ lệ công: Vì độ lớn điện tích, cường độ điện trường và độ dài quãng đường không đổi nên công tỉ lệ với cosin góc lệch\n$$\\frac{A_2}{A_1} = \\frac{\\cos\\alpha_2}{\\cos\\alpha_1} = \\frac{\\cos 60^\\circ}{\\cos 0^\\circ} = \\frac{0{,}5}{1} = 0{,}5$$\nTính công trong trường hợp thứ hai: Công nhận được khi dịch chuyển theo hướng hợp với chiều đường sức góc $60^\\circ$ là\n$$A_2 = 0{,}5\\text{ A}_1 = 0{,}5 \\cdot 10 = 5\\text{ J}$$\nCông nhận được trong trường hợp này là 5 J, tương ứng với phương án A.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-105",
-    "noi_dung": "Chọn phương án đúng: Một điện tích q chuyển động trong điện trường (đều hay không đều) theo một đường cong kín. Gọi công của lực điện trong chuyển động đó là A thì:",
-    "phuong_an": "A. A > 0 nếu q > 0\nB. A > 0 nếu q < 0\nC. $A \\neq 0$ nếu điện trường không đổi.\nD. A = 0",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $Điện tích q chuyển động theo đường cong kín$; $Công của lực điện trong chuyển động là A$.\nTính chất của lực điện: Lực điện là lực thế, công của lực điện trong dịch chuyển trong điện trường dọc theo một đường cong kín luôn bằng không\n$$A = 0$$\nCông của lực điện trong một chu trình kín luôn bằng 0, không phụ thuộc vào dấu của điện tích hay dạng của điện trường\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-106",
-    "noi_dung": "Khi một điện tích q di chuyển trong một điện trường từ một điểm A có thế năng tĩnh điện 2,5 J đến một điểm B thì lực điện sinh công 2,5 J. Thế năng tĩnh điện của q tại B sẽ là:",
-    "phuong_an": "A. 0\nB. - 5 J\nC. + 5 J\nD. -2,5 J",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $W_{tA} = 2{,}5\\text{ J}$; $A_{AB} = 2{,}5\\text{ J}$.\nMối liên hệ giữa công của lực điện và thế năng: Công của lực điện bằng độ giảm thế năng tĩnh điện của điện tích khi di chuyển từ A đến B\n$$A_{AB} = W_{tA} - W_{tB}$$\nTính thế năng tại B: Thay số để tìm thế năng tại B\n$$W_{tB} = W_{tA} - A_{AB} = 2{,}5 - 2{,}5 = 0\\text{ J}$$\nThế năng tĩnh điện của q tại B bằng 0 J, ứng với phương án A.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-107",
-    "noi_dung": "Một điện tích điểm q di chuyển trong điện trường đều E có quĩ đạo là một đường cong kín có chiều dài quĩ đạo là s thì công của lực điện trường bằng:",
-    "phuong_an": "A. qEs\nB. 2qEs\nC. 0 .\nD. - qEs",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $q: \\text{dien tich diem}$; $E: \\text{cuong do dien truong deu}$; $\\text{Quy dao la duong cong kin}$.\nTinh cong cua luc dien truong: Cong của lực điện trong điện trường đều không phụ thuộc vào dạng đường đi mà chỉ phụ thuộc vào vị trí điểm đầu và điểm cuối của quỹ đạo. Vì điện tích di chuyển theo một đường kín nên điểm đầu và điểm cuối trùng nhau.\n$$A = qEd$$\nKet luan: Do do d = 0 nen cong cua luc dien truong bang khong.\n$$A = 0$$\nCong cua luc dien truong trong mot chu trinh kin bang 0.\nĐáp án: C.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -1656,65 +1449,11 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1XHtGuMf-109",
-    "noi_dung": "Công thức xác định công của lực điện trường làm dịch chuyển điện tích q trong điện trường đều E là A = qEd, trong đó d là:",
-    "phuong_an": "A. khoảng cách giữa điểm đầu và điểm cuối.\nB. khoảng cách giữa hình chiếu điểm đầu và hình chiếu điểm cuối lên một đường sức.\nC. độ dài đại số của đoạn từ hình chiếu điểm đầu đến hình chiếu điểm cuối lên một đường sức, tính theo chiều đường sức điện.\nD. độ dài đại số của đoạn từ hình chiếu điểm đầu đến hình chiếu điểm cuối lên một đường sức.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $A = qEd$.\nPhân tích công thức: Trong công thức tính công của lực điện trường đều $A = qEd$, đại lượng $d$ không phải là khoảng cách thuần túy giữa hai điểm mà là độ dài đại số của đoạn từ hình chiếu điểm đầu đến hình chiếu điểm cuối lên một đường sức, tính theo chiều đường sức điện.\n$$A = qEd$$\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-110",
-    "noi_dung": "Một điện tích q chuyển động trong điện trường không đều theo một đường cong kín. Gọi công của lực điện trong chuyển động đó là A thì",
-    "phuong_an": "A. A > 0 nếu q > 0.\nB. A > 0 nếu q < 0.\nC. A ≠ 0 còn dấu của A chưa xác định vì chưa biết chiều chuyển động của q.\nD. A = 0 trong mọi trường hợp.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $\\text{Điện tích } q \\text{ chuyển động theo đường cong kín}$.\nTính chất của công lực điện: Công của lực điện trong điện trường dọc theo một đường cong kín luôn bằng không vì điện trường tĩnh là trường thế.\n$$A = 0$$\nCông của lực điện bằng không trong mọi trường hợp điện tích chuyển động theo đường cong kín.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-111",
-    "noi_dung": "Hai tấm kim loại song song, cách nhau 2 (cm) và được nhiễm điện trái dấu nhau. Muốn làm cho điện tích $q = 5\\cdot 10^{-10}\\text{ (C)}$ di chuyển từ tấm này đến tấm kia cần tốn một công $A = 2\\cdot 10^{-9}\\text{ (J)}$. Coi điện trường bên trong khoảng giữa hai tấm kim loại là điện trường đều và có các đường sức điện vuông góc với các tấm. Cường độ điện trường bên trong tấm kim loại đó là:",
-    "phuong_an": "A. E = 2 (V/m).\nB. E = 40 (V/m).\nC. E = 200 (V/m).\nD. Đáp án khác",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $d = 2\\text{ cm} = 0{,}02\\text{ m}$; $q = 5\\cdot 10^{-10}\\text{ C}$; $A = 2\\cdot 10^{-9}\\text{ J}$.\nĐộ lớn điện thế giữa hai tấm kim loại: Áp dụng công thức tính công của lực điện $A = qEd = qU$, ta tính được hiệu điện thế giữa hai tấm:\n$$U = \\frac{A}{q} = \\frac{2\\cdot 10^{-9}}{5\\cdot 10^{-10}} = 4\\text{ V}$$\nCường độ điện trường: Cường độ điện trường đều giữa hai tấm kim loại được tính bằng công thức:\n$$E = \\frac{U}{d} = \\frac{4}{0{,}02} = 200\\text{ V/m}$$\nTa tính được cường độ điện trường là 200 V/m, trùng với phương án C.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-112",
-    "noi_dung": "Một êlectron chuyển động dọc theo đường sức của một điện trường đều. Cường độ điện trường E = 100 (V/m). Vận tốc ban đầu của êlectron bằng 300 (km/s). Khối lượng của êlectron là $m = 9{,}1\\cdot 10^{-31}\\text{ (kg)}$. Từ lúc bắt đầu chuyển động đến lúc vận tốc của êlectron bằng không thì êlectron chuyển động được quãng đường là:",
-    "phuong_an": "A. S = 5,12 (mm).\nB. S = 2,56 (mm).\nC. S = $5{,}12\\cdot 10^{-3}\\text{ (mm)}$.\nD. Đáp án khác",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $E = 100\\text{ V/m}$; $v_0 = 300\\text{ km/s} = 3\\cdot 10^5\\text{ m/s}$; $v = 0\\text{ m/s}$; $m = 9{,}1\\cdot 10^{-31}\\text{ kg}$; $q = -1{,}6\\cdot 10^{-19}\\text{ C}$.\nGia tốc của êlectron: Áp dụng định luật II Newton và công thức lực điện\n$$a = \\frac{|q|E}{m} = \\frac{1{,}6\\cdot 10^{-19}\\cdot 100}{9{,}1\\cdot 10^{-31}} \\approx 1{,}758\\cdot 10^{13}\\text{ m/s}^2$$\nQuãng đường êlectron đi được: Sử dụng công thức liên hệ giữa vận tốc, gia tốc và quãng đường\n$$v^2 - v_0^2 = 2aS \\Rightarrow S = \\frac{-v_0^2}{2a} = \\frac{-(3\\cdot 10^5)^2}{-2\\cdot 1{,}758\\cdot 10^{13}} \\approx 2{,}56\\cdot 10^{-3}\\text{ m} = 2{,}56\\text{ mm}$$\nQuãng đường êlectron chuyển động được là 2,56 mm, trùng với phương án B\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-113",
-    "noi_dung": "Dưới tác dụng của lực điện trường một điện tích q>0 di chuyển được một đoạn s trong điện trường đều theo phương hợp với $\\vec{E}$ một góc $\\alpha$. Trong trường hợp nào sau đây, công của lực điện trường là lớn nhất:",
-    "phuong_an": "A. $\\alpha = 0$\nB. $\\alpha = 45^0$\nC. $\\alpha = 60^0$\nD. $\\alpha = 90^0$",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $q > 0$; $A = qEd \\cos\\alpha = qEs \\cos\\alpha$.\nCông thức tính công của lực điện trường: Công của lực điện trường dịch chuyển điện tích trong điện trường đều được tính bằng biểu thức\n$$A = qEs \\cos\\alpha$$\nXác định góc để công lớn nhất: Vì q, E, s đều dương nên công A lớn nhất khi \\cos\\alpha đạt giá trị cực đại bằng 1, tức là góc\n$$\\alpha = 0$$\nCông của lực điện trường lớn nhất khi góc giữa vectơ lực điện và độ dời là 0 độ\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-114",
     "noi_dung": "Cho các phát biểu sau về công của lực điện, phát biểu nào đúng, phát biểu nào sai?",
     "phuong_an": "a. Công của lực điện cũng là thế năng tĩnh điện.\nb. Công của lực điện là số đo độ biến thiên thế năng tĩnh điện.\nc. Lực điện thực hiện công dương thì thế năng tĩnh điện giảm.\nd. Lực điện thực hiện công âm thì thế năng tĩnh điện giảm.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-115",
-    "noi_dung": "Cho các nhận định sau. Nhận định nào đúng, nhận định nào sai?",
-    "phuong_an": "a. Công của lực điện bằng độ giảm thế năng điện.\nb. Lực điện thực hiện công dương thì thế năng điện giảm.\nc. Công của lực điện không phụ thuộc vào độ lớn cường độ điện trường.\nd. Công của lực điện khác 0 khi điện tích dịch chuyển giữa hai điểm khác nhau trên một đường vuông góc với đường sức điện của điện trường đều.",
-    "dap_an": "a) Đúng; b) Đúng; c) Sai; d) Sai",
-    "loi_giai": "Ý a) Công thức tính công của lực điện là $A_{MN} = W_M - W_N = \\Delta W_t$, với $W_t$ là thế năng điện. Do đó công của lực điện bằng độ giảm thế năng điện.\n$$A_{MN} = W_{tM} - W_{tN}$$\nÝ b) Khi lực điện thực hiện công dương ($A > 0$), từ hệ thức $A = W_{tM} - W_{tN} > 0$ ta suy ra $W_{tM} > W_{tN}$, tức là thế năng điện giảm.\n$$A > 0 \\Rightarrow W_{t} \\text{ giảm}$$\nÝ c) Công của lực điện trong điện trường đều được tính theo công thức $A = qEd\\cos\\theta$, phụ thuộc vào độ lớn cường độ điện trường $E$.\n$$A = qEd\\cos\\theta$$\nÝ d) Khi điện tích dịch chuyển trên một đường vuông góc với đường sức điện thì góc giữa hướng dịch chuyển và vectơ cường độ điện trường là $90^\\circ$, nên công của lực điện bằng 0.\n$$A = qEd\\cos 90^\\circ = 0$$\nĐáp án: a) Đúng; b) Đúng; c) Sai; d) Sai.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -1764,83 +1503,11 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1XHtGuMf-121",
-    "noi_dung": "Một hạt proton có điện tích +e và khối lượng $1{,}6726\\cdot 10^{-27}\\text{ kg}$ đang chuyển động lại gần một hạt nhân silic đứng yên có điện tích bằng +14e. Cho các hằng số $e = 1{,}6\\cdot 10^{-19}\\text{ C}$ và $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2/\\text{C}^2$. Khi khoảng cách từ prôtôn đến hạt nhân silic bằng $r_0 = 0{,}53\\cdot 10^{-10}\\text{ m}$ thì tốc độ chuyển động của hạt prôtôn bằng $2\\cdot 10^5\\text{ m/s}$. Vậy lúc hai hạt cách nhau $4r_0$ thì tốc độ của prôtôn xấp xỉ bằng $X.10^5\\text{ m/s}$. Giá trị của X là bao nhiêu? (kết quả làm tròn đến hai chữ số thập phân sau dấu phẩy).",
-    "phuong_an": "",
-    "dap_an": "3,08",
-    "loi_giai": "Tóm tắt: $m = 1{,}6726\\cdot 10^{-27}\\text{ kg}$; $q_1 = e = 1{,}6\\cdot 10^{-19}\\text{ C}$; $q_2 = 14e = 22{,}4\\cdot 10^{-19}\\text{ C}$; $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2/\\text{C}^2$; $r_1 = r_0 = 0{,}53\\cdot 10^{-10}\\text{ m}$; $v_1 = 2\\cdot 10^5\\text{ m/s}$; $r_2 = 4r_0 = 2{,}12\\cdot 10^{-10}\\text{ m}$.\nThế năng tương tác tĩnh điện tại khoảng cách r0: Thế năng tương tác giữa prôtôn và hạt nhân silic khi cách nhau một khoảng $r_1 = r_0$ là\n$$W_{t1} = k\\frac{q_1 q_2}{r_1} = \\frac{14ke^2}{r_0} = \\frac{14\\cdot 9\\cdot 10^9\\cdot (1{,}6\\cdot 10^{-19})^2}{0{,}53\\cdot 10^{-10}} \\approx 6{,}086\\cdot 10^{-17}\\text{ J}$$\nĐộng năng của prôtôn tại khoảng cách r0: Động năng của prôtôn tại vị trí cách hạt nhân $r_0$ là\n$$W_{đ1} = \\frac{1}{2}m v_1^2 = \\frac{1}{2}\\cdot 1{,}6726\\cdot 10^{-27}\\cdot (2\\cdot 10^5)^2 \\approx 3{,}345\\cdot 10^{-17}\\text{ J}$$\nThế năng tương tác tĩnh điện tại khoảng cách 4r0: Khi khoảng cách giữa hai hạt là $r_2 = 4r_0$, thế năng tương tác là\n$$W_{t2} = \\frac{W_{t1}}{4} = \\frac{6{,}086\\cdot 10^{-17}}{4} \\approx 1{,}522\\cdot 10^{-17}\\text{ J}$$\nTốc độ của prôtôn khi ở khoảng cách 4r0: Áp dụng định luật bảo toàn cơ năng trong điện trường\n$$W_{đ2} + W_{t2} = W_{đ1} + W_{t1} \\Rightarrow W_{đ2} = W_{đ1} + W_{t1} - W_{t2} \\approx 7{,}91\\cdot 10^{-17}\\text{ J}$$\nTính giá trị vận tốc và tìm X: Tốc độ của prôtôn tại khoảng cách $4r_0$ là\n$$v_2 = \\sqrt{\\frac{2W_{đ2}}{m}} = \\sqrt{\\frac{2\\cdot 7{,}91\\cdot 10^{-17}}{1{,}6726\\cdot 10^{-27}}} \\approx 3{,}08\\cdot 10^5\\text{ m/s}$$\nGiá trị của X là 3,08.\nĐáp án: 3,08.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-122",
-    "noi_dung": "Cho một hạt nhân nguyên tử helium chuyển động ngược chiều đường sức điện của một điện trường đều có tốc độ ban đầu là $5\\cdot 10^5\\text{ m/s}$. Sau khi chuyển động được 10 cm trong điện trường thì hạt dừng lại. Một cách gần đúng, có thể xem như hạt chỉ chịu tác dụng của lực điện. Biết rằng hạt nhân nguyên tử helium có 2 proton và khối lượng của hạt nhân này là $6{,}67\\cdot 10^{-27}\\text{ kg}$. Điện tích của proton là $1{,}6\\cdot 10^{-19}\\text{ C}$. Cường độ điện trường có độ lớn bằng bao nhiêu?",
-    "phuong_an": "",
-    "dap_an": "26055\\text{ V/m}",
-    "loi_giai": "Tóm tắt: $v_0 = 5\\cdot 10^5\\text{ m/s}$; $v = 0\\text{ m/s}$; $s = 10\\text{ cm} = 0{,}1\\text{ m}$; $m = 6{,}67\\cdot 10^{-27}\\text{ kg}$; $q = 2e = 2\\cdot 1{,}6\\cdot 10^{-19}\\text{ C} = 3{,}2\\cdot 10^{-19}\\text{ C}$.\nÁp dụng định lí động năng: Độ biến thiên động năng của hạt bằng công của lực điện trường cản trở chuyển động\n$$A = W_{d} - W_{d0} = -\\frac{1}{2}m v_0^2$$\nCông của lực điện trường: Vì hạt mang điện tích dương và chuyển động ngược chiều đường sức điện nên lực điện sinh công cản $A = -q E s$.\nTính cường độ điện trường: Từ biểu thức công của lực điện và định lí động năng, ta suy ra cường độ điện trường\n$$E = \\frac{m v_0^2}{2 q s} = \\frac{6{,}67\\cdot 10^{-27}\\cdot (5\\cdot 10^5)^2}{2\\cdot 3{,}2\\cdot 10^{-19}\\cdot 0{,}1} \\approx 26055\\text{ V/m}$$\nCường độ điện trường có độ lớn xấp xỉ 26055 V/m (hay khoảng 2,61.10^4 V/m).\nĐáp án: 26055\\text{ V/m} V/m.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-123",
-    "noi_dung": "Điện thế tại một điểm trong điện trường là đại lượng đặc trưng cho điện trường",
-    "phuong_an": "A. tại điểm đó về thế năng.\nB. về khả năng sinh công của vùng không gian có điện trường.\nC. về khả năng sinh công tại một điểm.\nD. về khả năng tác dụng lực tại tất cả các điểm trong không gian có điện trường.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $V_M: \\text{điện thế tại điểm } M$.\nĐịnh nghĩa điện thế: Điện thế tại một điểm trong điện trường là đại lượng đặc trưng cho điện trường về thế năng tại điểm đó, được xác định bằng tỉ số giữa thế năng của một điện tích $q$ đặt tại điểm đó và độ lớn của điện tích $q$:\n$$V_M = \\frac{W_M}{q}$$\nĐối chiếu các phương án: Điện thế đặc trưng cho điện trường tại điểm đó về thế năng, do đó phương án phù hợp là A.\nĐiện thế tại một điểm trong điện trường đặc trưng cho điện trường tại điểm đó về thế năng.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-124",
     "noi_dung": "Điện thế tại một điểm M trong điện trường được xác định bởi biểu thức:",
     "phuong_an": "A. $V_M = q \\cdot A_{M\\infty}$\nB. $V_M = A_{M\\infty}$\nC. $V_M = \\frac{A_{M\\infty}}{q}$\nD. $V_M = \\frac{q}{A_{M\\infty}}$",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-125",
-    "noi_dung": "Đơn vị của hiệu điện thế là",
-    "phuong_an": "A. vôn (V).\nB. jun (J).\nC. vôn trên mét (V/m).\nD. oát (W).",
-    "dap_an": "A",
-    "loi_giai": "Đơn vị của hiệu điện thế: Hiệu điện thế giữa hai điểm đặc trưng cho khả năng sinh công của điện trường khi dịch chuyển một điện tích giữa hai điểm đó, có đơn vị đo trong hệ SI là vôn, kí hiệu là $\\text{V}$.\n$$1\\text{ V} = 1\\text{ J/C}$$\nĐơn vị của hiệu điện thế là vôn (V).\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-126",
-    "noi_dung": "Trong các nhận định dưới đây, nhận định nào không đúng ?",
-    "phuong_an": "A. Cường độ điện trường tại một điểm M có độ lớn bằng thương của hiệu điện thế giữa hai điểm M và N trên một đoạn nhỏ đường sức chia cho độ dài đại số của đoạn đường sức đó.\nB. Trong điện trường đều, độ lớn của cường độ điện trường bằng độ giảm của điện thế dọc theo một đơn vị độ dài đường sức.\nC. Điện thế là một đại lượng gắn với điện trường.\nD. Điện thế là đại lượng véc tơ.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $\\text{Khảo sát tính chất của điện thế và cường độ điện trường}$.\nPhân tích đặc điểm của điện thế: Điện thế tại một điểm trong điện trường là đại lượng vô hướng (đại số), đặc trưng cho điện trường về phương diện tạo ra thế năng khi đặt tại đó một điện tích $q$. Điện thế có thể có giá trị dương, âm hoặc bằng không, không phải là đại lượng vectơ.\n$$V = \\frac{A_{\\infty}}{q}$$\nĐánh giá các nhận định: Các nhận định A, B, C đều mô tả đúng các tính chất và mối liên hệ giữa điện thế và cường độ điện trường theo định nghĩa. Nhận định D sai vì điện thế không phải là đại lượng vectơ.\nNhận định không đúng là điện thế là đại lượng véc tơ.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-127",
-    "noi_dung": "Đơn vị của điện thế là vôn (V). 1V bằng",
-    "phuong_an": "A. 1 J.C.\nB. 1 J/C.\nC. 1 N/C.\nD. 1. J/N.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $V = \\frac{A}{q}$.\nMối liên hệ giữa các đơn vị: Điện thế tại một điểm trong điện trường đặc trưng cho thế năng điện và được xác định bằng thương số giữa thế năng của điện tích thử đặt tại điểm đó với độ lớn của điện tích thử\n$$V = \\frac{W}{q}$$\nXác định đơn vị: Thế năng $W$ có đơn vị là jun ($\\text{J}$), điện tích $q$ có đơn vị là culông ($\\text{C}$). Do đó, đơn vị vôn ($\\text{V}$) tương đương với $1\\text{ V} = 1\\text{ J/C}$.\nĐơn vị vôn tương đương với $1\\text{ J/C}$.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-128",
-    "noi_dung": "Hệ thức liên hệ giữa hiệu điện thế và cường độ điện trường là:",
-    "phuong_an": "A. U = qd.\nB. U = q.E.d.\nC. U = E.q.\nD. U = E.d.",
-    "dap_an": "D",
-    "loi_giai": "Mối liên hệ giữa hiệu điện thế và cường độ điện trường: Trong điện trường đều, mối liên hệ giữa hiệu điện thế $U$ giữa hai điểm và cường độ điện trường $E$ được xác định bởi công thức\n$$U = E\\cdot d$$\nKết luận: Do đó, hệ thức đúng là $U = E\\cdot d$. Phương án phù hợp là D.\nHệ thức liên hệ giữa hiệu điện thế và cường độ điện trường là $U = E\\cdot d$.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-129",
-    "noi_dung": "Khi độ lớn điện tích thử đặt tại một điểm tăng lên gấp đôi thì điện thế tại điểm đó",
-    "phuong_an": "A. giảm một nửa.\nB. không đổi.\nC. tăng gấp đôi.\nD. tăng gấp 4.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $q' = 2q$.\nĐịnh nghĩa điện thế: Điện thế tại một điểm trong điện trường đặc trưng cho khả năng sinh công của điện trường khi đặt tại đó một điện tích thử $q$, được xác định bằng thương số giữa công của lực điện dịch chuyển $q$ ra xa vô cực và độ lớn của $q$\n$$V = \\frac{A}{q}$$\nTính chất của điện thế: Điện thế tại một điểm chỉ phụ thuộc vào điện trường gây ra bởi điện tích nguồn mà không phụ thuộc vào độ lớn của điện tích thử $q$. Khi độ lớn điện tích thử tăng lên gấp đôi thì điện thế tại điểm đó vẫn không đổi\nĐiện thế tại một điểm không phụ thuộc vào độ lớn điện tích thử đặt tại điểm đó\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -1854,191 +1521,11 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1XHtGuMf-131",
-    "noi_dung": "Biểu thức nào sau đây là sai?",
-    "phuong_an": "A. UMN = VM - VN.\nB. U = E.d.\nC. A = qEd.\nD. UMN = AMN.q.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $U_{MN} = V_M - V_N$; $U = E \\cdot d$; $A = q \\cdot E \\cdot d$; $U_{MN} = \\frac{A_{MN}}{q}$.\nKiểm tra biểu thức hiệu điện thế: Hiệu điện thế giữa hai điểm M và N trong điện trường được tính bằng công thức $U_{MN} = V_M - V_N$, do đó phương án A đúng.\n$$U_{MN} = V_M - V_N$$\nKiểm tra hệ thức giữa hiệu điện thế và cường độ điện trường: Trong điện trường đều, hiệu điện thế giữa hai điểm cách nhau một khoảng d tính theo phương của đường sức là $U = E \\cdot d$, do đó phương án B đúng.\n$$U = E \\cdot d$$\nKiểm tra công của lực điện: Công của lực điện dịch chuyển điện tích q trên đoạn đường d là $A = q \\cdot E \\cdot d$, do đó phương án C đúng.\n$$A = q \\cdot E \\cdot d$$\nKiểm tra biểu thức liên hệ giữa hiệu điện thế và công: Hiệu điện thế giữa hai điểm M và N được định nghĩa là thương số giữa công của lực điện dịch chuyển điện tích q từ M đến N và độ lớn điện tích q, nghĩa là $U_{MN} = \\frac{A_{MN}}{q}$. Biểu thức $U_{MN} = A_{MN} \\cdot q$ ở phương án D là sai.\n$$U_{MN} = \\frac{A_{MN}}{q}$$\nPhương án D là biểu thức sai.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-132",
-    "noi_dung": "Trong các nhận định dưới đây về hiệu điện thế, nhận định nào không đúng ?",
-    "phuong_an": "A. Đơn vị của hiệu điện thế là V.\nB. Hiệu điện thế giữa hai điểm phụ thuộc vị trí của hai điểm đó.\nC. Hiệu điện thế giữa hai điểm phụ thuộc điện tích dịch chuyển giữa hai điểm đó.\nD. Hiệu điện thế đặc trưng cho khả năng sinh công khi dịch chuyển điện tích giữa hai điểm trong điện trường.",
-    "dap_an": "C",
-    "loi_giai": "Đặc điểm của hiệu điện thế: Hiệu điện thế giữa hai điểm trong điện trường đặc trưng cho khả năng sinh công của điện trường khi dịch chuyển điện tích giữa hai điểm đó, có đơn vị là V và phụ thuộc vào vị trí của hai điểm, không phụ thuộc vào độ lớn điện tích dịch chuyển.\n$$U_{MN} = \\frac{A_{MN}}{q}$$\nHiệu điện thế giữa hai điểm không phụ thuộc vào điện tích dịch chuyển giữa hai điểm đó.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-133",
-    "noi_dung": "Điện tích q chuyển động từ M đến N trong một điện trường đều, công của lực điện càng nhỏ nếu",
-    "phuong_an": "A. Đường đi từ M đến N càng dài\nB. Đường đi từ M đến N càng ngắn\nC. Hiệu điện thế UMN càng nhỏ\nD. Hiệu điện thế UMN càng lớn",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $q: \\text{diện tích chuyển động}$; $U_{MN}: \\text{hiệu điện thế giữa M và N}$.\nCông của lực điện: Công của lực điện trong điện trường đều được tính bằng công thức\n$$A = qU_{MN}$$\nNhận xét: Với một điện tích q xác định, công của lực điện tỉ lệ thuận với hiệu điện thế U_{MN}. Do đó, hiệu điện thế U_{MN} càng nhỏ thì công của lực điện càng nhỏ.\nCông của lực điện tỉ lệ thuận với hiệu điện thế giữa hai điểm M và N\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-134",
-    "noi_dung": "Điện thế tại một điểm M trong điện trường bất kì có cường độ điện trường không phụ thuộc vào",
-    "phuong_an": "A. vị trí điểm M.\nB. cường độ điện trường.\nC. điện tích q đặt tại điểm M.\nD. vị trí được chọn làm mốc của điện thế.",
-    "dap_an": "C",
-    "loi_giai": "Khái niệm điện thế: Điện thế tại một điểm M trong điện trường đặc trưng cho thế năng của điện tích q đặt tại M, được xác định bằng thương số của công của lực điện tác dụng khi di chuyển điện tích q từ M ra vô cực và độ lớn của q\n$$V_M = \\frac{A_{M\\infty}}{q}$$\nXác định sự phụ thuộc: Điện thế phụ thuộc vào vị trí điểm M trong điện trường và cách chọn mốc điện thế, nhưng không phụ thuộc vào giá trị của điện tích thử q đặt tại điểm M\nĐiện thế tại một điểm không phụ thuộc vào điện tích q đặt tại điểm M\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-135",
-    "noi_dung": "Biết điện thế tại điểm M trong điện trường là 24V. Electron có điện tích $e = -1{,}6\\cdot 10^{-19}\\text{ C}$ đặt tại điểm M có thế năng là",
-    "phuong_an": "A. $3{,}84\\cdot 10^{-18}\\text{ J}$\nB. $-3{,}84\\cdot 10^{-18}\\text{ J}$\nC. $1{,}5\\cdot 10^{20}\\text{ J}$\nD. $-1{,}5\\cdot 10^{20}\\text{ J}$",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $V_M = 24\\text{ V}$; $q = e = -1{,}6\\cdot 10^{-19}\\text{ C}$.\nThế năng của electron tại điểm M: Thế năng của một điện tích $q$ tại điểm $M$ có điện thế $V_M$ trong điện trường được xác định bởi công thức\n$$W_M = q V_M = -1{,}6\\cdot 10^{-19}\\cdot 24 = -3{,}84\\cdot 10^{-18}\\text{ J}$$\nThế năng của electron tại điểm M là $-3{,}84\\cdot 10^{-18}\\text{ J}$.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-136",
-    "noi_dung": "Hiệu điện thế giữa hai điểm M,N là UMN=32V. Nhận xét nào sau đây đúng?",
-    "phuong_an": "A. Điện thế tại điểm M luôn là 32V\nB. Điện thế tại điểm N luôn là 0.\nC. Nếu điện thế tại M là 0 thì điện thế tại N là -32V.\nD. Nếu điện thế tại M là 10V thì điện thế tại N là 42V.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $U_{MN} = 32\\text{ V}$.\nHiệu điện thế: Hiệu điện thế giữa hai điểm $M$ và $N$ được xác định bởi biểu thức $U_{MN} = V_M - V_N$\n$$U_{MN} = V_M - V_N = 32\\text{ V}$$\nXét các phương án: Nếu điện thế tại $M$ là $V_M = 0\\text{ V}$ thì điện thế tại $N$ là $V_N = V_M - U_{MN} = 0 - 32 = -32\\text{ V} $V_N = -32\\text{ V}$.\nTừ hệ thức $U_{MN} = V_M - V_N$, ta thấy nếu $V_M = 0$ thì $V_N = -32\\text{ V}$, do đó phương án C đúng.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-137",
-    "noi_dung": "Công của lực điện trường dịch chuyển một điện tích - 5 μC từ A đến B là 5 mJ. Hiệu điện thế $U_{AB}$ có giá trị nào sau đây?",
-    "phuong_an": "A. 1000 V.\nB. -1000 V.\nC. 2500 V.\nD. - 2500 V.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $q = -5\\cdot 10^{-6}\\text{ C}$; $A_{AB} = 5\\text{ mJ} = 5\\cdot 10^{-3}\\text{ J}$.\nHiệu điện thế: Áp dụng công thức tính hiệu điện thế giữa hai điểm A và B\n$$U_{AB} = \\frac{A_{AB}}{q}$$\nTính toán: Thay số vào biểu thức ta được\n$$U_{AB} = \\frac{5\\cdot 10^{-3}}{-5\\cdot 10^{-6}} = -1000\\text{ V}$$\nGiá trị của hiệu điện thế U_{AB} là -1000 V, ứng với phương án B\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-138",
-    "noi_dung": "Tính công mà lực điện tác dụng lên một điện tích - 5 μC sinh ra khi nó chuyển động từ điểm A đến điểm B. Biết $U_{AB} = 1000\\text{ V}$.",
-    "phuong_an": "A. 5000 J.\nB. - 5000 J.\nC. 5 mJ.\nD. - 5 mJ.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $q = -5\\cdot 10^{-6}\\text{ C}$; $U_{AB} = 1000\\text{ V}$.\nCông của lực điện: Công của lực điện tác dụng lên điện tích khi di chuyển từ điểm A đến điểm B được tính bằng công thức\n$$A_{AB} = q\\cdot U_{AB}$$\nTính toán: Thay số vào công thức ta được\n$$A_{AB} = -5\\cdot 10^{-6}\\cdot 1000 = -5\\cdot 10^{-3}\\text{ J} = -5\\text{ mJ}$$\nCông mà lực điện sinh ra là -5 mJ, ứng với phương án D.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-139",
     "noi_dung": "Hiệu điện thế giữa hai điểm M, N là $U_{MN} = 20\\text{ V}$. Nhận xét nào sau đây đúng?",
     "phuong_an": "A. Điện thế tại điểm M là 20 V.\nB. Điện thế tại điểm N là 20 V.\nC. Điện thế ở M có giá trị dương, ở N có giá trị âm.\nD. Điện thế ở M cao hơn điện thế ở N 40 V.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-140",
-    "noi_dung": "Điện tích q di chuyển trong điện trường giữa hai điểm M, N có hiệu điện thế $U_{MN} = 2{,}4\\text{ V}$ thì lực điện trường sinh công $-3{,}84\\cdot 10^{-6}\\text{ J}$. Giá trị của điện tích q là",
-    "phuong_an": "A. $1{,}6\\cdot 10^{-6}\\text{C}$\nB. $-1{,}6\\cdot 10^{-6}\\text{C}$\nC. $1{,}2\\cdot 10^{-6}\\text{C}$\nD. $-1{,}2\\cdot 10^{-6}\\text{C}$",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $U_{MN} = 2{,}4\\text{ V}$; $A_{MN} = -3{,}84\\cdot 10^{-6}\\text{ J}$.\nCông thức tính công của lực điện: Công thức liên hệ giữa công của lực điện trường và hiệu điện thế là\n$$A_{MN} = q U_{MN}$$\nTính điện tích q: Thay số vào công thức trên để tìm điện tích q\n$$q = \\frac{A_{MN}}{U_{MN}} = \\frac{-3{,}84\\cdot 10^{-6}}{2{,}4} = -1{,}6\\cdot 10^{-6}\\text{ C}$$\nGiá trị của điện tích q là -1,6\\cdot 10^{-6}\\text{ C}, ứng với phương án B.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-141",
-    "noi_dung": "Một proton chỉ chịu tác dụng của lực điện, chuyển động trong điện trường đều dọc theo một đường sức từ điểm C đến điểm D. Nhận xét nào sau đây sai?",
-    "phuong_an": "A. Điện thế tại điểm D cao hơn điện thế tại điểm C.\nB. Nếu điện thế tại điểm C bằng 0 thì điện thế tại điểm D có giá trị âm\nC. Điện thế tại điểm C cao hơn điện thế tại điểm D\nD. Đường sức điện có chiều từ C đến D",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $Hạt proton mang điện tích dương q > 0$; $Chuyển động dọc theo đường sức điện từ C đến D$.\nChiều đường sức điện: Đường sức điện luôn có chiều đi từ nơi có điện thế cao đến nơi có điện thế thấp. Do proton chuyển động dọc theo chiều đường sức từ C đến D nên chiều đường sức là chiều từ C đến D.\n$$V_C > V_D$$\nSo sánh điện thế: Vì điện thế giảm dần theo chiều đường sức nên điện thế tại C cao hơn điện thế tại D. Do đó nhận xét Điện thế tại điểm D cao hơn điện thế tại điểm C là sai. $V_C - V_D > 0$.\nĐiện thế tại C cao hơn điện thế tại D nên phát biểu D cao hơn C là sai.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-142",
-    "noi_dung": "Thế năng tĩnh điện của một electron tại điểm M trong điện trường của một điện tích điểm là $-32\\cdot 10^{-19}\\text{ J}$. Mốc để tính thế năng tĩnh điện ở vô cực. Điện thế tại điểm M bằng",
-    "phuong_an": "A. -20 V\nB. 20 V\nC. 32 V\nD. -32 V",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $W_t = -32\\cdot 10^{-19}\\text{ J}$; $q = -1{,}6\\cdot 10^{-19}\\text{ C}$.\nĐiện thế tại điểm M: Áp dụng công thức liên hệ giữa thế năng tĩnh điện và điện thế $W_t = qV$, ta suy ra điện thế tại điểm M là\n$$V = \\frac{W_t}{q} = \\frac{-32\\cdot 10^{-19}}{-1{,}6\\cdot 10^{-19}} = 20\\text{ V}$$\nChọn phương án: Kết quả tính được là $20\\text{ V}$, trùng với phương án B.\nĐiện thế tại điểm M là 20 V.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-143",
-    "noi_dung": "Khi $U_{AB} > 0$, ta có:",
-    "phuong_an": "A. Điện thế ở A thấp hơn điện thế tại B.\nB. Điện thế ở A bằng điện thế ở B.\nC. Dòng điện chạy trong mạch AB theo chiều từ B → A.\nD. Điện thế ở A cao hơn điện thế ở B.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $U_{AB} > 0$.\nMối quan hệ giữa hiệu điện thế và điện thế: Hiệu điện thế giữa hai điểm A và B được tính bằng độ chênh lệch điện thế giữa hai điểm đó\n$$U_{AB} = V_A - V_B$$\nXác định so sánh điện thế: Vì $U_{AB} > 0$ nên hiệu số giữa điện thế tại A và điện thế tại B là số dương, suy ra điện thế tại A cao hơn điện thế tại B\n$$V_A > V_B$$\nĐiện thế ở A cao hơn điện thế ở B\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-144",
-    "noi_dung": "Khi di chuyển điện tích $q = -10^{-4}\\text{ C}$ từ rất xa (vô cực) đến điểm M trong điện trường thì công của lực điện thực hiện là $5\\cdot 10^{-5}\\text{ J}$. Cho điện thế ở vô cực bằng 0. Điện thế ở điểm M là bao nhiêu?",
-    "phuong_an": "A. 1 V.\nB. 5 V.\nC. 10 V.\nD. 0,5 V.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $q = -10^{-4}\\text{ C}$; $A_{\\infty M} = 5\\cdot 10^{-5}\\text{ J}$; $V_{\\infty} = 0\\text{ V}$.\nĐịnh nghĩa điện thế: Điện thế tại điểm M trong điện trường đặc trưng cho khả năng sinh công của điện trường khi đặt tại đó một điện tích thử q, được tính bằng thương số giữa công của lực điện dịch chuyển điện tích từ M ra vô cực và độ lớn điện tích q.\n$$V_M = \\frac{A_{\\infty M}}{q}$$\nTính điện thế: Thay số vào công thức ta tính được điện thế tại điểm M.\n$$V_M = \\frac{5\\cdot 10^{-5}}{-10^{-4}} = -0{,}5\\text{ V}$$\nĐề bài có sự nhầm lẫn về dấu của công lực điện hoặc điện tích, hoặc xét chiều dịch chuyển. Thực tế với $q < 0$ di chuyển từ vô cực đến M mà lực điện sinh công dương thì điện thế tại M phải mang giá trị âm. Tuy nhiên theo các phương án của đề, giá trị độ lớn là $0{,}5\\text{ V}$. Xem xét lại bản chất công dịch chuyển từ vô cực đến M: $A = q(V_{\\infty} - V_M) = -qV_M$. Suy ra $V_M = \\frac{A}{-q} = \\frac{5\\cdot 10^{-5}}{10^{-4}} = 0{,}5\\text{ V}$.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-145",
-    "noi_dung": "Hiệu điện thế giữa hai điểm M, N là $U_{MN} = 40\\text{ V}$. Chọn câu chắc chắn đúng.",
-    "phuong_an": "A. Điện thế ở M là 40 V.\nB. Điện thế ở N bằng 0.\nC. Điện thế ở M có giá trị dương, ở N có giá trị âm.\nD. Điện thế ở M cao hơn điện thế ở N là 40 V",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $U_{MN} = 40\\text{ V}$.\nĐịnh nghĩa hiệu điện thế: Hiệu điện thế giữa hai điểm M và N đặc trưng cho khả năng sinh công của điện trường khi di chuyển điện tích từ M đến N, được xác định bằng độ chênh lệch điện thế giữa hai điểm đó.\n$$U_{MN} = V_M - V_N = 40\\text{ V}$$\nSo sánh điện thế: Vì $U_{MN} > 0$ nên điện thế ở M cao hơn điện thế ở N là $40\\text{ V}$. $V_M - V_N = 40\\text{ V}$.\nĐiện thế ở M cao hơn điện thế ở N là 40 V\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-146",
-    "noi_dung": "Giữa hai bản kim loại phẳng song song cách nhau 4 cm có một hiệu điện thế không đổi 200 V. Cường độ điện trường ở khoảng giữa hai bản kim loại là",
-    "phuong_an": "A. 5000 V/m.\nB. 50 V/m.\nC. 800 V/m.\nD. 80 V/m.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $d = 4\\text{ cm} = 0{,}04\\text{ m}$; $U = 200\\text{ V}$.\nCường độ điện trường: Cường độ điện trường giữa hai bản kim loại phẳng song song được tính bằng công thức\n$$E = \\frac{U}{d}$$\nThay số: Thay các giá trị vào biểu thức ta được\n$$E = \\frac{200}{0{,}04} = 5000\\text{ V/m}$$\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-147",
-    "noi_dung": "Trong một điện trường đều, nếu trên một đường sức, giữa hai điểm cách nhau 5 cm có hiệu điện thế 10 V, giữa hai điểm cách nhau 8 cm có hiệu điện thế là",
-    "phuong_an": "A. 10 V.\nB. 16 V.\nC. 20 V.\nD. 6,25 V.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $d_1 = 5\\text{ cm}$; $U_1 = 10\\text{ V}$; $d_2 = 8\\text{ cm}$.\nĐộ lớn cường độ điện trường: Cường độ điện trường trong điện trường đều được tính bằng công thức $E = \\frac{U_1}{d_1}$\n$$E = \\frac{10}{0{,}05} = 200\\text{ V/m}$$\nHiệu điện thế giữa hai điểm cách nhau 8 cm: Hiệu điện thế giữa hai điểm cách nhau $d_2$ là $U_2 = E d_2$\n$$U_2 = 200 \\cdot 0{,}08 = 16\\text{ V}$$\nHiệu điện thế giữa hai điểm cách nhau 8 cm là 16 V, tương ứng với phương án B.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-148",
-    "noi_dung": "Tại một điểm M cách mặt đất 5 m ở nơi có điện trường của Trái Đất là 110 V/m. Chọn mặt đất là mốc điện thế. Điện thế tại điểm M là",
-    "phuong_an": "A. 550 V.\nB. 5 V.\nC. 110 V.\nD. 22 V.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $z = 5\\text{ m}$; $E = 110\\text{ V/m}$; $V_{\\text{dat}} = 0\\text{ V}$.\nĐiện thế tại điểm M: Điện thế tại điểm M trong điện trường đều được tính bằng công thức\n$$V_M = E\\cdot z = 110\\cdot 5 = 550\\text{ V}$$\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-149",
-    "noi_dung": "Biết hiệu điện thế $U_{MN} = 6\\text{ V}; U_{NP} = 3\\text{ V}$. Chọn gốc điện thế là điện thế của điểm M. Như thế điện thế của điểm P là",
-    "phuong_an": "A. 3 V\nB. 6 V\nC. – 9 V\nD. 9 V",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $U_{MN} = 6\\text{ V}$; $U_{NP} = 3\\text{ V}$; $V_M = 0\\text{ V}$.\nTính điện thế tại điểm N: Áp dụng định nghĩa hiệu điện thế giữa hai điểm\n$$U_{MN} = V_M - V_N \\Rightarrow V_N = V_M - U_{MN} = 0 - 6 = -6\\text{ V}$$\nTính điện thế tại điểm P: Áp dụng định nghĩa hiệu điện thế giữa hai điểm N và P\n$$U_{NP} = V_N - V_P \\Rightarrow V_P = V_N - U_{NP} = -6 - 3 = -9\\text{ V}$$\nĐiện thế của điểm P là -9 V\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-150",
-    "noi_dung": "Có hai bản kim loại phẳng, tích điện trái dấu, nhưng độ lớn bằng nhau đặt song song với nhau và cách nhau 1 cm. Hiệu điện thế giữa bản dương và bản âm là 120 V. Nếu chọn mốc điện thế ở bản âm thì điện thế tại điểm M cách bản âm 0,6 cm là",
-    "phuong_an": "A. 72 V.\nB. 36V.\nC. 82V.\nD. 18V.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $d = 1\\text{ cm} = 0{,}01\\text{ m}$; $U = 120\\text{ V}$; $x = 0{,}6\\text{ cm} = 0{,}006\\text{ m}$; $V_{-} = 0\\text{ V}$.\nĐộ lớn cường độ điện trường: Cường độ điện trường đều giữa hai bản kim loại là\n$$E = \\frac{U}{d} = \\frac{120}{0{,}01} = 12000\\text{ V/m}$$\nĐiện thế tại điểm M: Điện thế tại điểm M cách bản âm một khoảng x là\n$$V_{M} = E\\cdot (d - x) = 12000\\cdot (0{,}01 - 0{,}006) = 48\\text{ V}$$\nTính lại điện thế theo chiều điện trường từ bản âm đến M: V_M = E \\cdot x = 12000 \\cdot 0,006 = 72\\text{ V}. Do đó chọn phương án A.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-151",
-    "noi_dung": "Một electron bay với vận tốc $1{,}2\\cdot 10^7\\text{ m/s}$ từ điểm M có điện thế $V_M = 900\\text{ V}$ dọc theo một đường sức điện trong một điện trường đều. Biết điện tích của electron bằng $-1{,}6\\cdot 10^{-19}\\text{ C}$, khối lượng của electron bằng $9{,}1\\cdot 10^{-31}\\text{ kg}$. Điện thế tại điểm N mà ở đó electron dừng lại là:",
-    "phuong_an": "A. 1035V\nB. 490,5V\nC. 450V\nD. 600V",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $v_M = 1{,}2\\cdot 10^7\\text{ m/s}$; $v_N = 0\\text{ m/s}$; $V_M = 900\\text{ V}$; $q = -1{,}6\\cdot 10^{-19}\\text{ C}$; $m = 9{,}1\\cdot 10^{-31}\\text{ kg}$.\nÁp dụng định lí biến thiên động năng: Độ biến thiên động năng của electron khi di chuyển từ M đến N bằng công của lực điện trường\n$$W_{dN} - W_{dM} = A_{MN} \\Leftrightarrow 0 - \\frac{1}{2}mv_M^2 = q(V_M - V_N)$$\nTính hiệu điện thế giữa hai điểm M và N: Hiệu điện thế $U_{MN} = V_M - V_N$ được xác định bởi\n$$V_M - V_N = -\\frac{mv_M^2}{2q} = -\\frac{9{,}1\\cdot 10^{-31}\\cdot (1{,}2\\cdot 10^7)^2}{2\\cdot (-1{,}6\\cdot 10^{-19})} = 409{,}5\\text{ V}$$\nXác định điện thế tại điểm N: Điện thế tại N là\n$$V_N = V_M - 409{,}5 = 900 - 409{,}5 = 490{,}5\\text{ V}$$\nĐiện thế tại điểm N mà ở đó electron dừng lại là 490,5 V.\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2052,38 +1539,11 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1247_213636507ĐỀ_CƯƠNG_ÔN_TẬP_GK2-11-HS_(2025-2026).pdf_p14_img1.png, images/q1247_213636507___C__NG__N_T_P__p14_img1.png, images/q1247_213636507___C__NG__N_p14_img1.png"
   },
   {
-    "ma_cau": "C-1XHtGuMf-153",
-    "noi_dung": "Một quả cầu nhỏ khối lượng $3{,}06\\cdot 10^{-15}\\text{kg}$, mang điện tích $4{,}8\\cdot 10^{-18}\\text{C}$ nằm lơ lửng giữa hai tấm kim loại song song nằm ngang, nhiễm điện trái dấu, cách nhau 2cm. Lấy $g=10\\text{ m/s}^2$. Hiệu điện thế giữa hai tấm kim loại bằng",
-    "phuong_an": "A. 255V\nB. 63,75V\nC. 127,5V\nD. 734,4V",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $m = 3{,}06\\cdot 10^{-15}\\text{ kg}$; $q = 4{,}8\\cdot 10^{-18}\\text{ C}$; $d = 2\\text{ cm} = 0{,}02\\text{ m}$; $g = 10\\text{ m/s}^2$.\nĐiều kiện cân bằng: Quả cầu nằm lơ lửng giữa hai bản tụ nên trọng lực cân bằng với lực điện tác dụng lên quả cầu\n$$P = F_{d} \\Leftrightarrow m\\cdot g = |q|\\cdot E$$\nTính cường độ điện trường: Độ lớn cường độ điện trường giữa hai bản kim loại\n$$E = \\frac{m\\cdot g}{|q|} = \\frac{3{,}06\\cdot 10^{-15}\\cdot 10}{4{,}8\\cdot 10^{-18}} = 6375\\text{ V/m}$$\nTính hiệu điện thế: Hiệu điện thế giữa hai tấm kim loại\n$$U = E\\cdot d = 6375\\cdot 0{,}02 = 127{,}5\\text{ V}$$\nHiệu điện thế giữa hai tấm kim loại là 127,5 V, trùng với phương án C\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-154",
     "noi_dung": "Cho những nhận định sau:\na. Điện thế tại một điểm trong điện trường được xác định bằng công dịch chuyển trong một đơn vị điện tích dương từ vô về điểm đó.\nb. Điện thế có giá trị đại số.\nc. Chiều của vectơ cường độ điện trường hướng theo chiều tăng của điện thế.\nd. Hiệu điện thế giữa hai điểm phụ thuộc vị trí của hai điểm đó.\nNhận định nào ĐÚNG, nhận định nào SAI?",
     "phuong_an": "a. Điện thế tại một điểm trong điện trường được xác định bằng công dịch chuyển trong một đơn vị điện tích dương từ vô về điểm đó.\nb. Điện thế có giá trị đại số.\nc. Chiều của vectơ cường độ điện trường hướng theo chiều tăng của điện thế.\nd. Hiệu điện thế giữa hai điểm phụ thuộc vị trí của hai điểm đó.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-155",
-    "noi_dung": "Cho những nhận định sau:\na. Đơn vị của thế năng là Oát (W).\nb. Thế năng điện là đại lượng gắn với điện tích đặt trong điện trường.\nc. Thế năng điện và điện thế liên hệ với nhau bởi công thức: $W_M = V_M \\cdot q$\nd. Hệ thức giữa hiệu điện thế và cường độ điện trường: U = Ed.\nNhận định nào ĐÚNG, nhận định nào SAI?",
-    "phuong_an": "a. Đơn vị của thế năng là Oát (W).\nb. Thế năng điện là đại lượng gắn với điện tích đặt trong điện trường.\nc. Thế năng điện và điện thế liên hệ với nhau bởi công thức: $W_M = V_M \\cdot q$\nd. Hệ thức giữa hiệu điện thế và cường độ điện trường: U = Ed.",
-    "dap_an": "a) Sai; b) Đúng; c) Đúng; d) Đúng",
-    "loi_giai": "Ý a) Đơn vị của thế năng là jun (\\text{J}), còn oát (\\text{W}) là đơn vị của công suất.\nÝ b) Thế năng điện đặc trưng cho khả năng sinh công của điện trường khi đặt một điện tích tại điểm đó, nên nó là đại lượng gắn với điện tích đặt trong điện trường.\nÝ c) Điện thế tại điểm $M$ được xác định bởi tỉ số giữa thế năng điện của điện tích $q$ tại $M$ và điện tích $q$, do đó thế năng điện và điện thế liên hệ với nhau qua hệ thức:\n$$W_M = V_M \\cdot q$$\nÝ d) Trong điện trường đều, mối liên hệ giữa hiệu điện thế và cường độ điện trường được xác định bởi công thức:\n$$U = E\\cdot d$$\nĐáp án: a) Sai; b) Đúng; c) Đúng; d) Đúng.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-156",
-    "noi_dung": "Một điện tích $q = 2\\ \\mu\\text{C}$ dịch chuyển giữa hai điểm M, N trong điện trường đều giữa hai bản kim loại tích điện trái dấu. Thế năng của q tại M và N lần lượt là $W_M = 0{,}3\\text{ J}, W_N = 0{,}5\\text{ J}$. Khi điện tích q dịch chuyển từ M đến N.",
-    "phuong_an": "a. Điện thế tại M là $V_M = 25\\cdot 10^4\\text{ V}$.\nb. Điện thế tại N là $V_N = 25\\cdot 10^4\\text{ V}$.\nc. Hiệu điện thế $U_{MN} = -10\\cdot 10^4\\text{ V}$.\nd. Công lực điện thực hiện khi q dịch chuyển từ M đến N là $A_{MN} = 0{,}2\\text{ J}$.",
-    "dap_an": "a) Sai; b) Đúng; c) Đúng; d) Sai",
-    "loi_giai": "Tóm tắt: $q = 2\\ \\mu\\text{C} = 2\\cdot 10^{-6}\\text{ C}$; $W_M = 0{,}3\\text{ J}$; $W_N = 0{,}5\\text{ J}$.\nÝ a) Điện thế tại M là $V_M = \\frac{W_M}{q} = \\frac{0{,}3}{2\\cdot 10^{-6}} = 15\\cdot 10^4\\text{ V}$, do đó ý a sai.\n$$V_M = \\frac{W_M}{q} = \\frac{0{,}3}{2\\cdot 10^{-6}} = 15\\cdot 10^4\\text{ V}$$\nÝ b) Điện thế tại N là $V_N = \\frac{W_N}{q} = \\frac{0{,}5}{2\\cdot 10^{-6}} = 25\\cdot 10^4\\text{ V}$, do đó ý b đúng.\n$$V_N = \\frac{W_N}{q} = \\frac{0{,}5}{2\\cdot 10^{-6}} = 25\\cdot 10^4\\text{ V}$$\nÝ c) Hiệu điện thế $U_{MN} = V_M - V_N = 15\\cdot 10^4 - 25\\cdot 10^4 = -10\\cdot 10^4\\text{ V}$, do đó ý c đúng.\n$$U_{MN} = V_M - V_N = 15\\cdot 10^4 - 25\\cdot 10^4 = -10\\cdot 10^4\\text{ V}$$\nÝ d) Công của lực điện khi dịch chuyển từ M đến N là $A_{MN} = W_M - W_N = 0{,}3 - 0{,}5 = -0{,}2\\text{ J}$, do đó ý d sai.\n$$A_{MN} = W_M - W_N = 0{,}3 - 0{,}5 = -0{,}2\\text{ J}$$\nĐáp án: a) Sai; b) Đúng; c) Đúng; d) Sai.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -6138,57 +5598,12 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1YaCpMty-002",
-    "noi_dung": "Hiện tượng cảm ứng điện từ xảy ra khi",
-    "phuong_an": "A. mạch kín được đặt trong một từ trường đều.\nB. dây dẫn được làm bằng vật liệu siêu dẫn.\nC. có sự biến thiên từ thông qua một mạch kín.\nD. dòng điện chạy qua một cuộn dây.",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-003",
-    "noi_dung": "Trong hệ SI, đơn vị của từ thông là",
-    "phuong_an": "A. Weber (Wb).\nB. Tesla (T).\nC. Ampe (A).\nD. Volt (V).",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-004",
-    "noi_dung": "Hiện tượng phóng xạ là hiện tượng",
-    "phuong_an": "A. một hạt nhân không bền vững tự phát phân rã thành các hạt nhân khác và phát ra các tia phóng xạ.\nB. có thể được kiểm soát bằng cách đặt hạt nhân phóng xạ vào vùng không gian có điện trường và từ trường.\nC. một hạt nhân phát ra các tia phóng xạ khi bị bắn phá bởi các hạt có động năng lớn.\nD. một hạt nhân biến đổi thành một hạt nhân khác khi hấp thụ một neutron.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-005",
-    "noi_dung": "Đại lượng đặc trưng cho mức độ bền vững của hạt nhân?",
-    "phuong_an": "A. Năng lượng liên kết riêng.\nB. Độ hụt khối.\nC. Năng lượng liên kết.\nD. Số khối.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1YaCpMty-006",
     "noi_dung": "Một người đang dùng điện thoại di động để thực hiện cuộc gọi. Lúc này điện thoại phát ra",
     "phuong_an": "A. sóng vô tuyến.\nB. tia Rơn-ghen.\nC. bức xạ gamma.\nD. tia tử ngoại.",
     "dap_an": "A",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-007",
-    "noi_dung": "Hạt nhân nguyên tử có thể được cấu tạo từ",
-    "phuong_an": "A. neutron, electron.\nB. nucleon, electron.\nC. proton, electron.\nD. proton, neutron.",
-    "dap_an": "D",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -6197,88 +5612,7 @@
     "phuong_an": "A. tạo với nhau góc $45^0$.\nB. cùng chiều nhau.\nC. tạo với nhau góc $90^0$.\nD. ngược chiều nhau.",
     "dap_an": "C",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-009",
-    "noi_dung": "Khi nói về các tia phóng xạ, phát biểu nào sau đây đúng?",
-    "phuong_an": "A. Tia alpha (α) là dòng các hạt điện tích âm.\nB. Tia gamma (γ) có bản chất là sóng điện từ có bước sóng dài.\nC. Tia bêta trừ ($\\beta^-$) là các dòng hạt electron.\nD. Tia bêta (β) là các dòng hạt proton.",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-010",
-    "noi_dung": "Khi nói về độ phóng xạ, phát biểu nào sau đây sai?\nA. Đơn vị đo độ phóng xạ là becơren.\nB. Độ phóng xạ của một lượng chất phóng xạ phụ thuộc vào nhiệt độ của lượng chất đó.\nC. Với mỗi lượng chất phóng xạ xác định thì độ phóng xạ tỉ lệ với số nguyên tử của lượng chất đó.\nD. Độ phóng xạ là đại lượng đặc trưng cho tính phóng xạ mạnh hay yếu của một lượng chất phóng xạ.",
-    "phuong_an": "A. Đơn vị đo độ phóng xạ là becơren.\nB. Độ phóng xạ của một lượng chất phóng xạ phụ thuộc vào nhiệt độ của lượng chất đó.\nC. Với mỗi lượng chất phóng xạ xác định thì độ phóng xạ tỉ lệ với số nguyên tử của lượng chất đó.\nD. Độ phóng xạ là đại lượng đặc trưng cho tính phóng xạ mạnh hay yếu của một lượng chất phóng xạ.",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-011",
-    "noi_dung": "Dây dẫn mang dòng điện không tương tác với",
-    "phuong_an": "A. các điện tích đứng yên.\nB. nam châm đứng yên.\nC. các điện tích chuyển động.\nD. nam châm chuyển động.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-012",
-    "noi_dung": "Các hạt nhân đồng vị có",
-    "phuong_an": "A. cùng số khối.\nB. cùng khối lượng.\nC. cùng số neutron.\nD. cùng điện tích.",
-    "dap_an": "D",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-013",
-    "noi_dung": "Một nhóm học sinh làm thí nghiệm về hiện tượng cảm ứng điện từ và đưa ra các nhận định sau:",
-    "phuong_an": "a) Mỗi khi từ thông qua mặt giới hạn bởi mạch điện kín biến thiên theo thời gian thì trong mạch xuất hiện dòng điện cảm ứng.\nb) Độ lớn của suất điện động cảm ứng trong mạch điện kín tỉ lệ với tốc độ biến thiên của từ thông qua mạch kín đó.\nc) Độ lớn của từ thông qua một mạch kín càng lớn thì suất điện động cảm ứng trong mạch kín đó càng lớn.\nd) Khi một vòng dây dẫn phẳng có diện tích $S = 160\\text{ cm}^2$ được đặt vuông góc với cảm ứng từ trong một từ trường đồng nhất nhưng có độ lớn tăng đều với tốc độ 0,02 T/s thì độ lớn suất điện động cảm ứng trong vòng dây là 0,32 mV.",
-    "dap_an": "a) Đ, b) Đ, c) S, d) Đ",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-014",
-    "noi_dung": "Để so sánh tính bền vững cũng như năng lượng liên kết của hai hạt nhân $^{206}_{82}\\text{Pb}$ và $^{27}_{13}\\text{Al}$. Học sinh đưa ra các nhận định sau:",
-    "phuong_an": "a) Hạt nhân có số khối càng lớn thì càng bễn vững.\nb) Hạt nhân nào có độ hụt khối lớn hơn thì có năng lượng liên kết lớn hơn.\nc) Trong các hạt nhân có cùng năng lượng liên kết, hạt nhân nào có số khối càng lớn thì càng kém bền vững.\nd) Gọi R và A lần lượt là bán kính và số khối của hạt nhân, biết rằng $R \\sim A^{1/3}$. Bán kính hạt nhân $^{206}_{82}\\text{Pb}$ lớn hơn bán kính hạt nhân $^{27}_{13}\\text{Al}$ 7,63 lần.",
-    "dap_an": "a) S, b) Đ, c) Đ, d) S",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-015",
-    "noi_dung": "So với hạt nhân vàng $^{197}_{79}\\text{Au}$ thì hạt nhân bạc $^{107}_{47}\\text{Ag}$ có ít hơn $x\\text{ neutron}$. Giá trị của $x$ bao nhiêu?",
-    "phuong_an": "",
-    "dap_an": "58",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-016",
-    "noi_dung": "Cho phương trình phản ứng phân hạch: $^{235}_{92}\\text{U} + ^1_0\\text{ n} \\rightarrow ^{140}_{54}\\text{Xe} + ^{94}_{38}\\text{Sr} + k ^1_0\\text{ n}$. Giá trị của $k$ bao nhiêu?",
-    "phuong_an": "",
-    "dap_an": "2",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-017",
-    "noi_dung": "Một chất phóng xạ ban đầu có N0 hạt nhân. Sau 1 năm, còn lại một phần bốn số hạt nhân ban đầu. Hạt nhân có chu kì bán rã bao nhiêu năm? (viết kết quả đến chữ số hàng phần mười)",
-    "phuong_an": "",
-    "dap_an": "0.5",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -6287,7 +5621,7 @@
     "phuong_an": "",
     "dap_an": "0.08",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -6296,7 +5630,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -6305,61 +5639,7 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-16c6ArsW-002",
-    "noi_dung": "Đặc điểm nào sau đây không phải là đặc điểm của các phân tử chất rắn?",
-    "phuong_an": "A. Dao động quanh vị trí cân bằng.\nB. Lực liên kết giữa các phân tử mạnh.\nC. Các phân tử sắp xếp có trật tự.\nD. Khoảng cách giữa các phân tử rất lớn.",
-    "dap_an": "D",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-16c6ArsW-003",
-    "noi_dung": "Trong các hiện tượng sau đây, hiện tượng nào không liên quan đến sự đông đặc?",
-    "phuong_an": "A. Tuyết rơi.\nB. Đúc tượng đồng.\nC. Làm đá trong tủ lạnh.\nD. Rèn thép trong lò rèn",
-    "dap_an": "D",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-16c6ArsW-004",
-    "noi_dung": "Quy ước về dấu nào sau đây phù hợp với công thức $\\Delta U = A + Q$ định luật I của nhiệt động lực học?",
-    "phuong_an": "A. Vật nhận công: A < 0 ; vật nhận nhiệt: Q < 0.\nB. Vật nhận công: A > 0 ; vật nhận nhiệt: Q > 0.\nC. Vật thực hiện công: A < 0 ; vật truyền nhiệt: Q > 0.\nD. Vật thực hiện công: A > 0 ; vật truyền nhiệt: Q < 0.",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-16c6ArsW-005",
-    "noi_dung": "Nhiệt lượng của vật bằng không khi:",
-    "phuong_an": "A. vật truyền nhiệt.\nB. vật nhận nhiệt\nC. vật không trao đổi nhiệt.\nD. vật trao đổi nhiệt.",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-16c6ArsW-006",
-    "noi_dung": "Nội năng của một vật là",
-    "phuong_an": "A. tổng động năng và thế năng của vật.\nB. tổng động năng và thế năng của các phân tử cấu tạo nên vật.\nC. tổng nhiệt lượng và cơ năng mà vật nhận được trong quá trình truyền nhiệt và thực hiện công.\nD. nhiệt lượng vật nhận được trong quá trình truyền nhiệt.",
-    "dap_an": "B",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-16c6ArsW-007",
-    "noi_dung": "Khi ôtô đóng kín cửa để ngoài trời nắng nóng, nhiệt độ không khí trong xe tăng rất cao so với nhiệt độ bên ngoài, làm giảm tuổi thọ các thiết bị trong xe. Nguyên nhân gây ra sự tăng nhiệt độ này là",
-    "phuong_an": "A. do thể tích khối khí trong ôtô thay đổi nên nhiệt lượng mà khối khí trong ôtô nhận được chủ yếu làm tăng nội năng của khối khí.\nB. do thể tích khối khí trong ôtô không đổi nên nhiệt lượng mà khối khí trong ôtô nhận được chủ yếu làm giảm nội năng của khối khí.\nC. do thể tích khối khí trong ôtô thay đổi nên nhiệt lượng mà khối khí trong ôtô nhận được chủ yếu làm giảm nội giảm của khối khí.\nD. do thể tích khối khí trong ôtô không đổi nên nhiệt lượng mà khối khí trong ôtô nhận được chủ yếu làm tăng nội năng của khối khí.",
-    "dap_an": "D",
-    "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
@@ -6368,25 +5648,304 @@
     "phuong_an": "A. 0,5 J.\nB. -0,5J.\nC. 2,5J.\nD. -2,5J.",
     "dap_an": "B",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
-    "ma_cau": "C-16c6ArsW-009",
-    "noi_dung": "Khi hai vật có nhiệt độ chênh lệch tiếp xúc nhau thì nhiệt năng được truyền như thế nào?",
-    "phuong_an": "A. Truyền từ vật có nhiệt độ cao sang vật có nhiệt độ thấp.\nB. Truyền từ vật có nhiệt độ thấp sang vật có nhiệt độ cao.\nC. Không có sự truyền nhiệt năng giữa chúng.\nD. Vật ở trạng thái cân bằng nhiệt.",
-    "dap_an": "A",
+    "ma_cau": "C-1Aq5Cimb-002",
+    "noi_dung": "Ống sáo và các loại kèn khí như clarinet, xaxôphôn đều có bộ phận chính là một ống có một đầu kín, một đầu hở (hình 1)\n[Hình: Hình 1 ống một đầu kín một đầu hở; Hình 2 mô tả âm cơ bản trong ống]\nNếu chiều dài của ống thích hợp thì khi thổi trong ống sẽ hình thành sóng dừng với âm cơ bản được biểu thị như hình 2. Thì ở hình 3 và hình 4 kết luận nào là đúng\n[Hình: Hình 3 mô tả sóng dừng 1 nút 1 bụng phụ; Hình 4 mô tả sóng dừng với nhiều nút hơn]",
+    "phuong_an": "A. Hình 3 biểu diễn họa âm bậc 2.\nB. Hình 4 biểu diễn họa âm bậc 3.\nC. Hình 3 biểu diễn họa âm bậc 1.\nD. Hình 4 biểu diễn họa âm bậc 5.",
+    "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   },
   {
-    "ma_cau": "C-16c6ArsW-010",
-    "noi_dung": "Nhiệt độ không tuyệt đối là nhiệt độ tại đó",
-    "phuong_an": "A. nước đông đặc thành đá.\nB. tất cả các chất khí hóa lỏng.\nC. chuyển động nhiệt phân tử hầu như dừng lại.\nD. tất cả các chất khí hóa rắn.",
-    "dap_an": "C",
+    "ma_cau": "C-1Aq5Cimb-003",
+    "noi_dung": "Một con lắc đơn có khối lượng m, chiều dài dây treo là 1,2 m, dao động điều hòa dưới tác dụng của ngoại lực cưỡng bức $F = F_0\\cos(2\\pi ft + \\frac{\\pi}{2})$. Lấy $g \\approx \\pi^2 \\approx 10\\text{ m/s}^2$. Nếu tần số của ngoại lực thay đổi từ 0,5 Hz đến 1,5 Hz thì biên độ dao động của con lắc",
+    "phuong_an": "A. tăng\nB. giảm\nC. tăng rồi giảm\nD. giảm rồi tăng.",
+    "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Chưa duyệt",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-005",
+    "noi_dung": "Một vật dao động điều hoà xung quanh vị trí cân bằng với biên độ dao động là A và chu kì T. Tại điểm có li độ $x = \\frac{A}{3}$ tốc độ của vật là",
+    "phuong_an": "A. $\\frac{\\pi A}{3T}$\nB. $\\frac{\\sqrt{3}\\pi A}{T}$\nC. $\\frac{4\\sqrt{2}\\pi A}{3T}$\nD. $\\frac{2\\sqrt{3}\\pi A}{3T}$",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-006",
+    "noi_dung": "Hai quả cầu nhỏ giống nhau mang điện tích $q_1$ và $q_2$ có cùng độ lớn, khi đưa lại gần nhau thì chúng hút nhau. Cho chúng tiếp xúc nhau rồi tách ra một khoảng nhỏ thì chúng",
+    "phuong_an": "A. hút nhau.\nB. không tương tác nhau.\nC. có thể hút hoặc đẩy nhau.\nD. đẩy nhau.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-007",
+    "noi_dung": "Trong điều kiện thời tiết bình thường, bên ngoài bề mặt Trái Đất được bao phủ bởi một điện trường. Trong một không gian hẹp gần mặt đất, điện trường là đều, vectơ cường độ điện trường hướng thẳng đứng từ trên xuống dưới và có độ lớn $E = 150\\text{ V/m}$. Một hạt bụi khối lượng $m = 1{,}2\\cdot 10^{-6}\\text{ kg}$ lơ lửng trong không khí. Lấy $g = 10\\text{ m/s}^2$. Điện tích của hạt bụi là",
+    "phuong_an": "A. -80 nC.\nB. 80 nC.\nC. -1,8 mC.\nD. 1,8 mC.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-008",
+    "noi_dung": "Khi tăng hiệu điện thế lên 2 lần thì điện dung của tụ điện",
+    "phuong_an": "A. giảm 2 lần.\nB. tăng 2 lần.\nC. không đổi.\nD. không xác định được.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-009",
+    "noi_dung": "Một chiếc ôtô chạy bằng năng lượng mặt trời nhờ các tấm pin có tổng diện tích $5\\text{ m}^2$ đặt trên nóc xe. Bộ pin cho điện áp 100V, điện trở trong $1\\,\\Omega$ khi công suất bức xạ trung bình của ánh nắng tới pin là $10^3\\text{ W/m}^2$. Khi xe hoạt động, dòng điện chạy qua động cơ xe là 10A, điện trở động cơ là $4\\,\\Omega$. Hiệu suất biến đổi năng lượng mặt trời thành cơ năng của xe là",
+    "phuong_an": "A. 10 %.\nB. 20 %.\nC. 12 %.\nD. 30 %.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-010",
+    "noi_dung": "Một acqui có suất điện động $E = 12\\text{ V}$, điện trở trong $r = 0{,}4\\,\\Omega$. Khi nối với một điện trở ngoài thì cường độ dòng điện $I = 5\\text{ A}$. Trong trường hợp bị đoản mạch thì cường độ dòng điện sẽ bằng",
+    "phuong_an": "A. I = 20A.\nB. I = 25A.\nC. I = 30A.\nD. I = 35A.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-011",
+    "noi_dung": "Hệ thức của nguyên lí I NĐLH có dạng $\\Delta U = Q$ ứng với quá trình nào vẽ ở hình bên?\n[Hình: Đồ thị p-T với chu trình 1-2-3-4 gồm 1-2 là đẳng áp, 2-3 là đẳng nhiệt, 3-4 là kéo dài qua gốc tọa độ O, 4-1 là song song hoặc liên kết]",
+    "phuong_an": "A. Quá trình 1 → 2.\nB. Quá trình 2 → 3.\nC. Quá trình 3 → 4.\nD. Quá trình 4 → 1.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-012",
+    "noi_dung": "Trong quá trình đẳng nhiệt của khí lí tưởng",
+    "phuong_an": "A. nội năng của khí tăng.\nB. nội năng của khí giảm.\nC. khí không thực hiện công.\nD. không có độ biến thiên nội năng.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-013",
+    "noi_dung": "Đổ nước đá vào trong một cốc thủy tinh (không thủng hay vỡ), một lát sau bên ngoài thành cốc xuất hiện những giọt nước. Những giọt nước này được hình thành là do quá trình",
+    "phuong_an": "A. ngưng kết.\nB. nóng chảy.\nC. đông đặc.\nD. ngưng tụ.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-014",
+    "noi_dung": "Cho các phát biểu sau:\na) Một chất lỏng ở bất cứ nhiệt độ nào cũng chứa những phân tử có động năng đủ lớn để thắng lực hút của các phân tử xung quanh, thoát ra khỏi mặt thoáng chất lỏng.\nb) Muốn thành hơi, các phân tử phải sinh công để thắng lực hút giữa các phân tử còn lại có xu hướng kéo chúng trở lại chất lỏng.\nc) Hiện tượng các phân tử chất lỏng thoát ra khỏi chất lỏng, tạo thành hơi được gọi là sự ngưng tụ.\nd) Đồng thời với sự bay hơi còn xảy ra hiện tượng ngưng tụ, một số phân tử hơi ở gần mặt thoáng đi ngược trở lại vào trong lòng chất lỏng.\ne) Khác với sự bay hơi, sự sôi là sự chuyển từ thể lỏng sang thể hơi chỉ trong lòng chất lỏng.\nCác phát biểu đúng là:",
+    "phuong_an": "A. a, b, d.\nB. c, d, e.\nC. a, b, c.\nD. b, d, e.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-015",
+    "noi_dung": "Nội năng của vật trong hình nào sau đây đang giảm?\n[Hình 1: Ấm nước đang đun trên bếp.]\n[Hình 2: Tô phở nóng đặt trong không khí.]\n[Hình 3: Mối hàn kim loại đang được mài nhẵn.]\n[Hình 4: Đá lạnh trong cốc thủy tinh đặt trong không khí]",
+    "phuong_an": "A. Hình 3.\nB. Hình 2.\nC. Hình 4.\nD. Hình 1.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-016",
+    "noi_dung": "Bạn Mạnh đun sôi 1kg nước từ $25^0\\text{ C}$ bằng một ấm điện. Sau khi nước sôi một thời gian, bạn Mạnh mới ngắt điện và rót hết lượng nước sôi còn lại trong ấm vào một phích nước. Biết rằng trong phích nước đã có sẵn 200g nước ở $60^0\\text{ C}$ và nhiệt độ nước trong phích khi cân bằng nhiệt là $92^0\\text{ C}$. Bỏ qua sự trao đổi nhiệt của nước với môi trường và ruột phích. Cho nhiệt dung riêng của nước $c = 4200\\text{ J/(kg.K)}$, nhiệt hoá hơi của nước $L = 2{,}3\\cdot 10^6\\text{ J/kg}$; nước sôi ở $100^0\\text{ C}$; phích nước có dung tích đủ lớn. Nhiệt lượng mà ấm đã cung cấp cho nước trong quá trình đun nói trên là",
+    "phuong_an": "A. 775 kJ.\nB. 460 kJ.\nC. 315 kJ.\nD. 556 kJ.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-017",
+    "noi_dung": "Khi nói về các tính chất của chất khí, phát biểu đúng là",
+    "phuong_an": "A. bành trướng là chiếm một phần thể tích của bình chứa.\nB. khi áp suất tác dụng lên một lượng khí tăng thì thể tích của khí tăng đáng kể.\nC. chất khí có tính dễ nén.\nD. chất khí có khối lượng riêng lớn so với chất rắn và chất lỏng.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-018",
+    "noi_dung": "Hai phòng kín có thể tích bằng nhau thông với nhau bằng một cửa mở. Nhiệt độ không khí trong hai phòng khác nhau thì số phân tử trong mỗi phòng so với nhau là",
+    "phuong_an": "A. bằng nhau.\nB. ở phòng nóng nhiều hơn.\nC. ở phòng lạnh nhiều hơn.\nD. tùy kích thước của cửa.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-019",
+    "noi_dung": "Một xilanh chứa đầy không khí ở nhiệt độ $100^0\\text{ C}$ và áp suất $10^5\\text{ Pa}$. Tiến hành đặt thêm gia trọng có khối lượng $m = 500\\text{ g}$ lên trên pittong của xilanh. Biết diện tích của pittong là $10\\text{ cm}^2$, lấy $g = 10\\text{ m/s}^2$ và áp suất khí quyển là $p_0 = 10^5\\text{ Pa}$. Để thể tích của khí trong xilanh được giữ không đổi thì phải tăng nhiệt độ của chất khí lên xấp xỉ",
+    "phuong_an": "A. 392K.\nB. 423K.\nC. 287K.\nD. 400K.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-020",
+    "noi_dung": "Khi nung nóng một khối khí, sự thay đổi của áp suất p theo nhiệt độ tuyệt đối T được cho bởi đồ thị hình vẽ. Trong quá trình trên thể tích khí\n[Hình: Đồ thị p theo T là đoạn thẳng nối 1 và 2 có đường kéo dài cắt trục p tại giá trị dương (hoặc đường không qua gốc O)]",
+    "phuong_an": "A. bị nén\nB. bị dãn\nC. không thay đổi .\nD. nén rồi dãn.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-021",
+    "noi_dung": "Một con lắc lò xo có độ cứng $K = 100\\text{ N/m}$ vật nặng khối lượng m đang dao động điều hòa. Hình bên là đồ thị biểu diễn sự phụ thuộc của động năng $W_đ$ của con lắc theo thời gian t. Biết $t_3 - t_2 = 0{,}4\\text{ s}$.\n[Hình: Đồ thị động năng Wđ (J) biến thiên từ 0 đến 2 J theo thời gian t (s), các mốc thời gian t1, t2, t3, t4 tương ứng]",
+    "phuong_an": "a) Thời điểm ban đầu vật đang ở cân bằng\nb) Vật dao động với biên độ 2cm\nc) Giá trị của $t_4 - t_1$ là 0,8 s\nd) Tốc độ trung bình lớn nhất của vật trong thời gian 0,8 s là 50cm/s",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-022",
+    "noi_dung": "Nồi cơm điện là thiết bị điện được sử dụng phổ biến trong các hộ gia đình, nó có chức năng đun nóng và ủ nhiệt. Hình 2a là sơ đồ mạch điện đơn giản của một nồi cơm điện. Khóa k là một công tắc có thể tự ngắt khi nhiệt độ đạt đến một giá trị nhất định, $R_1$ và $R_2$ đều là điện trở đốt nóng. $R_2$ là điện trở đốt nóng chính được gắn cố định dưới đáy nồi, điện trở $R_1$ chỉ đốt nóng khi ủ nhiệt (còn gọi là lá ủ nhiệt). Khi bắt đầu nấu thì ta phải bật công tắc k, đến khi cơm chín thì k tự động ngắt và chuyển sang chế độ ủ nhiệt. Một học sinh tiến hành thí nghiệm để đo các thông số của nồi cơm điện. Học sinh này dùng một vôn kế và một ampe kế để đo hiệu điện thế ở hai đầu dây nguồn và cường độ dòng điện chạy qua dây nguồn của nồi. Hiệu điện thế đo được là 220V, cường độ dòng điện thay đổi theo thời gian như đồ thị hình 2b.\n[Hình: Hình 2a sơ đồ mạch gồm nguồn 220V, công tắc k song song R1 và nối tiếp R2; Hình 2b đồ thị dòng điện I theo thời gian t: 10 phút đầu I = 4A, từ 10 đến 30 phút I = 0,27A]",
+    "phuong_an": "a) Trong 10 phút đầu nồi cơm ở chế độ nấu có dòng điện chạy qua cả $R_1$ và $R_2$.\nb) Giá trị của các điện trở đốt nóng $R_1 = 55\\,\\Omega$; $R_2 = 550\\,\\Omega$\nc) Nhiệt lượng do nồi cơm điện tỏa ra trong 30 phút kể từ lúc bật nút nấu là 599280J\nd) Học sinh này muốn công suất tỏa nhiệt trên $R_1$ là lớn nhất khi nồi đang ở chế độ ủ nhiệt thì cần thay $R_1$ bằng điện trở có giá trị là $55\\,\\Omega$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-023",
+    "noi_dung": "Ở điều kiện áp suất tiêu chuẩn, người ta đổ 0,5 kg nước ở $60^0\\text{ C}$ vào 2kg nước đá ở $-35^0\\text{ C}$ trong bình cách nhiệt. Biết nhiệt dung riêng của nước đá là $C_đ = 2100\\text{ J/kg.K}$, của nước là $C_n = 4200\\text{ J/kg.K}$. Nhiệt nóng chảy riêng của nước đá là $\\lambda = 3{,}4\\cdot 10^5\\text{ J/kg}$.",
+    "phuong_an": "a) Nhiệt độ nóng chảy của nước đá là $100^0\\text{ C}$\nb) Nhiệt lượng mà nước tỏa ra khi hạ nhiệt độ đến $0^0\\text{ C}$ là 126000(J)\nc) Nước đá đã tan một lượng là 0,38 kg\nd) Nước sau khi hạ nhiệt độ xuống $0^0\\text{ C}$ thì đã bị đông đặc một lượng 0,12kg",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-024",
+    "noi_dung": "Người ta dùng một lò hồ quang điện để nấu chảy một khối kim loại nặng 30kg. Biết lò hồ quang sinh ra năng lượng 500 kJ trong mỗi phút, hiệu suất của lò là 80%. Đồ thị nhiệt độ theo thời gian của khối kim loại được mô tả như hình vẽ.\n[Hình: Đồ thị nhiệt độ theo thời gian t(phút): từ 0 đến 12 phút nhiệt độ tăng từ 30°C đến 1530°C; từ 12 đến 48 phút nhiệt độ không đổi ở 1530°C; sau 48 phút nhiệt độ tiếp tục tăng]",
+    "phuong_an": "a) Nhiệt độ nóng chảy của khối kim loại là $72^0\\text{ C}$\nb) Nhiệt lượng tỏa ra môi trường từ lúc bắt đầu đun đến khi khối kim loại nóng chảy hoàn toàn là 48000 KJ\nc) Nhiệt dung riêng của kim loại 533,375 (J/kg.K)\nd) Tính nhiệt nóng chảy của kim loại là $9{,}6\\cdot 10^5\\text{ J/kg}$",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-025",
+    "noi_dung": "Máy nước nóng năng lượng mặt trời, làm nóng nước phục vụ nhu cầu sinh hoạt của gia đình. Máy có ưu điểm là an toàn, tiết kiệm năng lượng. Cấu tạo của máy gồm 2 bộ phận chính: bộ phận thu nhiệt (gồm các ống hấp thụ nhiệt làm bằng thủy tinh) và bộ phận giữ nhiệt hay còn gọi là bình bảo ôn (bình này dùng để chứa nước). Biết dung tích của bình giữ nhiệt là 180 lít và luôn chứa đầy nước, nhiệt dung riêng của nước là 4200J/kg.K, khối lượng riêng của nước là 1kg/lít.\n[Hình: Máy nước nóng năng lượng mặt trời gồm bình bảo ôn đặt phía trên và bộ thu nhiệt đặt nghiêng phía dưới]",
+    "phuong_an": "a) Đây là thiết bị chuyển đổi trực tiếp năng lượng ánh sáng Mặt Trời thành nội năng của nước.\nb) Bình chứa nước lại đặt phía trên chứ không phải đặt phía dưới, vì khi đặt phía trên thì mức vững vàng cao hơn.\nc) Nhiệt lượng mà nước trong bình nhận được khi nhiệt độ của nước tăng từ 20°C lên 80°C là 37800 kJ\nd) Biết 40% năng lượng của ánh sáng Mặt Trời chuyển hóa thành nhiệt lượng làm nóng nước trong bình, công suất bức xạ Mặt Trời trung bình thu được trên $1\\text{ m}^2$ là $1400\\text{ W/m}^2$. Để nhiệt độ của nước trong bình tăng từ 20°C đến 80°C thì cần có ánh sáng Mặt Trời chiếu vào trong 5 giờ. Diện tích bộ thu nhiệt của máy là $4{,}5\\text{ m}^2$.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-026",
+    "noi_dung": "Cho một mol khí lý tưởng đơn nguyên tử biến đổi theo một chu trình thuận nghịch được biểu diễn trên đồ thị như hình bên, trong đó đoạn thẳng 1 – 2 là đường kéo dài đi qua gốc tọa độ O và quá trình 2 – 3 là quá trình đẳng nhiệt. Lấy hằng số khí lí tưởng $R = 0{,}082\\text{ atm.l/mol.K}$. Biết $T_1 = 300\\text{ K}$, $V_1 = 5\\,\\ell$, $p_2 = 2p_1 = 2\\text{ atm}$.\n[Hình: Đồ thị p-V biểu diễn chu trình 1-2-3; đoạn 1-2 là đường thẳng qua O, 2-3 là đường đẳng nhiệt cong, 3-1 là đường đẳng áp ngang]",
+    "phuong_an": "a) Quá trình biến đổi từ trạng thái 1 sang trạng thái 2 là quá trình đẳng nhiệt.\nb) Nhiệt độ của khối khí ở trạng thái 2 là 1200 K.\nc) Thể tích của khối khí ở trạng thái 3 là 20 lít.\nd) Công thực hiện khi chuyển từ trạng thái 1 đến trạng thái 2 là 912 J.",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-027",
+    "noi_dung": "Dây đàn hồi AB dài 48 cm với đầu A cố định, đầu B mắc vào nhánh của một âm thoa dao động với tần số f thì trên dây có sóng dừng với 5 bó. Biết biên độ dao động của điểm bụng là $2\\sqrt{3}\\text{ cm}$. M và N là hai điểm trên dây dao động ngược pha với biên độ lần lượt là $\\sqrt{3}\\text{ cm}$ và 3 cm . Khoảng cách lớn nhất giữa hai điểm M và N là bao nhiêu centimet ?( đáp số được làm tròn đến sau dấu phẩy một chữ số)",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-029",
+    "noi_dung": "Đồ thị sự phụ thuộc thế năng của điện tích điểm q trong điện trường đều E vào khoảng cách d đến mốc tính thế năng như hình vẽ:\n[Hình: Đồ thị Wt (10^-17 J) theo d (10^-2 m) là đường thẳng đi qua gốc tọa độ, đi qua điểm (1; căn 3)]\nTích $qE$ có giá trị bằng $a\\cdot 10^{-15}\\text{ J/m}$, khi đó a có giá trị bằng bao nhiêu? (sai số lấy đến giá trị của a sau dấu phẩy 2 chữ số).",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-030",
+    "noi_dung": "Cho hai điểm A và B cùng nằm trên một đường sức của điện trường do một điện tích điểm $q > 0$ gây ra. Biết độ lớn của cường độ điện trường tại A là 36V/m, tại B là 9 V/m. Nếu đặt tại M (là trung điểm của AB) một điện tích điểm $q_0 = -10^{-12}\\text{C}$ thì độ lớn lực điện tác dụng lên $q_0$ là bao nhiêu Niu tơn (N)?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-031",
+    "noi_dung": "Ở điều kiện nhiệt độ môi trường là $30^0\\text{ C}$, áp suất 1atm. Một viên đạn chì có khối lượng $m = 50\\text{ g}$, Nhiệt dung riêng $C = 0{,}12\\text{ kJ/kg.K}$, bay với vận tốc $v_0 = 360\\text{ km/h}$. Sau khi xuyên qua một tấm thép, vận tốc giảm còn 72km/h. Biết rằng 65% lượng nội năng tăng thêm của đạn và thép đuợc biến thành nhiệt làm nóng viên đạn.(Bỏ qua sự trao đổi nhiệt với môi trường). Hỏi ngay sau khi xuyên qua tấm thép nhiệt độ của đạn là bao nhiêu $^0\\text{ C}$?",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-032",
+    "noi_dung": "Người ta bỏ một cục sắt khối lượng $m_1 = 0{,}1\\text{ kg}$ có nhiệt độ $t_1 = 527^0\\text{ C}$ vào một bình chứa $m_2 = 1\\text{ kg}$ nước ở nhiệt độ $t_2 = 20^0\\text{ C}$. Nhiệt dung riêng của sắt và nước lần lượt là $c_1 = 460\\text{ J/kg.K}$ và $c_2 = 4200\\text{ J/kg.K}$, nhiệt hóa hơi của nước là $L = 2{,}3\\cdot 10^6\\text{ J/kg}$. Bỏ qua hao phí với môi trường xung quanh. Đã có bao nhiêu gam nước kịp hóa hơi ở nhiệt độ $t_3 = 100^0\\text{ C}$? biết rằng nhiệt độ cuối cùng của hỗn hợp là $t = 24^0\\text{ C}$.( đáp số được làm tròn đến sau dấu phẩy một chữ số)",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-033",
+    "noi_dung": "Một bếp dầu đun sôi 1 lít nước đựng trong ấm bằng nhôm khối lượng 300gam thì sau thời gian $t_1 = 10$ phút nước sôi. Nếu dùng bếp trên để đun 2 lít nước trong cùng điều kiện thì nước sôi sau bao nhiêu phút? Cho nhiệt dung riêng của nước và nhôm lần lượt là $C_1 = 4200\\text{ J/kg.K}$ ; $C_2 = 880\\text{ J/kg.K}$. Biết nhiệt độ bếp dầu cung cấp một cách đều đặn.( đáp số được làm tròn đến sau dấu phẩy một chữ số)",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-034",
+    "noi_dung": "Với 2 lít xăng, một xe máy có công suất 3,5kW chuyển động với vận tốc 45km/h sẽ đi được bao nhiêu km? Biết hiệu suất của động cơ là 25%, năng suất tỏa nhiệt của xăng là $4{,}6\\cdot 10^7\\text{ J/kg}$, khối lượng riêng của xăng là $700\\text{ kg/m}^3$.( đáp số được làm tròn đến sau dấu phẩy một chữ số)",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-035",
+    "noi_dung": "Bình chứa khí nén ở $27^0\\text{ C}$, 40atm. Một nửa lượng khí trong bình thoát ra và nhiệt độ hạ xuống đến $12^0\\text{ C}$. Áp suất của khí còn lại trong bình bằng bao nhiêu atm? (Nhiệt độ chỉ lấy phần nguyên)",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
+    "link_anh": ""
+  },
+  {
+    "ma_cau": "C-1Aq5Cimb-036",
+    "noi_dung": "Trong ô tô, người ta thường đặt ở hệ thống tay lái một thiết bị nhằm bảo vệ người lái xe khi xe gặp tai nạn, gọi là “túi khí”. Túi khí được chế tạo bằng vật liệu co giãn, chịu được áp suất lớn. Trong túi khí thường chứa chất $\\text{NaN}_3$, khi xe va chạm mạnh vào vật cản thì hệ thống cảm biến của xe sẽ kích thích chất rắn này làm nó phân huỷ tạo thành Na và khí $\\text{N}_2$ theo phương trình $2\\text{ NaN}_3 \\rightarrow 2\\text{ Na} + 3\\text{ N}_2$. Khí $\\text{N}_2$ được tạo thành có tác dụng làm phồng túi lên, giúp người lái xe không bị va chạm trực tiếp vào hệ thống lái. Trong túi chứa 100 g $\\text{NaN}_3$ và thể tích túi khí khi phồng lên có độ lớn 48 lít. Áp suất của khí $\\text{N}_2$ trong túi khí khi đã phồng lên là $a\\cdot 10^4\\text{ Pa}$. Biết nhiệt độ là $30^\\circ\\text{C}$. Bỏ qua thể tích khí có trong túi trước khi phồng lên và thể tích của Na được tạo thành trong túi do phản ứng phân huỷ, cho hằng số khí lí tưởng $R = 8{,}31\\text{ J/(mol.K)}$.(Nhiệt độ chỉ lấy phần nguyên). Tính a? (Làm tròn đến 1 chữ số thập phân).",
+    "phuong_an": "",
+    "dap_an": "",
+    "loi_giai": "",
+    "trang_thai": "Cần người xem",
     "link_anh": ""
   }
 ]
