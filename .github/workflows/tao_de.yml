@@ -1,0 +1,37 @@
+# .github/workflows/tao_de.yml – SOẠN ĐỀ THI 45 PHÚT TỰ ĐỘNG
+name: tao_de
+on:
+  workflow_dispatch:
+    inputs:
+      ma:
+        description: "Mã đề"
+        required: false
+      goi:
+        description: "File ID gói việc (goi_de_<mã>.json trên Drive)"
+        required: true
+      ket_qua:
+        description: "File ID kết quả (ket_qua_<mã>.json trên Drive)"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  soan_de:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+      - name: Soạn đề thi bằng Python trên GitHub Actions
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOI_ID: ${{ inputs.goi }}
+          KQ_ID: ${{ inputs.ket_qua }}
+        run: python trung_tam.py tao_de.py
