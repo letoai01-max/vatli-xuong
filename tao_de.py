@@ -14,16 +14,9 @@ import doc_de as X
 TZ = dt.timezone(dt.timedelta(hours=7))
 
 def ket_noi():
-    raw_cred = os.environ["GOOGLE_CREDENTIALS"].strip()
-    try:
-        tt = json.loads(raw_cred, strict=False)
-    except Exception:
-        import base64
-        tt = json.loads(base64.b64decode(raw_cred).decode("utf-8"), strict=False)
-    if "private_key" in tt:
-        tt["private_key"] = tt["private_key"].replace("\\n", "\n")
-    cred = service_account.Credentials.from_service_account_info(
-        tt, scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"])
+    import google.auth
+    cred, _ = google.auth.default(
+        scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"])
     return gspread.authorize(cred), build("drive", "v3", credentials=cred, cache_discovery=False)
 
 def doc_tep(drive, fid):
