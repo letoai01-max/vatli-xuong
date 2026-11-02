@@ -5598,33 +5598,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1YaCpMty-006",
-    "noi_dung": "Một người đang dùng điện thoại di động để thực hiện cuộc gọi. Lúc này điện thoại phát ra",
-    "phuong_an": "A. sóng vô tuyến.\nB. tia Rơn-ghen.\nC. bức xạ gamma.\nD. tia tử ngoại.",
-    "dap_an": "A",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-008",
-    "noi_dung": "Tại mỗi điểm trong quá trình truyền sóng điện từ, vectơ cường độ điện trường $\\vec{E}$ và vectơ cảm ứng từ $\\vec{B}$",
-    "phuong_an": "A. tạo với nhau góc $45^0$.\nB. cùng chiều nhau.\nC. tạo với nhau góc $90^0$.\nD. ngược chiều nhau.",
-    "dap_an": "C",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1YaCpMty-018",
-    "noi_dung": "Một đoạn dây dẫn dài 5 cm đặt trong từ trường đều vuông góc với vecttơ cảm ứng từ. Dòng điện có cường độ 0,75 A chạy qua dây dẫn thì lực từ tác dụng lên đoạn dây có độ lớn là $3\\cdot 10^{-3}\\text{ N}$. Cảm ứng của từ trường có giá trị bao nhiêu Tesla (T)? (viết kết quả đến chữ số hàng phần trăm)",
-    "phuong_an": "",
-    "dap_an": "0.08",
-    "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1YaCpMty-019",
     "noi_dung": "Thanh kim loại MN (đồng chất, khối lượng phân bố đều) có chiều dài $l = 20\\text{ cm}$, nặng 20 gam được treo nằm ngang bằng hai sợi dây mảnh, nhẹ, không dãn cách điện giống nhau. Thanh được đặt trong từ trường đều, biết cảm ứng từ có phương, chiều như hình vẽ bên [Hình: Khung dây treo thanh MN mang dòng điện I từ M sang N, vectơ B có hướng vuông góc đi ra ngoài dấu chấm tròn trong vòng tròn], có độ lớn $B = 0{,}8\\text{ T}$, cường độ dòng điện qua chạy qua thanh MN có $I = 2{,}5\\text{ A}$ có chiều từ M đến N. Lấy $g = 10\\text{ m/s}^2$.\na) Biểu diễn các lực tác dụng lên thanh MN.\nb) Tính độ lớn lực từ tác dụng lên thanh MN.\nc) Tính lực căng của mỗi sợi dây tác dụng lên thanh.",
     "phuong_an": "",
