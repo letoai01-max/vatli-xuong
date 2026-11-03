@@ -16,8 +16,14 @@ import json, re
 
 from duyet_cau import loai_dang, tach_ds, khop, chuan, cung_thu_nguyen, json_cuoi, lay_so
 
+try:
+    import groq_xuong as G
+except Exception:                       # thiếu groq_xuong: cổng vẫn chạy như cũ
+    G = None
+
 LO = 12
 SAI_SO = 0.02
+MAX_TRANH_CHAP = 30        # [Hàng 5] bảo vệ hạn mức Groq miễn phí
 
 
 def _goi(goi_gemini, he, nguoi, co_code, cac_model):
@@ -75,6 +81,32 @@ def _dap_an_may(loai, g):
     except (TypeError, ValueError): return "", []
 
 
+def lay_noi_dung_cau(goi_gemini, de_md, ds_so, cac_model):
+    """[Hàng 5] Model nhẹ chép NGUYÊN VĂN câu + phương án của vài câu tranh chấp (để gửi cho Groq)."""
+    nhe = [m for m in cac_model if "lite" in m] + [m for m in cac_model if "lite" not in m]
+    he = "Bạn chép nguyên văn, không giải, không sửa. Chỉ trả về một khối ```json```."
+    nguoi = ("Từ ĐỀ dưới đây, chép NGUYÊN VĂN nội dung và các phương án của các câu: " + ", ".join(ds_so) + ". "
+             "Mỗi phần tử: {\"so\": \"I.3\", \"noi_dung\": \"...\", \"phuong_an\": \"A. ... B. ... C. ... D. ...\"} "
+             "(đúng/sai: phuong_an chứa các ý a), b), c), d)). Giữ nguyên công thức $…$.\n\n=== ĐỀ ===\n" + de_md[:60000])
+    text, _ = _goi(goi_gemini, he, nguoi, False, nhe)
+    return {str(x["so"]).strip(): x for x in (json_cuoi(text) or []) if isinstance(x, dict) and x.get("so")}
+
+
+def phan_xu_groq(goi_gemini, de_md, tranh_chap, cac_model):
+    """[Hàng 5] tranh_chap: [{so, loai}] → ({so: đáp án Groq}, tên model). Công tắc tắt / thiếu khoá / lỗi → ({}, '')."""
+    if not tranh_chap or not (G and G.san_sang()):
+        return {}, ""
+    try:
+        nd = lay_noi_dung_cau(goi_gemini, de_md, [t["so"] for t in tranh_chap], cac_model)
+        ds = [{"ma": t["so"], "dang": t["loai"], "noi_dung": nd[t["so"]]["noi_dung"],
+               "phuong_an": nd[t["so"]].get("phuong_an") or ""}
+              for t in tranh_chap if t["so"] in nd and str(nd[t["so"]].get("noi_dung") or "").strip()]
+        return G.giai_lo(ds)
+    except Exception as e:
+        print("  [Cổng chất lượng] Vòng Groq lỗi, bỏ qua: %s" % str(e)[:100], flush=True)
+        return {}, ""
+
+
 def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
     """Chạy cổng. Trả về (bao_cao_md, tom_tat dict, bang_chung_cho_ra_soat str)."""
     loi_chung = []
@@ -85,11 +117,23 @@ def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
         return "### Báo cáo kiểm định (cổng chất lượng)\n\nChưa tách được danh sách câu – không kiểm định được lượt này.\n", \
                {"tong": 0}, ""
     may, model_giai = giai_doc_lap(goi_gemini, de_md, cac_cau, cac_model, model_soan)
+    # [Hàng 5] danh sách câu tranh chấp (agent lệch máy hoặc máy chưa giải) → Groq phân xử
+    tranh_chap = []
+    for c in cac_cau:
+        so_, loai_ = str(c["so"]).strip(), loai_dang(c.get("dang"))
+        da_ = chuan(loai_, c.get("dap_an"))
+        m_, pa_ = _dap_an_may(loai_, may.get(so_))
+        if not da_ or (loai_ == "TL" and lay_so(da_) != lay_so(da_)) or (loai_ == "TN" and len(pa_) > 1):
+            continue                               # lay_so(x) != lay_so(x) là cách kiểm tra NaN (câu định tính)
+        if not m_ or not khop(loai_, m_, da_, SAI_SO):
+            tranh_chap.append({"so": so_, "loai": loai_})
+    groq_kq, model_groq = phan_xu_groq(goi_gemini, de_md, tranh_chap[:MAX_TRANH_CHAP], cac_model)
     dong = ["### Báo cáo kiểm định (cổng chất lượng)", "",
             "Mỗi câu được một model khác (%s), không xem đáp án, giải lại bằng code. Câu **đạt** khi đáp án của agent và lời giải "
             "bằng code khớp nhau, đúng một phương án đúng, đơn vị cùng thứ nguyên." % model_giai.replace("gemini-", ""), "",
             "| Câu | Đáp án của agent | Máy giải bằng code | Kết luận |", "|---|---|---|---|"]
-    tt = {"tong": 0, "dat": 0, "lech": 0, "nhieu_dap_an": 0, "chua_giai": 0, "luat": 0, "dinh_tinh": 0, "goi_y": 0}
+    tt = {"tong": 0, "dat": 0, "lech": 0, "nhieu_dap_an": 0, "chua_giai": 0, "luat": 0, "dinh_tinh": 0, "goi_y": 0,
+          "groq_xac_nhan": 0, "nen_sua": 0}
     bang_chung = []
     for c in cac_cau:
         so, loai = str(c["so"]).strip(), loai_dang(c.get("dang"))
@@ -134,6 +178,25 @@ def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
         if loai in ("TLN", "TL") and g and g.get("don_vi") and c.get("don_vi"):
             if cung_thu_nguyen(g["don_vi"], c["don_vi"]) is False:
                 van_de.append("đơn vị không cùng thứ nguyên (%s / %s)" % (c["don_vi"], g["don_vi"]))
+        # [Hàng 5] vòng 2: Groq (khác hãng, không xem đáp án) phân xử khi agent và máy lệch / máy chưa giải
+        if so in groq_kq and da:
+            gd = chuan(loai, groq_kq[so])
+            if khop(loai, gd, da, SAI_SO):                       # Groq cùng ý agent
+                if not m:
+                    van_de = [v for v in van_de if v != "máy chưa giải được"]
+                    tt["chua_giai"] -= 1
+                    tt["groq_xac_nhan"] += 1
+                    goi_y = (goi_y + " · " if goi_y else "") + "ℹ️ Groq xác nhận (Groq không chạy code, thầy lưu ý)"
+                else:
+                    van_de = [v for v in van_de if not v.startswith("nếu máy đúng")]
+                    van_de.append("Groq đồng ý với agent, máy lệch → giữ đáp án, thầy xem")
+            elif m and khop(loai, gd, m, SAI_SO):                # Groq cùng ý máy → 2/3 khác agent
+                tt["nen_sua"] += 1
+                van_de.append("NÊN SỬA: Groq và máy cùng đáp án %s (agent %s)" % (m, da))
+                bang_chung.append("- Câu %s: SỬA đáp án từ %s thành %s (2/3 nguồn độc lập đồng ý); "
+                                  "sửa kèm lời giải và nếu là Đúng/Sai thì giữ 2Đ–2S" % (so, da, m))
+            else:
+                van_de.append("3 nguồn cho 3 đáp án khác nhau (agent %s, máy %s, Groq %s) → thầy xem" % (da, m or "–", gd))
         if g and str(g.get("tu_tin", "")).lower().startswith("thấp"):
             van_de.append("máy không chắc chắn")
         dat = not van_de
@@ -147,5 +210,7 @@ def kiem_dinh(goi_gemini, de_md, dap_an_md, cac_model, model_soan):
                                                                        tt["chua_giai"], tt["luat"],
                                                                        (", %d câu định tính (thầy xem)" % tt["dinh_tinh"] if tt["dinh_tinh"] else "") +
                                                                        (", %d gợi ý về phương án nhiễu" % tt["goi_y"] if tt["goi_y"] else ""))]
+    if model_groq:
+        dong.append("Vòng 2 (%s): %d câu được Groq xác nhận, %d câu nên sửa đáp án." % (model_groq, tt["groq_xac_nhan"], tt["nen_sua"]))
     if loi_chung: dong.append("Lưu ý chung: " + "; ".join(loi_chung))
     return "\n".join(dong) + "\n", tt, "\n".join(bang_chung)
