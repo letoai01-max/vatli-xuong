@@ -1,5 +1,5 @@
 # .github/workflows/canh_gac.yml – NGƯỜI CANH GÁC NGOÀI
-# 7h20 sáng giờ Việt Nam (0h20 UTC). Có sự cố → lượt chạy đỏ → GitHub tự email cho chủ kho.
+# 7h20 sáng giờ Việt Nam (0h20 UTC). Có sự cố → gửi tin Telegram, lượt chạy đỏ → GitHub tự email cho chủ kho.
 name: canh_gac
 on:
   schedule:
@@ -11,6 +11,9 @@ permissions:
 
 jobs:
   kiem_tra:
+    # Công tắc bật/tắt: tạo biến CANH_GAC_TU_DONG (Settings → Secrets and variables → Actions → Variables).
+    # Đặt giá trị false = tắt canh gác. Chưa tạo biến, hoặc đặt true = vẫn chạy bình thường.
+    if: ${{ vars.CANH_GAC_TU_DONG != 'false' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -19,10 +22,24 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -q gspread google-auth
+      - run: pip install -q gspread google-auth requests
       - name: Kiểm tra nhịp chạy các agent
+        id: chay
         timeout-minutes: 5
         env:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python trung_tam.py canh_gac.py
+      # Chỉ chạy khi lượt chạy hỏng TRƯỚC bước canh gác (cài thư viện lỗi, checkout lỗi...).
+      # Nếu bước canh gác đã chạy thì chính canh_gac.py tự báo, bước này không báo thêm.
+      - name: Báo Telegram khi lượt chạy hỏng trước bước canh gác
+        if: failure() && steps.chay.outcome != 'failure'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -s -o /dev/null -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=🚨 Canh gác không chạy được (lỗi cài đặt). ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
