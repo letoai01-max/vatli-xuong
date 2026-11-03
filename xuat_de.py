@@ -16,9 +16,57 @@ def ket_noi():
         return gspread.authorize(Credentials.from_service_account_file("credentials.json", scopes=SCOPES))
     sys.exit("Thiếu GOOGLE_CREDENTIALS.")
 
+def doc_nut(kho):
+    """Đọc tab CauHinh (cột A = tên nút, cột B = giá trị)."""
+    try:
+        return {str(r[0]).strip(): (str(r[1]).strip() if len(r) > 1 else "")
+                for r in kho.worksheet("CauHinh").get_all_values()[1:] if r and str(r[0]).strip()}
+    except Exception:
+        return {}
+
+
+def doc_chi_muc(kho):
+    """{mã câu: [(mã câu giống, % giống chữ), ...]} từ tab ChiMucTrung (chi_muc_trung.py ghi mỗi đêm). Không có tab -> None."""
+    try:
+        v = kho.worksheet("ChiMucTrung").get_all_values()[1:]
+    except Exception:
+        return None
+    kq = {}
+    for r in v:
+        r = r + [""] * 11
+        if not r[0].strip():
+            continue
+        ds = []
+        for k in (1, 4, 7):
+            ma, chu = r[k].strip(), r[k + 1].strip().replace(",", ".")
+            try:
+                if ma:
+                    ds.append((ma, float(chu)))
+            except ValueError:
+                pass
+        kq[r[0].strip()] = ds
+    return kq
+
+
+def loc_trung(ds, chi_muc, vi_tri, loai, nguong):
+    """Bỏ câu có bản GIỐNG CHỮ >= nguong với một câu ĐẾN TRƯỚC nó trong ngân hàng (câu trước không bị 'Loại').
+    Chỉ bỏ câu sau, giữ câu trước -> cặp trùng không bao giờ mất cả hai."""
+    giu, bo = [], 0
+    for x in ds:
+        ma = x["ma_cau"]
+        trung = any(chu >= nguong and m in vi_tri and m not in loai and vi_tri[m] < vi_tri.get(ma, 0)
+                    for m, chu in chi_muc.get(ma, []))
+        if trung:
+            bo += 1
+        else:
+            giu.append(x)
+    return giu, bo
+
+
 def main():
     gc = ket_noi()
-    d = gc.open_by_key(ID_KHO_CHUNG).worksheet("NganHangCauHoi").get_all_values()
+    kho = gc.open_by_key(ID_KHO_CHUNG)
+    d = kho.worksheet("NganHangCauHoi").get_all_values()
     
     if not d or len(d) < 2:
         sys.exit("Tab NganHangCauHoi trống hoặc không đủ dữ liệu.")
@@ -39,11 +87,15 @@ def main():
 
     lay = lambda r, idx: (r[idx].strip() if idx is not None and idx < len(r) else "")
     
-    ds = []
-    for r in d[1:]:
+    ds, vi_tri, loai = [], {}, set()
+    for i, r in enumerate(d[1:]):
         ma = lay(r, c["ma_cau"])
         nd = lay(r, c["noi_dung"])
         trang_thai = lay(r, c["trang_thai"]).lower()
+        if ma:
+            vi_tri.setdefault(ma, i)                 # thứ tự dòng = thứ tự vào ngân hàng
+            if "loại" in trang_thai:
+                loai.add(ma)
         
         # 💡 ĐIỀU KIỆN LỌC TẬN GỐC:
         # Chỉ lấy các câu bắt đầu bằng "C-" VÀ trạng thái phải là CHƯA DUYỆT 
@@ -63,10 +115,26 @@ def main():
             "link_anh": lay(r, c["link_anh"])
         })
         
-    with open("questions.json", "w", encoding="utf-8") as f:
+    nut = doc_nut(kho)
+    bo_trung = 0
+    if nut.get("KIEM_TRA_TRUNG_LAP", "true").lower() in ("false", "0", "no", "off", "tat", "tắt"):
+        print("ℹ️ KIEM_TRA_TRUNG_LAP đang tắt – không lọc trùng.")
+    else:
+        chi_muc = doc_chi_muc(kho)
+        if chi_muc is None:
+            print("⚠️ Chưa có tab ChiMucTrung – xuất không lọc trùng.")
+        else:
+            try:
+                nguong = min(100.0, max(50.0, float(nut["NGUONG_TRUNG_CHEP"])))
+            except (KeyError, ValueError):
+                nguong = 90.0
+            ds, bo_trung = loc_trung(ds, chi_muc, vi_tri, loai, nguong)
+
+    with open("questions.json.tmp", "w", encoding="utf-8") as f:   # ghi file tạm rồi mới thay, tránh file hỏng giữa chừng
         json.dump(ds, f, ensure_ascii=False, indent=2)
-        
-    print(f"✨ Đã xuất thành công {len(ds)} câu hỏi chưa duyệt vào questions.json!")
+    os.replace("questions.json.tmp", "questions.json")
+
+    print(f"✨ Đã xuất {len(ds)} câu hỏi chưa duyệt vào questions.json (bỏ {bo_trung} câu trùng câu có trước).")
 
 if __name__ == "__main__":
     main()
