@@ -73,6 +73,7 @@ RE_CT_CU = re.compile(r"\b(" + "|".join([
 
 BAT_DAU = time.time()
 TOI_DA_LUOT_TRA_PHI = int(os.environ.get("TOI_DA_LUOT_TRA_PHI", "40"))   # chặn chi phí mỗi lượt chạy
+CHO_PHEP_DOC_DE = True                                              # công tắc bật/tắt (tab CauHinh)
 TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0, "het": set()}
 
 
@@ -112,7 +113,7 @@ def tai_ve(drive, file_id, xuat_pdf=False):
     tai = MediaIoBaseDownload(buf, req, chunksize=8 * 1024 * 1024)
     xong = False
     while not xong:
-        _, xong = tai.next_chunk()
+        _, xong = tai.next_chunk(num_retries=3)
     return buf.getvalue()
 
 
@@ -243,7 +244,7 @@ def tach_pdf(du_lieu, ten):
 
 # ---------------- GEMINI ----------------
 def doc_cau_hinh(kho):
-    global SO_CAU_MOI_LO, SO_LO_TOI_DA, TOI_DA_LUOT_TRA_PHI
+    global SO_CAU_MOI_LO, SO_LO_TOI_DA, TOI_DA_LUOT_TRA_PHI, CHO_PHEP_DOC_DE, GIOI_HAN_TAI_VE
     try:
         v = kho.worksheet(TAB_CAU_HINH).get_all_values()[1:]
         cfg = {str(r[0]).strip(): str(r[1]).strip() for r in v if r and str(r[0]).strip()}
@@ -258,6 +259,8 @@ def doc_cau_hinh(kho):
     SO_CAU_MOI_LO = max(5, _so("GIOI_HAN_SO_CAU_TOI_DA", SO_CAU_MOI_LO))
     SO_LO_TOI_DA = max(1, _so("SO_LO_TOI_DA", SO_LO_TOI_DA))
     TOI_DA_LUOT_TRA_PHI = max(0, _so("TOI_DA_LUOT_TRA_PHI", TOI_DA_LUOT_TRA_PHI))
+    CHO_PHEP_DOC_DE = cfg.get("CHO_PHEP_DOC_DE", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")
+    GIOI_HAN_TAI_VE = max(50, _so("GIOI_HAN_TAI_MB", GIOI_HAN_TAI_VE // 1048576)) * 1024 * 1024
     chinh = cfg.get("MODEL_CHINH") or MODEL_MAC_DINH
     du_phong = [m.strip() for m in re.split(r"[,;\s]+", cfg.get("MODEL_DU_PHONG", "")) if m.strip()] or MODEL_DU_PHONG_MAC_DINH
     return [chinh] + [m for m in du_phong if m != chinh]
@@ -655,6 +658,10 @@ def main():
         raise SystemExit("Tab YCCD trống.")
     ds_model = doc_cau_hinh(kho)
     print("Model:", ", ".join(ds_model))
+    if not CHO_PHEP_DOC_DE:
+        print("⏹️ CHO_PHEP_DOC_DE đang tắt – nghỉ lượt này.")
+        ghi_nhip(kho, True, "Lượt %s: công tắc CHO_PHEP_DOC_DE đang tắt, không xử lý." % bay_gio())
+        return
     so_file = so_cau = 0
     da_lam, het_han_muc = set(), False
     try:
