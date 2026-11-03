@@ -18,7 +18,8 @@ except Exception:                       # thiếu tệp ghi hạn mức: vẫn c
     Q = None
 
 URL = "https://api.groq.com/openai/v1/chat/completions"
-MODELS = [m.strip() for m in os.environ.get("GROQ_MODELS", "openai/gpt-oss-120b,qwen/qwen3.8-27b,openai/gpt-oss-20b").split(",") if m.strip()]
+MODELS = [m.strip() for m in (os.environ.get("GROQ_MODELS") or os.environ.get("CFG_GROQ_MODELS")
+          or "openai/gpt-oss-120b,qwen/qwen3.8-27b,openai/gpt-oss-20b").split(",") if m.strip()]
 LO = 10                    # số câu mỗi lượt gọi
 NGHI_GIUA_LUOT = 3         # giây – Groq miễn phí giới hạn token/phút
 _HONG = set()
@@ -26,6 +27,24 @@ _HONG = set()
 
 def co_khoa():
     return bool(os.environ.get("GROQ_API_KEY", "").strip())
+
+
+def cong_tac_bat(ten="VONG_KIEM_TRA_THU_HAI_GROQ", mac_dinh=True):
+    """[Hàng 5] Ưu tiên CFG_<ten> (tab CauHinhDong) → CONG_TAC trong trung_tam_dieu_phoi.json → mặc định."""
+    v = os.environ.get("CFG_" + ten)
+    if v is None:
+        try:
+            with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "trung_tam_dieu_phoi.json"), encoding="utf-8") as f:
+                v = (json.load(f).get("CONG_TAC") or {}).get(ten)
+        except Exception:
+            v = None
+    if v is None:
+        return mac_dinh
+    return str(v).strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")
+
+
+def san_sang():
+    return co_khoa() and cong_tac_bat()
 
 
 def _ghi(model, ma, data=None, treo=False):
@@ -71,7 +90,10 @@ def goi(noi_dung, max_tokens=16000, suy_nghi="medium"):
             if r.status_code == 404:
                 _HONG.add(model); print("  [Groq] %s đã ngừng (404), bỏ qua." % model, flush=True); break
             if r.status_code == 429 and lan == 1:
-                cho = min(60, int(float(r.headers.get("retry-after") or 20)) + 2)
+                try:
+                    cho = min(60, int(float(r.headers.get("retry-after") or 20)) + 2)
+                except ValueError:
+                    cho = 22
                 print("  [Groq] %s hết hạn mức tạm thời, chờ %d giây…" % (model, cho), flush=True)
                 time.sleep(cho); continue
             if r.status_code in (500, 502, 503) and lan < 3:
@@ -93,11 +115,11 @@ def doc_json(text):
 def giai_lo(ds):
     """ds: [{ma, dang (TN|DS|TLN|TL hoặc tên dạng), noi_dung, phuong_an}] → ({ma: đáp án}, model). Không thấy đáp án gốc."""
     kq, model_dung = {}, ""
-    if not co_khoa() or not ds:
+    if not san_sang() or not ds:
         return kq, model_dung
     for k in range(0, len(ds), LO):
         lo = ds[k:k + LO]
-        du_lieu = [{"ma_cau": x["ma"], "dang": x["dang"], "noi_dung": str(x["noi_dung"])[:1500],
+        du_lieu = [{"ma_cau": x["ma"], "dang": x["dang"], "noi_dung": str(x["noi_dung"])[:3000],
                     "phuong_an": str(x.get("phuong_an") or "")[:800]} for x in lo]
         loi_nhan = ("Bạn là học sinh giỏi Vật lí. Tự giải ĐỘC LẬP, cẩn thận từng câu, tính toán chính xác. Ghi đáp án: "
                     "nhiều lựa chọn là MỘT chữ A-D; đúng/sai dạng \"a) Đ, b) S, c) Đ, d) S\"; trả lời ngắn và tự luận là MỘT con số "
