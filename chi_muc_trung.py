@@ -27,7 +27,7 @@ UNG_VIEN_TOI_DA = 40
 def chuan_chu(s, bo_so=False):
     s = X.bo_dau(s)                                    # bỏ dấu, bỏ $ và lệnh LaTeX, chỉ còn a-z0-9
     if bo_so:
-        s = re.sub(r"\b\d+\b", " ", s)
+        s = re.sub(r"\b\d+[a-z]{0,3}\b", " ", s)             # cả số dính đơn vị: 10cm, 5kg, 2s
     return re.sub(r"\s+", " ", s).strip().split(" ")
 
 
@@ -42,11 +42,30 @@ def jaccard(a, b):
     return len(a & b) / len(a | b) if a and b else 0.0
 
 
+def doc_nut(kho):
+    """Đọc tab CauHinh (cột A = tên nút, cột B = giá trị)."""
+    try:
+        return {str(r[0]).strip(): (str(r[1]).strip() if len(r) > 1 else "")
+                for r in kho.worksheet(X.TAB_CAU_HINH).get_all_values()[1:] if r and str(r[0]).strip()}
+    except Exception:
+        return {}
+
+
 def main():
+    global NGUONG_GHI
     t0 = time.time()
     gc, _, sa = X.ket_noi()
     print("Tài khoản dịch vụ:", sa, flush=True)
     kho = gc.open_by_key(X.ID_KHO_CHUNG)
+    nut = doc_nut(kho)
+    if nut.get("KIEM_TRA_TRUNG_LAP", "true").lower() in ("false", "0", "no", "off", "tat", "tắt"):
+        print("⏹️ KIEM_TRA_TRUNG_LAP đang tắt – nghỉ lượt này.")
+        nhip(kho, "Lượt %s: công tắc KIEM_TRA_TRUNG_LAP đang tắt, không lập chỉ mục." % dt.datetime.now(X.TZ).strftime("%d/%m/%Y %H:%M"))
+        return
+    try:
+        NGUONG_GHI = min(100.0, max(30.0, float(nut["NGUONG_GHI"])))
+    except (KeyError, ValueError):
+        pass
     d = kho.worksheet(TAB_NH).get_all_values()
     td = [t.strip() for t in d[0]]
     c = {t: td.index(t) for t in ["Mã câu", "Nội dung", "Phương án", "Trạng thái duyệt"] if t in td}
@@ -98,10 +117,11 @@ def main():
         tab = kho.worksheet(TAB_CM)
     except Exception:
         tab = kho.add_worksheet(TAB_CM, rows=max(100, len(dong) + 10), cols=len(TIEU_DE))
-    tab.clear()
     if tab.row_count < len(dong) + 5:
         tab.add_rows(len(dong) + 5 - tab.row_count)
     tab.update(range_name="A1", values=dong, value_input_option="RAW")
+    if tab.row_count > len(dong):          # xoá phần dư của đêm trước SAU khi đã ghi xong
+        tab.batch_clear(["A%d:K%d" % (len(dong) + 1, tab.row_count)])
     rat_giong = sum(1 for h in dong[1:] if isinstance(h[2], int) and h[2] >= 90)
     doi_so = sum(1 for h in dong[1:] if isinstance(h[2], int) and isinstance(h[3], int) and h[3] >= 85 and h[2] < 90)
     tom = "Chỉ mục %s: %d câu, %d câu có câu giống ≥%d%%; %d gần như chép lại (chữ ≥90%%), %d cùng dạng đổi số liệu. %.0f giây." % (
