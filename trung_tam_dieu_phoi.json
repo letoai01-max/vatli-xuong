@@ -8,7 +8,8 @@
   },
   "CONG_TAC": {
     "CHE_DO_DIEU_PHOI": true,
-    "CANH_GAC_TU_DONG": true
+    "CANH_GAC_TU_DONG": true,
+    "VONG_KIEM_TRA_THU_HAI_GROQ": true
   },
   "BO_LOC_KY_THUAT": {
     "min_width": 40,
