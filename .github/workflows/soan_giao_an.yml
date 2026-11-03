@@ -1,0 +1,69 @@
+# .github/workflows/soan_giao_an.yml – XƯỞNG SOẠN GIÁO ÁN (KHBD, CV 5512)
+# Không có lịch: chỉ chạy khi được gọi, nên không trùng với các lịch soanGiaoAnLop… của Apps Script.
+#   • Apps Script ra lệnh: gửi ma, goi, ket_qua (File ID gói việc / kết quả trên Drive) – cùng khuôn với de_cuong.yml.
+#   • Soạn tay để thử: bỏ trống goi/ket_qua, điền ten_bai (lop, yccd tuỳ chọn) → tải Word ở mục Artifacts.
+# [BẢO MẬT] Dữ liệu nhập vào KHÔNG chèn thẳng vào lệnh shell: đi qua biến môi trường.
+name: soan_giao_an
+on:
+  workflow_dispatch:
+    inputs:
+      ma:
+        description: "Mã giáo án (Apps Script gửi, không bắt buộc)"
+        required: false
+      goi:
+        description: "File ID gói việc (goi_<mã>.json trên Drive) – để trống nếu soạn tay"
+        required: false
+      ket_qua:
+        description: "File ID kết quả (ket_qua_<mã>.json trên Drive) – để trống nếu soạn tay"
+        required: false
+      lop:
+        description: "Lớp (chỉ dùng khi soạn tay)"
+        required: false
+        default: "10"
+        type: choice
+        options: ["10", "11", "12"]
+      ten_bai:
+        description: "Tên bài học (soạn tay)"
+        required: false
+      yccd:
+        description: "Yêu cầu cần đạt (soạn tay, có thể bỏ trống)"
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soan_giao_an
+  cancel-in-progress: false
+
+jobs:
+  soan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+      - name: Soạn giáo án
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GOI_ID: ${{ inputs.goi }}
+          KQ_ID: ${{ inputs.ket_qua }}
+          LOP: ${{ inputs.lop }}
+          TEN_BAI: ${{ inputs.ten_bai }}
+          YCCD: ${{ inputs.yccd }}
+        run: python trung_tam.py soan_giao_an.py
+      - name: Lưu bản Word (soạn tay)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: khbd-word
+          path: out/*.docx
+          if-no-files-found: ignore
+          retention-days: 14
