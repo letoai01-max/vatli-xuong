@@ -80,7 +80,7 @@ def kiem_tra_cheo_groq(noi_dung_giao_an):
     groq_api_key = os.environ.get("GROQ_API_KEY")
     if not groq_api_key:
         print("⚠️ Không tìm thấy GROQ_API_KEY. Bỏ qua vòng kiểm tra chéo thứ 2.")
-        return noi_dung_giao_an  # Giữ nguyên nếu không có cấu hình khoá phụ
+        return noi_dung_giao_an
 
     url = "https://api.groq.com/openai/v1/chat/completions"
     headers = {
@@ -96,7 +96,7 @@ def kiem_tra_cheo_groq(noi_dung_giao_an):
     )
     
     payload = {
-        "model": "llama-3.3-70b-versatile",  # Hoặc model DeepSeek tương đương trên Groq
+        "model": "llama-3.3-70b-versatile",
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": noi_dung_giao_an}
