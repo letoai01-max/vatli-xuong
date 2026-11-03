@@ -1,10 +1,14 @@
 {
   "METADATA": {
     "ten_trung_tam": "Trung tâm điều phối tự động Xưởng Vật lí",
-    "mo_ta": "Thông số dùng chung: ID Kho chung (trung_tam.py, quet_bu_hinh_anh.py) và bộ lọc hình (quet_bu_hinh_anh.py)"
+    "mo_ta": "Thông số dùng chung: ID Kho chung (trung_tam.py, quet_bu_hinh_anh.py), công tắc bật/tắt (trung_tam.py, canh_gac.py) và bộ lọc hình (quet_bu_hinh_anh.py)"
   },
   "SHEET_CONFIG": {
     "SHEET_ID": "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
+  },
+  "CONG_TAC": {
+    "CHE_DO_DIEU_PHOI": true,
+    "CANH_GAC_TU_DONG": true
   },
   "BO_LOC_KY_THUAT": {
     "min_width": 40,
