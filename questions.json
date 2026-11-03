@@ -1584,119 +1584,11 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1XHtGuMf-161",
-    "noi_dung": "Một quả cầu nhỏ khối lượng $3{,}06\\cdot 10^{-15}\\text{(kg)}$, mang điện tích $4{,}8\\cdot 10^{-18}\\text{ (C)}$, nằm lơ lửng giữa hai tấm kim loại song song nằm ngang nhiễm điện trái dấu, cách nhau một khoảng 2 (cm). Lấy $g = 10\\text{ (m/s}^2)$. Tính hiệu điện thế đặt vào hai tấm kim loại đó?",
-    "phuong_an": "",
-    "dap_an": "127,5\\text{ V}",
-    "loi_giai": "Tóm tắt: $m = 3{,}06\\cdot 10^{-15}\\text{ kg}$; $q = 4{,}8\\cdot 10^{-18}\\text{ C}$; $d = 2\\text{ cm} = 0{,}02\\text{ m}$; $g = 10\\text{ m/s}^2$.\nĐiều kiện cân bằng của quả cầu: Quả cầu nằm lơ lửng nên lực điện tác dụng lên quả cầu cân bằng với trọng lực\n$$F_{\\text{đ}} = P \\Leftrightarrow qE = mg$$\nTính hiệu điện thế giữa hai tấm kim loại: Mối liên hệ giữa cường độ điện trường và hiệu điện thế trong điện trường đều là $E = \\frac{U}{d}$\n$$q\\frac{U}{d} = mg \\Rightarrow U = \\frac{mgd}{q} = \\frac{3{,}06\\cdot 10^{-15}\\cdot 10\\cdot 0{,}02}{4{,}8\\cdot 10^{-18}} = 127{,}5\\text{ V}$$\nHiệu điện thế đặt vào hai tấm kim loại là $127{,}5\\text{ V}$.\nĐáp án: 127,5\\text{ V} V.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-162",
     "noi_dung": "Một quả cầu tích điện có khối lượng 0,1g nằm cân bằng giữa hai bản tụ điện phẳng đứng cạnh nhau d = 1 cm. Khi hai bản tụ được nối với hiệu điện thế U = 1000 V thì dây treo quả cầu lệch khỏi phương thẳng đứng một góc $\\alpha = 10^\\circ$. Điện tích của quả cầu có độ lớn bằng bao nhiêu?",
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-163",
-    "noi_dung": "Biểu thức nào dưới đây là biểu thức định nghĩa điện dung của tụ điện?",
-    "phuong_an": "A. $\\frac{F}{q}$\nB. $\\frac{U}{d}$\nC. $\\frac{A_{M\\infty}}{q}$\nD. $\\frac{Q}{U}$",
-    "dap_an": "D",
-    "loi_giai": "Định nghĩa điện dung: Điện dung của tụ điện được xác định bằng thương số giữa điện tích Q của tụ điện và hiệu điện thế U giữa hai bản của nó.\n$$C = \\frac{Q}{U}$$\nBiểu thức định nghĩa điện dung của tụ điện là Q/U.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-165",
-    "noi_dung": "Trường hợp nào dưới đây ta có một tụ điện?",
-    "phuong_an": "A. Một quả cầu kim loại nhiễm điện, đặt xa các vật khác.\nB. Một quả cầu thủy tinh nhiễm điện, đặt xa các vật khác.\nC. Hai quả cầu kim loại không nhiễm điện, đặt gần nhau trong không khí.\nD. Hai quả cầu thủy tinh, không nhiễm điện, đặt gần nhau trong không khí.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $\\text{Tụ điện: hệ hai vật dẫn đặt gần nhau và ngăn cách nhau bằng một lớp cách điện (điện môi)}$.\nĐịnh nghĩa tụ điện: Tụ điện là một hệ gồm hai vật dẫn đặt gần nhau và ngăn cách nhau bằng một lớp cách điện (chất điện môi). Các vật dẫn không nhất thiết phải tích điện sẵn.\nXét các phương án: Phương án A và B chỉ gồm một vật nên không tạo thành tụ điện. Phương án D gồm hai quả cầu thủy tinh là chất cách điện, không phải vật dẫn. Phương án C gồm hai quả cầu kim loại (hai vật dẫn) đặt gần nhau trong không khí (chất điện môi), do đó cấu tạo thành một tụ điện.\nHai quả cầu kim loại không nhiễm điện, đặt gần nhau trong không khí tạo thành một tụ điện.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-166",
-    "noi_dung": "Đơn vị điện dung là",
-    "phuong_an": "A. Cu–lông (C).\nB. Vôn (V).\nC. Fara (F).\nD. Vôn trên mét (V/m).",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $Duyet don vi dien dung$.\nXac dinh don vi: Trong Hẹ SI, dien dung cua tu dien co don vi la Fara, ki hieu la F.\n$$C = \\frac{Q}{U}$$\nKet luan: Chon phuong an dung.\nDon vi dien dung la Fara (F).\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-167",
-    "noi_dung": "Điều nào sau đây là sai khi nói về cấu tạo của tụ điện?",
-    "phuong_an": "A. Hai bản là hai vật dẫn\nB. Giữa hai bản có thể là chân không.\nC. Hai bản cách nhau một khoảng rất lớn.\nD. Giữa hai bản có thể là điện môi",
-    "dap_an": "C",
-    "loi_giai": "Cấu tạo tụ điện: Tụ điện là hệ thống hai vật dẫn đặt gần nhau và ngăn cách nhau bằng một lớp điện môi (hoặc chân không). Khoảng cách giữa hai bản phải rất nhỏ để điện trường giữa hai bản là đều và đảm bảo khả năng tích điện.\nPhát biểu hai bản cách nhau một khoảng rất lớn là sai.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-168",
-    "noi_dung": "Để tích điện cho tụ điện, ta phải",
-    "phuong_an": "A. mắc vào hai đầu tụ một hiệu điện thế.\nB. cọ xát các bản tụ với nhau.\nC. đặt tụ gần vật nhiễm điện.\nD. đặt tụ gần nguồn điện.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $Tụ điện cần được tích điện$.\nNguyên tắc tích điện cho tụ điện: Để tích điện cho tụ điện, người ta mắc vào hai đầu bản tụ một hiệu điện thế (nối hai bản tụ với hai cực của nguồn điện).\nDo đó, ta phải mắc vào hai đầu tụ một hiệu điện thế.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-169",
-    "noi_dung": "Trong trường hợp nào dưới đây, ta không có một tụ điện? Giữa hai bản kim loại là một lớp",
-    "phuong_an": "A. mica.\nB. nhựa pôliêtilen.\nC. giấy tẩm dung dịch muối ăn.\nD. giấy tẩm parafin.",
-    "dap_an": "C",
-    "loi_giai": "Cấu tạo tụ điện: Tụ điện gồm hai bản kim loại đặt song song và được ngăn cách nhau bằng một lớp vật liệu cách điện gọi là điện môi (như mica, nhựa pôliêtilen, giấy tẩm parafin, ...). Dung dịch muối ăn là chất dẫn điện chứ không phải chất cách điện, do đó không dùng để chế tạo tụ điện.\nGiấy tẩm dung dịch muối ăn là chất dẫn điện nên không thể dùng làm lớp điện môi cho tụ điện.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-170",
-    "noi_dung": "$1\\mu\\text{F}$ bằng",
-    "phuong_an": "A. $10^{-9}\\text{F}$.\nB. $10^{-6}\\text{F}$.\nC. $10^{-12}\\text{F}$.\nD. $10^6\\text{ F}$.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $1\\mu\\text{F} = 10^{-6}\\text{ F}$.\nĐổi đơn vị: Theo hệ thốøng đo lường quốc tế, kí hiệu micro ($\\mu$) biểu thị cho thừa số $10^{-6}$. Do đó, $1\\mu\\text{F}$ bằng $10^{-6}\\text{ F}$.\n$$1\\mu\\text{F} = 10^{-6}\\text{ F}$$\nTa có $1\\mu\\text{F} = 10^{-6}\\text{ F}$, do đó chọn phương án B.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-171",
-    "noi_dung": "Hệ nào sau đây có thể coi tương đương như một tụ điện?",
-    "phuong_an": "A. 2 bản bằng đồng đặt xong xong rồi được nhúng vào trong dung dịch muối ăn.\nB. 2 quả cầu kim loại đặt gần nhau trong không khí.\nC. 2 tấm thủy tinh đặt xong xong rồi được nhúng vào trong nước cất.\nD. 2 quả cầu bằng mica đặt gần nhau trong chân không.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $Cấu tạo tụ điện: gồm hai vật dẫn đặt gần nhau và ngăn cách nhau bằng một lớp điện môi.$.\nPhân tích các phương án: Tụ điện được cấu tạo từ hai vật dẫn điện đặt cách nhau bởi một lớp điện môi. Phương án A có hai bản đồng (vật dẫn) đặt trong dung dịch muối ăn (chất dẫn điện, không phải điện môi). Phương án C và D chứa thủy tinh hoặc mica (chất điện môi) nhưng lại là hai tấm thủy tinh hoặc hai quả cầu mica (không phải vật dẫn). Phương án B gồm hai quả cầu kim loại (vật dẫn) đặt gần nhau trong không khí (chất điện môi), thỏa mãn điều kiện cấu tạo của một tụ điện.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-172",
-    "noi_dung": "Năng lượng của tụ điện được xác định bởi công thức nào sau đây?",
-    "phuong_an": "A. $W = \\frac{1}{2}QU^2$\nB. $W = \\frac{1}{2}CU$\nC. $W = CU^2$\nD. $W = \\frac{1}{2}\\frac{Q^2}{C}$",
-    "dap_an": "D",
-    "loi_giai": "Công thức năng lượng tụ điện: Năng lượng của tụ điện trữ trong điện trường giữa hai bản tụ được tính bằng công thức\n$$W = \\frac{1}{2}CU^2 = \\frac{1}{2}QU = \\frac{1}{2}\\frac{Q^2}{C}$$\nSo sánh với các phương án: Từ biểu thức năng lượng, ta thấy phương án D phù hợp $W = \\frac{1}{2}\\frac{Q^2}{C}$.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-173",
-    "noi_dung": "Đại lượng đặc trưng cho khả năng tích điện của tụ điện là",
-    "phuong_an": "A. điện dung C\nB. điện tích Q\nC. khoảng cách d giữa hai bản tụ.\nD. cường độ điện trường.",
-    "dap_an": "A",
-    "loi_giai": "Khái niệm điện dung: Điện dung của tụ điện là đại lượng đặc trưng cho khả năng tích điện của tụ điện ở một hiệu điện thế nhất định, được xác định bằng thương số giữa điện tích của tụ điện và hiệu điện thế giữa hai bản tụ: $C = \\frac{Q}{U}$.\n$$C = \\frac{Q}{U}$$\nXác định đại lượng đặc trưng: Vì điện dung $C$ có giá trị không đổi đối với một tụ điện nhất định và đặc trưng cho khả năng tích điện của tụ điện đó, nên đáp án đúng là điện dung C.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-174",
-    "noi_dung": "Công dụng nào sau đây của một thiết bị không liên quan tới tụ điện?",
-    "phuong_an": "A. Tích trữ năng lượng.\nB. Tích điện và phóng điện.\nC. Không cho dòng điện một chiều đi qua.\nD. Cung cấp nhiệt năng.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $Thiết bị: Tụ điện$.\nChức năng của tụ điện: Tụ điện có công dụng tích trữ năng lượng điện trường, tích điện và phóng điện, cho dòng điện xoay chiều đi qua và không cho dòng điện một chiều đi qua.\nXác định công dụng không liên quan: Cung cấp nhiệt năng là công dụng của các thiết bị điện trở (như bàn là, bếp điện), không phải của tụ điện.\nTụ điện không có công dụng cung cấp nhiệt năng.\nĐáp án: D.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -1710,42 +1602,6 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1270_213636507ĐỀ_CƯƠNG_ÔN_TẬP_GK2-11-HS_(2025-2026).pdf_p17_img1.jpeg, images/q1270_213636507___C__NG__N_T_P__p1_img1.png, images/q1270_213636507___C__NG__N_T_P__p1_img2.png, images/q1270_213636507___C__NG__N_T_P__p1_img3.jpeg, images/q1270_213636507___C__NG__N_T_P__p2_img1.png, images/q1270_213636507___C__NG__N_T_P__p2_img2.png, images/q1270_213636507___C__NG__N_T_P__p2_img3.png, images/q1270_213636507___C__NG__N_T_P__p2_img4.png, images/q1270_213636507___C__NG__N_T_P__p7_img1.jpeg, images/q1270_213636507___C__NG__N_T_P__p7_img2.jpeg, images/q1270_213636507___C__NG__N_T_P__p17_img1.jpeg, images/q1270_213636507___C__NG__N_T_P__p19_img1.png, images/q1270_213636507___C__NG__N_T_P__p19_img3.png, images/q1270_213636507___C__NG__N_p17_img1.jpeg"
   },
   {
-    "ma_cau": "C-1XHtGuMf-176",
-    "noi_dung": "Năng lượng của điện trường trong một tụ điện đã tích được điện tích q không phụ thuộc vào",
-    "phuong_an": "A. điện tích mà tụ điện tích được.\nB. hiệu điện thế giữa hai bản tụ điện.\nC. thời gian đã thực hiện để tích điện cho tụ điện.\nD. điện dung của tụ điện.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $W = \\frac{1}{2}\\frac{q^2}{C} = \\frac{1}{2}CU^2 = \\frac{1}{2}qU$.\nBiểu thức năng lượng điện trường: Năng lượng điện trường trong tụ điện được tính bằng các công thức\n$$W = \\frac{1}{2}CU^2 = \\frac{1}{2}\\frac{q^2}{C} = \\frac{1}{2}qU$$\nXét sự phụ thuộc: Từ biểu thức ta thấy năng lượng điện trường phụ thuộc vào điện tích q, hiệu điện thế U và điện dung C của tụ điện, hoàn toàn không phụ thuộc vào thời gian tích điện cho tụ\nNăng lượng điện trường không phụ thuộc vào thời gian đã thực hiện để tích điện cho tụ điện.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-177",
-    "noi_dung": "Năng lượng của tụ điện bằng",
-    "phuong_an": "A. công để tích điện cho tụ điện.\nB. điện thế của các điện tích trên các bản tụ điện.\nC. tổng điện thế của các bản tụ điện.\nD. khả năng tích điện của tụ điện.",
-    "dap_an": "A",
-    "loi_giai": "Định nghĩa năng lượng tụ điện: Năng lượng của tụ điện chính là công mà nguồn điện thực hiện để tích điện cho các bản tụ điện đó.\n$$W = A$$\nNăng lượng của tụ điện bằng công để tích điện cho tụ điện.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-178",
-    "noi_dung": "Hai tụ điện chứa cùng một điện tích:",
-    "phuong_an": "A. Hai tụ điện phải có cùng điện dung.\nB. Hiệu điện thế giữa hai bản của mỗi tụ điện phải bằng nhau.\nC. Tụ điện có điện dung lớn sẽ có hiệu điện thế giữa hai bản lớn hơn.\nD. Hiệu điện thế giữa hai bản tụ tỉ lệ nghịch với điện dung của nó.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $Q_1 = Q_2 = Q$.\nBiểu thức điện tích: Điện tích của tụ điện được tính bằng công thức\n$$Q = C\\cdot U$$\nSo sánh hiệu điện thế: Từ biểu thức ta suy ra hiệu điện thế giữa hai bản tụ là\n$$U = \\frac{Q}{C}$$\nKết luận: Vì hai tụ điện chứa cùng một điện tích nên hiệu điện thế tỉ lệ nghịch với điện dung của tụ điện $U \\sim \\frac{1}{C}$.\nHiệu điện thế giữa hai bản tụ tỉ lệ nghịch với điện dung của nó\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-179",
-    "noi_dung": "Chọn câu phát biểu đúng.",
-    "phuong_an": "A. Điện dung của tụ điện phụ thuộc điện tích của nó.\nB. Điện dung của tụ điện phụ thuộc hiệu điện thế giữa hai bản của nó.\nC. Điện dung của tụ điện phụ thuộc cả vào điện tích lẫn hiệu điện thế giữa hai bản của tụ.\nD. Điện dung của tụ điện không phụ thuộc điện tích và hiệu điện thế giữa hai bản của tụ điện",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $C = \\frac{Q}{U}$.\nĐịnh nghĩa điện dung: Điện dung của tụ điện là đại lượng đặc trưng cho khả năng tích điện của tụ điện ở một hiệu điện thế nhất định, được tính bằng thương số giữa điện tích của tụ điện và hiệu điện thế giữa hai bản của nó.\n$$C = \\frac{Q}{U}$$\nBản chất của điện dung: Điện dung của một tụ điện có giá trị không đổi đối với một tụ điện xác định, không phụ thuộc vào điện tích $Q$ cũng như hiệu điện thế $U$ đặt vào hai bản tụ mà chỉ phụ thuộc vào cấu tạo của tụ điện.\nĐiện dung của tụ điện đặc trưng cho khả năng tích điện của tụ, có giá trị không đổi và không phụ thuộc vào điện tích hay hiệu điện thế giữa hai bản tụ.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-180",
     "noi_dung": "Đồ thị trên hình biểu diễn sự phụ thuộc của điện tích của một tụ điện vào hiệu điện thế giữa hai bản của nó [Hình các đồ thị a, b, c giữa Q và U]",
     "phuong_an": "A. Đồ thị a.\nB. Đồ thị b.\nC. Đồ thị c.\nD. Không có đồ thị nào.",
@@ -1755,173 +1611,11 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1275_213636507ĐỀ_CƯƠNG_ÔN_TẬP_GK2-11-HS_(2025-2026).pdf_p17_img2.png, images/q1275_213636507___C__NG__N_T_P__p1_img1.png, images/q1275_213636507___C__NG__N_T_P__p1_img2.png, images/q1275_213636507___C__NG__N_T_P__p1_img3.jpeg, images/q1275_213636507___C__NG__N_T_P__p5_img1.png, images/q1275_213636507___C__NG__N_T_P__p5_img2.png, images/q1275_213636507___C__NG__N_T_P__p5_img3.png, images/q1275_213636507___C__NG__N_T_P__p5_img4.png, images/q1275_213636507___C__NG__N_T_P__p7_img2.jpeg, images/q1275_213636507___C__NG__N_T_P__p17_img2.png, images/q1275_213636507___C__NG__N_p1_img1.png"
   },
   {
-    "ma_cau": "C-1XHtGuMf-181",
-    "noi_dung": "Trong các nhận xét về tụ điện dưới đây, nhận xét không đúng là",
-    "phuong_an": "A. Điện dung đặc trưng cho khả năng tích điện của tụ.\nB. Điện dung của tụ càng lớn thì tích được điện lượng càng lớn.\nC. Điện dung của tụ có đơn vị là Fara (F).\nD. Hiệu điện thế càng lớn thì điện dung của tụ càng lớn.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $C = \\frac{Q}{U}$.\nĐịnh nghĩa điện dung: Điện dung của tụ điện là đại lượng đặc trưng cho khả năng tích điện của tụ ở một hiệu điện thế nhất định, được xác định bằng thương số giữa điện tích $Q$ của tụ và hiệu điện thế $U$ đặt vào hai bản tụ: $C = \\frac{Q}{U}$.\n$$C = \\frac{Q}{U}$$\nĐặc điểm điện dung: Điện dung $C$ chỉ phụ thuộc vào cấu tạo của tụ điện (kích thước, hình dáng bản tụ, khoảng cách và bản chất điện môi giữa hai bản) mà không phụ thuộc vào điện tích $Q$ hay hiệu điện thế $U$. Do đó, hiệu điện thế tăng hay giảm không làm thay đổi điện dung của tụ.\nKết luận: Nhận xét \"Hiệu điện thế càng lớn thì điện dung của tụ càng lớn\" là phát biểu không đúng.\nPhát biểu không đúng về tụ điện là hiệu điện thế càng lớn thì điện dung của tụ càng lớn.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-182",
-    "noi_dung": "Dựa vào công thức $W = Q^2/2C$, hãy cho biết khi hiệu điện thế giữa hai bản của tụ điện tăng gấp đôi thì năng lượng của tụ điện biến đổi thế nào ?",
-    "phuong_an": "A. Không đổi\nB. Tăng hai lần\nC. Tăng $\\sqrt{2}$ lần\nD. Tăng bốn lần",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $U_2 = 2U_1$.\nMối quan hệ giữa năng lượng và hiệu điện thế: Ta có công thức tính năng lượng của tụ điện theo hiệu điện thế là\n$$W = \\frac{1}{2}CU^2$$\nLập tỉ lệ: Khi hiệu điện thế tăng gấp đôi thì năng lượng của tụ điện tăng\n$$\\frac{W_2}{W_1} = \\left(\\frac{U_2}{U_1}\\right)^2 = 2^2 = 4$$\nNăng lượng của tụ điện tăng bốn lần\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-183",
-    "noi_dung": "Dựa vào công thức $W = CU^2/2$, hãy cho biết khi điện tích của tụ điện tăng gấp đôi thì năng lượng của tụ điện biến đổi thế nào ?",
-    "phuong_an": "A. Tăng gấp bốn lần\nB. Tăng gấp ba lần\nC. Tăng gấp hai lần\nD. Không đổi",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $W = \\frac{C U^2}{2}$; $q' = 2q$; $C = \\text{const}$.\nMối liên hệ giữa năng lượng và điện tích của tụ điện: Ta có mối liên hệ giữa điện tích, điện dung và hiệu điện thế là $q = CU$, hay $U = \\frac{q}{C}$. Thay vào công thức năng lượng ta được\n$$W = \\frac{C U^2}{2} = \\frac{q^2}{2C}$$\nBiện luận khi điện tích tăng gấp đôi: Vì điện dung $C$ của tụ điện không đổi nên năng lượng $W$ tỉ lệ thuận với bình phương điện tích $q$. Do đó, khi điện tích tăng gấp đôi thì năng lượng của tụ điện tăng gấp bốn lần\n$$q' = 2q \\implies W' = \\frac{(2q)^2}{2C} = 4W$$\nKhi điện tích của tụ điện tăng gấp đôi thì năng lượng của tụ điện tăng gấp bốn lần.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-184",
-    "noi_dung": "Phát biểu nào sau đây là không đúng?",
-    "phuong_an": "A. Tụ điện là một hệ hai vật dẫn đặt gần nhau nhưng không tiếp xúc với nhau. Mỗi vật đó gọi là một bản tụ.\nB. Tụ điện phẳng là tụ điện có hai bản tụ là hai tấm kim loại có kích thước lớn đặt đối diện với nhau.\nC. Điện dung của tụ điện là đại lượng đặc trưng cho khả năng tích điện của tụ điện và được đo bằng thương số giữa điện tích của tụ và hiệu điện thế giữa hai bản tụ.\nD. Hiệu điện thế giới hạn là hiệu điện thế lớn nhất đặt vào hai bản tụ điện mà lớp điện môi của tụ điện đã bị đánh thủng.",
-    "dap_an": "D",
-    "loi_giai": "Phân tích cấu tạo tụ điện: Tụ điện là hệ hai vật dẫn đặt gần nhau và ngăn cách nhau bằng một lớp điện môi, mỗi vật dẫn là một bản tụ, nên phát biểu A đúng.\nPhân tích tụ điện phẳng: Tụ điện phẳng có các bản tụ là hai tấm kim loại kích thước lớn đặt song song đối diện nhau, nên phát biểu B đúng.\nPhân tích điện dung của tụ điện: Điện dung $C = \\frac{Q}{U}$ đặc trưng cho khả năng tích điện của tụ, nên phát biểu C đúng. $C = \\frac{Q}{U}$.\nPhân tích hiệu điện thế giới hạn: Hiệu điện thế giới hạn là hiệu điện thế lớn nhất đặt vào hai bản tụ mà lớp điện môi chưa bị đánh thủng. Phát biểu nói lớp điện môi đã bị đánh thủng là sai.\nPhát biểu D không đúng vì ở hiệu điện thế giới hạn thì lớp điện môi vẫn chưa bị đánh thủng.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-185",
-    "noi_dung": "Câu nào sau đây là sai?",
-    "phuong_an": "A. Khi ta nối hai bản của một tụ điện với hai cực của một nguồn điện có hiệu điện thế U thì tụ điện được nạp một điện tích xác định bằng Q\nB. Đối với mỗi tụ điện, điện tích Q trên bản dương là một hằng số\nC. Khi hiệu điện thế U giữa hai bản của tụ điện tăng gấp đôi thì điện tích của tụ điện cũng tăng gấp đôi\nD. Thương số Q/U của mỗi tụ điện là một hằng số C, gọi là điện dung của tụ điện",
-    "dap_an": "B",
-    "loi_giai": "Phân tích điện tích của tụ điện: Điện tích $Q$ của tụ điện phụ thuộc vào hiệu điện thế $U$ đặt vào hai bản tụ theo công thức $Q = C\\cdot U$. Khi hiệu điện thế thay đổi thì điện tích $Q$ cũng thay đổi, do đó $Q$ không phải là một hằng số đối với một tụ điện.\n$$Q = C\\cdot U$$\nPhát biểu B là sai vì điện tích Q trên bản dương của tụ điện tỉ lệ thuận với hiệu điện thế U và không phải là một hằng số.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-186",
-    "noi_dung": "Khi nói về cách mắc các tụ điện, câu nào sau đây là đúng ?",
-    "phuong_an": "A. Khi hai tụ điện mắc nối tiếp, các bản dương được nối với nhau và các bản âm được nối với nhau\nB. Khi hai tụ điện mắc song song, bản dương của tụ điện này được nối bản âm của tụ điện kia\nC. Khi nhiều tụ điện được mắc song song, điện dung của mỗi tụ điện nhỏ hơn điện dung của cả bộ tụ\nD. Khi nhiều tụ điện được mắc song song, điện dung của mỗi tụ điện lớn hơn điện dung của cả bộ tụ",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $Bộ tụ điện mắc song song: C = C_1 + C_2 + ... + C_n$.\nĐặc điểm mạch mắc song song: Khi các tụ điện được mắc song song, điện dung của bộ tụ là tổng điện dung của các tụ thành phần, do đó điện dung của mỗi tụ điện nhỏ hơn điện dung của cả bộ tụ.\n$$C > C_i$$\nĐiện dung của bộ tụ mắc song song lớn hơn điện dung của từng tụ thành phần, nên điện dung của mỗi tụ nhỏ hơn điện dung của cả bộ.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-187",
-    "noi_dung": "Chọn phát biểu sai khi ghép hai tụ điện thành bộ",
-    "phuong_an": "A. Muốn có bộ tụ điện điện dung lớn hơn điện dung một tụ đã có, cần mắc song song với tụ điện khác\nB. Với một nguồn nạp điện đã cho, bộ ghép hai tụ điện nối tiếp sẽ cho điện tích lớn hơn so với mỗi tụ ghép riêng rẽ\nC. Khi ghép nối tiếp hai tụ điện rồi nạp điện, tụ có điện dung lớn hơn bao nhiêu lần thì hiệu điện thế trên chúng lại nhỏ hơn bấy nhiêu lần\nD. trong bộ tụ ghép song song, điện tích tên các tụ điện tỉ lệ thuận với điện dung của chúng",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $C_1, C_2\\text{ ghép nối tiếp hoặc song song}$.\nPhân tích tụ điện ghép song song: Đối với bộ tụ điện ghép song song, điện dung của bộ tụ là $C = C_1 + C_2$ lớn hơn điện dung của mỗi tụ thành phần. Điện tích trên mỗi tụ là $q = C U$, do đó điện tích tỉ lệ thuận với điện dung. Các phát biểu A và D đúng.\n$$C = C_1 + C_2,\\quad q_1/q_2 = C_1/C_2$$\nPhân tích tụ điện ghép nối tiếp: Đối với bộ tụ điện ghép nối tiếp, điện tích của các tụ bằng nhau và bằng điện tích của bộ tụ $q = q_1 = q_2$. Hiệu điện thế trên mỗi tụ là $U = q/C$, do đó hiệu điện thế tỉ lệ nghịch với điện dung (tụ có điện dung lớn hơn thì hiệu điện thế nhỏ hơn). Điện tích của bộ tụ nối tiếp luôn nhỏ hơn điện tích của mỗi tụ khi được nạp đến cùng một hiệu điện thế. Do đó phát biểu B sai.\n$$\\frac{1}{C} = \\frac{1}{C_1} + \\frac{1}{C_2},\\quad \\frac{U_1}{U_2} = \\frac{C_2}{C_1}$$\nPhát biểu B sai vì khi ghép nối tiếp, điện tích của bộ tụ bằng điện tích của mỗi tụ thành phần chứ không lớn hơn.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-188",
-    "noi_dung": "Trên vỏ một tụ điện có ghi $1000\\ \\mu\\text{F} - 63\\text{ V}$. Điện tích tối đa có thể tích cho tụ có giá trị là",
-    "phuong_an": "A. 0,63 C.\nB. 0,063 C.\nC. 63 C.\nD. 63.000 C.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $C = 1000\\, \\mu\\text{F} = 10^{-3}\\text{ F}$; $U_{\\text{max}} = 63\\text{ V}$.\nĐiện tích tối đa: Áp dụng công thức tính điện tích của tụ điện $q = C \\cdot U$, điện tích tối đa mà tụ có thể tích được ứng với hiệu điện thế lớn nhất là\n$$Q_{\\text{max}} = C \\cdot U_{\\text{max}} = 10^{-3} \\cdot 63 = 0{,}063\\text{ C}$$\nTa có điện tích tối đa của tụ là $0{,}063\\text{ C}$, ứng với phương án B.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-189",
-    "noi_dung": "Một tụ điện điện dung $5\\mu\\text{F}$ được tích điện đến điện tích bằng $86\\mu\\text{C}$. Tính hiệu điện thế trên hai bản tụ",
-    "phuong_an": "A. 17,2V\nB. 27,2V\nC. 37,2V\nD. 47,2V",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $C = 5\\mu\\text{F} = 5\\cdot 10^{-6}\\text{ F}$; $Q = 86\\mu\\text{C} = 86\\cdot 10^{-6}\\text{ C}$.\nHiệu điện thế: Áp dụng công thức tính hiệu điện thế giữa hai bản tụ điện\n$$U = \\frac{Q}{C} = \\frac{86\\cdot 10^{-6}}{5\\cdot 10^{-6}} = 17{,}2\\text{ V}$$\nHiệu điện thế trên hai bản tụ là 17,2 V, tương ứng với phương án A.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-190",
-    "noi_dung": "Một tụ điện có điện dung 5nF, điện trường lớn nhất mà tụ có thể chịu được là $3\\cdot 10^5\\text{ V/m}$, khoảng cách giữa 2 bản là 2mm. Hiệu điện thế lớn nhất giữa 2 bản tụ là",
-    "phuong_an": "A. 600V\nB. 400V\nC. 500V\nD. 800V",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $C = 5\\text{ nF} = 5\\cdot 10^{-9}\\text{ F}$; $E_{\\text{max}} = 3\\cdot 10^5\\text{ V/m}$; $d = 2\\text{ mm} = 2\\cdot 10^{-3}\\text{ m}$.\nHiệu điện thế lớn nhất: Hiệu điện thế lớn nhất giữa hai bản tụ được tính theo công thức liên hệ giữa điện trường đều và hiệu điện thế\n$$U_{\\text{max}} = E_{\\text{max}}\\cdot d$$\nTính toán: Thay số vào biểu thức ta được\n$$U_{\\text{max}} = 3\\cdot 10^5\\cdot 2\\cdot 10^{-3} = 600\\text{ V}$$\nHiệu điện thế lớn nhất giữa 2 bản tụ là 600V, ứng với phương án A\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-191",
-    "noi_dung": "Một tụ có điện dung $2\\ \\mu\\text{F}$. Khi đặt một hiệu điện thế 4 V vào 2 bản của tụ điện thì tụ tích được một điện lượng là",
-    "phuong_an": "A. $2\\cdot 10^{-6}\\text{ C}$.\nB. $16\\cdot 10^{-6}\\text{ C}$.\nC. $4\\cdot 10^{-6}\\text{ C}$.\nD. $8\\cdot 10^{-6}\\text{ C}$.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $C = 2\\ \\mu\\text{F} = 2\\cdot 10^{-6}\\text{ F}$; $U = 4\\text{ V}$.\nĐiện tích của tụ điện: Áp dụng công thức tính điện tích của tụ điện\n$$Q = C\\cdot U$$\nTính toán: Thay số vào công thức ta được\n$$Q = 2\\cdot 10^{-6}\\cdot 4 = 8\\cdot 10^{-6}\\text{ C}$$\nĐiện lượng tích được là 8\\cdot 10^{-6}\\text{ C}, ứng với phương án D.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-192",
-    "noi_dung": "Một tụ điện có điện dung 500pF mắc vào hai cực của một máy phát điện có hiệu điện thế 220V. Điện tích của tụ điện bằng",
-    "phuong_an": "A. $0{,}31\\mu\\text{C}$\nB. $0{,}21\\mu\\text{C}$\nC. $0{,}11\\mu\\text{C}$.\nD. $0{,}01\\mu\\text{C}$",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $C = 500\\text{ pF} = 500\\cdot 10^{-12}\\text{ F}$; $U = 220\\text{ V}$.\nTính điện tích của tụ điện: Áp dụng công thức tính điện tích của tụ điện $q = C\\cdot U$\n$$q = 500\\cdot 10^{-12}\\cdot 220 = 1{,}1\\cdot 10^{-7}\\text{ C} = 0{,}11\\cdot 10^{-6}\\text{ C} = 0{,}11\\mu\\text{ C}$$\nTa có kết quả điện tích của tụ điện là $0{,}11\\mu\\text{C}$, trùng với phương án C\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-193",
-    "noi_dung": "Một tụ điện có thể chịu được điện trường giới hạn là $3\\cdot 10^6\\text{ V/m}$, khoảng cách giữa hai bản tụ là 1mm, điện dung là $8{,}85\\cdot 10^{-11}\\text{F}$. Điện tích cực đại mà tụ tích được bằng",
-    "phuong_an": "A. $26{,}65\\cdot 10^{-8}\\text{C}$.\nB. $26{,}65\\cdot 10^{-9}\\text{C}$.\nC. $26{,}65\\cdot 10^{-7}\\text{C}$.\nD. $13{,}32\\cdot 10^{-8}\\text{C}$.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $E = 3\\cdot 10^6\\text{ V/m}$; $d = 1\\text{ mm} = 10^{-3}\\text{ m}$; $C = 8{,}85\\cdot 10^{-11}\\text{ F}$.\nHiệu điện thế cực đại: Hiệu điện thế lớn nhất giữa hai bản tụ là\n$$U_{max} = E \\cdot d = 3\\cdot 10^6 \\cdot 10^{-3} = 3000\\text{ V}$$\nĐiện tích cực đại: Điện tích cực đại mà tụ tích được là\n$$Q_{max} = C \\cdot U_{max} = 8{,}85\\cdot 10^{-11} \\cdot 3000 = 26{,}55\\cdot 10^{-8}\\text{ C}$$\nChọn phương án: Ta thấy kết quả tính toán gần với giá trị của phương án A do sai số làm tròn trong các bài toán thực tế, chọn A.\nĐiện tích cực đại mà tụ tích được là khoảng 26,65.10^-8 C.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-194",
     "noi_dung": "Để tụ tích một điện lượng 10 nC thì đặt vào hai đầu tụ một hiệu điện thế 2V. Để tụ đó tích được điện lượng 2,5 nC thì phải đặt vào hai đầu tụ một hiệu điện thế",
     "phuong_an": "A. 500 mV.\nB. 0,05 V.\nC. 5V.\nD. 20 V.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-195",
-    "noi_dung": "Đặt vào hai đầu tụ một hiệu điện thế 10 V thì tụ tích được một điện lượng $20\\cdot 10^{-9}\\text{ C}$. Điện dung của tụ là",
-    "phuong_an": "A. $2\\ \\mu\\text{F}$.\nB. 2 mF.\nC. 2 F.\nD. 2 nF.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $U = 10\\text{ V}$; $q = 20\\cdot 10^{-9}\\text{ C}$.\nĐiện dung của tụ điện: Áp dụng công thức tính điện dung của tụ điện C = \\frac{q}{U}\n$$C = \\frac{20\\cdot 10^{-9}}{10} = 2\\cdot 10^{-9}\\text{ F} = 2\\text{ nF}$$\nĐiện dung của tụ điện là 2 nF, tương ứng với phương án D.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-196",
-    "noi_dung": "Khi đặt tụ điện có điện dung $2\\ \\mu\\text{F}$ dưới hiệu điện thế 5000V thì công thực hiện để tích điện cho tụ điện bằng",
-    "phuong_an": "A. 2,5J\nB. 5J\nC. 25J\nD. 50J",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $C = 2\\cdot 10^{-6}\\text{ F}$; $U = 5000\\text{ V}$.\nCông thực hiện: Công thực hiện để tích điện cho tụ điện bằng năng lượng điện trường của tụ\n$$A = W = \\frac{1}{2} C U^2$$\nTính toán: Thay số vào biểu thức\n$$A = \\frac{1}{2} \\cdot 2\\cdot 10^{-6} \\cdot 5000^2 = 25\\text{ J}$$\nCông thực hiện để tích điện cho tụ điện là 25 J\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-197",
-    "noi_dung": "Hai tụ điện có điện dung $C_1 = 2\\mu\\text{F}; C_2 = 3\\mu\\text{F}$ mắc nối tiếp nhau. Điện dung của bộ tụ là",
-    "phuong_an": "A. $1{,}8\\ \\mu\\text{F}$\nB. $1{,}6\\ \\mu\\text{F}$\nC. $1{,}4\\ \\mu\\text{F}$\nD. $1{,}2\\ \\mu\\text{F}$",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $C_1 = 2\\ \\mu\\text{F}$; $C_2 = 3\\ \\mu\\text{F}$; $Mắc nối tiếp$.\nCông thức điện dung bộ tụ mắc nối tiếp: Điện dung của hai tụ điện mắc nối tiếp được tính theo công thức\n$$\\frac{1}{C} = \\frac{1}{C_1} + \\frac{1}{C_2}$$\nTính điện dung bộ tụ: Thay số vào công thức ta được\n$$C = \\frac{C_1 \\cdot C_2}{C_1 + C_2} = \\frac{2 \\cdot 3}{2 + 3} = 1{,}2\\ \\mu\\text{F}$$\nĐiện dung của bộ tụ là $1{,}2\\ \\mu\\text{F}$, tương ứng với phương án D.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-198",
-    "noi_dung": "Năm tụ điện giống hệt nhau, mỗi tụ có điện dung $C = 50\\mu\\text{F}$, được mắc song song với nhau. Điện dung của bộ tụ bằng",
-    "phuong_an": "A. $10\\mu\\text{F}$\nB. $50\\mu\\text{F}$\nC. $250\\mu\\text{F}$\nD. 250F.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $n = 5$; $C_1 = C_2 = C_3 = C_4 = C_5 = 50\\mu\\text{F}$; $\\text{Mắc song song}$.\nTính điện dung bộ tụ: Vì năm tụ điện giống hệt nhau mắc song song nên điện dung của bộ tụ là\n$$C_{b} = n\\cdot C = 5\\cdot 50 = 250\\mu\\text{F}$$\nĐiện dung của bộ tụ bằng 250\\mu\\text{F}, ứng với phương án C\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1XHtGuMf-199",
-    "noi_dung": "Một tụ điện có điện dung $2µ\\text{F}$ được tích điện ở hiệu điện thế 12V. Năng lượng điện trường dự trữ trong tụ điện là",
-    "phuong_an": "A. 144J\nB. $1{,}44\\cdot 10^{-4}\\text{ J}$\nC. $1{,}2\\cdot 10^{-5}\\text{ J}$\nD. 12J",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $C = 2\\mu\\text{F} = 2\\cdot 10^{-6}\\text{ F}$; $U = 12\\text{ V}$.\nNăng lượng điện trường dự trữ trong tụ điện: Áp dụng công thức tính năng lượng của tụ điện:\n$$W = \\frac{1}{2} C U^2 = \\frac{1}{2}\\cdot 2\\cdot 10^{-6}\\cdot 12^2 = 1{,}44\\cdot 10^{-4}\\text{ J}$$\nNăng lượng điện trường dự trữ trong tụ điện là $1{,}44\\cdot 10^{-4}\\text{ J}$.\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -1953,15 +1647,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1XHtGuMf-203",
-    "noi_dung": "Cho trước tụ điện $C_1 = 6\\mu\\text{F}$. Tụ điện thứ hai $C_2$ có giá trị là bao nhiêu micro Fara để ghép với tụ $C_1$ sẽ được bộ tụ có điện dung $C = 4\\mu\\text{F}$",
-    "phuong_an": "",
-    "dap_an": "12\\,\\mu\\text{F}",
-    "loi_giai": "Tóm tắt: $C_1 = 6\\,\\mu\\text{F}$; $C = 4\\,\\mu\\text{F}$.\nBiện luận cách ghép tụ điện: Vì điện dung tương đương $C < C_1$ ($4\\,\\mu\\text{F} < 6\\,\\mu\\text{F}$) nên bộ tụ phải được ghép nối tiếp. $C < C_1$.\nTính điện dung của tụ điện thứ hai: Áp dụng công thức tính điện dung của bộ tụ ghép nối tiếp:\n$$\\frac{1}{C} = \\frac{1}{C_1} + \\frac{1}{C_2} \\Rightarrow \\frac{1}{C_2} = \\frac{1}{C} - \\frac{1}{C_1} = \\frac{1}{4} - \\frac{1}{6} = \\frac{1}{12}$$\nGiá trị của tụ điện thứ hai: Suy ra giá trị điện dung của tụ điện $C_2$: $C_2 = 12\\,\\mu\\text{F}$.\nTụ điện thứ hai $C_2$ phải được ghép nối tiếp với $C_1$ và có giá trị điện dung là $12\\,\\mu\\text{F}$.\nĐáp án: 12\\,\\mu\\text{F} muF.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1XHtGuMf-204",
     "noi_dung": "Quạt treo tường nhà bạn Nam bị hỏng chiếc tụ điện như Hình 2 và cần được thay thế. Hãy cho biết bạn Nam có thể chọn được tụ điện hình nào trong các loại dưới đây mà cửa hàng đồ điện có bán? [Hình 2 kèm Hình 1, 2, 3, 4 ở trang kế tiếp]",
     "phuong_an": "",
@@ -1976,96 +1661,6 @@
     "phuong_an": "A. tác dụng lực lên mọi vật đặt trong nó.\nB. tác dụng lực điện lên mọi vật đặt trong nó.\nC. truyền lực cho các điện tích.\nD. truyền tương tác giữa các điện tích.",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-002",
-    "noi_dung": "Đơn vị của cường độ điện trường là:\nA. V/m; C/N B. V.m; N/C C. V/m; N/C D. V.m; C/N",
-    "phuong_an": "A. V/m; C/N\nB. V.m; N/C\nC. V/m; N/C\nD. V.m; C/N",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $E = \\frac{F}{q}$; $E = \\frac{U}{d}$.\nXac dinh don vi: Cuong doi dien truong duoc xac dinh bang thuong so giua do lon luc dien tac dung len dien tich thu va do lon dien tich do hoac do giam dien the tren mot don vi do dai, nen co don vi la Newton tren coulomb hoac Volt tren met\n$$E = \\frac{F}{q} = \\frac{U}{d} \\Rightarrow \\text{unit}(E) = \\text{N/C} = \\text{V/m}$$\nVay don vi cua cuong doi dien truong la V/m hoac N/C\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-003",
-    "noi_dung": "Chọn phát biểu đúng về đặc điểm các đường sức điện\nA. Véctơ cường độ điện trường dọc theo một đường sức có độ lớn bằng nhau\nB. Các đường sức trong điện trường của hai điện tích bằng nhau nhưng trái dấu và đặt cô lập xa nhau thì giống hệt nhau, đều là những nửa đường thẳng xuyên tâm đi qua điểm đặt điện tích\nC. Trong điện trường, ở những chỗ cường độ điện trường nhỏ thì các đường sức điện sẽ thưa\nD. Tại mỗi điểm trong điện trường không có nhiều hơn hai đường sức đi qua vì chỉ cần hai đường sức cắt nhau là đủ xác định một điểm",
-    "phuong_an": "A. Véctơ cường độ điện trường dọc theo một đường sức có độ lớn bằng nhau\nB. Các đường sức trong điện trường của hai điện tích bằng nhau nhưng trái dấu và đặt cô lập xa nhau thì giống hệt nhau, đều là những nửa đường thẳng xuyên tâm đi qua điểm đặt điện tích\nC. Trong điện trường, ở những chỗ cường độ điện trường nhỏ thì các đường sức điện sẽ thưa\nD. Tại mỗi điểm trong điện trường không có nhiều hơn hai đường sức đi qua vì chỉ cần hai đường sức cắt nhau là đủ xác định một điểm",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $Dạng câu hỏi lý thuyết về đặc điểm của các đường sức điện$.\nPhân tích phát biểu A: Cường độ điện trường dọc theo một đường sức có thể khác nhau tùy thuộc vào mật độ đường sức điện tại mỗi vùng. $E \\text{ không đổi dọc theo đường sức trong điện trường không đều}$.\nPhân tích phát biểu B: Điện tích dương có đường sức đi ra, điện tích âm có đường sức đi vào nên chúng không giống hệt nhau.\nPhân tích phát biểu C: Nơi nào cường độ điện trường lớn thì đường sức dày, nơi nào cường độ điện trường nhỏ thì đường sức thưa.\n$$E \\sim \\text{mật độ đường sức}$$\nPhân tích phát biểu D: Qua mỗi điểm trong điện trường chỉ có một đường sức điện đi qua, không có chuyện cắt nhau.\nChỗ cường độ điện trường nhỏ thì các đường sức điện thưa, đây là tính chất đúng của đường sức điện.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-004",
-    "noi_dung": "Công thức liên hệ giữa cường độ điện trường và hiệu điện thế là\nA. U = Ed B. U = A/q C. E = A/qd D. E = F/q",
-    "phuong_an": "A. U = Ed\nB. U = A/q\nC. E = A/qd\nD. E = F/q",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $Liên hệ giữa cường độ điện trường và hiệu điện thế trong điện trường đều$.\nCông thức liên hệ: Trong điện trường đều, hiệu điện thế $U$ giữa hai điểm cách nhau một khoảng $d$ dọc theo đường sức điện và cường độ điện trường $E$ được liên hệ bằng biểu thức\n$$U = E\\cdot d$$\nXác định đáp án: Từ công thức $U = E\\cdot d$, ta suy ra phương án đúng là A. $U = Ed$.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-005",
-    "noi_dung": "Hai điện tích điểm có độ lớn không đổi được đặt trong cùng một môi trường có hằng số điện môi là $\\varepsilon$, nếu tăng khoảng cách giữa hai điện tích lên 2 lần thì lực tương tác giữa chúng sẽ:\nA. Tăng 2 lần B. giảm 2 lần C. tăng 4 lần D. giảm 4 lần",
-    "phuong_an": "A. Tăng 2 lần\nB. giảm 2 lần\nC. tăng 4 lần\nD. giảm 4 lần",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $r_2 = 2r_1$.\nBiểu thức lực tương tác điện: Theo định luật Cul-lông, lực tương tác giữa hai điện tích điểm là\n$$F = k\\cdot \\frac{|q_1 q_2|}{\\varepsilon r^2}$$\nĐánh giá sự thay đổi lực tương tác: Vì lực tương tác tỉ lệ nghịch với bình phương khoảng cách $r^2$, khi khoảng cách tăng lên 2 lần thì lực tương tác sẽ giảm đi $2^2 = 4$ lần\n$$F' = k\\cdot \\frac{|q_1 q_2|}{\\varepsilon (2r)^2} = \\frac{F}{4}$$\nLực tương tác giữa hai điện tích giảm 4 lần.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-006",
-    "noi_dung": "Hai điện tích điểm cùng độ lớn $10^{-9}$ đặt trong chân không. Khoảng cách giữa chúng bằng bao nhiêu để lực tính điện giữa chúng có độ lớn $2{,}5\\cdot 10^{-6}\\text{ N}$?\nA. 0,06 cm B. 6 cm C. 36 cm D. 6 m",
-    "phuong_an": "A. 0,06 cm\nB. 6 cm\nC. 36 cm\nD. 6 m",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $q_1 = q_2 = 10^{-9}\\text{ C}$; $F = 2{,}5\\cdot 10^{-6}\\text{ N}$; $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2/\\text{C}^2$.\nĐịnh luật Cu-lông: Áp dụng công thức lực tương tác giữa hai điện tích điểm trong chân không\n$$F = k \\frac{|q_1 q_2|}{r^2}$$\nTính khoảng cách: Biến đổi công thức để tính khoảng cách r\n$$r = \\sqrt{\\frac{k |q_1 q_2|}{F}} = \\sqrt{\\frac{9\\cdot 10^9 \\cdot 10^{-9} \\cdot 10^{-9}}{2{,}5\\cdot 10^{-6}}} = 0{,}06\\text{ m} = 6\\text{ cm}$$\nKhoảng cách giữa hai điện tích là 6 cm\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-007",
-    "noi_dung": "Hai quả cầu kim loại nhỏ giống hệt nhau mang điện tích 2Q và -Q được đặt cách nhau một khoảng r, lực điện tác dụng lên nhau có độ lớn là F. Nối chúng lại với nhau bằng một dây dẫn điện sau đó bỏ dây dẫn đi. Sau khi bỏ dây nối hai quả cầu tác dụng lên nhau một lực điện có độ lớn là:\nA. F. B. F/2 C. F/4 D. F/8",
-    "phuong_an": "A. F.\nB. F/2\nC. F/4\nD. F/8",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $q_1 = 2Q$; $q_2 = -Q$; $F = k \\frac{|2Q \\cdot (-Q)|}{r^2} = 2k \\frac{Q^2}{r^2}$.\nĐiện tích sau khi nối: Khi nối hai quả cầu kim loại giống hệt nhau bằng dây dẫn rồi tách ra, điện tích của mỗi quả cầu là trung bình cộng điện tích ban đầu\n$$q_1' = q_2' = \\frac{2Q + (-Q)}{2} = \\frac{Q}{2}$$\nĐộ lớn lực điện mới: Áp dụng định luật Cul-lông cho trường hợp sau khi tách\n$$F' = k \\frac{|q_1' q_2'|}{r^2} = k \\frac{(\\frac{Q}{2})(\\frac{Q}{2})}{r^2} = \\frac{1}{4} k \\frac{Q^2}{r^2}$$\nSo sánh lực điện: Lập tỉ số lực điện mới so với lực điện ban đầu\n$$F' = \\frac{1}{4} \\left(\\frac{F}{2}\\right) = \\frac{F}{8}$$\nLực điện tác dụng lên nhau sau khi bỏ dây nối có độ lớn là F/8\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-008",
-    "noi_dung": "Cho hai điện tích điểm $q_1 = 16\\mu\\text{C}$ và $q_2 = -64\\mu\\text{C}$ lần lượt đặt tại hai điểm A và B trong chân không cách nhau $AB = 100\\text{ cm}$. Xác định lực điện tổng hợp tác dụng lên điện tích điểm $q_0 = 4\\mu\\text{C}$ đặt tại điểm M: $AM = 60\\text{ cm}$, $BM = 40\\text{ cm}$.\nA. 16N B. 1,6N C. 14,4N D. 12,8N",
-    "phuong_an": "A. 16N\nB. 1,6N\nC. 14,4N\nD. 12,8N",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $q_1 = 16\\cdot 10^{-6}\\text{ C}$; $q_2 = -64\\cdot 10^{-6}\\text{ C}$; $q_0 = 4\\cdot 10^{-6}\\text{ C}$; $AB = 1\\text{ m}$; $AM = 0{,}6\\text{ m}$; $BM = 0{,}4\\text{ m}$; $AM + BM = AB \\text{ (M nằm trên đoạn thẳng AB)}$.\nĐộ lớn lực điện do q_1 tác dụng lên q_0: Áp dụng định luật Cu-lông\n$$F_1 = k\\cdot \\frac{|q_1 q_0|}{AM^2} = 9\\cdot 10^9 \\cdot \\frac{16\\cdot 10^{-6} \\cdot 4\\cdot 10^{-6}}{0{,}6^2} = 1{,}6\\text{ N}$$\nĐộ lớn lực điện do q_2 tác dụng lên q_0: Áp dụng định luật Cu-lông\n$$F_2 = k\\cdot \\frac{|q_2 q_0|}{BM^2} = 9\\cdot 10^9 \\cdot \\frac{64\\cdot 10^{-6} \\cdot 4\\cdot 10^{-6}}{0{,}4^2} = 14{,}4\\text{ N}$$\nXác định lực điện tổng hợp: Vì q_1 > 0 và q_2 < 0 nên vectơ lực \\vec{F_1} hướng ra xa q_1 (hướng từ A đến B), còn vectơ lực \\vec{F_2} hướng về phía q_2 (cũng hướng từ A đến B). Do đó hai lực cùng phương, cùng chiều.\n$$F = F_1 + F_2 = 1{,}6 + 14{,}4 = 16\\text{ N}$$\nLực điện tổng hợp tác dụng lên q_0 có độ lớn là 16 N\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-009",
-    "noi_dung": "Hai điện tích điểm $q_1 = 0{,}5\\text{ nC}$ và $q_2 = -0{,}5\\text{ nC}$ đặt tại hai điểm A, B cách nhau $6\\text{ cm}$ trong không khí. Cường độ điện trường tại trung điểm của AB có độ lớn là:\nA. E = 0V/m. B. E = 5000V/m C. E = 10000V/m D. E = 20000V/m",
-    "phuong_an": "A. E = 0V/m.\nB. E = 5000V/m\nC. E = 10000V/m\nD. E = 20000V/m",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $q_1 = 0{,}5\\text{ nC} = 0{,}5\\cdot 10^{-9}\\text{ C}$; $q_2 = -0{,}5\\text{ nC} = -0{,}5\\cdot 10^{-9}\\text{ C}$; $AB = 6\\text{ cm} = 0{,}06\\text{ m}$; $\\varepsilon = 1$; $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2/\\text{C}^2$.\nKhoảng cách từ trung điểm M đến A và B: Gọi M là trung điểm của AB, khoảng cách từ M đến mỗi điện tích là\n$$r = \\frac{AB}{2} = \\frac{6}{2} = 3\\text{ cm} = 0{,}03\\text{ m}$$\nĐộ lớn cường độ điện trường do q1 và q2 gây ra tại M: Cường độ điện trường do q_1 và q_2 gây ra tại M có độ lớn bằng nhau vì q_1 = |q_2| và cách đều M\n$$E_1 = E_2 = k \\frac{|q_1|}{r^2} = 9\\cdot 10^9 \\cdot \\frac{0{,}5\\cdot 10^{-9}}{(0{,}03)^2} = 5000\\text{ V/m}$$\nCường độ điện trường tổng hợp tại M: Do q_1 > 0 và q_2 < 0, các véc-tơ cường độ điện trường \\vec{E_1} và \\vec{E_2} tại trung điểm M đều có hướng từ A sang B. Độ lớn cường độ điện trường tổng hợp là\n$$E = E_1 + E_2 = 5000 + 5000 = 10000\\text{ V/m}$$\nCường độ điện trường tại trung điểm của AB là 10000 V/m, trùng với phương án C.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-010",
-    "noi_dung": "Một quả cầu nhỏ khối lượng $3{,}06\\cdot 10^{-15}\\text{ (kg)}$, mang điện tích $4{,}8\\cdot 10^{-18}\\text{ (C)}$, nằm lơ lửng giữa hai tấm kim loại song song nằm ngang nhiễm điện trái dấu, cách nhau một khoảng $2\\text{ (cm)}$. Lấy $g = 10\\text{ (m/s}^2)$. Hiệu điện thế đặt vào hai tấm kim loại đó là:\nA. U = 255,0 (V). B. U = 127,5 (V).\nC. U = 63,75 (V). D.U= 734,4 (V).",
-    "phuong_an": "A. U = 255,0 (V).\nB. U = 127,5 (V).\nC. U = 63,75 (V).\nD. U = 734,4 (V).",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $m = 3{,}06\\cdot 10^{-15}\\text{ kg}$; $q = 4{,}8\\cdot 10^{-18}\\text{ C}$; $d = 2\\text{ cm} = 0{,}02\\text{ m}$; $g = 10\\text{ m/s}^2$.\nĐiều kiện lơ lửng: Để quả cầu nằm lơ lửng giữa hai bản tụ thì trọng lực tác dụng lên quả cầu phải cân bằng với lực điện\n$$P = F_{d}$$\nĐộ lớn điện trường: Từ điều kiện cân bằng ta tính được cường độ điện trường\n$$mg = |q|E \\Rightarrow E = \\frac{mg}{|q|} = \\frac{3{,}06\\cdot 10^{-15}\\cdot 10}{4{,}8\\cdot 10^{-18}} = 6375\\text{ V/m}$$\nHiệu điện thế: Hiệu điện thế giữa hai tấm kim loại là\n$$U = E\\cdot d = 6375\\cdot 0{,}02 = 127{,}5\\text{ V}$$\nGiá trị của hiệu điện thế là 127,5 V, ứng với phương án B\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-011",
-    "noi_dung": "Cho rằng một trong hai êlectron của nguyên tử heli chuyển động tròn dều quanh hạt nhân, trên quỹ đạo có bán kính $1{,}18\\cdot 10^{-10}\\text{ m}$. Cho khối lượng của êlectron $9{,}1\\cdot 10^{-31}\\text{ kg}$, điện tích của êlectron là $-1{,}6\\cdot 10^{-19}\\text{ C}$. Lực hút của hạt nhân lên êlectron này là\nA. $4{,}5\\cdot 10^{-8}\\text{ N}$. B. $3{,}31\\cdot 10^{-8}\\text{ N}$. C. $0{,}0045\\text{ N}$. D. $81\\cdot 10^{-8}\\text{ N}$.",
-    "phuong_an": "A. $4{,}5\\cdot 10^{-8}\\text{ N}$.\nB. $3{,}31\\cdot 10^{-8}\\text{ N}$.\nC. $0{,}0045\\text{ N}$.\nD. $81\\cdot 10^{-8}\\text{ N}$.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $r = 1{,}18\\cdot 10^{-10}\\text{ m}$; $q_1 = q_2 = 1{,}6\\cdot 10^{-19}\\text{ C}$; $q_{hn} = 2\\cdot 1{,}6\\cdot 10^{-19}\\text{ C} = 3{,}2\\cdot 10^{-19}\\text{ C}$; $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2/\\text{C}^2$.\nĐộ lớn lực hút: Áp dụng định luật Cu-lông để tính lực hút giữa hạt nhân heli và êlectron\n$$F = k \\frac{|q_{hn} q_e|}{r^2}$$\nThay số: Thay các giá trị vào biểu thức\n$$F = 9\\cdot 10^9 \\frac{3{,}2\\cdot 10^{-19} \\cdot 1{,}6\\cdot 10^{-19}}{(1{,}18\\cdot 10^{-10})^2} \\approx 3{,}31\\cdot 10^{-8}\\text{ N}$$\nLực hút của hạt nhân lên êlectron có độ lớn khoảng $3{,}31\\cdot 10^{-8}\\text{ N}$\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
@@ -2097,33 +1692,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1h9Jazjw-015",
-    "noi_dung": "Trong công thức định nghĩa cường độ điện trường tại một điểm $E = F/q$ thì F và q là gì?\nA. F là tổng hợp các lực tác dụng lên điện tích thử, q là độ lớn của điện tích gây ra điện trường.\nB. F là tổng hợp các lực điện tác dụng lên điện tích thử, q là độ lớn của điện tích gây ra điện trường.\nC. F là tổng hợp các lực tác dụng lên điện tích thử, q là độ lớn của điện tích thử.\nD. F là tổng hợp các lực điện tác dụng lên điện tích thử, q là độ lớn của điện tích thử.",
-    "phuong_an": "A. F là tổng hợp các lực tác dụng lên điện tích thử, q là độ lớn của điện tích gây ra điện trường.\nB. F là tổng hợp các lực điện tác dụng lên điện tích thử, q là độ lớn của điện tích gây ra điện trường.\nC. F là tổng hợp các lực tác dụng lên điện tích thử, q là độ lớn của điện tích thử.\nD. F là tổng hợp các lực điện tác dụng lên điện tích thử, q là độ lớn của điện tích thử.",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $E = \\frac{F}{q}$.\nXác định đại lượng: Trong công thức định nghĩa cường độ điện trường, $F$ là lực điện tác dụng lên điện tích thử và $q$ là độ lớn của điện tích thử đặt tại điểm đó.\n$$E = \\frac{F}{q}$$\nPhương án đúng là D vì phản ánh chính xác ý nghĩa các đại lượng trong công thức định nghĩa cường độ điện trường.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-016",
-    "noi_dung": "Khẳng định nào sau đây là sai?\nA. Đường sức điện là những đường cong không khép kín\nB. Các đường sức điện không cắt nhau\nC. Qua một điểm trong điện trường, ta chỉ vẽ được một đường sức điện\nD. Trong trường hợp giới hạn, hai đường sức có thể tiếp xúc với nhau tại một điểm mà không cắt nhau",
-    "phuong_an": "A. Đường sức điện là những đường cong không khép kín\nB. Các đường sức điện không cắt nhau\nC. Qua một điểm trong điện trường, ta chỉ vẽ được một đường sức điện\nD. Trong trường hợp giới hạn, hai đường sức có thể tiếp xúc với nhau tại một điểm mà không cắt nhau",
-    "dap_an": "D",
-    "loi_giai": "Đặc điểm của đường sức điện: Đường sức điện của điện trường tĩnh là những đường không khép kín, đi ra từ điện tích dương và đi vào điện tích âm.\nTính chất của các đường sức điện: Các đường sức điện không cắt nhau vì tại một điểm trong điện trường chỉ có một véc tơ cường độ điện trường duy nhất. Do đó, hai đường sức điện không thể cắt nhau và cũng không thể tiếp xúc với nhau.\nKhẳng định hai đường sức có thể tiếp xúc với nhau tại một điểm là sai.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-017",
-    "noi_dung": "Với điện trường như thế nào thì có thể viết hệ thức $U = Ed$\nA. Điện trường của điện tích dương B. Điện trường của điện tích âm\nC. Điện trường đều D. Điện trường không đều",
-    "phuong_an": "A. Điện trường của điện tích dương\nB. Điện trường của điện tích âm\nC. Điện trường đều\nD. Điện trường không đều",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $U = Ed$.\nĐiều kiện áp dụng: Hệ thức $U = Ed$ chỉ áp dụng được cho trường hợp điện trường đều, trong đó $E$ là độ lớn cường độ điện trường, $d$ là hình chiếu của độ dời trên phương của đường sức điện.\n$$U = E\\cdot d$$\nKết luận: Ta chọn phương án C vì hệ thức này chỉ đúng với điện trường đều.\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1h9Jazjw-018",
     "noi_dung": "Trong chân không đặt cố định một điện tích điểm $Q = 2. 10^{-13}\\text{C}$. Cường độ điện trường tại một điểm M cách Q một khoảng $2\\text{ cm}$ có giá trị bằng [Hình: Điện tích dương Q và điểm M]\nA. 2,25 V/m. B. 4,5 V/m.\nC. $2, 25\\cdot 10^{-4}\\text{ V/m}$. D. $4{,}5. 10^{-4}\\text{ V/m}$.",
     "phuong_an": "A. 2,25 V/m.\nB. 4,5 V/m.\nC. $2, 25\\cdot 10^{-4}\\text{ V/m}$.\nD. $4{,}5. 10^{-4}\\text{ V/m}$.",
@@ -2131,24 +1699,6 @@
     "loi_giai": "Tóm tắt: $Q = 2\\cdot 10^{-13}\\text{ C}$; $r = 2\\text{ cm} = 0{,}02\\text{ m}$; $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2/\\text{C}^2$.\nCường độ điện trường: Áp dụng công thức tính cường độ điện trường của điện tích điểm trong chân không\n$$E = \\frac{k\\cdot |Q|}{r^2} = \\frac{9\\cdot 10^9\\cdot 2\\cdot 10^{-13}}{(0{,}02)^2} = 4{,}5\\text{ V/m}$$\nĐáp án: B.",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1317_LOP11_DECUONGONTAPGIUAKY2_TRUONGDONGANH.pdf_p2_img3.png, images/q1317_LOP11_DECUONGONTAPGIUAKY2_p2_img3.png, images/q1317_LOP11_DECUONGONTAPGI_p2_img3.png"
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-019",
-    "noi_dung": "Xét ba điện tích $q_0$, $q_1$ và $q_2$ đặt tại 3 điểm khác nhau trong không gian. Biết lực do $q_1$ và $q_2$ tác dụng lên $q_0$ lần lượt là $\\vec{F}_{10}$ và $\\vec{F}_{20}$. Biểu thức nào sau đây xác định lực tính điện tổng hợp tác dụng lên điện tích $q_0$?\nA. $F_0 = F_{10} + F_{20}$.\nB. $\\vec{F}_0 = \\vec{F}_{10} + \\vec{F}_{20}$\nC. $F_0 = F_{10} - F_{20}$.\nD. $\\vec{F}_0 = \\vec{F}_{20} - \\vec{F}_{10}$",
-    "phuong_an": "A. $F_0 = F_{10} + F_{20}$.\nB. $\\vec{F}_0 = \\vec{F}_{10} + \\vec{F}_{20}$\nC. $F_0 = F_{10} - F_{20}$.\nD. $\\vec{F}_0 = \\vec{F}_{20} - \\vec{F}_{10}$",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $\\vec{F}_{10}: \\text{lực do } q_1\\text{ tác dụng lên } q_0$; $\\vec{F}_{20}: \\text{lực do } q_2\\text{ tác dụng lên } q_0$; $\\vec{F}_0: \\text{lực tổng hợp tác dụng lên } q_0$.\nNguyên lý chồng chất lực điện: Lực điện tổng hợp tác dụng lên một điện tích bằng tổng hợp các lực điện do các điện tích khác tác dụng lên nó.\n$$\\vec{F}_0 = \\vec{F}_{10} + \\vec{F}_{20}$$\nÁp dụng nguyên lý chồng chất lực điện, lực tổng hợp tác dụng lên điện tích q_0 là tổng véc-tơ của các lực thành phần.\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-020",
-    "noi_dung": "Mỗi hạt bụi li ti trong không khí mang điện tích $q = -9{,}6\\cdot 10^{-13}\\text{C}$. Hỏi mỗi hạt bụi ấy thừa hay thiếu bao nhiêu electron? Biết điện tích electron có độ lớn là $1{,}6\\cdot 10^{-19}\\text{C}$.\nA. Thừa $6\\cdot 10^6$ hạt. B. Thừa $6\\cdot 10^5$ hạt.\nC. Thiếu $6\\cdot 10^6$ hạt. D. Thiếu $6\\cdot 10^5$ hạt.",
-    "phuong_an": "A. Thừa $6\\cdot 10^6$ hạt.\nB. Thừa $6\\cdot 10^5$ hạt.\nC. Thiếu $6\\cdot 10^6$ hạt.\nD. Thiếu $6\\cdot 10^5$ hạt.",
-    "dap_an": "A",
-    "loi_giai": "Tóm tắt: $q = -9{,}6\\cdot 10^{-13}\\text{ C}$; $e = 1{,}6\\cdot 10^{-19}\\text{ C}$.\nTính số lượng electron: Số lượng electron thừa hoặc thiếu trong hạt bụi được tính bằng độ lớn điện tích của hạt chia cho độ lớn điện tích của một electron\n$$N = \\frac{|q|}{e} = \\frac{9{,}6\\cdot 10^{-13}}{1{,}6\\cdot 10^{-19}} = 6\\cdot 10^6$$\nXác định trạng thái thừa hay thiếu: Vì hạt bụi mang điện tích âm ($q < 0$), hạt bụi phải nhận thêm electron nên hạt bụi thừa electron\nHạt bụi mang điện âm và thừa 6\\cdot 10^6 electron, do đó ta chọn phương án A\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1h9Jazjw-021",
@@ -2160,15 +1710,6 @@
     "link_anh": ""
   },
   {
-    "ma_cau": "C-1h9Jazjw-022",
-    "noi_dung": "Có hai điện tích $q_1 = 5\\cdot 10^{-9}\\text{ C}$, $q_2 = - 5\\cdot 10^{-9}\\text{ C}$ đặt cách nhau 10cm. Xác định cường độ điện trường tại điểm M nằm trên đường thẳng đi qua hai điện tích đó và cách $q_1$ 5cm; cách $q_2$ 15cm\nA. 4500 V/m B. 36000 V/m C. 18000 V/m D. 16000 V/m",
-    "phuong_an": "A. 4500 V/m\nB. 36000 V/m\nC. 18000 V/m\nD. 16000 V/m",
-    "dap_an": "D",
-    "loi_giai": "Tóm tắt: $q_1 = 5\\cdot 10^{-9}\\text{ C}$; $q_2 = -5\\cdot 10^{-9}\\text{ C}$; $r_{12} = 10\\text{ cm} = 0{,}1\\text{ m}$; $r_1 = 5\\text{ cm} = 0{,}05\\text{ m}$; $r_2 = 15\\text{ cm} = 0{,}15\\text{ m}$; $k = 9\\cdot 10^9\\text{ N}\\cdot\\text{m}^2/\\text{C}^2$.\nCường độ điện trường do q1 gây ra tại M: Độ lớn cường độ điện trường do q1 gây ra tại M là\n$$E_1 = k\\cdot \\frac{|q_1|}{r_1^2} = 9\\cdot 10^9\\cdot \\frac{5\\cdot 10^{-9}}{0{,}05^2} = 18000\\text{ V/m}$$\nCường độ điện trường do q2 gây ra tại M: Độ lớn cường độ điện trường do q2 gây ra tại M là\n$$E_2 = k\\cdot \\frac{|q_2|}{r_2^2} = 9\\cdot 10^9\\cdot \\frac{5\\cdot 10^{-9}}{0{,}15^2} = 2000\\text{ V/m}$$\nXác định chiều và tính cường độ điện trường tổng hợp: Vì điểm M nằm ngoài đoạn thẳng nối hai điện tích và gần q1 hơn, đồng thời q1 và q2 trái dấu nên vec tơ cường độ điện trường E1 hướng ra xa q1, vec tơ E2 hướng về phía q2. Hai vec tơ này cùng phương, ngược chiều và E1 > E2 nên cường độ điện trường tổng hợp tại M là\n$$E = |E_1 - E_2| = 18000 - 2000 = 16000\\text{ V/m}$$\nCường độ điện trường tại M có độ lớn là 16000 V/m, trùng với phương án D.\nĐáp án: D.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1h9Jazjw-023",
     "noi_dung": "Quả cầu nhỏ $m = 0{,}5\\text{ g}$, mang điện tích $q_1 = 5\\text{ nC}$ treo trên một sợi dây mảnh trong điện trường đều có phương nằm ngang. Cường độ điện trường $E = 10^6\\text{ V/m}$. ($g = 10\\text{ m/s}^2$). Góc lệch của dây so với phương thẳng đứng là: [Hình: Quả cầu tích điện treo bằng dây lệch góc trong điện trường nằm ngang]\nA. $15^\\circ$ B. $30^\\circ$ C. $45^\\circ$ D. $60^\\circ$",
     "phuong_an": "A. $15^\\circ$\nB. $30^\\circ$\nC. $45^\\circ$\nD. $60^\\circ$",
@@ -2176,33 +1717,6 @@
     "loi_giai": "Tóm tắt: $m = 0{,}5\\text{ g} = 5\\cdot 10^{-4}\\text{ kg}$; $q_1 = 5\\text{ nC} = 5\\cdot 10^{-9}\\text{ C}$; $E = 10^6\\text{ V/m}$; $g = 10\\text{ m/s}^2$.\nĐộ lớn lực điện: Lực điện tác dụng lên quả cầu có độ lớn tính theo công thức\n$$F = |q_1| E = 5\\cdot 10^{-9}\\cdot 10^6 = 5\\cdot 10^{-3}\\text{ N}$$\nTrọng lực: Trọng lực tác dụng lên quả cầu là\n$$P = mg = 5\\cdot 10^{-4}\\cdot 10 = 5\\cdot 10^{-3}\\text{ N}$$\nGóc lệch của dây: Khi quả cầu cân bằng, góc lệch $\\alpha$ của dây so với phương thẳng đứng được xác định bởi\n$$\\tan\\alpha = \\frac{F}{P} = \\frac{5\\cdot 10^{-3}}{5\\cdot 10^{-3}} = 1$$\nXác định góc: Suy ra góc lệch của dây treo là $\\alpha = 45^\\circ$.\nGóc lệch của dây so với phương thẳng đứng là $45^\\circ$.\nĐáp án: C.",
     "trang_thai": "Cần người xem",
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1322_LOP11_DECUONGONTAPGIUAKY2_TRUO_p3_img5.png, images/q1322_LOP11_DECUONGONTAPGIUAKY2_p3_img5.png"
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-024",
-    "noi_dung": "Cường độ điện trường tại một điểm M trong điện trường bất kì là đại lượng\nA. vectơ, có phương, chiều và độ lớn phụ thuộc vào vị trí của điểm M.\nB. vectơ, chỉ có độ lớn phụ thuộc vào vị trí của điểm M.\nC. vô hướng, có giá trị luôn dương.\nD. vô hướng, có thể có giá trị âm hoặc dương.",
-    "phuong_an": "A. vectơ, có phương, chiều và độ lớn phụ thuộc vào vị trí của điểm M.\nB. vectơ, chỉ có độ lớn phụ thuộc vào vị trí của điểm M.\nC. vô hướng, có giá trị luôn dương.\nD. vô hướng, có thể có giá trị âm hoặc dương.",
-    "dap_an": "A",
-    "loi_giai": "Khái niệm cường độ điện trường: Cường độ điện trường là đại lượng vectơ, đặc trưng cho tác dụng lực của điện trường tại điểm đó, có phương, chiều trùng với phương, chiều của lực điện tác dụng lên điện tích thử dương và có độ lớn phụ thuộc vào vị trí của điểm M.\nCường độ điện trường là đại lượng vectơ, có phương, chiều và độ lớn phụ thuộc vào vị trí của điểm M.\nĐáp án: A.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-025",
-    "noi_dung": "Trên hình bên có vẽ một số đường sức của hệ thống hai điện tích điểm A và B. [Hình: Đường sức điện hướng ra xa khỏi cả hai điện tích A và B] Chọn kết luận đúng.\nA. A là điện tích dương, B là điện tích âm.\nB. A là điện tích âm, B là điện tích dương.\nC. Cả A và B là điện tích dương.\nD. Cả A và B là điện tích âm.",
-    "phuong_an": "A. A là điện tích dương, B là điện tích âm.\nB. A là điện tích âm, B là điện tích dương.\nC. Cả A và B là điện tích dương.\nD. Cả A và B là điện tích âm.",
-    "dap_an": "C",
-    "loi_giai": "Tóm tắt: $\\text{Đường sức điện hướng ra xa khỏi cả hai điện tích A và B}$.\nTính chất đường sức điện: Đường sức điện có chiều đi ra từ điện tích dương và đi vào điện tích âm\nXác định dấu điện tích: Vì các đường sức điện đều có chiều hướng ra xa khỏi cả hai điện tích A và B nên cả hai điện tích này đều là điện tích dương\nCả hai điện tích A và B đều mang điện tích dương\nĐáp án: C.",
-    "trang_thai": "Cần người xem",
-    "link_anh": "images/q1324_LOP11_DECUONGONTAPGIUAKY2_p2_img3.png"
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-026",
-    "noi_dung": "Đặt một điện tích âm, khối lượng nhỏ vào một điện trường đều rồi thả nhẹ. Điện tích sẽ chuyển động:\nA. dọc theo chiều của đường sức điện trường.\nB. ngược chiều đường sức điện trường.\nC. vuông góc với đường sức điện trường.\nD. theo một quỹ đạo bất kỳ.",
-    "phuong_an": "A. dọc theo chiều của đường sức điện trường.\nB. ngược chiều đường sức điện trường.\nC. vuông góc với đường sức điện trường.\nD. theo một quỹ đạo bất kỳ.",
-    "dap_an": "B",
-    "loi_giai": "Tóm tắt: $Điện tích âm: q < 0$; $Trọng lực và lực điện tác dụng$.\nLực điện tác dụng lên điện tích: Vì điện tích có giá trị âm nên lực điện ngược chiều với cường độ điện trường\n$$\\vec{F} = q\\vec{E}$$\nChiều chuyển động: Khi thả nhẹ điện tích âm đứng yên trong điện trường đều, nó sẽ chuyển động ngược chiều với đường sức điện trường do chịu lực điện ngược chiều đường sức\nĐiện tích âm chuyển động ngược chiều đường sức điện trường\nĐáp án: B.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
   },
   {
     "ma_cau": "C-1h9Jazjw-027",
@@ -2259,15 +1773,6 @@
     "link_anh": "https://raw.githubusercontent.com/vatli-xuong/vatli-xuong/main/images/q1331_LOP11_DECUONGONTAPGIUAKY2_TRUONGDONGANH.pdf_p5_img2.png, images/q1331_LOP11_DECUONGONTAPGIUAKY2_p5_img2.png, images/q1331_LOP11_DECUONGONTAPGI_p5_img2.png"
   },
   {
-    "ma_cau": "C-1h9Jazjw-033",
-    "noi_dung": "Cho hai tấm kim loại phẳng rộng, đặt nằm ngang, song song với nhau và cách nhau $d = 5\\text{ cm}$. Hiệu điện thế giữa hai tấm đó là 20V. Cường độ điện trường trong khoảng giữa hai bản phẳng bằng bao nhiêu V/m?",
-    "phuong_an": "",
-    "dap_an": "400",
-    "loi_giai": "Tóm tắt: $d = 5\\text{ cm} = 0{,}05\\text{ m}$; $U = 20\\text{ V}$.\nCường độ điện trường: Cường độ điện trường đều giữa hai bản phẳng kim loại được tính bằng công thức\n$$E = \\frac{U}{d}$$\nThay số: Thay các giá trị vào biểu thức ta được\n$$E = \\frac{20}{0{,}05} = 400\\text{ V/m}$$\nCường độ điện trường trong khoảng giữa hai bản phẳng là 400 V/m\nĐáp án: 400 V/m.",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
     "ma_cau": "C-1h9Jazjw-034",
     "noi_dung": "Một vật có khối lượng 5mg được tích điện 20µC chuyển động không vận tốc đầu dọc theo phương của đường sức điện trong một điện trường đều với cường độ $E = 2000\\text{ V/m}$. Vận tốc của vật sau 0,5 s sau khi chuyển động được 0,5s bằng bao nhiêu m/s?",
     "phuong_an": "",
@@ -2282,15 +1787,6 @@
     "phuong_an": "",
     "dap_an": "",
     "loi_giai": "",
-    "trang_thai": "Cần người xem",
-    "link_anh": ""
-  },
-  {
-    "ma_cau": "C-1h9Jazjw-036",
-    "noi_dung": "Quả cầu nhỏ khối lượng 25 g, mang điện tích $q = 2{,}5\\cdot 10^{-7}\\text{ C}$ được treo bởi một sợi dây không dãn, khối lượng không đáng kể và đặt vào trong một điện trường đều với cường độ điện trường có phương nằm ngang và độ lớn $E = 10^6\\text{ V/m}$. lấy $g = 10\\text{ m/s}^2$. Góc lệch của dây treo so với phương thẳng đứng khi vật ở vị trí cân bằng bằng bao nhiêu độ?",
-    "phuong_an": "",
-    "dap_an": "45",
-    "loi_giai": "Tóm tắt: $m = 25\\text{ g} = 0{,}025\\text{ kg}$; $q = 2{,}5\\cdot 10^{-7}\\text{ C}$; $E = 10^6\\text{ V/m}$; $g = 10\\text{ m/s}^2$.\nĐộ lớn lực điện: Lực điện tác dụng lên quả cầu có phương nằm ngang và độ lớn tính bởi công thức\n$$F_d = |q| E = 2{,}5\\cdot 10^{-7}\\cdot 10^6 = 0{,}25\\text{ N}$$\nGóc lệch của dây treo: Ở vị trí cân bằng, góc lệch \\alpha của dây treo so với phương thẳng đứng được xác định bởi\n$$\\tan\\alpha = \\frac{F_d}{P} = \\frac{0{,}25}{m g} = \\frac{0{,}25}{0{,}025\\cdot 10} = 1$$\nTính góc lệch: Từ giá trị của tang, ta suy ra góc lệch\n$$\\alpha = 45^\\circ$$\nGóc lệch của dây treo so với phương thẳng đứng là 45 độ\nĐáp án: 45 độ.",
     "trang_thai": "Cần người xem",
     "link_anh": ""
   },
