@@ -4,8 +4,8 @@ canh_gac.py – NGƯỜI CANH GÁC NGOÀI (GitHub Actions, độc lập hoàn to
 Mỗi sáng 7h20 (giờ Việt Nam) chỉ ĐỌC Kho chung bằng tài khoản dịch vụ:
   1. Tab Agent: agent có "Chu kì tối đa (giờ)" mà quá hạn → báo; lỗi trong 2 ngày gần nhất → báo.
   2. Tab ThoiGianChay: Meta-agent phải ghi dòng TỔNG của hôm qua (lúc 6h). Không có → Meta có thể đã ngừng.
-     Có thì so tổng phút trigger với trần 90 phút/ngày.
-Có vấn đề → lượt chạy báo ĐỎ và GitHub tự gửi email cho chủ kho. Không có vấn đề → lượt chạy XANH.
+     Có thì so tổng phút trigger với mức trung vị 7 ngày gần nhất (tăng đột biến thì báo).
+Có vấn đề → gửi tin Telegram, lượt chạy báo ĐỎ và GitHub tự gửi email cho chủ kho. Không có vấn đề → lượt chạy XANH.
 Báo cáo đầy đủ nằm ở trang tóm tắt (Summary) của lượt chạy trong tab Actions.
 """
 import datetime as dt, json, os, re, sys, traceback
@@ -41,7 +41,7 @@ def main():
         pass
     try:
         kho = gc.open_by_key(ID_KHO_CHUNG)
-       except Exception as e:
+    except Exception as e:
         loi = "Không mở được Kho chung (%s). Hãy CHIA SẺ Kho chung cho email %s." % (type(e).__name__, tt.get("client_email"))
         gui_telegram("🚨 " + loi)
         sys.exit(loi)
@@ -106,7 +106,7 @@ def main():
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
             f.write(bao_cao + "\n")
-       if van:
+    if van:
         gui_telegram("🚨 Hệ thống agent có %d vấn đề cần xem ngay:\n" % len(van)
                      + "\n".join("- " + x.replace("**", "") for x in van))
         sys.exit("Phát hiện %d vấn đề – xem trang Summary của lượt chạy." % len(van))
