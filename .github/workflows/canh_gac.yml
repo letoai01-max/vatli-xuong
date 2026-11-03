@@ -1,45 +1,61 @@
-# .github/workflows/canh_gac.yml – NGƯỜI CANH GÁC NGOÀI
-# 7h20 sáng giờ Việt Nam (0h20 UTC). Có sự cố → gửi tin Telegram, lượt chạy đỏ → GitHub tự email cho chủ kho.
-name: canh_gac
+# Đường dẫn trong kho: .github/workflows/canh_gac.yml
+name: Canh gac
+
 on:
   schedule:
+    # 07:20 giờ Việt Nam mỗi ngày (UTC+7) = 00:20 UTC
     - cron: "20 0 * * *"
   workflow_dispatch:
-# [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
+
 permissions:
   contents: read
 
+concurrency:
+  group: canh-gac
+  cancel-in-progress: false
+
 jobs:
-  kiem_tra:
-    # Công tắc bật/tắt: tạo biến CANH_GAC_TU_DONG (Settings → Secrets and variables → Actions → Variables).
-    # Đặt giá trị false = tắt canh gác. Chưa tạo biến, hoặc đặt true = vẫn chạy bình thường.
-    if: ${{ vars.CANH_GAC_TU_DONG != 'false' }}
+  canh-gac:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    env:
+      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      PYTHONUTF8: "1"
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Lấy mã nguồn
+        uses: actions/checkout@v4
+
+      - name: Cài Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: pip
-      - run: pip install -q gspread google-auth requests
-      - name: Kiểm tra nhịp chạy các agent
-        id: chay
-        timeout-minutes: 5
-        env:
-          PYTHONUNBUFFERED: "1"
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python trung_tam.py canh_gac.py
-      # Chỉ chạy khi lượt chạy hỏng TRƯỚC bước canh gác (cài thư viện lỗi, checkout lỗi...).
-      # Nếu bước canh gác đã chạy thì chính canh_gac.py tự báo, bước này không báo thêm.
-      - name: Báo Telegram khi lượt chạy hỏng trước bước canh gác
-        if: failure() && steps.chay.outcome != 'failure'
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      - name: Cài thư viện
         run: |
-          curl -s -o /dev/null -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            pip install gspread google-auth
+          fi
+
+      - name: Chạy canh gác (qua trung tâm điều phối)
+        run: python trung_tam.py canh_gac.py
+
+      # Chạy độc lập với Python: canh_gac.py báo đỏ hay sập đều gửi được Telegram
+      - name: Báo lỗi khẩn qua Telegram
+        if: failure()
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "Chưa cấu hình TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID, bỏ qua báo Telegram."
+            exit 0
+          fi
+          curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-            --data-urlencode "text=🚨 Canh gác không chạy được (lỗi cài đặt). ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            --data-urlencode "text=CẢNH BÁO: canh gác hệ thống Vật lí phát hiện sự cố. Xem chi tiết: ${RUN_URL}" \
+            > /dev/null
