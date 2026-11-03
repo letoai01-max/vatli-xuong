@@ -247,7 +247,7 @@ def doc_cau_hinh(kho):
     global SO_CAU_MOI_LO, SO_LO_TOI_DA, TOI_DA_LUOT_TRA_PHI, CHO_PHEP_DOC_DE, GIOI_HAN_TAI_VE
     try:
         v = kho.worksheet(TAB_CAU_HINH).get_all_values()[1:]
-        cfg = {str(r[0]).strip(): str(r[1]).strip() for r in v if r and str(r[0]).strip()}
+        cfg = {str(r[0]).strip(): (str(r[1]).strip() if len(r) > 1 else "") for r in v if r and str(r[0]).strip()}
     except Exception:
         cfg = {}
     def _so(ten, mac_dinh):
