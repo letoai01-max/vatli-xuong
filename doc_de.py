@@ -243,11 +243,21 @@ def tach_pdf(du_lieu, ten):
 
 # ---------------- GEMINI ----------------
 def doc_cau_hinh(kho):
+    global SO_CAU_MOI_LO, SO_LO_TOI_DA, TOI_DA_LUOT_TRA_PHI
     try:
         v = kho.worksheet(TAB_CAU_HINH).get_all_values()[1:]
         cfg = {str(r[0]).strip(): str(r[1]).strip() for r in v if r and str(r[0]).strip()}
     except Exception:
         cfg = {}
+    def _so(ten, mac_dinh):
+        try:
+            return int(float(cfg.get(ten, "")))
+        except ValueError:
+            return mac_dinh
+    # Nút điều chỉnh trên tab CauHinh (không có thì giữ giá trị từ biến môi trường / mặc định)
+    SO_CAU_MOI_LO = max(5, _so("GIOI_HAN_SO_CAU_TOI_DA", SO_CAU_MOI_LO))
+    SO_LO_TOI_DA = max(1, _so("SO_LO_TOI_DA", SO_LO_TOI_DA))
+    TOI_DA_LUOT_TRA_PHI = max(0, _so("TOI_DA_LUOT_TRA_PHI", TOI_DA_LUOT_TRA_PHI))
     chinh = cfg.get("MODEL_CHINH") or MODEL_MAC_DINH
     du_phong = [m.strip() for m in re.split(r"[,;\s]+", cfg.get("MODEL_DU_PHONG", "")) if m.strip()] or MODEL_DU_PHONG_MAC_DINH
     return [chinh] + [m for m in du_phong if m != chinh]
@@ -286,6 +296,15 @@ def _ghi_quota(model, ten_khoa, ma, data=None, treo=False):
         pass
 
 
+def phan_tich_429(r):
+    """Trả (het_ngay, giay_cho). Hết theo phút -> chờ rồi thử lại cùng khoá; hết theo ngày -> đổi model/khoá."""
+    txt = r.text or ""
+    het_ngay = bool(re.search(r"PerDay|per day|daily", txt, re.I))
+    m = re.search(r'"retryDelay"\s*:\s*"(\d+(?:\.\d+)?)s"', txt)
+    giay = float(m.group(1)) if m else (30.0 if re.search(r"PerMinute|per minute", txt, re.I) else 0.0)
+    return het_ngay, giay
+
+
 def _goi_gemini_mot_khoa(payload, ds_model, key, ten_khoa=""):
     ds_model, ds_loi, co_loi_khac = list(ds_model), [], False
     m = 0
@@ -313,6 +332,12 @@ def _goi_gemini_mot_khoa(payload, ds_model, key, ten_khoa=""):
                 msg = r.text[:220]
             if r.status_code != 429:
                 co_loi_khac = True
+            else:
+                het_ngay, giay = phan_tich_429(r)
+                if not het_ngay and 0 < giay <= 90 and lan < 2:
+                    print("⏳ %s chạm giới hạn theo phút, chờ %.0fs rồi thử lại." % (ten_khoa or model, giay), flush=True)
+                    time.sleep(giay + 2); lan += 1
+                    continue
             if r.status_code == 404 or re.search(r"no longer available|not found", msg, re.I):
                 for x in re.findall(r"models/(gemini-[\w.\-]*\w)", msg):
                     if x != model and x not in ds_model:
