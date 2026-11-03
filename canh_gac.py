@@ -8,10 +8,11 @@ Mỗi sáng 7h20 (giờ Việt Nam) chỉ ĐỌC Kho chung bằng tài khoản d
 Có vấn đề → lượt chạy báo ĐỎ và GitHub tự gửi email cho chủ kho. Không có vấn đề → lượt chạy XANH.
 Báo cáo đầy đủ nằm ở trang tóm tắt (Summary) của lượt chạy trong tab Actions.
 """
-import datetime as dt, json, os, re, sys
+import datetime as dt, json, os, re, sys, traceback
 
 import gspread
 from google.oauth2 import service_account
+from thong_bao import gui_telegram
 
 ID_KHO_CHUNG = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
 TZ = dt.timezone(dt.timedelta(hours=7))
@@ -40,8 +41,10 @@ def main():
         pass
     try:
         kho = gc.open_by_key(ID_KHO_CHUNG)
-    except Exception as e:
-        sys.exit("Không mở được Kho chung (%s). Hãy CHIA SẺ Kho chung cho email %s (quyền Người chỉnh sửa)." % (type(e).__name__, tt.get("client_email")))
+       except Exception as e:
+        loi = "Không mở được Kho chung (%s). Hãy CHIA SẺ Kho chung cho email %s." % (type(e).__name__, tt.get("client_email"))
+        gui_telegram("🚨 " + loi)
+        sys.exit(loi)
     print("2/3 Đã mở Kho chung, đọc tab ThoiGianChay và Agent…", flush=True)
     bay = dt.datetime.now(TZ)
     van, ghi_chu, tot = [], [], []
@@ -103,9 +106,15 @@ def main():
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
             f.write(bao_cao + "\n")
-    if van:
+       if van:
+        gui_telegram("🚨 Hệ thống agent có %d vấn đề cần xem ngay:\n" % len(van)
+                     + "\n".join("- " + x.replace("**", "") for x in van))
         sys.exit("Phát hiện %d vấn đề – xem trang Summary của lượt chạy." % len(van))
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        gui_telegram("🚨 canh_gac.py bị lỗi ngoại lệ:\n" + traceback.format_exc()[-1500:])
+        raise
