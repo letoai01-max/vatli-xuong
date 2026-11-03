@@ -89,6 +89,46 @@ def main():
         return
 
     print("✅ Hệ thống sẵn sàng xử lý soạn giáo án theo cấu hình thời gian thực.")
+import io
+from docx import Document
+from docx.shared import Inches, Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
+def xuat_file_word_giao_an(noi_dung_markdown, ten_bai_hoc):
+    """
+    Tự động định dạng và xuất nội dung giáo án ra file Word (.docx) 
+    theo chuẩn: Times New Roman, cỡ chữ 13, lề chuẩn hành chính.
+    """
+    doc = Document()
+    
+    # Thiết lập lề trang giấy (Lề trên: 2cm, Dưới: 2cm, Trái: 3cm, Phải: 1.5cm)
+    sections = doc.sections
+    for section in sections:
+        section.top_margin = Inches(0.79)     # ~ 2 cm
+        section.bottom_margin = Inches(0.79)  # ~ 2 cm
+        section.left_margin = Inches(1.18)    # ~ 3 cm
+        section.right_margin = Inches(0.59)   # ~ 1.5 cm
+
+    # Tiêu đề bài học
+    p_title = doc.add_paragraph()
+    p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run_title = p_title.add_run(f"KẾ HOẠCH BÀI DẠY: {ten_bai_hoc.upper()}")
+    run_title.font.name = 'Times New Roman'
+    run_title.font.size = Pt(14)
+    run_title.font.bold = True
+    
+    # Thêm nội dung chi tiết do AI sinh ra vào tệp Word
+    for line in noi_dung_markdown.split('\n'):
+        p = doc.add_paragraph()
+        run = p.add_run(line)
+        run.font.name = 'Times New Roman'
+        run.font.size = Pt(13)  # Cỡ chữ chuẩn 13 theo yêu cầu
+        p.paragraph_format.line_spacing = 1.15
+
+    # Lưu tệp vào bộ nhớ đệm hoặc thư mục cục bộ
+    ten_file_out = f"KHBD_{ten_bai_hoc.replace(' ', '_')}.docx"
+    doc.save(ten_file_out)
+    print(f"📄 Đã xuất file Word thành công: {ten_file_out}")
+    return ten_file_out
 if __name__ == "__main__":
     main()
