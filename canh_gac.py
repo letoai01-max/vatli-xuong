@@ -4,17 +4,16 @@ canh_gac.py – NGƯỜI CANH GÁC NGOÀI (GitHub Actions, độc lập hoàn to
 Mỗi sáng 7h20 (giờ Việt Nam) chỉ ĐỌC Kho chung bằng tài khoản dịch vụ:
   1. Tab Agent: agent có "Chu kì tối đa (giờ)" mà quá hạn → báo; lỗi trong 2 ngày gần nhất → báo.
   2. Tab ThoiGianChay: Meta-agent phải ghi dòng TỔNG của hôm qua (lúc 6h). Không có → Meta có thể đã ngừng.
-     Có thì so tổng phút trigger với mức trung vị 7 ngày gần nhất (tăng đột biến thì báo).
-Có vấn đề → gửi tin Telegram, lượt chạy báo ĐỎ và GitHub tự gửi email cho chủ kho. Không có vấn đề → lượt chạy XANH.
+     Có thì so tổng phút trigger với trần 90 phút/ngày.
+Có vấn đề → lượt chạy báo ĐỎ và GitHub tự gửi email cho chủ kho. Không có vấn đề → lượt chạy XANH.
 Báo cáo đầy đủ nằm ở trang tóm tắt (Summary) của lượt chạy trong tab Actions.
 """
-import datetime as dt, json, os, re, sys, traceback
+import datetime as dt, json, os, re, sys
 
 import gspread
 from google.oauth2 import service_account
-from thong_bao import gui_telegram
 
-ID_KHO_CHUNG = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
+ID_KHO_CHUNG = os.environ.get("SHEET_ID") or "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
 TZ = dt.timezone(dt.timedelta(hours=7))
 DU_PHONG_GIO = 3
 NGAY_CHAY_THEO_YEU_CAU = 7
@@ -29,7 +28,19 @@ def doc_ngay(s):
     return dt.datetime(int(m[3]), int(m[2]), int(m[1]), int(m[4] or 23), int(m[5] or 59), tzinfo=TZ)
 
 
+def cong_tac_bat():
+    """Công tắc CANH_GAC_TU_DONG trong trung_tam_dieu_phoi.json (mặc định bật)."""
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "trung_tam_dieu_phoi.json"), encoding="utf-8") as f:
+            return bool(json.load(f).get("CONG_TAC", {}).get("CANH_GAC_TU_DONG", True))
+    except Exception:
+        return True
+
+
 def main():
+    if not cong_tac_bat():
+        print("Công tắc CANH_GAC_TU_DONG đang TẮT – bỏ qua lượt canh gác.", flush=True)
+        return
     tt = json.loads(os.environ["GOOGLE_CREDENTIALS"])
     print("Tài khoản dịch vụ đang dùng:", tt.get("client_email"), flush=True)
     cred = service_account.Credentials.from_service_account_info(tt, scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"])
@@ -42,9 +53,7 @@ def main():
     try:
         kho = gc.open_by_key(ID_KHO_CHUNG)
     except Exception as e:
-        loi = "Không mở được Kho chung (%s). Hãy CHIA SẺ Kho chung cho email %s." % (type(e).__name__, tt.get("client_email"))
-        gui_telegram("🚨 " + loi)
-        sys.exit(loi)
+        sys.exit("Không mở được Kho chung (%s). Hãy CHIA SẺ Kho chung cho email %s (quyền Người chỉnh sửa)." % (type(e).__name__, tt.get("client_email")))
     print("2/3 Đã mở Kho chung, đọc tab ThoiGianChay và Agent…", flush=True)
     bay = dt.datetime.now(TZ)
     van, ghi_chu, tot = [], [], []
@@ -107,14 +116,8 @@ def main():
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
             f.write(bao_cao + "\n")
     if van:
-        gui_telegram("🚨 Hệ thống agent có %d vấn đề cần xem ngay:\n" % len(van)
-                     + "\n".join("- " + x.replace("**", "") for x in van))
         sys.exit("Phát hiện %d vấn đề – xem trang Summary của lượt chạy." % len(van))
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception:
-        gui_telegram("🚨 canh_gac.py bị lỗi ngoại lệ:\n" + traceback.format_exc()[-1500:])
-        raise
+    main()
