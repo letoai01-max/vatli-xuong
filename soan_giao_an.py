@@ -466,24 +466,51 @@ def _khong_dau(x):
     return "".join(c for c in x if unicodedata.category(c) != "Mn").replace("đ", "d").replace("Đ", "D").lower()
 
 
-def id_kho_anh():
-    """ID thư mục kho ảnh SGK trên Drive: biến KHO_ANH_SGK_ID (GitHub Variables) hoặc khoá KHO_ANH_SGK_ID ở tab CauHinhDong (→ CFG_KHO_ANH_SGK_ID).
-    Chấp nhận cả đường liên kết thư mục. Thư mục phải được chia sẻ cho tài khoản dịch vụ."""
+def ids_kho_anh():
+    """Danh sách thư mục gốc kho ảnh SGK dạng [(ID, lớp)] từ biến KHO_ANH_SGK_ID (GitHub Variables) hoặc khoá KHO_ANH_SGK_ID ở tab CauHinhDong.
+    Chỉ cần ID thư mục GỐC (xưởng tự duyệt mọi thư mục con). Có thể khai nhiều thư mục gốc, cách nhau dấu phẩy, chấm phẩy hoặc xuống dòng;
+    mỗi mục là ID hoặc cả đường liên kết (tự cắt '?hl=vi'…). Muốn gán lớp cho cả thư mục (khi tên thư mục không có chữ Lop10/11/12) thì viết
+    '10=<ID>' (lớp 10), '11=<ID>', '12=<ID>'. Các thư mục phải được chia sẻ cho tài khoản dịch vụ."""
     v = (os.environ.get("KHO_ANH_SGK_ID") or os.environ.get("CFG_KHO_ANH_SGK_ID") or "").strip()
-    m = re.search(r"/folders/([\w-]+)", v) or re.search(r"[?&]id=([\w-]+)", v)
-    return m.group(1) if m else v
+    ra, thay = [], set()
+    for mot in re.split(r"[,;\n\r]+", v):
+        mot = mot.strip()
+        if not mot:
+            continue
+        lop = ""
+        ml = re.match(r"^(?:lop|khoi)?\s*(1[0-2])\s*[=:]\s*(.+)$", mot, flags=re.I)
+        if ml:
+            lop, mot = ml.group(1), ml.group(2).strip()
+        m = re.search(r"/folders/([\w-]+)", mot) or re.search(r"[?&]id=([\w-]+)", mot)
+        x = m.group(1) if m else re.split(r"[?&#/\s]", mot)[0]
+        if x and x not in thay:
+            thay.add(x)
+            ra.append((x, lop))
+    return ra
+
+
+def id_kho_anh():
+    """ID thư mục gốc đầu tiên (giữ cho nơi gọi cũ); '' nếu chưa cấu hình."""
+    ds = ids_kho_anh()
+    return ds[0][0] if ds else ""
 
 
 def nap_kho_anh(drive):
-    """Liệt kê ảnh trong thư mục kho ảnh SGK (kể cả thư mục con): [{id, ten, mo_ta, duong, mime}]. Rỗng nếu chưa cấu hình hoặc lỗi."""
-    goc = id_kho_anh()
-    if not goc:
+    """Liệt kê ảnh trong thư mục kho ảnh SGK (kể cả thư mục con và lối tắt Drive): [{id, ten, mo_ta, duong, mime}]. Rỗng nếu chưa cấu hình hoặc lỗi."""
+    gocs = ids_kho_anh()
+    if not gocs:
         print("ℹ️ Chưa cấu hình KHO_ANH_SGK_ID – bỏ qua việc kết nối hình SGK với kho ảnh.", flush=True)
         return []
     if drive is None:
         return []
-    ds, hang, da = [], [(goc, "")], set()
+    ds, hang, da, loai = [], [(g, ("Lop%s" % lp) if lp else "") for g, lp in gocs], set(), {}
     try:
+        for goc, _ in gocs:
+            try:
+                g = drive.files().get(fileId=goc, fields="name,mimeType", supportsAllDrives=True).execute()
+                print("📁 Thư mục gốc kho ảnh: '%s' (%s)" % (g.get("name"), "thư mục" if g.get("mimeType") == MIME_THU_MUC else "KHÔNG phải thư mục: " + str(g.get("mimeType"))), flush=True)
+            except Exception as e:
+                print("⚠️ Không mở được thư mục gốc %s… (%s) – kiểm tra ID và quyền chia sẻ." % (goc[:8], type(e).__name__), flush=True)
         while hang and len(ds) < TOI_DA_ANH_KHO:
             tm, duong = hang.pop(0)
             if tm in da:
@@ -492,13 +519,18 @@ def nap_kho_anh(drive):
             tiep = None
             while True:
                 r = drive.files().list(q="'%s' in parents and trashed=false" % tm, spaces="drive", pageSize=1000, pageToken=tiep,
-                                       fields="nextPageToken, files(id,name,mimeType,description)",
+                                       fields="nextPageToken, files(id,name,mimeType,description,shortcutDetails(targetId,targetMimeType))",
                                        supportsAllDrives=True, includeItemsFromAllDrives=True).execute()
                 for f in r.get("files", []):
-                    if f.get("mimeType") == MIME_THU_MUC:
-                        hang.append((f["id"], (duong + "/" + f.get("name", "")).strip("/")))
-                    elif str(f.get("mimeType", "")).startswith("image/"):
-                        ds.append({"id": f["id"], "ten": f.get("name", ""), "mo_ta": f.get("description") or "", "duong": duong, "mime": f["mimeType"]})
+                    mime, fid = str(f.get("mimeType", "")), f["id"]
+                    if mime == "application/vnd.google-apps.shortcut":          # lối tắt: đi theo đích của nó
+                        sd = f.get("shortcutDetails") or {}
+                        mime, fid = str(sd.get("targetMimeType", "")), sd.get("targetId") or fid
+                    loai[mime] = loai.get(mime, 0) + 1
+                    if mime == MIME_THU_MUC:
+                        hang.append((fid, (duong + "/" + f.get("name", "")).strip("/")))
+                    elif mime.startswith("image/"):
+                        ds.append({"id": fid, "ten": f.get("name", ""), "mo_ta": f.get("description") or "", "duong": duong, "mime": mime})
                 tiep = r.get("nextPageToken")
                 if not tiep:
                     break
@@ -513,7 +545,11 @@ def nap_kho_anh(drive):
                     f["mo_ta"] = str(cm[f["id"]].get("mo_ta") or "")
         except Exception as e:
             print("⚠️ Không đọc được chi_muc_anh.json (%s)" % type(e).__name__, flush=True)
-    print("🖼️ Kho ảnh SGK: %d ảnh." % len(ds) if ds else "⚠️ Kho ảnh SGK trống hoặc không có ảnh nào.", flush=True)
+    if ds:
+        print("🖼️ Kho ảnh SGK: %d ảnh." % len(ds), flush=True)
+    else:
+        print("⚠️ Kho ảnh SGK trống hoặc không có ảnh nào. Đã thấy trong kho (theo loại tệp): %s" % (
+            ", ".join("%s × %d" % (k or "?", v) for k, v in sorted(loai.items(), key=lambda t: -t[1])[:6]) or "không thấy tệp hay thư mục nào"), flush=True)
     return ds
 
 
