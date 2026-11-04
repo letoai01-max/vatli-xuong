@@ -46,10 +46,10 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - name: Cài pandoc (xuất bảng và công thức thành Word thật) và thư viện
+      - name: Cài pandoc (xuất bảng và công thức thành Word thật), phông chữ vẽ hình và thư viện
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq pandoc > /dev/null
+          sudo apt-get install -y -qq pandoc fonts-noto-core > /dev/null
           pip install -q -r requirements.txt
       - name: Soạn giáo án
         env:
