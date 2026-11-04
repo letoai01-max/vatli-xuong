@@ -28,11 +28,17 @@ YÊU CẦU RIÊNG CỦA TỔ (bản 04/11/2026), áp cho cả hai cách chạy:
   Gói việc: bổ sung các yêu cầu trên vào lời hệ thống của mọi bước (tắt bằng "boSungNLS": false trong gói), kiểm cấu trúc ở bước cuối
   và ghi cảnh báo vào mục "canhBao" của kết quả (Apps Script bỏ qua mục lạ).
 
+YÊU CẦU BỔ SUNG (soạn tay, bản 04/11/2026): (1) Word xuất ra không còn khoảng trắng giữa các dòng/đoạn (giãn đoạn 0, bỏ đoạn trống);
+  (2) đồ thị vẽ bằng code có mũi tên ở đầu hai trục; (3) hoạt động dùng hình SGK → dòng [[ANH_SGK]]: so sánh nội dung hoạt động với ảnh trong
+  kho ảnh SGK trên Google Drive (thư mục đặt ở KHO_ANH_SGK_ID), chèn ảnh khớp + câu "Kết nối nội dung"; không có ảnh khớp thì để chỗ cho GV chèn.
+
 Công tắc ở tab CauHinh của Kho chung: BAT_TAT_SOAN_GIAO_AN, SOAN_GIAO_AN_LOP_10 / _11 / _12 (mặc định bật).
 Vòng rà soát chéo Groq dùng công tắc VONG_KIEM_TRA_THU_HAI_GROQ (xem groq_xuong.cong_tac_bat).
 Biến môi trường: GOOGLE_CREDENTIALS, GEMINI_API_KEY; tuỳ chọn GROQ_API_KEY, GROQ_MODELS.
 """
 import datetime as dt
+import base64
+import io
 import json
 import os
 import re
@@ -40,10 +46,11 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import unicodedata
 
 import requests
 from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
@@ -131,12 +138,21 @@ QUY_DINH_HINH = """G. HÌNH ẢNH, BẢNG BIỂU, ĐỒ THỊ CHO TỪNG HOẠT 
    Không yêu cầu ảnh chụp thực tế; không viết tên tệp ảnh hay đường dẫn. Chú thích ghi trong "chuThich", hệ thống tự đánh số "Hình n."."""
 
 
-def tao_khung_giao_an_cv5512(ten_bai_hoc, lop, yeu_cau_can_dat, cac_model=None, hinh=False):
+QUY_DINH_ANH_SGK = """H. HÌNH TRONG SÁCH GIÁO KHOA (SGK Vật lí, bộ Kết nối tri thức) – KẾT NỐI VỚI KHO ẢNH SGK TRÊN GOOGLE DRIVE:
+   Chỉ khi nội dung hoạt động THỰC SỰ dùng hoặc đối chiếu một hình của SGK (ví dụ "quan sát Hình 2.1 SGK", sơ đồ thí nghiệm, đồ thị, hình minh hoạ của bài),
+   thêm ngay sau mục b) MỘT dòng riêng, JSON viết trên MỘT dòng, đúng khuôn:
+       [[ANH_SGK: {"chuThich": "Hình ... (SGK)", "hinhSGK": "Hình 2.1", "tuKhoa": "từ khoá nội dung hình, ví dụ: thí nghiệm rơi tự do; đồ thị độ dịch chuyển – thời gian"}]]
+   Hệ thống sẽ SO SÁNH nội dung hoạt động với các ảnh trong kho ảnh SGK rồi chèn ảnh khớp nhất kèm câu kết nối nội dung.
+   Tối đa 3 dòng [[ANH_SGK]] trong cả bài; không bịa số hình SGK nếu không chắc chắn (bỏ trường "hinhSGK"); không dùng cho hình tự vẽ (dùng [[HINH]] hoặc [[DO_THI]]).
+   Ở mục b) và trong bảng d), nêu rõ học sinh quan sát hình SGK nào và rút ra điều gì từ hình; không viết tên tệp ảnh."""
+
+
+def tao_khung_giao_an_cv5512(ten_bai_hoc, lop, yeu_cau_can_dat, cac_model=None, hinh=False, anh_sgk=False):
     """
     Bước 1: Gọi Gemini tạo phần CHÍNH của Kế hoạch bài dạy (I, II, III) theo Phụ lục 1 Công văn 5512
     + yêu cầu riêng của tổ (năng lực số – AI, bảng 2 cột, tích hợp ≥ 50%). Phần Phụ lục soạn ở bước sau.
     """
-    quy_dinh = QUY_DINH_BO_SUNG + (("\n\n" + QUY_DINH_HINH) if hinh else "")
+    quy_dinh = QUY_DINH_BO_SUNG + (("\n\n" + QUY_DINH_HINH) if hinh else "") + (("\n\n" + QUY_DINH_ANH_SGK) if (hinh and anh_sgk) else "")
     he = ("Bạn là một giáo viên môn Vật lí THPT giỏi chuyên môn tại trường THPT Thủy Sơn, thành thạo Công văn 5512, "
           "Chương trình GDPT 2018 (sách Kết nối tri thức) và Khung năng lực số cho người học (Thông tư 02/2025/TT-BGDĐT).")
     nguoi = f"""
@@ -245,7 +261,7 @@ def kiem_cau_truc(md, kiem_phu_luc=False, kiem_hinh=False):
         moc = [(m.start(), int(m.group(1))) for m in RE_HOAT_DONG.finditer(chinh)]
         for k, (vt, so_hd) in enumerate(moc):
             doan = chinh[vt: moc[k + 1][0] if k + 1 < len(moc) else len(chinh)]
-            co_ma = bool(re.search(r"\[\[(HINH|DO_THI):", doan))
+            co_ma = bool(re.search(r"\[\[(HINH|DO_THI|ANH_SGK):", doan))
             bang = [kh for kh in re.split(r"\n\s*\n", doan)
                     if kh.lstrip().startswith("|") and not re.search(r"hoạt động của giáo viên", kh, re.I)]
             if not (co_ma or bang):
@@ -261,12 +277,13 @@ def kiem_cau_truc(md, kiem_phu_luc=False, kiem_hinh=False):
     return loi
 
 
-def sua_loi_cau_truc(noi_dung, loi, cac_model=None, hinh=False):
+def sua_loi_cau_truc(noi_dung, loi, cac_model=None, hinh=False, anh_sgk=False):
     """Nhờ Gemini sửa MỘT lần các lỗi cấu trúc; trả bản mới (hoặc bản cũ nếu không cải thiện)."""
     he = "Bạn là giáo viên Vật lí THPT giỏi, đang hoàn thiện Kế hoạch bài dạy theo Công văn 5512."
     nguoi = ("Kế hoạch bài dạy dưới đây còn các lỗi cấu trúc sau, hãy sửa TẤT CẢ và trả về TOÀN BỘ giáo án hoàn chỉnh "
              "(giữ nguyên phần đã đạt, không thêm lời dẫn, không soạn Phụ lục):\n- " + "\n- ".join(loi) +
-             "\n\n" + QUY_DINH_BO_SUNG + (("\n\n" + QUY_DINH_HINH) if hinh else "") + "\n\nGIÁO ÁN HIỆN TẠI:\n" + noi_dung[:40000])
+             "\n\n" + QUY_DINH_BO_SUNG + (("\n\n" + QUY_DINH_HINH) if hinh else "") + (("\n\n" + QUY_DINH_ANH_SGK) if (hinh and anh_sgk) else "")
+             + "\n\nGIÁO ÁN HIỆN TẠI:\n" + noi_dung[:40000])
     try:
         moi, _ = DC.goi_gemini(he, nguoi, False, cac_model or [DC.MODEL_MAC_DINH])
     except Exception as e:
@@ -307,7 +324,7 @@ def kiem_tra_cheo_groq(noi_dung_giao_an):
         "GIỮ NGUYÊN: toàn bộ cấu trúc, định dạng Markdown, công thức LaTeX, các BẢNG 2 cột ở mục d) "
         "(| HOẠT ĐỘNG CỦA GIÁO VIÊN | HOẠT ĐỘNG CỦA HỌC SINH |, dùng <br> để xuống dòng trong ô), "
         "dòng 'Tích hợp NLS – AI: Có/Không' của từng hoạt động và dòng 'Năng lực số và năng lực AI' ở mục tiêu, "
-        "các dòng [[HINH: {...}]] và [[DO_THI: {...}]] (giữ nguyên từng kí tự), mọi bảng số liệu, gạch đầu dòng '-' và cách viết chỗ trống '$m$ = ........ kg'. "
+        "các dòng [[HINH: {...}]], [[DO_THI: {...}]] và [[ANH_SGK: {...}]] (giữ nguyên từng kí tự), mọi bảng số liệu, gạch đầu dòng '-' và cách viết chỗ trống '$m$ = ........ kg'. "
         "Chỉ sửa chỗ sai, không xoá nội dung tích hợp năng lực số – AI. "
         "Trả về nội dung giáo án hoàn chỉnh sau khi đã được tinh chỉnh tối ưu, không thêm lời dẫn."
     )
@@ -329,7 +346,7 @@ def kiem_tra_cheo_groq(noi_dung_giao_an):
         ch = (r.json().get("choices") or [{}])[0]
         moi = ((ch.get("message") or {}).get("content") or "").strip()
         if ch.get("finish_reason") == "stop" and len(moi) >= 0.8 * len(noi_dung_giao_an):
-            dem_ma = lambda t: len(re.findall(r"\[\[(?:HINH|DO_THI):", t))
+            dem_ma = lambda t: len(re.findall(r"\[\[(?:HINH|DO_THI|ANH_SGK):", t))
             if dem_ma(moi) < dem_ma(noi_dung_giao_an):
                 print(f"⚠️ Bản rà soát của {model} làm mất hình / đồ thị đã chèn – giữ bản gốc.")
                 continue
@@ -376,7 +393,7 @@ def chuan_cong_thuc(md):
 
 
 # ---------------- HÌNH VẼ / ĐỒ THỊ CHO CÁC HOẠT ĐỘNG ----------------
-RE_MA_HINH = re.compile(r"^\s*\[\[(HINH|DO_THI):\s*(\{.*\})\s*\]\]\s*$")
+RE_MA_HINH = re.compile(r"^\s*\[\[(HINH|DO_THI|ANH_SGK):\s*(\{.*\})\s*\]\]\s*$")
 MAU_DT = ["#000000", "#1f4e79", "#a61c00", "#38761d"]
 
 
@@ -417,6 +434,9 @@ def ve_do_thi_ga(spec, duong_dan):
     ax.grid(True, ls=":", lw=0.7, color="#888888")
     for ten in ("top", "right"):
         ax.spines[ten].set_visible(False)
+    # mũi tên ở đầu hai trục (cuối trục x bên phải, cuối trục y phía trên) – đặt theo toạ độ khung nên đúng cả khi trục không bắt đầu từ 0
+    ax.plot(1, 0, ">", color="black", ms=8, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
+    ax.plot(0, 1, "^", color="black", ms=8, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
     if any(d.get("ten") for d in (spec.get("duong") or [])[:4]):
         ax.legend(fontsize=8, frameon=False)
     fig.savefig(duong_dan, bbox_inches="tight", pad_inches=0.12, facecolor="white")
@@ -433,12 +453,196 @@ def _ve_hinh_xuong(spec, duong_dan, cac_model, ten_bai, so):
     shutil.move(png, duong_dan)
 
 
-def chen_hinh(md, thu_hinh, cac_model=None, ten_bai=""):
-    """Thay mỗi dòng [[DO_THI: {...}]] / [[HINH: {...}]] bằng ảnh + chú thích 'Hình n.' (tự đánh số).
-    Hình nào không vẽ được thì để dòng chú thích '[… GV tự chèn …]' để giáo án vẫn đủ chỗ, và ghi vào danh sách lỗi."""
+# ---------------- KHO ẢNH SGK TRÊN GOOGLE DRIVE ----------------
+MIME_THU_MUC = "application/vnd.google-apps.folder"
+TOI_DA_ANH_KHO = 8000          # chặn kho quá lớn làm chậm lượt chạy
+TOI_DA_UNG_VIEN = 4            # số ảnh ứng viên đưa cho Gemini so sánh với nội dung hoạt động
+TOI_DA_ANH_SGK = 4             # số dòng [[ANH_SGK]] được xử lí trong một bài
+TU_DUNG = {"cua", "cho", "cac", "mot", "nhung", "trong", "voi", "khi", "duoc", "hinh", "anh", "sgk", "bai", "vat", "ket", "noi", "tri", "thuc"}
+
+
+def _khong_dau(x):
+    x = unicodedata.normalize("NFD", str(x or ""))
+    return "".join(c for c in x if unicodedata.category(c) != "Mn").replace("đ", "d").replace("Đ", "D").lower()
+
+
+def id_kho_anh():
+    """ID thư mục kho ảnh SGK trên Drive: biến KHO_ANH_SGK_ID (GitHub Variables) hoặc khoá KHO_ANH_SGK_ID ở tab CauHinhDong (→ CFG_KHO_ANH_SGK_ID).
+    Chấp nhận cả đường liên kết thư mục. Thư mục phải được chia sẻ cho tài khoản dịch vụ."""
+    v = (os.environ.get("KHO_ANH_SGK_ID") or os.environ.get("CFG_KHO_ANH_SGK_ID") or "").strip()
+    m = re.search(r"/folders/([\w-]+)", v) or re.search(r"[?&]id=([\w-]+)", v)
+    return m.group(1) if m else v
+
+
+def nap_kho_anh(drive):
+    """Liệt kê ảnh trong thư mục kho ảnh SGK (kể cả thư mục con): [{id, ten, mo_ta, duong, mime}]. Rỗng nếu chưa cấu hình hoặc lỗi."""
+    goc = id_kho_anh()
+    if not goc:
+        print("ℹ️ Chưa cấu hình KHO_ANH_SGK_ID – bỏ qua việc kết nối hình SGK với kho ảnh.", flush=True)
+        return []
+    if drive is None:
+        return []
+    ds, hang, da = [], [(goc, "")], set()
+    try:
+        while hang and len(ds) < TOI_DA_ANH_KHO:
+            tm, duong = hang.pop(0)
+            if tm in da:
+                continue
+            da.add(tm)
+            tiep = None
+            while True:
+                r = drive.files().list(q="'%s' in parents and trashed=false" % tm, spaces="drive", pageSize=1000, pageToken=tiep,
+                                       fields="nextPageToken, files(id,name,mimeType,description)",
+                                       supportsAllDrives=True, includeItemsFromAllDrives=True).execute()
+                for f in r.get("files", []):
+                    if f.get("mimeType") == MIME_THU_MUC:
+                        hang.append((f["id"], (duong + "/" + f.get("name", "")).strip("/")))
+                    elif str(f.get("mimeType", "")).startswith("image/"):
+                        ds.append({"id": f["id"], "ten": f.get("name", ""), "mo_ta": f.get("description") or "", "duong": duong, "mime": f["mimeType"]})
+                tiep = r.get("nextPageToken")
+                if not tiep:
+                    break
+    except Exception as e:
+        print("⚠️ Không đọc được kho ảnh SGK (%s: %s) – kiểm tra ID và quyền chia sẻ cho tài khoản dịch vụ." % (type(e).__name__, str(e)[:150]), flush=True)
+    print("🖼️ Kho ảnh SGK: %d ảnh." % len(ds) if ds else "⚠️ Kho ảnh SGK trống hoặc không có ảnh nào.", flush=True)
+    return ds
+
+
+def _tu_khoa(x):
+    return {t for t in re.findall(r"[a-z0-9]+", _khong_dau(x)) if len(t) >= 3 and t not in TU_DUNG}
+
+
+def _so_hinh(x):
+    """'Hình 2.1', 'hinh_2-1', 'H2.1' → '2.1' (None nếu không có)."""
+    m = re.search(r"h(?:inh)?[\s_\-]*(\d+)\s*[._\-]\s*(\d+)", _khong_dau(x))
+    return "%s.%s" % (m.group(1), m.group(2)) if m else None
+
+
+def tim_ung_vien_anh(kho_ds, spec, khoi, ten_bai, loai_tru=()):
+    """Xếp hạng ảnh theo độ trùng từ khoá (tên tệp, đường dẫn thư mục, mô tả) + trùng số hình SGK; trả tối đa TOI_DA_UNG_VIEN ảnh."""
+    goc = " ".join(str(spec.get(k) or "") for k in ("chuThich", "hinhSGK", "tuKhoa"))
+    can = _tu_khoa(goc) | _tu_khoa(ten_bai)
+    so_can = _so_hinh(str(spec.get("hinhSGK") or "") + " " + str(spec.get("chuThich") or ""))
+    xep = []
+    for f in kho_ds:
+        if f["id"] in loai_tru:
+            continue
+        diem = 0.0
+        diem += 2.0 * len(can & _tu_khoa(f["ten"])) + 1.0 * len(can & _tu_khoa(f["duong"])) + 1.5 * len(can & _tu_khoa(f["mo_ta"]))
+        if so_can and so_can in {_so_hinh(f["ten"]), _so_hinh(f["mo_ta"])}:
+            diem += 6.0
+        if diem >= 2.0:
+            xep.append((diem, f))
+    xep.sort(key=lambda t: -t[0])
+    return [f for _, f in xep[:TOI_DA_UNG_VIEN]]
+
+
+def _tai_anh(drive, f, ra_png):
+    """Tải ảnh từ Drive, lưu PNG (cạnh dài tối đa 1600 px) và trả bản JPEG nhỏ (base64) để Gemini so sánh."""
+    from PIL import Image
+    buf = io.BytesIO()
+    tai = DC.MediaIoBaseDownload(buf, drive.files().get_media(fileId=f["id"], supportsAllDrives=True))
+    xong = False
+    while not xong:
+        _, xong = tai.next_chunk()
+    buf.seek(0)
+    im = Image.open(buf)
+    im.load()
+    if im.mode in ("RGBA", "LA", "P"):
+        nen = Image.new("RGB", im.size, (255, 255, 255))
+        im = im.convert("RGBA")
+        nen.paste(im, mask=im.split()[-1])
+        im = nen
+    else:
+        im = im.convert("RGB")
+    im.thumbnail((1600, 1600))
+    im.save(ra_png, "PNG")
+    nho = im.copy()
+    nho.thumbnail((900, 900))
+    b = io.BytesIO()
+    nho.save(b, "JPEG", quality=85)
+    return base64.b64encode(b.getvalue()).decode("ascii")
+
+
+def so_sanh_anh_sgk(spec, khoi, ung_vien, cac_model, ten_bai):
+    """Nhờ Gemini (đọc ảnh) so sánh nội dung hoạt động với từng ảnh ứng viên; trả (chỉ số ảnh 0-based, dict kết quả) hoặc (None, dict)."""
+    import ve_hinh as VH                 # nạp muộn: kéo theo thư viện Google, chỉ cần khi thật sự có [[ANH_SGK]]
+    phan = [{"text": (
+        "Bạn là giáo viên Vật lí THPT. Dưới đây là NỘI DUNG MỘT HOẠT ĐỘNG trong Kế hoạch bài dạy bài \"%s\" và các ảnh ứng viên lấy từ kho ảnh SGK.\n"
+        "Hình SGK mà hoạt động cần: %s | từ khoá: %s | chú thích dự kiến: %s\n\nNỘI DUNG HOẠT ĐỘNG:\n%s\n\n"
+        "NHIỆM VỤ: so sánh từng ảnh với nội dung hoạt động. Chọn ảnh thể hiện ĐÚNG hiện tượng / thiết bị / đồ thị / số liệu mà hoạt động dùng "
+        "(không chọn ảnh chỉ trùng từ khoá nhưng khác nội dung; nếu có số hình SGK thì ưu tiên ảnh đúng số hình đó). "
+        "Trả về JSON: {\"chon\": số thứ tự ảnh 1..%d, hoặc 0 nếu KHÔNG ảnh nào phù hợp, \"doKhop\": \"cao\"|\"vua\"|\"thap\", "
+        "\"lyDo\": \"một câu\", \"chuThich\": \"chú thích ngắn cho hình (không đánh số hình)\", "
+        "\"ketNoi\": \"1-2 câu kết nối nội dung hoạt động với hình: hình thể hiện gì, học sinh quan sát chỗ nào, đối chiếu với kiến thức nào của bài; "
+        "KHÔNG nêu đáp án mà học sinh phải tự tìm\"}." % (
+            ten_bai, spec.get("hinhSGK") or "(không nêu)", spec.get("tuKhoa") or "", spec.get("chuThich") or "", khoi, len(ung_vien)))}]
+    for i, (f, b64) in enumerate(ung_vien, 1):
+        phan.append({"text": "Ảnh %d – tệp: %s | thư mục: %s | mô tả: %s" % (i, f["ten"], f["duong"] or "(gốc)", f["mo_ta"][:150])})
+        phan.append({"inline_data": {"mime_type": "image/jpeg", "data": b64}})
+    kq, _ = VH.goi_json(phan, cac_model, 0.1)
+    try:
+        chon = int(kq.get("chon") or 0)
+    except (TypeError, ValueError):
+        chon = 0
+    if 1 <= chon <= len(ung_vien) and str(kq.get("doKhop", "")).lower() in ("cao", "vua"):
+        return chon - 1, kq
+    return None, kq
+
+
+def lay_anh_sgk(spec, khoi, dich_png, kho, cac_model, ten_bai):
+    """Tìm - tải - so sánh - lưu ảnh SGK cho một dòng [[ANH_SGK]]; trả dict {chuThich, ketNoi}. Ném RuntimeError nếu không có ảnh khớp."""
+    if not kho or not kho.get("ds"):
+        raise RuntimeError("chưa cấu hình / không đọc được kho ảnh SGK (KHO_ANH_SGK_ID)")
+    uv = tim_ung_vien_anh(kho["ds"], spec, khoi, ten_bai, kho["da_dung"])
+    if not uv:
+        raise RuntimeError("kho ảnh không có ảnh trùng từ khoá (%s)" % (spec.get("hinhSGK") or spec.get("tuKhoa") or spec.get("chuThich") or "")[:60])
+    tep_tam, co_anh = [], []
+    thu = os.path.dirname(dich_png)
+    for k, f in enumerate(uv):
+        tam = os.path.join(thu, "ung_vien_%d_%d.png" % (id(spec) % 10000, k))
+        try:
+            co_anh.append((f, _tai_anh(kho["drive"], f, tam)))
+            tep_tam.append(tam)
+        except Exception as e:
+            print("⚠️ Không tải được ảnh kho '%s' (%s)" % (f["ten"], type(e).__name__), flush=True)
+            tep_tam.append(None)
+    # giữ tương ứng chỉ số giữa danh sách tải được và tệp tạm
+    hop_le = [(f, b64, t) for (f, b64), t in zip(co_anh, [t for t in tep_tam if t])]
+    if not hop_le:
+        raise RuntimeError("không tải được ảnh ứng viên nào từ kho")
+    try:
+        vt, kq = so_sanh_anh_sgk(spec, khoi, [(f, b64) for f, b64, _ in hop_le], cac_model, ten_bai)
+        if vt is None:
+            raise RuntimeError("so sánh nội dung: không ảnh nào khớp (%s)" % str(kq.get("lyDo") or "")[:100])
+        f, _, tam = hop_le[vt]
+        shutil.copyfile(tam, dich_png)
+        kho["da_dung"].add(f["id"])
+        print("🔗 Ảnh SGK khớp: %s (độ khớp %s)" % (f["ten"], kq.get("doKhop")), flush=True)
+        return {"chuThich": str(kq.get("chuThich") or "").strip(), "ketNoi": str(kq.get("ketNoi") or "").strip(), "tep": f["ten"]}
+    finally:
+        for _, _, t in hop_le:
+            try:
+                os.remove(t)
+            except OSError:
+                pass
+
+
+def chen_hinh(md, thu_hinh, cac_model=None, ten_bai="", kho=None):
+    """Thay mỗi dòng [[DO_THI: {...}]] / [[HINH: {...}]] / [[ANH_SGK: {...}]] bằng ảnh + chú thích 'Hình n.' (tự đánh số).
+    [[ANH_SGK]]: so sánh nội dung hoạt động với ảnh trong kho ảnh SGK trên Drive (kho = {drive, ds, da_dung}), chèn ảnh khớp và câu kết nối nội dung.
+    Hình nào không vẽ / không tìm được thì để dòng chú thích '[… GV tự chèn …]' để giáo án vẫn đủ chỗ, và ghi vào danh sách lỗi."""
     os.makedirs(thu_hinh, exist_ok=True)
-    ra, so, loi = [], 0, []
-    for dong in str(md or "").split("\n"):
+    ra, so, loi, so_sgk = [], 0, [], 0
+    dong_ds = str(md or "").split("\n")
+    dau_hd = [i for i, d in enumerate(dong_ds) if RE_HOAT_DONG.match(d)]
+
+    def khoi_hd(i):                        # nội dung hoạt động chứa dòng thứ i (để so sánh với ảnh)
+        truoc = max([k for k in dau_hd if k <= i] or [0])
+        sau = min([k for k in dau_hd if k > i] or [len(dong_ds)])
+        return re.sub(r"^\s*\[\[(?:HINH|DO_THI|ANH_SGK):.*$", "", "\n".join(dong_ds[truoc:sau]), flags=re.M)[:3500]
+
+    for vi_tri, dong in enumerate(dong_ds):
         m = RE_MA_HINH.match(dong)
         if not m:
             ra.append(dong)
@@ -451,18 +655,29 @@ def chen_hinh(md, thu_hinh, cac_model=None, ten_bai=""):
             ra += ["", '::: {custom-style="Chu thich hinh"}', "*[Hình %d – GV tự chèn hình/đồ thị minh hoạ]*" % so, ":::", ""]
             continue
         ten_tep = os.path.join(thu_hinh, "hinh%d.png" % so)
-        ct = re.sub(r"^\s*Hình\s*\d+\s*[.:]\s*", "", str(spec.get("chuThich") or "")).strip()
+        ct = re.sub(r"^\s*Hình\s*\d+\s*[.:]\s*(?!\d)", "", str(spec.get("chuThich") or "")).strip()
+        ket_noi = ""
         try:
             if loai == "DO_THI":
                 ve_do_thi_ga(spec, ten_tep)
+            elif loai == "ANH_SGK":
+                so_sgk += 1
+                if so_sgk > TOI_DA_ANH_SGK:
+                    raise RuntimeError("vượt %d dòng [[ANH_SGK]] cho một bài" % TOI_DA_ANH_SGK)
+                kq = lay_anh_sgk(spec, khoi_hd(vi_tri), ten_tep, kho, cac_model or [DC.MODEL_MAC_DINH], ten_bai)
+                ct = ct or re.sub(r"^\s*Hình\s*\d+\s*[.:]\s*(?!\d)", "", kq["chuThich"]).strip()
+                ket_noi = kq["ketNoi"]
             else:
                 _ve_hinh_xuong(spec, ten_tep, cac_model or [DC.MODEL_MAC_DINH], ten_bai, so)
             ra += ["", '::: {custom-style="Hinh minh hoa"}', "![](%s){width=%s}" % (ten_tep, "4.2in" if loai == "DO_THI" else "4.6in"), ":::",
                    "", '::: {custom-style="Chu thich hinh"}', "*Hình %d. %s*" % (so, ct) if ct else "*Hình %d.*" % so, ":::", ""]
+            if ket_noi:
+                ra += ["**Kết nối nội dung:** " + ket_noi.replace("\n", " "), ""]
         except Exception as e:
             loi.append("Hình %d (%s): %s: %s" % (so, loai, type(e).__name__, str(e)[:120]))
             ra += ["", '::: {custom-style="Chu thich hinh"}',
-                   "*[Hình %d. %s – GV tự chèn hình/đồ thị minh hoạ]*" % (so, ct) if ct else "*[Hình %d – GV tự chèn hình/đồ thị minh hoạ]*" % so,
+                   ("*[Hình %d. %s – GV tự chèn %s]*" % (so, ct, "hình SGK tương ứng" if loai == "ANH_SGK" else "hình/đồ thị minh hoạ")) if ct
+                   else "*[Hình %d – GV tự chèn hình/đồ thị minh hoạ]*" % so,
                    ":::", ""]
     return "\n".join(ra), so - len(loi), loi
 
@@ -471,7 +686,7 @@ def an_ma_hinh(md):
     """Cho trang Summary: dòng [[HINH/DO_THI: {...}]] hiện gọn thành '[Hình/đồ thị: chú thích]' (không để lộ JSON)."""
     def gon(m):
         try:
-            return "*[%s: %s]*" % ("Đồ thị" if m.group(1) == "DO_THI" else "Hình", json.loads(m.group(2)).get("chuThich", ""))
+            return "*[%s: %s]*" % ({"DO_THI": "Đồ thị", "ANH_SGK": "Ảnh SGK"}.get(m.group(1), "Hình"), json.loads(m.group(2)).get("chuThich", ""))
         except ValueError:
             return "*[Hình/đồ thị]*"
     return "\n".join(RE_MA_HINH.sub(gon, d) if RE_MA_HINH.match(d) else d for d in str(md or "").split("\n"))
@@ -593,6 +808,60 @@ def _gach_dau_dong(d):
         ppr.append(ind)
 
 
+def _la_doan_trong(p):
+    """Đoạn không chữ, không ảnh, không công thức, không ngắt dòng/trang."""
+    if p.text.strip():
+        return False
+    x = p._p.xml
+    return not any(t in x for t in ("<w:drawing", "<w:pict", "<w:br", "<m:oMath", "<w:sectPr", "<w:object", "<w:fldChar"))
+
+
+def _bo_khoang_trang(d):
+    """Bỏ khoảng trắng giữa các dòng: giãn đoạn trước/sau = 0 và giãn dòng đơn ở mọi đoạn (kể cả trong bảng),
+    xoá đoạn trống, ngắt trang bằng 'bắt đầu trang mới' thay cho đoạn chứa dấu ngắt (khỏi thừa một dòng trống đầu trang).
+    Đoạn trống nằm giữa hai bảng liền nhau được thu thành đường 1pt để Word không dồn hai bảng làm một."""
+    def chuan(p):
+        pf = p.paragraph_format
+        pf.space_before, pf.space_after, pf.line_spacing = Pt(0), Pt(0), 1.0
+
+    def xoa(p):
+        p._p.getparent().remove(p._p)
+
+    for st in d.styles:
+        if st.type == 1:
+            pf = st.paragraph_format
+            pf.space_before, pf.space_after, pf.line_spacing = Pt(0), Pt(0), 1.0
+    ps = list(d.paragraphs)
+    for i, p in enumerate(ps):
+        if p.text.strip():
+            continue
+        if 'w:type="page"' in p._p.xml and i + 1 < len(ps):
+            ps[i + 1].paragraph_format.page_break_before = True
+            xoa(p)
+        elif _la_doan_trong(p):
+            truoc, sau = p._p.getprevious(), p._p.getnext()
+            giua_hai_bang = (truoc is not None and sau is not None and truoc.tag == qn("w:tbl") and sau.tag == qn("w:tbl"))
+            if giua_hai_bang:
+                p.paragraph_format.line_spacing_rule = WD_LINE_SPACING.EXACTLY
+                p.paragraph_format.line_spacing = Pt(1)
+            else:
+                xoa(p)
+    for tbl in d.tables:
+        for hang in tbl.rows:
+            for o in hang.cells:
+                ds = list(o.paragraphs)
+                for p in ds:
+                    if len(o.paragraphs) > 1 and _la_doan_trong(p):
+                        xoa(p)
+    for p in d.paragraphs:
+        chuan(p)
+    for tbl in d.tables:
+        for hang in tbl.rows:
+            for o in hang.cells:
+                for p in o.paragraphs:
+                    chuan(p)
+
+
 def _dinh_dang_word(duong_dan):
     """Sau pandoc: Times New Roman 13, lề hành chính, tiêu đề đen, bảng có viền + dòng tiêu đề tô nền, bảng rộng hết khổ."""
     d = Document(duong_dan)
@@ -643,6 +912,7 @@ def _dinh_dang_word(duong_dan):
                     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
                     for r in p.runs:
                         r.font.bold = True
+    _bo_khoang_trang(d)          # chạy cuối cùng để không bị phần định dạng phía trên ghi đè
     d.save(duong_dan)
 
 
@@ -682,7 +952,7 @@ def _ghi_dong(doc, line):
         line = muc.group(1)
     line = RE_GACH.sub("- ", line, count=1)
     p = doc.add_paragraph()
-    p.paragraph_format.line_spacing = 1.15
+    p.paragraph_format.space_before, p.paragraph_format.space_after, p.paragraph_format.line_spacing = Pt(0), Pt(0), 1.0
     _ghi_run(p, line, dam=dam_ca_dong)
 
 
@@ -701,7 +971,8 @@ def _ghi_bang(doc, dong_bang):
             if i == 0:
                 nen = OxmlElement("w:shd"); nen.set(qn("w:val"), "clear"); nen.set(qn("w:color"), "auto"); nen.set(qn("w:fill"), "D9E2F3")
                 o._tc.get_or_add_tcPr().append(nen)
-    doc.add_paragraph()
+            for p in o.paragraphs:
+                p.paragraph_format.space_before, p.paragraph_format.space_after, p.paragraph_format.line_spacing = Pt(0), Pt(0), 1.0
 
 
 def _xuat_python_docx(md, tieu_de, ra):
@@ -717,7 +988,7 @@ def _xuat_python_docx(md, tieu_de, ra):
     run_title.font.name = PHONG
     run_title.font.size = Pt(14)
     run_title.font.bold = True
-    dong_ds, i = _chuan_markdown(md, pandoc=False).split("\n"), 0
+    dong_ds, i, cho_ngat_trang = _chuan_markdown(md, pandoc=False).split("\n"), 0, False
     while i < len(dong_ds):
         d = dong_ds[i]
         if d.lstrip().startswith("|"):
@@ -725,9 +996,17 @@ def _xuat_python_docx(md, tieu_de, ra):
             while i < len(dong_ds) and dong_ds[i].lstrip().startswith("|"):
                 khoi.append(dong_ds[i]); i += 1
             _ghi_bang(doc, khoi)
+            j = i
+            while j < len(dong_ds) and not dong_ds[j].strip():
+                j += 1
+            if j < len(dong_ds) and dong_ds[j].lstrip().startswith("|"):      # hai bảng liền nhau: chèn đoạn 1pt để Word không dồn làm một
+                p_ngan = doc.add_paragraph()
+                p_ngan.paragraph_format.space_before = p_ngan.paragraph_format.space_after = Pt(0)
+                p_ngan.paragraph_format.line_spacing_rule = WD_LINE_SPACING.EXACTLY
+                p_ngan.paragraph_format.line_spacing = Pt(1)
             continue
         if d.strip() == "@@NGAT_TRANG@@":
-            doc.add_page_break()
+            cho_ngat_trang = True
         elif d.strip().startswith(":::"):
             pass
         elif re.match(r"^\s*!\[\]\((.+?)\)", d):
@@ -743,7 +1022,12 @@ def _xuat_python_docx(md, tieu_de, ra):
             r_ct.italic, r_ct.font.name, r_ct.font.size = True, PHONG, Pt(12)
         elif d.strip():
             _ghi_dong(doc, d)
+            if cho_ngat_trang:                         # ngắt trang bằng "bắt đầu trang mới" ở đoạn kế tiếp, không để dòng trống
+                doc.paragraphs[-1].paragraph_format.page_break_before = True
+                cho_ngat_trang = False
         i += 1
+    for p in doc.paragraphs:                           # mọi đoạn (kể cả tiêu đề, ảnh, chú thích): không giãn đoạn
+        p.paragraph_format.space_before, p.paragraph_format.space_after = Pt(0), Pt(0)
     doc.save(ra)
 
 
@@ -813,15 +1097,17 @@ def chay_goi(drive, goi_id, kq_id, cac_model, config):
 
 
 # ---------------- CÁCH 2: SOẠN TAY ----------------
-def soan_tay(lop, ten_bai, yccd, cac_model):
+def soan_tay(lop, ten_bai, yccd, cac_model, drive=None):
     print(f"✍️ Soạn tay: {ten_bai} (lớp {lop})")
+    kho_ds = nap_kho_anh(drive)                    # kho ảnh SGK trên Drive (rỗng nếu chưa cấu hình KHO_ANH_SGK_ID)
+    kho = {"drive": drive, "ds": kho_ds, "da_dung": set()} if kho_ds else None
     yccd = yccd or "(theo Chương trình GDPT 2018, sách Kết nối tri thức)"
     # 1. Phần chính (I–III, có hình/bảng/đồ thị cho từng hoạt động) + tự kiểm cấu trúc, sửa tối đa một lần
-    noi_dung = tao_khung_giao_an_cv5512(ten_bai, lop, yccd, cac_model, hinh=True)
+    noi_dung = tao_khung_giao_an_cv5512(ten_bai, lop, yccd, cac_model, hinh=True, anh_sgk=bool(kho))
     loi = kiem_cau_truc(noi_dung, kiem_hinh=True)
     if loi:
         print("⚠️ Cấu trúc chưa đạt: " + " | ".join(loi))
-        noi_dung = sua_loi_cau_truc(noi_dung, loi, cac_model, hinh=True)
+        noi_dung = sua_loi_cau_truc(noi_dung, loi, cac_model, hinh=True, anh_sgk=bool(kho))
     # 2. Groq rà soát chéo (chỉ nhận nếu giữ đủ cấu trúc và đủ hình/đồ thị)
     noi_dung, da_cheo = kiem_tra_cheo_groq(noi_dung)
     # 3. Phụ lục: 2 Phiếu học tập + Rubric NLS–AI rút gọn (soạn từ giáo án đã chốt)
@@ -840,7 +1126,7 @@ def soan_tay(lop, ten_bai, yccd, cac_model):
     # 4. Vẽ đồ thị / hình và ghép vào bài, rồi xuất Word
     thu_hinh = tempfile.mkdtemp(prefix="hinh_")
     try:
-        toan_bai_hinh, so_hinh_ok, loi_hinh = chen_hinh(toan_bai, thu_hinh, cac_model, ten_bai)
+        toan_bai_hinh, so_hinh_ok, loi_hinh = chen_hinh(toan_bai, thu_hinh, cac_model, ten_bai, kho)
         for c in loi_hinh:
             print("⚠️ " + c)
         print("🖼️ Đã ghép %d hình/đồ thị vào bài%s." % (so_hinh_ok, (", %d hình phải để chỗ cho GV chèn" % len(loi_hinh)) if loi_hinh else ""))
@@ -851,8 +1137,8 @@ def soan_tay(lop, ten_bai, yccd, cac_model):
     if tom_tat:
         tat_ca = canh_bao + loi_hinh
         with open(tom_tat, "a", encoding="utf-8") as f:
-            f.write("# KHBD: %s (lớp %s)\n\nModel soạn: `%s` · Rà soát chéo Groq: %s · Hình/đồ thị ghép: %d\n\nBản Word: tải ở mục **Artifacts** (%s).\n\n"
-                    % (ten_bai, lop, _NHAT_KY["model"], "đã áp dụng" if da_cheo else "không áp dụng", so_hinh_ok, os.path.basename(tep)))
+            f.write("# KHBD: %s (lớp %s)\n\nModel soạn: `%s` · Rà soát chéo Groq: %s · Hình/đồ thị ghép: %d · Ảnh kho SGK khớp: %d\n\nBản Word: tải ở mục **Artifacts** (%s).\n\n"
+                    % (ten_bai, lop, _NHAT_KY["model"], "đã áp dụng" if da_cheo else "không áp dụng", so_hinh_ok, len(kho["da_dung"]) if kho else 0, os.path.basename(tep)))
             f.write(("**Kiểm cấu trúc:** " + ("đạt ✅" if not tat_ca else "còn thiếu ⚠️ – " + " | ".join(tat_ca))) + "\n\n---\n\n%s\n" % an_ma_hinh(toan_bai))
     return tep
 
@@ -891,7 +1177,7 @@ def main():
     if not config.get(f"SOAN_GIAO_AN_LOP_{lop}", True):
         print(f"⏸️ Công tắc SOAN_GIAO_AN_LOP_{lop} đang tắt. Dừng thực thi.")
         return
-    soan_tay(lop, ten_bai, os.environ.get("YCCD", "").strip(), cac_model)
+    soan_tay(lop, ten_bai, os.environ.get("YCCD", "").strip(), cac_model, drive)
 
 
 if __name__ == "__main__":
