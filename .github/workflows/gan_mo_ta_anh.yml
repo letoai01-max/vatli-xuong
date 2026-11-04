@@ -1,8 +1,3 @@
-      - name: Xem email tài khoản dịch vụ
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-        run: |
-          python -c "import json,os; e=json.loads(os.environ['GOOGLE_CREDENTIALS'])['client_email']; print(' '.join(e.replace('@',' @ ').replace('.',' . ')))"
 # .github/workflows/gan_mo_ta_anh.yml – GẮN MÔ TẢ CHO ẢNH KHO SGK (chạy tay khi cần, không có lịch)
 # Gemini đọc từng ảnh chưa có mô tả → ghi số hình, nội dung, từ khoá vào ô "Mô tả" của tệp trên Drive để soan_giao_an.py tìm được ảnh.
 # Cần: biến KHO_ANH_SGK_ID; tài khoản dịch vụ có quyền "Người chỉnh sửa" trên thư mục kho (chỉ "Người xem" thì dùng tệp out/chi_muc_anh.json).
