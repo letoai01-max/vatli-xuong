@@ -504,6 +504,15 @@ def nap_kho_anh(drive):
                     break
     except Exception as e:
         print("⚠️ Không đọc được kho ảnh SGK (%s: %s) – kiểm tra ID và quyền chia sẻ cho tài khoản dịch vụ." % (type(e).__name__, str(e)[:150]), flush=True)
+    chi_muc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "chi_muc_anh.json")   # do gan_mo_ta_anh.py tạo (khi không ghi được mô tả lên Drive)
+    if ds and os.path.isfile(chi_muc):
+        try:
+            cm = json.load(open(chi_muc, encoding="utf-8"))
+            for f in ds:
+                if not f["mo_ta"] and f["id"] in cm:
+                    f["mo_ta"] = str(cm[f["id"]].get("mo_ta") or "")
+        except Exception as e:
+            print("⚠️ Không đọc được chi_muc_anh.json (%s)" % type(e).__name__, flush=True)
     print("🖼️ Kho ảnh SGK: %d ảnh." % len(ds) if ds else "⚠️ Kho ảnh SGK trống hoặc không có ảnh nào.", flush=True)
     return ds
 
@@ -518,7 +527,15 @@ def _so_hinh(x):
     return "%s.%s" % (m.group(1), m.group(2)) if m else None
 
 
-def tim_ung_vien_anh(kho_ds, spec, khoi, ten_bai, loai_tru=()):
+def _lop_cua_anh(f):
+    """Đoán lớp (10/11/12) của ảnh từ đường dẫn thư mục + tên tệp: 'Lop10', 'Khoi_11', 'Vat li 12', thư mục tên '10'… ('' nếu không rõ)."""
+    t = _khong_dau(str(f.get("duong") or "") + "/" + str(f.get("ten") or ""))
+    m = (re.search(r"(?:lop|khoi|vat\s*li|vl|sgk|cd|chuyen\s*de)[\s_\-]*(1[0-2])(?!\d)", t)
+         or re.search(r"(?:^|/)(1[0-2])(?:/|$)", t))
+    return m.group(1) if m else ""
+
+
+def tim_ung_vien_anh(kho_ds, spec, khoi, ten_bai, loai_tru=(), lop=""):
     """Xếp hạng ảnh theo độ trùng từ khoá (tên tệp, đường dẫn thư mục, mô tả) + trùng số hình SGK; trả tối đa TOI_DA_UNG_VIEN ảnh."""
     goc = " ".join(str(spec.get(k) or "") for k in ("chuThich", "hinhSGK", "tuKhoa"))
     can = _tu_khoa(goc) | _tu_khoa(ten_bai)
@@ -527,11 +544,16 @@ def tim_ung_vien_anh(kho_ds, spec, khoi, ten_bai, loai_tru=()):
     for f in kho_ds:
         if f["id"] in loai_tru:
             continue
+        lop_anh = _lop_cua_anh(f)
+        if lop and lop_anh and lop_anh != str(lop):          # ảnh của lớp khác: loại (cùng số hình ở các lớp rất dễ nhầm)
+            continue
         diem = 0.0
         diem += 2.0 * len(can & _tu_khoa(f["ten"])) + 1.0 * len(can & _tu_khoa(f["duong"])) + 1.5 * len(can & _tu_khoa(f["mo_ta"]))
         if so_can and so_can in {_so_hinh(f["ten"]), _so_hinh(f["mo_ta"])}:
             diem += 6.0
         if diem >= 2.0:
+            if lop and lop_anh == str(lop):
+                diem += 1.5                                  # ảnh đúng lớp được ưu tiên
             xep.append((diem, f))
     xep.sort(key=lambda t: -t[0])
     return [f for _, f in xep[:TOI_DA_UNG_VIEN]]
@@ -594,7 +616,7 @@ def lay_anh_sgk(spec, khoi, dich_png, kho, cac_model, ten_bai):
     """Tìm - tải - so sánh - lưu ảnh SGK cho một dòng [[ANH_SGK]]; trả dict {chuThich, ketNoi}. Ném RuntimeError nếu không có ảnh khớp."""
     if not kho or not kho.get("ds"):
         raise RuntimeError("chưa cấu hình / không đọc được kho ảnh SGK (KHO_ANH_SGK_ID)")
-    uv = tim_ung_vien_anh(kho["ds"], spec, khoi, ten_bai, kho["da_dung"])
+    uv = tim_ung_vien_anh(kho["ds"], spec, khoi, ten_bai, kho["da_dung"], kho.get("lop", ""))
     if not uv:
         raise RuntimeError("kho ảnh không có ảnh trùng từ khoá (%s)" % (spec.get("hinhSGK") or spec.get("tuKhoa") or spec.get("chuThich") or "")[:60])
     tep_tam, co_anh = [], []
@@ -1100,7 +1122,7 @@ def chay_goi(drive, goi_id, kq_id, cac_model, config):
 def soan_tay(lop, ten_bai, yccd, cac_model, drive=None):
     print(f"✍️ Soạn tay: {ten_bai} (lớp {lop})")
     kho_ds = nap_kho_anh(drive)                    # kho ảnh SGK trên Drive (rỗng nếu chưa cấu hình KHO_ANH_SGK_ID)
-    kho = {"drive": drive, "ds": kho_ds, "da_dung": set()} if kho_ds else None
+    kho = {"drive": drive, "ds": kho_ds, "da_dung": set(), "lop": lop} if kho_ds else None
     yccd = yccd or "(theo Chương trình GDPT 2018, sách Kết nối tri thức)"
     # 1. Phần chính (I–III, có hình/bảng/đồ thị cho từng hoạt động) + tự kiểm cấu trúc, sửa tối đa một lần
     noi_dung = tao_khung_giao_an_cv5512(ten_bai, lop, yccd, cac_model, hinh=True, anh_sgk=bool(kho))
