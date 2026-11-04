@@ -57,7 +57,7 @@ jobs:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          KHO_ANH_SGK_ID: ${{ vars.KHO_ANH_SGK_ID }}
+          KHO_ANH_SGK_ID: ${{ vars.KHO_ANH_SGK_ID || secrets.KHO_ANH_SGK_ID }}
           GOI_ID: ${{ inputs.goi }}
           KQ_ID: ${{ inputs.ket_qua }}
           LOP: ${{ inputs.lop }}
