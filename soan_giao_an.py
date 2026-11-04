@@ -33,6 +33,7 @@ Vòng rà soát chéo Groq dùng công tắc VONG_KIEM_TRA_THU_HAI_GROQ (xem gro
 Biến môi trường: GOOGLE_CREDENTIALS, GEMINI_API_KEY; tuỳ chọn GROQ_API_KEY, GROQ_MODELS.
 """
 import datetime as dt
+import json
 import os
 import re
 import shutil
@@ -109,14 +110,33 @@ C. TÍCH HỢP NĂNG LỰC SỐ – AI Ở ÍT NHẤT 50% SỐ HOẠT ĐỘNG.
    (iii) ghi nguồn đã dùng AI, không sao chép nguyên văn; giáo viên nhắc về dữ liệu cá nhân và trung thực học thuật.
    AI chỉ hỗ trợ, không thay học sinh kết luận kiến thức vật lí.
 
-D. SỐ THẬP PHÂN dùng dấu phẩy; công thức viết bằng LaTeX trong $...$."""
+D. SỐ THẬP PHÂN dùng dấu phẩy; công thức viết bằng LaTeX trong $...$.
+
+E. DẤU $ VÀ CHỖ ĐIỀN TRỐNG. Dấu $ chỉ bao MỘT công thức hoàn chỉnh và sát chữ: viết $v = s/t$, không viết $ v = s/t $; không bao giờ
+   kết thúc công thức bằng dấu "=" rồi mới đóng $. Chỗ trống cho học sinh điền thì chỉ đặt kí hiệu trong $, còn dấu "=" và dòng chấm nằm ngoài:
+   ví dụ  $m$ = ........ kg ;  $h = s$ = ........ m ;  $t$ = ........ s.
+
+F. GẠCH ĐẦU DÒNG THEO CHUẨN VĂN BẢN HÀNH CHÍNH. Ý liệt kê cấp 1 mở đầu bằng dấu gạch ngang "-" (dấu "+" cho ý nhỏ hơn, cấp 2); không dùng •, *, ○, ► hay số thứ tự
+   thay cho gạch đầu dòng. Mỗi ý kết thúc bằng dấu chấm phẩy (;), ý cuối cùng kết thúc bằng dấu chấm (.). Trong ô của bảng, liệt kê bằng <br>- ... (mỗi ý một lần <br>)."""
+
+QUY_DINH_HINH = """G. HÌNH ẢNH, BẢNG BIỂU, ĐỒ THỊ CHO TỪNG HOẠT ĐỘNG (bắt buộc ở MỖI hoạt động 1-4, đặt ngay sau mục b) Nội dung):
+   Mỗi hoạt động có ít nhất MỘT trong ba loại minh hoạ dưới đây, đúng nội dung bài, số liệu hợp lí, KHÔNG làm lộ đáp án mà học sinh phải tự tìm:
+   (1) BẢNG SỐ LIỆU: bảng Markdown thường (không phải bảng GV–HS), có dòng tên "**Bảng n. ...**" ngay phía trên, số thập phân dùng dấu phẩy.
+   (2) ĐỒ THỊ: MỘT dòng riêng, JSON viết trên MỘT dòng, đúng khuôn:
+       [[DO_THI: {"chuThich": "Đồ thị ...", "truc_x": "t (s)", "truc_y": "v (m/s)", "duong": [{"ten": "...", "diem": [[0,0],[1,2],[2,4]]}]}]]
+       (tối đa 4 đường, mỗi đường 2-12 điểm; muốn lưới trống cho học sinh tự vẽ thì bỏ "duong" và thêm "xmax", "ymax", "luoi": true.)
+   (3) HÌNH VẼ (sơ đồ lực, mặt phẳng nghiêng, vật, lò xo, mạch điện...): MỘT dòng riêng, JSON trên MỘT dòng:
+       [[HINH: {"chuThich": "Sơ đồ ...", "moTa": "mô tả thật cụ thể các vật, vị trí, lực, nhãn cần vẽ"}]]
+       (hình vẽ bằng code nên dựng chậm: tối đa 2 dòng [[HINH]] trong cả bài; ưu tiên bảng số liệu và đồ thị.)
+   Không yêu cầu ảnh chụp thực tế; không viết tên tệp ảnh hay đường dẫn. Chú thích ghi trong "chuThich", hệ thống tự đánh số "Hình n."."""
 
 
-def tao_khung_giao_an_cv5512(ten_bai_hoc, lop, yeu_cau_can_dat, cac_model=None):
+def tao_khung_giao_an_cv5512(ten_bai_hoc, lop, yeu_cau_can_dat, cac_model=None, hinh=False):
     """
     Bước 1: Gọi Gemini tạo phần CHÍNH của Kế hoạch bài dạy (I, II, III) theo Phụ lục 1 Công văn 5512
     + yêu cầu riêng của tổ (năng lực số – AI, bảng 2 cột, tích hợp ≥ 50%). Phần Phụ lục soạn ở bước sau.
     """
+    quy_dinh = QUY_DINH_BO_SUNG + (("\n\n" + QUY_DINH_HINH) if hinh else "")
     he = ("Bạn là một giáo viên môn Vật lí THPT giỏi chuyên môn tại trường THPT Thủy Sơn, thành thạo Công văn 5512, "
           "Chương trình GDPT 2018 (sách Kết nối tri thức) và Khung năng lực số cho người học (Thông tư 02/2025/TT-BGDĐT).")
     nguoi = f"""
@@ -143,40 +163,52 @@ def tao_khung_giao_an_cv5512(ten_bai_hoc, lop, yeu_cau_can_dat, cac_model=None):
     Trình bày rõ từng hoạt động theo 4 mục: a) Mục tiêu; b) Nội dung; c) Sản phẩm; d) Tổ chức thực hiện (d là BẢNG 2 cột).
     Công thức viết bằng LaTeX trong dấu $...$ (ví dụ $v = \\dfrac{{s}}{{t}}$), số thập phân dùng dấu phẩy.
 
-    {QUY_DINH_BO_SUNG}
+    {quy_dinh}
     """
     text, model = DC.goi_gemini(he, nguoi, False, cac_model or [DC.MODEL_MAC_DINH])
     _NHAT_KY["model"] = model
     return text
 
 
-def tao_phu_luc(giao_an, ten_bai_hoc, lop, cac_model=None):
-    """Bước 3: soạn PHỤ LỤC (Phiếu học tập + Rubric năng lực số – AI) dựa trên giáo án đã chốt."""
-    he = ("Bạn là giáo viên Vật lí THPT giỏi, chuyên soạn học liệu và công cụ đánh giá năng lực "
-          "(Công văn 5512; Khung năng lực số cho người học, Thông tư 02/2025/TT-BGDĐT).")
-    nguoi = f"""Dưới đây là Kế hoạch bài dạy bài "{ten_bai_hoc}" (lớp {lop}). Hãy soạn PHỤ LỤC đặt ở cuối bài, đúng cấu trúc sau
+PHU_LUC_YEU_CAU = """Dưới đây là Kế hoạch bài dạy bài "@TEN@" (lớp @LOP@). Hãy soạn PHỤ LỤC đặt ở cuối bài, đúng cấu trúc sau
 (dùng đúng các tiêu đề, không thêm lời dẫn):
 
 ## PHỤ LỤC 1: HỌC LIỆU – PHIẾU HỌC TẬP
-- Soạn ít nhất 2 phiếu: **PHIẾU HỌC TẬP SỐ 1** (gắn với Hoạt động 2) và **PHIẾU HỌC TẬP SỐ 2** (gắn với Hoạt động 3 hoặc 4); thêm phiếu số 3 nếu bài cần.
-- Mỗi phiếu: dòng "Họ và tên/Nhóm/Lớp: ......", tên hoạt động gắn với phiếu, các nhiệm vụ đánh số, chỗ trống để học sinh ghi (dùng dòng chấm ...... hoặc bảng có ô trống).
-- Các phiếu gắn với hoạt động có tích hợp năng lực số – AI phải có nhiệm vụ dùng công cụ số/AI đã nêu trong giáo án và một bảng "Kiểm chứng đầu ra của AI"
-  với cột: Câu lệnh em đã dùng | AI trả lời (tóm tắt) | Đối chiếu SGK/thí nghiệm/tính toán | Đúng / Sai / Chưa chắc | Em chỉnh lại như thế nào.
-- Có câu hỏi/bài tập vật lí cụ thể, số liệu cụ thể, đúng nội dung bài; có gợi ý đáp án ngắn cho giáo viên ở cuối mỗi phiếu (đặt trong mục "*Gợi ý đáp án (dành cho GV)*").
+Soạn đúng 2 phiếu, mỗi phiếu vừa MỘT trang A4, bám sát đúng bài, đúng hoạt động và đúng thiết bị/công cụ đã nêu trong giáo án, vừa sức học sinh lớp @LOP@:
+- **PHIẾU HỌC TẬP SỐ 1** (gắn Hoạt động 2 – hình thành kiến thức): 3-4 nhiệm vụ đánh số theo trình tự thu thập → xử lí → rút ra kết luận.
+  Gồm: đọc thông tin hoặc làm thí nghiệm/mô phỏng đã nêu trong giáo án; ghi vào BẢNG SỐ LIỆU có ô trống (tiêu đề cột có đơn vị);
+  vẽ đồ thị trên lưới trống; trả lời 1-2 câu rút ra nhận xét hoặc công thức.
+- **PHIẾU HỌC TẬP SỐ 2** (gắn Hoạt động 3 và 4 – luyện tập, vận dụng): 3 câu trắc nghiệm ngắn (A, B, C, D), 1 bài tự luận tính toán có số liệu cụ thể,
+  1 tình huống vận dụng thực tế gần gũi với học sinh THPT (đo đạc/ước lượng ở trường, ở nhà); xếp từ dễ đến khó.
+- Mỗi phiếu: dòng "Họ và tên/Nhóm/Lớp: ......", tên hoạt động gắn với phiếu, nhiệm vụ đánh số; chỗ trống là dòng chấm ...... hoặc ô trống của bảng.
+- Phiếu gắn hoạt động có tích hợp năng lực số – AI có MỘT bảng gọn "Kiểm chứng đầu ra của AI" gồm 3 cột
+  (Câu lệnh em đã dùng | Đối chiếu SGK/thí nghiệm/tính toán | Đúng – Sai, em chỉnh lại) và 2 hàng trống.
+- Cuối mỗi phiếu có mục "*Gợi ý đáp án (dành cho GV)*" 2-4 dòng, số liệu đúng.
+- Được dùng MỘT dòng đồ thị/hình theo khuôn  [[DO_THI: {"chuThich": "...", "truc_x": "...", "truc_y": "...", "xmax": 10, "ymax": 20, "luoi": true}]]  (lưới trống cho học sinh vẽ)
+  hoặc  [[HINH: {"chuThich": "...", "moTa": "..."}]]  khi phiếu cần hình; JSON trên một dòng.
+- Chỗ điền trống viết  $m$ = ........ kg  (kí hiệu trong $, dấu "=" và dòng chấm ở ngoài $); không đặt dấu $ quanh dòng chấm; không để khoảng trắng sát dấu $.
+- Liệt kê dùng gạch đầu dòng "-" (ý nhỏ hơn dùng "+"), không dùng •.
 
 ## PHỤ LỤC 2: RUBRIC ĐÁNH GIÁ NĂNG LỰC SỐ VÀ NĂNG LỰC AI
-- Một bảng Markdown: cột "Tiêu chí" | "Mức 1 – Cần cố gắng" | "Mức 2 – Đạt" | "Mức 3 – Tốt" | "Điểm".
-- Ít nhất 6 tiêu chí, gồm 3 tiêu chí năng lực số (ví dụ: khai thác và đánh giá thông tin/dữ liệu; hợp tác và giao tiếp trong môi trường số; sáng tạo sản phẩm số/xử lí số liệu, an toàn số)
-  và 3 tiêu chí năng lực AI (ví dụ: viết câu lệnh rõ mục đích; kiểm chứng và phát hiện sai sót của AI; sử dụng AI trung thực, có trích nguồn, bảo vệ dữ liệu cá nhân).
-  Cột đầu mỗi hàng ghi rõ "NLS" hoặc "AI" và tên tiêu chí gắn với miền năng lực của Khung năng lực số.
-- Mô tả từng mức bằng biểu hiện quan sát được, gắn với nội dung bài, không nói chung chung. Mỗi ô một dòng của bảng, xuống dòng trong ô dùng <br>.
-- Dưới bảng: thang điểm (Mức 1 = 1 điểm, Mức 2 = 2 điểm, Mức 3 = 3 điểm), cách quy đổi tổng điểm sang xếp loại, và nói rõ ai đánh giá (giáo viên, nhóm, tự đánh giá), khi nào đánh giá (hoạt động nào).
+- Một bảng Markdown NGẮN GỌN, 4 cột "Tiêu chí" | "Mức 1 – Cần cố gắng" | "Mức 2 – Đạt" | "Mức 3 – Tốt", đúng 4 hàng:
+  2 tiêu chí năng lực số (ghi "NLS – ...", ví dụ khai thác dữ liệu; xử lí và biểu diễn số liệu) và
+  2 tiêu chí năng lực AI (ghi "AI – ...", ví dụ viết câu lệnh rõ mục đích; kiểm chứng đầu ra và dùng AI trung thực).
+- Mỗi ô mô tả tối đa 15 từ, là biểu hiện quan sát được gắn với nội dung bài; mỗi ô một dòng của bảng.
+- Dưới bảng chỉ MỘT dòng: Mức 1 = 1 điểm, Mức 2 = 2 điểm, Mức 3 = 3 điểm; tổng 4-6 Cần cố gắng, 7-9 Đạt, 10-12 Tốt; ai đánh giá và ở hoạt động nào.
 
 Số thập phân dùng dấu phẩy; công thức viết bằng LaTeX trong $...$.
 
 KẾ HOẠCH BÀI DẠY:
-{giao_an[:40000]}
+@GIAO_AN@
 """
+
+
+def tao_phu_luc(giao_an, ten_bai_hoc, lop, cac_model=None):
+    """Bước 3: soạn PHỤ LỤC (2 Phiếu học tập sát bài + Rubric NLS–AI rút gọn 4 tiêu chí) dựa trên giáo án đã chốt."""
+    he = ("Bạn là giáo viên Vật lí THPT giỏi, chuyên soạn học liệu và công cụ đánh giá năng lực "
+          "(Công văn 5512; Khung năng lực số cho người học, Thông tư 02/2025/TT-BGDĐT).")
+    nguoi = (PHU_LUC_YEU_CAU.replace("@TEN@", str(ten_bai_hoc)).replace("@LOP@", str(lop))
+             .replace("@GIAO_AN@", giao_an[:40000]))
     text, model = DC.goi_gemini(he, nguoi, False, cac_model or [DC.MODEL_MAC_DINH])
     return text
 
@@ -186,7 +218,7 @@ RE_HOAT_DONG = re.compile(r"^[#*\s\d.]*Hoạt động\s+(\d+)\s*[:：.\-–—]"
 RE_TICH_HOP = re.compile(r"Tích hợp\s+NLS\W+AI\W*(Có|Không)\b", re.I)
 
 
-def kiem_cau_truc(md, kiem_phu_luc=False):
+def kiem_cau_truc(md, kiem_phu_luc=False, kiem_hinh=False):
     """Trả về danh sách lỗi cấu trúc (rỗng = đạt). Kiểm: mục tiêu có NLS–AI, mỗi hoạt động có bảng 2 cột và dòng
     'Tích hợp NLS – AI', tối thiểu 50% hoạt động tích hợp; nếu kiem_phu_luc thì kiểm cả Phiếu học tập và Rubric."""
     md = str(md or "")
@@ -208,6 +240,16 @@ def kiem_cau_truc(md, kiem_phu_luc=False):
         loi.append("Thiếu dòng 'Tích hợp NLS – AI: Có/Không' ở %d hoạt động." % (n - len(dong)))
     if n and co * 2 < n:
         loi.append("Chỉ %d/%d hoạt động tích hợp năng lực số – AI (cần ≥ 50%%)." % (co, n))
+    if kiem_hinh:
+        chinh = re.split(r"^[#*\s]*PHỤ LỤC\b", md, flags=re.I | re.M)[0]
+        moc = [(m.start(), int(m.group(1))) for m in RE_HOAT_DONG.finditer(chinh)]
+        for k, (vt, so_hd) in enumerate(moc):
+            doan = chinh[vt: moc[k + 1][0] if k + 1 < len(moc) else len(chinh)]
+            co_ma = bool(re.search(r"\[\[(HINH|DO_THI):", doan))
+            bang = [kh for kh in re.split(r"\n\s*\n", doan)
+                    if kh.lstrip().startswith("|") and not re.search(r"hoạt động của giáo viên", kh, re.I)]
+            if not (co_ma or bang):
+                loi.append("Hoạt động %d chưa có hình / bảng số liệu / đồ thị minh hoạ." % so_hd)
     if kiem_phu_luc:
         if len(set(re.findall(r"PHIẾU HỌC TẬP SỐ\s*(\d+)", md, re.I))) < 2:
             loi.append("Phụ lục chưa có đủ 2 Phiếu học tập.")
@@ -219,18 +261,18 @@ def kiem_cau_truc(md, kiem_phu_luc=False):
     return loi
 
 
-def sua_loi_cau_truc(noi_dung, loi, cac_model=None):
+def sua_loi_cau_truc(noi_dung, loi, cac_model=None, hinh=False):
     """Nhờ Gemini sửa MỘT lần các lỗi cấu trúc; trả bản mới (hoặc bản cũ nếu không cải thiện)."""
     he = "Bạn là giáo viên Vật lí THPT giỏi, đang hoàn thiện Kế hoạch bài dạy theo Công văn 5512."
     nguoi = ("Kế hoạch bài dạy dưới đây còn các lỗi cấu trúc sau, hãy sửa TẤT CẢ và trả về TOÀN BỘ giáo án hoàn chỉnh "
              "(giữ nguyên phần đã đạt, không thêm lời dẫn, không soạn Phụ lục):\n- " + "\n- ".join(loi) +
-             "\n\n" + QUY_DINH_BO_SUNG + "\n\nGIÁO ÁN HIỆN TẠI:\n" + noi_dung[:40000])
+             "\n\n" + QUY_DINH_BO_SUNG + (("\n\n" + QUY_DINH_HINH) if hinh else "") + "\n\nGIÁO ÁN HIỆN TẠI:\n" + noi_dung[:40000])
     try:
         moi, _ = DC.goi_gemini(he, nguoi, False, cac_model or [DC.MODEL_MAC_DINH])
     except Exception as e:
         print("⚠️ Không sửa được lỗi cấu trúc (%s) – giữ bản cũ." % type(e).__name__)
         return noi_dung
-    loi_moi = kiem_cau_truc(moi)
+    loi_moi = kiem_cau_truc(moi, kiem_hinh=hinh)
     if len(loi_moi) < len(loi):
         print("🛠️ Đã sửa cấu trúc: còn %d lỗi (trước đó %d)." % (len(loi_moi), len(loi)))
         return moi
@@ -264,7 +306,8 @@ def kiem_tra_cheo_groq(noi_dung_giao_an):
         "các lỗi sai về mặt khoa học vật lí, logic hoạt động hoặc cấu trúc Công văn 5512. "
         "GIỮ NGUYÊN: toàn bộ cấu trúc, định dạng Markdown, công thức LaTeX, các BẢNG 2 cột ở mục d) "
         "(| HOẠT ĐỘNG CỦA GIÁO VIÊN | HOẠT ĐỘNG CỦA HỌC SINH |, dùng <br> để xuống dòng trong ô), "
-        "dòng 'Tích hợp NLS – AI: Có/Không' của từng hoạt động và dòng 'Năng lực số và năng lực AI' ở mục tiêu. "
+        "dòng 'Tích hợp NLS – AI: Có/Không' của từng hoạt động và dòng 'Năng lực số và năng lực AI' ở mục tiêu, "
+        "các dòng [[HINH: {...}]] và [[DO_THI: {...}]] (giữ nguyên từng kí tự), mọi bảng số liệu, gạch đầu dòng '-' và cách viết chỗ trống '$m$ = ........ kg'. "
         "Chỉ sửa chỗ sai, không xoá nội dung tích hợp năng lực số – AI. "
         "Trả về nội dung giáo án hoàn chỉnh sau khi đã được tinh chỉnh tối ưu, không thêm lời dẫn."
     )
@@ -286,6 +329,10 @@ def kiem_tra_cheo_groq(noi_dung_giao_an):
         ch = (r.json().get("choices") or [{}])[0]
         moi = ((ch.get("message") or {}).get("content") or "").strip()
         if ch.get("finish_reason") == "stop" and len(moi) >= 0.8 * len(noi_dung_giao_an):
+            dem_ma = lambda t: len(re.findall(r"\[\[(?:HINH|DO_THI):", t))
+            if dem_ma(moi) < dem_ma(noi_dung_giao_an):
+                print(f"⚠️ Bản rà soát của {model} làm mất hình / đồ thị đã chèn – giữ bản gốc.")
+                continue
             if len(kiem_cau_truc(moi)) > loi_goc:
                 print(f"⚠️ Bản rà soát của {model} làm mất cấu trúc yêu cầu (bảng 2 cột / tích hợp NLS–AI) – giữ bản gốc.")
                 continue
@@ -293,6 +340,141 @@ def kiem_tra_cheo_groq(noi_dung_giao_an):
             return moi, True
         print(f"⚠️ Bản rà soát của {model} không đầy đủ ({ch.get('finish_reason')}, {len(moi)}/{len(noi_dung_giao_an)} kí tự) – giữ bản gốc.")
     return noi_dung_giao_an, False
+
+
+# ---------------- CHUẨN DẤU $ (lỗi "$m = $ ........") ----------------
+RE_TOAN = re.compile(r"(?<!\\)\$([^$\n]*?)(?<!\\)\$")
+
+
+def _sua_toan(m):
+    ct = m.group(1).strip()
+    if not ct:
+        return " "
+    if ct.endswith("="):                       # "$m = $" → "$m$ ="  (dấu = nằm ngoài công thức)
+        ct = ct[:-1].rstrip()
+        return ("$%s$ =" % ct) if ct else "="
+    return "$%s$" % ct
+
+
+def _chuan_dong_toan(d):
+    ra, vt = [], 0
+    for m in RE_TOAN.finditer(d):
+        ra.append(re.sub(r"(?<!\\)\$", r"\\$", d[vt:m.start()]))
+        ra.append(_sua_toan(m))
+        vt = m.end()
+    ra.append(re.sub(r"(?<!\\)\$", r"\\$", d[vt:]))
+    return "".join(ra)
+
+
+def chuan_cong_thuc(md):
+    """Bỏ khoảng trắng sát dấu $, đưa dấu '=' ra ngoài công thức ($m = $ → $m$ =), và thoát dấu $ lẻ
+    để pandoc không để lộ $ thô trong Word. Khối $$...$$ giữ nguyên."""
+    phan = re.split(r"(\$\$[\s\S]*?\$\$)", str(md or ""))
+    for i in range(0, len(phan), 2):
+        phan[i] = "\n".join(_chuan_dong_toan(d) for d in phan[i].split("\n"))
+    return "".join(phan)
+
+
+# ---------------- HÌNH VẼ / ĐỒ THỊ CHO CÁC HOẠT ĐỘNG ----------------
+RE_MA_HINH = re.compile(r"^\s*\[\[(HINH|DO_THI):\s*(\{.*\})\s*\]\]\s*$")
+MAU_DT = ["#000000", "#1f4e79", "#a61c00", "#38761d"]
+
+
+def ve_do_thi_ga(spec, duong_dan):
+    """Đồ thị từ số liệu bằng matplotlib: tối đa 4 đường (đường + điểm); không có đường nhưng có xmax/ymax → lưới trống cho học sinh vẽ."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.ticker import FuncFormatter
+    fig, ax = plt.subplots(figsize=(6.4, 4.0), dpi=150)
+    co_duong = False
+    for i, d in enumerate((spec.get("duong") or [])[:4]):
+        diem = []
+        for q in d.get("diem") or []:
+            try:
+                diem.append((float(q[0]), float(q[1])))
+            except (TypeError, ValueError, IndexError):
+                pass
+        if len(diem) < 2:
+            continue
+        co_duong = True
+        xs, ys = zip(*diem[:30])
+        ax.plot(xs, ys, marker="o", ms=4, lw=1.6, color=MAU_DT[i], label=d.get("ten") or None)
+    if not co_duong and not (spec.get("xmax") and spec.get("ymax")):
+        plt.close(fig)
+        raise ValueError("đồ thị không có đường (≥ 2 điểm) và cũng không có xmax/ymax")
+    if spec.get("xmax"):
+        ax.set_xlim(float(spec.get("xmin", 0)), float(spec["xmax"]))
+    if spec.get("ymax"):
+        ax.set_ylim(float(spec.get("ymin", 0)), float(spec["ymax"]))
+    dau_phay = FuncFormatter(lambda v, _: ("%g" % v).replace(".", ","))
+    ax.xaxis.set_major_formatter(dau_phay)
+    ax.yaxis.set_major_formatter(dau_phay)
+    ax.set_xlabel(str(spec.get("truc_x") or ""), fontsize=10)
+    ax.set_ylabel(str(spec.get("truc_y") or ""), fontsize=10)
+    if spec.get("tieuDe"):
+        ax.set_title(str(spec["tieuDe"]), fontsize=11)
+    ax.grid(True, ls=":", lw=0.7, color="#888888")
+    for ten in ("top", "right"):
+        ax.spines[ten].set_visible(False)
+    if any(d.get("ten") for d in (spec.get("duong") or [])[:4]):
+        ax.legend(fontsize=8, frameon=False)
+    fig.savefig(duong_dan, bbox_inches="tight", pad_inches=0.12, facecolor="white")
+    plt.close(fig)
+
+
+def _ve_hinh_xuong(spec, duong_dan, cac_model, ten_bai, so):
+    """Hình vẽ (lực, mặt phẳng nghiêng, mạch điện…) bằng bộ vẽ của xưởng (ve_hinh.py): Gemini lập sơ đồ → vẽ code → tự kiểm."""
+    import ve_hinh as VH                 # nạp muộn: kéo theo thư viện Google, chỉ cần khi thật sự có [[HINH]]
+    if not spec.get("moTa"):
+        raise ValueError("thiếu 'moTa'")
+    muc = {"cauHoi": "Bài học: %s" % ten_bai, "chuThich": spec.get("chuThich", ""), "moTa": spec["moTa"]}
+    png, _ = VH.ve_mot_hinh(muc, cac_model, os.path.dirname(duong_dan), 900 + so)
+    shutil.move(png, duong_dan)
+
+
+def chen_hinh(md, thu_hinh, cac_model=None, ten_bai=""):
+    """Thay mỗi dòng [[DO_THI: {...}]] / [[HINH: {...}]] bằng ảnh + chú thích 'Hình n.' (tự đánh số).
+    Hình nào không vẽ được thì để dòng chú thích '[… GV tự chèn …]' để giáo án vẫn đủ chỗ, và ghi vào danh sách lỗi."""
+    os.makedirs(thu_hinh, exist_ok=True)
+    ra, so, loi = [], 0, []
+    for dong in str(md or "").split("\n"):
+        m = RE_MA_HINH.match(dong)
+        if not m:
+            ra.append(dong)
+            continue
+        loai, so = m.group(1), so + 1
+        try:
+            spec = json.loads(m.group(2))
+        except ValueError as e:
+            loi.append("Hình %d: JSON không đọc được (%s)" % (so, str(e)[:60]))
+            ra += ["", '::: {custom-style="Chu thich hinh"}', "*[Hình %d – GV tự chèn hình/đồ thị minh hoạ]*" % so, ":::", ""]
+            continue
+        ten_tep = os.path.join(thu_hinh, "hinh%d.png" % so)
+        ct = re.sub(r"^\s*Hình\s*\d+\s*[.:]\s*", "", str(spec.get("chuThich") or "")).strip()
+        try:
+            if loai == "DO_THI":
+                ve_do_thi_ga(spec, ten_tep)
+            else:
+                _ve_hinh_xuong(spec, ten_tep, cac_model or [DC.MODEL_MAC_DINH], ten_bai, so)
+            ra += ["", '::: {custom-style="Hinh minh hoa"}', "![](%s){width=%s}" % (ten_tep, "4.2in" if loai == "DO_THI" else "4.6in"), ":::",
+                   "", '::: {custom-style="Chu thich hinh"}', "*Hình %d. %s*" % (so, ct) if ct else "*Hình %d.*" % so, ":::", ""]
+        except Exception as e:
+            loi.append("Hình %d (%s): %s: %s" % (so, loai, type(e).__name__, str(e)[:120]))
+            ra += ["", '::: {custom-style="Chu thich hinh"}',
+                   "*[Hình %d. %s – GV tự chèn hình/đồ thị minh hoạ]*" % (so, ct) if ct else "*[Hình %d – GV tự chèn hình/đồ thị minh hoạ]*" % so,
+                   ":::", ""]
+    return "\n".join(ra), so - len(loi), loi
+
+
+def an_ma_hinh(md):
+    """Cho trang Summary: dòng [[HINH/DO_THI: {...}]] hiện gọn thành '[Hình/đồ thị: chú thích]' (không để lộ JSON)."""
+    def gon(m):
+        try:
+            return "*[%s: %s]*" % ("Đồ thị" if m.group(1) == "DO_THI" else "Hình", json.loads(m.group(2)).get("chuThich", ""))
+        except ValueError:
+            return "*[Hình/đồ thị]*"
+    return "\n".join(RE_MA_HINH.sub(gon, d) if RE_MA_HINH.match(d) else d for d in str(md or "").split("\n"))
 
 
 # ---------------- XUẤT WORD ----------------
@@ -314,7 +496,7 @@ def _so_thap_phan(m):
 def _chuan_markdown(md, pandoc=True):
     """Chuẩn bị Markdown cho pandoc: dòng trống trước bảng / tiêu đề / gạch đầu dòng, <br> → xuống dòng Word,
     cột bảng chia đều (2 cột 50/50; bảng nhiều cột: cột đầu hẹp hơn), ngắt trang trước Phụ lục."""
-    md = re.sub(r"\$\$[\s\S]*?\$\$|\$[^$\n]+\$", _so_thap_phan, str(md or ""))
+    md = re.sub(r"\$\$[\s\S]*?\$\$|\$[^$\n]+\$", _so_thap_phan, chuan_cong_thuc(md))
     ra, truoc, da_ngat = [], "", False
     for dong in md.split("\n"):
         la_bang = dong.lstrip().startswith("|")
@@ -325,7 +507,7 @@ def _chuan_markdown(md, pandoc=True):
                 dong = "|" + "|".join("-" * (40 if so_cot <= 2 else 56 if i == 0 else 16 if (co_diem and i == so_cot - 1) else 40)
                                       for i in range(so_cot)) + "|"
             else:
-                dong = re.sub(r"\s*<br\s*/?>\s*[-*•]\s+", " <br>• ", dong, flags=re.I)
+                dong = re.sub(r"\s*<br\s*/?>\s*[-*•+]\s+", " <br>- ", dong, flags=re.I)
                 if pandoc:
                     dong = re.sub(r"<br\s*/?>", XUONG_DONG_OOXML, dong, flags=re.I)
         elif pandoc:
@@ -338,8 +520,9 @@ def _chuan_markdown(md, pandoc=True):
         tieu_de = re.match(r"^#{1,6}\s", dong) is not None
         mo_gach = RE_GACH.match(dong) is not None and RE_GACH.match(truoc) is None and not la_bang
         het_gach = RE_GACH.match(dong) is None and RE_GACH.match(truoc) is not None and dong.strip()
-        if RE_GACH.match(dong) and not la_bang:
-            dong = RE_GACH.sub("- ", dong, count=1)
+        if RE_GACH.match(dong) and not la_bang:       # gạch đầu dòng chuẩn: cấp 1 "-", cấp 2 "+" (chỉ khi ngay sau một gạch đầu dòng)
+            cap2 = RE_GACH.match(truoc) is not None and (dong.lstrip().startswith("+") or len(dong) - len(dong.lstrip()) >= 2)
+            dong = ("    - " if cap2 else "- ") + RE_GACH.sub("", dong, count=1)
         if (mo_bang or het_bang or tieu_de or mo_gach or het_gach) and truoc.strip():
             ra.append("")
         ra.append(dong)
@@ -375,9 +558,45 @@ def _chen_truoc(cha, con, ten_sau):
     cha.append(con)
 
 
+def _gach_dau_dong(d):
+    """Đổi dấu đầu dòng của pandoc thành gạch đầu dòng chuẩn văn bản: cấp 1 "-", cấp 2 "+", phông Times New Roman, thụt lề treo."""
+    try:
+        goc = d.part.numbering_part.element
+    except Exception:
+        return
+    for lvl in goc.iter(qn("w:lvl")):
+        nf = lvl.find(qn("w:numFmt"))
+        if nf is None or nf.get(qn("w:val")) != "bullet":
+            continue
+        cap = int(lvl.get(qn("w:ilvl")) or 0)
+        lt = lvl.find(qn("w:lvlText"))
+        if lt is None:
+            continue
+        lt.set(qn("w:val"), "-" if cap % 2 == 0 else "+")
+        for cu in lvl.findall(qn("w:rPr")):
+            lvl.remove(cu)
+        rpr = OxmlElement("w:rPr")
+        rf = OxmlElement("w:rFonts")
+        for k in ("w:ascii", "w:hAnsi", "w:cs", "w:eastAsia"):
+            rf.set(qn(k), PHONG)
+        rpr.append(rf)
+        lvl.append(rpr)
+        ppr = lvl.find(qn("w:pPr"))
+        if ppr is None:
+            ppr = OxmlElement("w:pPr")
+            lvl.insert(0, ppr)
+        for cu in ppr.findall(qn("w:ind")):
+            ppr.remove(cu)
+        ind = OxmlElement("w:ind")
+        ind.set(qn("w:left"), str(567 + 425 * cap))
+        ind.set(qn("w:hanging"), "283")
+        ppr.append(ind)
+
+
 def _dinh_dang_word(duong_dan):
     """Sau pandoc: Times New Roman 13, lề hành chính, tiêu đề đen, bảng có viền + dòng tiêu đề tô nền, bảng rộng hết khổ."""
     d = Document(duong_dan)
+    _gach_dau_dong(d)
     for s in d.sections:
         s.top_margin, s.bottom_margin = Inches(0.79), Inches(0.79)
         s.left_margin, s.right_margin = Inches(1.18), Inches(0.59)
@@ -395,6 +614,11 @@ def _dinh_dang_word(duong_dan):
             st.font.color.rgb = RGBColor(0, 0, 0)
         if ten == "Title":
             st.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        if ten in ("Hinh minh hoa", "Chu thich hinh"):      # ảnh và chú thích hình: căn giữa, chú thích nghiêng cỡ 12
+            st.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            st.paragraph_format.keep_with_next = (ten == "Hinh minh hoa")
+            if ten == "Chu thich hinh":
+                st.font.size, st.font.italic, st.font.bold = Pt(12), True, False
     for tbl in d.tables:
         tpr = tbl._tbl.tblPr
         for ten in ("w:tblW", "w:tblBorders", "w:tblLayout"):
@@ -456,7 +680,7 @@ def _ghi_dong(doc, line):
     dam_ca_dong = bool(muc)
     if muc:
         line = muc.group(1)
-    line = RE_GACH.sub("• ", line, count=1)
+    line = RE_GACH.sub("- ", line, count=1)
     p = doc.add_paragraph()
     p.paragraph_format.line_spacing = 1.15
     _ghi_run(p, line, dam=dam_ca_dong)
@@ -504,6 +728,19 @@ def _xuat_python_docx(md, tieu_de, ra):
             continue
         if d.strip() == "@@NGAT_TRANG@@":
             doc.add_page_break()
+        elif d.strip().startswith(":::"):
+            pass
+        elif re.match(r"^\s*!\[\]\((.+?)\)", d):
+            try:
+                doc.add_picture(re.match(r"^\s*!\[\]\((.+?)\)", d).group(1), width=Inches(4.4))
+                doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+            except Exception as e:
+                print("⚠️ Không chèn được ảnh vào bản python-docx:", str(e)[:100])
+        elif re.match(r"^\s*\*\[?Hình\b", d):
+            p_ct = doc.add_paragraph()
+            p_ct.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            r_ct = p_ct.add_run(d.strip().strip("*"))
+            r_ct.italic, r_ct.font.name, r_ct.font.size = True, PHONG, Pt(12)
         elif d.strip():
             _ghi_dong(doc, d)
         i += 1
@@ -559,7 +796,7 @@ def chay_goi(drive, goi_id, kq_id, cac_model, config):
             nguoi = re.sub(r"\{\{BUOC_(\w+)\}\}", lambda m: ra.get(m.group(1), "")[:60000], b["nguoi"])
             he = b.get("he", "") + ("\n\n" + QUY_DINH_BO_SUNG if bo_sung else "")
             text, model_dung = DC.goi_gemini(he, nguoi, b.get("coCode"), cac_model)
-            ra[so] = text
+            ra[so] = chuan_cong_thuc(text)
             print("✅ Bước %s xong (%d kí tự)" % (so, len(text)))
         if goi.get("kiemTraCheo"):
             cuoi = str(buoc[-1]["so"])
@@ -579,15 +816,15 @@ def chay_goi(drive, goi_id, kq_id, cac_model, config):
 def soan_tay(lop, ten_bai, yccd, cac_model):
     print(f"✍️ Soạn tay: {ten_bai} (lớp {lop})")
     yccd = yccd or "(theo Chương trình GDPT 2018, sách Kết nối tri thức)"
-    # 1. Phần chính (I–III) + tự kiểm cấu trúc, sửa tối đa một lần
-    noi_dung = tao_khung_giao_an_cv5512(ten_bai, lop, yccd, cac_model)
-    loi = kiem_cau_truc(noi_dung)
+    # 1. Phần chính (I–III, có hình/bảng/đồ thị cho từng hoạt động) + tự kiểm cấu trúc, sửa tối đa một lần
+    noi_dung = tao_khung_giao_an_cv5512(ten_bai, lop, yccd, cac_model, hinh=True)
+    loi = kiem_cau_truc(noi_dung, kiem_hinh=True)
     if loi:
         print("⚠️ Cấu trúc chưa đạt: " + " | ".join(loi))
-        noi_dung = sua_loi_cau_truc(noi_dung, loi, cac_model)
-    # 2. Groq rà soát chéo (chỉ nhận nếu giữ đủ cấu trúc)
+        noi_dung = sua_loi_cau_truc(noi_dung, loi, cac_model, hinh=True)
+    # 2. Groq rà soát chéo (chỉ nhận nếu giữ đủ cấu trúc và đủ hình/đồ thị)
     noi_dung, da_cheo = kiem_tra_cheo_groq(noi_dung)
-    # 3. Phụ lục: Phiếu học tập + Rubric năng lực số – AI (soạn từ giáo án đã chốt)
+    # 3. Phụ lục: 2 Phiếu học tập + Rubric NLS–AI rút gọn (soạn từ giáo án đã chốt)
     print("📎 Đang soạn Phụ lục (Phiếu học tập + Rubric NLS–AI)...")
     try:
         phu_luc = tao_phu_luc(noi_dung, ten_bai, lop, cac_model)
@@ -595,18 +832,28 @@ def soan_tay(lop, ten_bai, yccd, cac_model):
         print(f"⚠️ Không soạn được Phụ lục: {type(e).__name__}: {str(e)[:200]}")
         phu_luc = ""
     toan_bai = noi_dung.rstrip() + ("\n\n" + phu_luc.strip() if phu_luc.strip() else "")
-    canh_bao = kiem_cau_truc(toan_bai, kiem_phu_luc=True)
+    canh_bao = kiem_cau_truc(toan_bai, kiem_phu_luc=True, kiem_hinh=True)
     for c in canh_bao:
         print("⚠️ Cấu trúc còn thiếu: " + c)
     if not canh_bao:
-        print("✅ Cấu trúc đạt: mục tiêu NLS–AI, bảng 2 cột, ≥ 50% hoạt động tích hợp, có Phiếu học tập và Rubric.")
-    tep = xuat_file_word_giao_an(toan_bai, ten_bai, THU_MUC_RA, lop)
+        print("✅ Cấu trúc đạt: mục tiêu NLS–AI, bảng 2 cột, ≥ 50% hoạt động tích hợp, mỗi hoạt động có hình/bảng/đồ thị, có Phiếu học tập và Rubric.")
+    # 4. Vẽ đồ thị / hình và ghép vào bài, rồi xuất Word
+    thu_hinh = tempfile.mkdtemp(prefix="hinh_")
+    try:
+        toan_bai_hinh, so_hinh_ok, loi_hinh = chen_hinh(toan_bai, thu_hinh, cac_model, ten_bai)
+        for c in loi_hinh:
+            print("⚠️ " + c)
+        print("🖼️ Đã ghép %d hình/đồ thị vào bài%s." % (so_hinh_ok, (", %d hình phải để chỗ cho GV chèn" % len(loi_hinh)) if loi_hinh else ""))
+        tep = xuat_file_word_giao_an(toan_bai_hinh, ten_bai, THU_MUC_RA, lop)
+    finally:
+        shutil.rmtree(thu_hinh, ignore_errors=True)
     tom_tat = os.environ.get("GITHUB_STEP_SUMMARY")
     if tom_tat:
+        tat_ca = canh_bao + loi_hinh
         with open(tom_tat, "a", encoding="utf-8") as f:
-            f.write("# KHBD: %s (lớp %s)\n\nModel soạn: `%s` · Rà soát chéo Groq: %s\n\nBản Word: tải ở mục **Artifacts** (%s).\n\n"
-                    % (ten_bai, lop, _NHAT_KY["model"], "đã áp dụng" if da_cheo else "không áp dụng", os.path.basename(tep)))
-            f.write(("**Kiểm cấu trúc:** " + ("đạt ✅" if not canh_bao else "còn thiếu ⚠️ – " + " | ".join(canh_bao))) + "\n\n---\n\n%s\n" % toan_bai)
+            f.write("# KHBD: %s (lớp %s)\n\nModel soạn: `%s` · Rà soát chéo Groq: %s · Hình/đồ thị ghép: %d\n\nBản Word: tải ở mục **Artifacts** (%s).\n\n"
+                    % (ten_bai, lop, _NHAT_KY["model"], "đã áp dụng" if da_cheo else "không áp dụng", so_hinh_ok, os.path.basename(tep)))
+            f.write(("**Kiểm cấu trúc:** " + ("đạt ✅" if not tat_ca else "còn thiếu ⚠️ – " + " | ".join(tat_ca))) + "\n\n---\n\n%s\n" % an_ma_hinh(toan_bai))
     return tep
 
 
