@@ -42,7 +42,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          KHO_ANH_SGK_ID: ${{ vars.KHO_ANH_SGK_ID }}
+          KHO_ANH_SGK_ID: ${{ vars.KHO_ANH_SGK_ID || secrets.KHO_ANH_SGK_ID }}
           TOI_DA: ${{ inputs.toi_da }}
           LAM_LAI: ${{ inputs.lam_lai && '1' || '' }}
         run: python trung_tam.py gan_mo_ta_anh.py
