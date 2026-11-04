@@ -1,0 +1,56 @@
+# .github/workflows/gan_mo_ta_anh.yml – GẮN MÔ TẢ CHO ẢNH KHO SGK (chạy tay khi cần, không có lịch)
+# Gemini đọc từng ảnh chưa có mô tả → ghi số hình, nội dung, từ khoá vào ô "Mô tả" của tệp trên Drive để soan_giao_an.py tìm được ảnh.
+# Cần: biến KHO_ANH_SGK_ID; tài khoản dịch vụ có quyền "Người chỉnh sửa" trên thư mục kho (chỉ "Người xem" thì dùng tệp out/chi_muc_anh.json).
+name: gan_mo_ta_anh
+on:
+  workflow_dispatch:
+    inputs:
+      toi_da:
+        description: "Số ảnh tối đa xử lí trong lượt này (chạy lại để làm tiếp)"
+        required: false
+        default: "60"
+      lam_lai:
+        description: "Viết lại cả các mô tả do máy viết trước đó ([AI])"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gan_mo_ta_anh
+  cancel-in-progress: false
+
+jobs:
+  gan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Cài thư viện
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq pandoc fonts-noto-core > /dev/null
+          pip install -q -r requirements.txt
+      - name: Gắn mô tả cho ảnh kho SGK
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          KHO_ANH_SGK_ID: ${{ vars.KHO_ANH_SGK_ID }}
+          TOI_DA: ${{ inputs.toi_da }}
+          LAM_LAI: ${{ inputs.lam_lai && '1' || '' }}
+        run: python trung_tam.py gan_mo_ta_anh.py
+      - name: Lưu chỉ mục mô tả
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chi-muc-anh
+          path: out/chi_muc_anh.json
+          if-no-files-found: ignore
+          retention-days: 30
