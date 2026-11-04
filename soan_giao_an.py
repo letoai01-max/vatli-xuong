@@ -510,7 +510,9 @@ def nap_kho_anh(drive):
                 g = drive.files().get(fileId=goc, fields="name,mimeType", supportsAllDrives=True).execute()
                 print("📁 Thư mục gốc kho ảnh: '%s' (%s)" % (g.get("name"), "thư mục" if g.get("mimeType") == MIME_THU_MUC else "KHÔNG phải thư mục: " + str(g.get("mimeType"))), flush=True)
             except Exception as e:
-                print("⚠️ Không mở được thư mục gốc %s… (%s) – kiểm tra ID và quyền chia sẻ." % (goc[:8], type(e).__name__), flush=True)
+                ma = getattr(getattr(e, "resp", None), "status", "")
+                print("⚠️ Không mở được thư mục gốc %s… (%s%s) – %s" % (goc[:8], type(e).__name__, (" HTTP %s" % ma) if ma else "",
+                      "404 = ID sai hoặc thư mục CHƯA chia sẻ cho tài khoản dịch vụ; 403 = tài khoản có mặt nhưng thiếu quyền." if ma in (403, 404) else "kiểm tra ID và quyền chia sẻ."), flush=True)
         while hang and len(ds) < TOI_DA_ANH_KHO:
             tm, duong = hang.pop(0)
             if tm in da:
