@@ -26,7 +26,6 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
-      - name: Đăng nhập Google không cần khóa (WIF)
       - name: Đăng nhập Google bằng key JSON
         uses: google-github-actions/auth@v2
         with:
