@@ -1,4 +1,4 @@
-# .github/workflows/tao_de.yml – SOẠN ĐỀ THI 45 PHÚT TỰ ĐỘNG
+# .github/workflows/tao_de.yml – AGENT SOẠN ĐỀ THI (soạn → giải lại độc lập → soạn lại câu lệch → kiểm cấu trúc)
 name: tao_de
 on:
   workflow_dispatch:
@@ -20,7 +20,7 @@ permissions:
 jobs:
   soan_de:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - name: Đăng nhập Google không cần khóa (WIF)
@@ -33,11 +33,18 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install -q -r requirements.txt
-      - name: Soạn đề thi bằng Python trên GitHub Actions
+      - name: Agent Python soạn đề thi
         env:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          GEMINI_API_KEY_4: ${{ secrets.GEMINI_API_KEY_4 }}
+          GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
+          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          TD_HAN_PHUT: "75"
           GOI_ID: ${{ inputs.goi }}
           KQ_ID: ${{ inputs.ket_qua }}
         run: python trung_tam.py tao_de.py
