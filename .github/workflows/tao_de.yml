@@ -1,4 +1,4 @@
-# .github/workflows/tao_de.yml – AGENT SOẠN ĐỀ THI (soạn → giải lại độc lập → soạn lại câu lệch → kiểm cấu trúc)
+# .github/workflows/tao_de.yml – SOẠN ĐỀ THI TỰ ĐỘNG (giao thức v2: gói việc + kết quả + 2 tệp Word HS/GV)
 name: tao_de
 on:
   workflow_dispatch:
@@ -20,7 +20,10 @@ permissions:
 jobs:
   soan_de:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 45
+    concurrency:
+      group: tao-de-${{ inputs.ma }}
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
       - name: Đăng nhập Google không cần khóa (WIF)
@@ -32,19 +35,19 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -q -r requirements.txt
-      - name: Agent Python soạn đề thi
+      - name: Cài pandoc (xuất Word có phương trình) và thư viện
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq pandoc > /dev/null
+          pip install -q -r requirements.txt
+      - name: Soạn đề thi bằng Python trên GitHub Actions
         env:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
-          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
-          GEMINI_API_KEY_4: ${{ secrets.GEMINI_API_KEY_4 }}
-          GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
           GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          TD_HAN_PHUT: "75"
           GOI_ID: ${{ inputs.goi }}
           KQ_ID: ${{ inputs.ket_qua }}
         run: python trung_tam.py tao_de.py
