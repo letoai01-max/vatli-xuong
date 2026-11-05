@@ -85,8 +85,14 @@ def main():
     gc, drive = gspread.authorize(cred), build("drive", "v3", credentials=cred, cache_discovery=False)
     goi_id, kq_id = os.environ["GOI_ID"], os.environ["KQ_ID"]
     goi = GT.doc_json_drive(drive, goi_id)
-    if goi.get("phienBan", 2) == 1:
-        raise SystemExit("Gói việc phiên bản 1 không còn được hỗ trợ.")
+    if goi.get("phienBan", 1) == 1:            # khớp GT.kiem_goi: thiếu phienBan = gói v1 (Apps Script đang gửi bằng guiDeSangXuong_ cũ)
+        thong_bao = ("Gói việc là phiên bản 1 (thiếu phienBan/loai) nên xưởng không xử lí được. "
+                     "Trong Apps Script chạy xtd2BatXuong(true) để taoDeThiAgent gửi gói v2, rồi tạo đề lại.")
+        try:
+            GT.Phien(drive, kq_id, goi).loi(thong_bao)   # báo ra B17 thay vì chỉ lỗi trong GitHub Actions
+        except Exception as e:
+            print("Không ghi được ket_qua:", e, flush=True)
+        raise SystemExit(thong_bao)
     loi_goi = GT.kiem_goi(goi)
     ph = GT.Phien(drive, kq_id, goi)
     if loi_goi:
