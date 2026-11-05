@@ -1125,6 +1125,9 @@ def chay_goi(drive, goi_id, kq_id, cac_model, config):
                                   "luc": dt.datetime.now(TZ).isoformat()})
         print(f"⏸️ Công tắc SOAN_GIAO_AN_LOP_{khoi} đang tắt. Đã báo lại cho Apps Script, dừng.")
         return
+    if goi.get("tronGoi"):                                  # TRỌN GÓI: xưởng soạn đủ mọi bước, ghi Word vào file có sẵn
+        chay_tron_goi(drive, goi, kq_id, cac_model)
+        return
     buoc = [b for b in (goi.get("buoc") or []) if b]
     if not buoc:
         DC.ghi_tep(drive, kq_id, {"trangThai": "LOI", "loi": "Gói việc không có mục 'buoc'.",
@@ -1154,6 +1157,82 @@ def chay_goi(drive, goi_id, kq_id, cac_model, config):
     except Exception as e:
         DC.ghi_tep(drive, kq_id, {"trangThai": "LOI", "loi": str(e)[:500], "luc": dt.datetime.now(TZ).isoformat()})
         raise
+
+
+DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+
+def ghi_word_vao_tep(drive, docx_id, duong_dan):
+    """Ghi đè nội dung file Word vào MỘT FILE CÓ SẴN trên Drive (Apps Script đã tạo trước).
+    Tài khoản dịch vụ không có dung lượng riêng nên không thể tạo file mới trong thư mục của giáo viên."""
+    from googleapiclient.http import MediaIoBaseUpload
+    with open(duong_dan, "rb") as f:
+        du_lieu = f.read()
+    media = MediaIoBaseUpload(io.BytesIO(du_lieu), mimetype=DOCX_MIME, resumable=True)
+    drive.files().update(fileId=docx_id, media_body=media).execute()
+    return len(du_lieu)
+
+
+def chay_tron_goi(drive, goi, kq_id, cac_model):
+    """CÁCH 1b – TRỌN GÓI. Gói việc: {"tronGoi": true, "ma", "khoi", "tenBai", "yccd", "boiCanh", "kiemTraCheo", "docxId"}.
+    Xưởng làm đủ: soạn khung -> tự kiểm cấu trúc (sửa 1 lần) -> Groq rà soát chéo -> Phụ lục -> vẽ hình / đồ thị / ảnh SGK -> xuất Word,
+    ghi Word vào file docxId (có sẵn), rồi ghi ket_qua {trangThai: XONG, vanBan, canhBao, loiHinh, soHinh, model, daKiemTraCheo, buoc:{"1": vanBan}}.
+    Apps Script rà soát lại một lần rồi chuyển file vào thư mục Word và ghi PPCT."""
+    lop = str(goi.get("khoi") or goi.get("lop") or "").strip()
+    ten_bai = str(goi.get("tenBai") or "").strip()
+    docx_id = str(goi.get("docxId") or "").strip()
+
+    def bao_loi(thong_diep):
+        DC.ghi_tep(drive, kq_id, {"trangThai": "LOI", "loi": thong_diep[:500], "luc": dt.datetime.now(TZ).isoformat()})
+
+    if lop not in ("10", "11", "12") or not ten_bai or not docx_id:
+        bao_loi("Gói trọn gói thiếu khoi (10/11/12), tenBai hoặc docxId.")
+        raise ValueError("Gói trọn gói thiếu khoi, tenBai hoặc docxId.")
+    yccd = str(goi.get("yccd") or "").strip() or "(theo Chương trình GDPT 2018, sách Kết nối tri thức)"
+    boi_canh = str(goi.get("boiCanh") or "").strip()[:20000]
+    if boi_canh:
+        yccd += ("\n\nBỐI CẢNH BỔ SUNG TỪ KẾ HOẠCH CỦA TỔ (câu hỏi thật của Kho chung, yêu cầu riêng của tiết; dùng khi hợp với khung bài, "
+                 "không làm sai cấu trúc đã quy định ở trên):\n" + boi_canh)
+    print("Giáo án trọn gói %s – lớp %s – %s; model: %s" % (goi.get("ma"), lop, ten_bai, ", ".join(cac_model)))
+    DC.ghi_tep(drive, kq_id, {"trangThai": "DANG_LAM", "luc": dt.datetime.now(TZ).isoformat()})
+    thu_hinh = tempfile.mkdtemp(prefix="hinh_")
+    try:
+        kho_ds = nap_kho_anh(drive)
+        kho = {"drive": drive, "ds": kho_ds, "da_dung": set(), "lop": lop} if kho_ds else None
+        noi_dung = tao_khung_giao_an_cv5512(ten_bai, lop, yccd, cac_model, hinh=True, anh_sgk=bool(kho))
+        loi = kiem_cau_truc(noi_dung, kiem_hinh=True)
+        if loi:
+            print("⚠️ Cấu trúc chưa đạt: " + " | ".join(loi))
+            noi_dung = sua_loi_cau_truc(noi_dung, loi, cac_model, hinh=True, anh_sgk=bool(kho))
+        da_cheo = False
+        if goi.get("kiemTraCheo", True):
+            noi_dung, da_cheo = kiem_tra_cheo_groq(noi_dung)
+        try:
+            phu_luc = tao_phu_luc(noi_dung, ten_bai, lop, cac_model)
+        except Exception as e:
+            print("⚠️ Không soạn được Phụ lục: %s: %s" % (type(e).__name__, str(e)[:200]))
+            phu_luc = ""
+        toan_bai = noi_dung.rstrip() + ("\n\n" + phu_luc.strip() if phu_luc.strip() else "")
+        canh_bao = kiem_cau_truc(toan_bai, kiem_phu_luc=True, kiem_hinh=True)
+        for c in canh_bao:
+            print("⚠️ Cấu trúc còn thiếu: " + c)
+        toan_bai_hinh, so_hinh_ok, loi_hinh = chen_hinh(toan_bai, thu_hinh, cac_model, ten_bai, kho)
+        tep = xuat_file_word_giao_an(toan_bai_hinh, ten_bai, THU_MUC_RA, lop)
+        n_byte = ghi_word_vao_tep(drive, docx_id, tep)
+        print("📦 Đã ghi file Word (%d KB) vào Drive." % (n_byte // 1024))
+        van_ban = chuan_cong_thuc(an_ma_hinh(toan_bai))
+        DC.ghi_tep(drive, kq_id, {"trangThai": "XONG", "model": _NHAT_KY["model"], "daKiemTraCheo": da_cheo, "vanBan": van_ban,
+                                  "buoc": {"1": van_ban}, "canhBao": canh_bao, "loiHinh": loi_hinh, "soHinh": so_hinh_ok,
+                                  "kichThuocWord": n_byte, "luc": dt.datetime.now(TZ).isoformat()})
+        print("✅ Xong. Apps Script sẽ nhận, rà soát một lần và lưu file Word.")
+    except Exception as e:
+        try:
+            bao_loi("%s: %s" % (type(e).__name__, str(e)))
+        except Exception:
+            pass
+        raise
+    finally:
+        shutil.rmtree(thu_hinh, ignore_errors=True)
 
 
 # ---------------- CÁCH 2: SOẠN TAY ----------------
