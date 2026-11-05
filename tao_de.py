@@ -85,9 +85,8 @@ def main():
     gc, drive = gspread.authorize(cred), build("drive", "v3", credentials=cred, cache_discovery=False)
     goi_id, kq_id = os.environ["GOI_ID"], os.environ["KQ_ID"]
     goi = GT.doc_json_drive(drive, goi_id)
-    if goi.get("phienBan", 1) == 1:
-        import tao_de_v1                      # bản cũ, giữ làm dự phòng
-        return tao_de_v1.main()
+    if goi.get("phienBan", 2) == 1:
+        raise SystemExit("Gói việc phiên bản 1 không còn được hỗ trợ.")
     loi_goi = GT.kiem_goi(goi)
     ph = GT.Phien(drive, kq_id, goi)
     if loi_goi:
