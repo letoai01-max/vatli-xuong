@@ -27,10 +27,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Đăng nhập Google không cần khóa (WIF)
+      - name: Đăng nhập Google bằng key JSON
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: "projects/837404998273/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
-          service_account: "xuong-python@gen-lang-client-0596994090.iam.gserviceaccount.com"
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
