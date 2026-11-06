@@ -9,6 +9,7 @@ kiểm trùng với Ngân hàng câu hỏi Kho chung (xuat_de.tinh_chi_muc); ghi
 Mô-đun tuỳ chọn nạp lỗi → bỏ qua bước đó và ghi cảnh báo, không làm hỏng việc chính.
 Đã port thêm: cấu trúc theo khối (lớp 12), đáp án Phần III vừa phiếu, Đúng/Sai 2–2 (kiểm + quy định gắn vào chỉ dẫn hệ thống), nhật kí câu mẫu Kho chung.
 Câu mẫu Kho chung (ô B24) và YCCĐ Kho chung (ô B25) do Apps Script xử lí khi dựng gói (khoiTaoTrangThaiAgent), xưởng nhận sẵn qua trangThai0.
+Đã thêm: Google Search cho phần có câu thực tiễn (soan_phan; lỗi Search → tự soạn lại không Search như Mã.gs; tắt bằng TIM_KIEM_GOOGLE=0).
 Chưa có: ảnh thực tế (loại "anhthuc"), phiếu làm lại (sua_cau / tron_de).
 Gói cũ (phienBan 1, chỉ có các ô B…) → chạy bản cũ đã đổi tên thành tao_de_v1.py (giữ làm dự phòng).
 Biến môi trường: GOOGLE_CREDENTIALS / đăng nhập WIF, GEMINI_API_KEY…, GOI_ID, KQ_ID.
@@ -82,21 +83,61 @@ def doc_json(text):
     return json.loads(s[a:b + 1] if a != -1 and b > a else s)
 
 
-def soan_phan(goi, p, cac_model, ghi_chu_loi=""):
+TIM_KIEM_GOOGLE = os.environ.get("TIM_KIEM_GOOGLE", "1").strip().lower() not in ("0", "false", "no", "off", "tat")
+LENH_TIM_KIEM = ("\n\nDÙNG GOOGLE SEARCH để lấy SỐ LIỆU THỰC TẾ (thông số thiết bị, hiện tượng, đại lượng đo được) đưa vào các câu thực tiễn nêu trên; "
+                 "số liệu phải hợp lí và khớp đáp án. Sau khi tra cứu, CHỈ trả về MỘT đối tượng JSON đúng mẫu, không bình luận, không ```.")
+
+
+def _doc_text(data):
+    cand = (data.get("candidates") or [{}])[0]
+    return "".join(x.get("text", "") for x in (cand.get("content") or {}).get("parts", []) if not x.get("thought"))
+
+
+def soan_phan(goi, p, cac_model, ghi_chu_loi="", ph=None):
+    """Soạn một phần. Phần có câu thực tiễn dùng Google Search (như callGemini(prompt, true) của Mã.gs);
+    Search lỗi (không phải hết hạn mức) → soạn lại KHÔNG Search và ghi cảnh báo, giống agentSoanPhan."""
     ch, t0 = goi["cauHinh"], goi["trangThai0"]
     n = t0["yc"]["p%d" % p]
-    nguoi = ("Soạn riêng PHẦN %d của đề kiểm tra môn %s lớp %s (%s).\n\n=== DANH MỤC CÂU HỎI BẮT BUỘC ===\n%s\n\n"
-             "ĐÚNG %d câu. %s\n\nNGUỒN CÂU HỎI THAM KHẢO TỪ GIÁO VIÊN:\n%s\n\nMẫu JSON:\n%s%s") % (
-        p, ch.get("subject", "Vật lí"), ch.get("grade"), ch.get("textbook", ""), dung_danh_muc(t0, p), n, LUAT[p] + quy_dinh_phan(p),
-        (t0.get("nganHang") or "")[:6000], MAU[p] + lenh_bo_sung(t0, p), ("\n\nLƯU Ý SỬA LỖI LẦN TRƯỚC: " + ghi_chu_loi) if ghi_chu_loi else "")
-    payload = {"contents": [{"role": "user", "parts": [{"text": nguoi}]}], "systemInstruction": {"parts": [{"text": he_thong_cho(p == 2)}]},
-               "generationConfig": {"temperature": 0.3, "responseMimeType": "application/json", "maxOutputTokens": 32768}}
-    data, model = X.goi_gemini(payload, cac_model)
-    cand = (data.get("candidates") or [{}])[0]
-    text = "".join(x.get("text", "") for x in (cand.get("content") or {}).get("parts", []) if not x.get("thought"))
-    kq = doc_json(text)
-    mang = kq.get("phan%d" % p) if isinstance(kq, dict) else kq
-    return (mang if isinstance(mang, list) else []), model
+    co_tt = bool((t0.get("vtThucTien") or {}).get("p%d" % p))
+
+    def dung_payload(tim_kiem):
+        nguoi = ("Soạn riêng PHẦN %d của đề kiểm tra môn %s lớp %s (%s).\n\n=== DANH MỤC CÂU HỎI BẮT BUỘC ===\n%s\n\n"
+                 "ĐÚNG %d câu. %s\n\nNGUỒN CÂU HỎI THAM KHẢO TỪ GIÁO VIÊN:\n%s\n\nMẫu JSON:\n%s%s%s") % (
+            p, ch.get("subject", "Vật lí"), ch.get("grade"), ch.get("textbook", ""), dung_danh_muc(t0, p), n, LUAT[p] + quy_dinh_phan(p),
+            (t0.get("nganHang") or "")[:6000], MAU[p] + lenh_bo_sung(t0, p), LENH_TIM_KIEM if tim_kiem else "",
+            ("\n\nLƯU Ý SỬA LỖI LẦN TRƯỚC: " + ghi_chu_loi) if ghi_chu_loi else "")
+        gen = {"temperature": 0.3, "maxOutputTokens": 32768}
+        if not tim_kiem:
+            gen["responseMimeType"] = "application/json"      # Gemini không cho vừa Search vừa ép JSON → khi Search chỉ ép bằng lời
+        pl = {"contents": [{"role": "user", "parts": [{"text": nguoi}]}], "systemInstruction": {"parts": [{"text": he_thong_cho(p == 2)}]},
+              "generationConfig": gen}
+        if tim_kiem:
+            pl["tools"] = [{"google_search": {}}]
+        return pl
+
+    def lay_mang(data):
+        kq = doc_json(_doc_text(data))
+        mang = kq.get("phan%d" % p) if isinstance(kq, dict) else kq
+        return mang if isinstance(mang, list) else []
+
+    if TIM_KIEM_GOOGLE and co_tt:
+        try:
+            data, model = X.goi_gemini(dung_payload(True), cac_model)
+            mang = lay_mang(data)
+            if mang:
+                if ph:
+                    ph.ghi_nhat_ky("soạn phần %d" % p, "có dùng Google Search (câu thực tiễn)")
+                return mang, model
+            raise ValueError("Search trả về JSON rỗng")
+        except X.HetHanMuc:
+            raise
+        except Exception as e:
+            if ph:
+                ph.them_canh_bao("Phần %d: Google Search lỗi (%s) → soạn không Search, số liệu thực tiễn do AI tự đặt." % (p, str(e)[:100]))
+            else:
+                print("⚠️ Search lỗi phần %d: %s" % (p, str(e)[:100]), flush=True)
+    data, model = X.goi_gemini(dung_payload(False), cac_model)
+    return lay_mang(data), model
 
 
 # =====================================================================================================================
@@ -675,7 +716,7 @@ def main():
                 continue
             for lan in (1, 2):                # đủ số câu thì nhận; thiếu thì soạn lại 1 lần
                 ph.tien_do("soạn phần %d" % p, 10 + 12 * p, "lần %d, cần %d câu" % (lan, n))
-                mang, model = soan_phan(goi, p, cac_model, ghi_chu.get(p, ""))
+                mang, model = soan_phan(goi, p, cac_model, ghi_chu.get(p, ""), ph)
                 if len(mang) == n:
                     break
                 ghi_chu[p] = "lần trước chỉ có %d/%d câu; phải trả ĐỦ %d câu." % (len(mang), n, n)
