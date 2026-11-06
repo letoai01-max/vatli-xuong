@@ -7,6 +7,8 @@ Việc đã làm đủ ở khung này: đọc gói v2, ghi tiến độ/nhật k
 cổng chất lượng cong_chat_luong (giải lại độc lập bằng code + Groq, soạn lại câu lệch); vẽ hình bằng code (ve_hinh);
 kiểm trùng với Ngân hàng câu hỏi Kho chung (xuat_de.tinh_chi_muc); ghi hạn mức (quota_xuong); báo Telegram (thong_bao).
 Mô-đun tuỳ chọn nạp lỗi → bỏ qua bước đó và ghi cảnh báo, không làm hỏng việc chính.
+Đã port thêm: cấu trúc theo khối (lớp 12), đáp án Phần III vừa phiếu, Đúng/Sai 2–2 (kiểm + quy định gắn vào chỉ dẫn hệ thống), nhật kí câu mẫu Kho chung.
+Câu mẫu Kho chung (ô B24) và YCCĐ Kho chung (ô B25) do Apps Script xử lí khi dựng gói (khoiTaoTrangThaiAgent), xưởng nhận sẵn qua trangThai0.
 Chưa có: ảnh thực tế (loại "anhthuc"), phiếu làm lại (sua_cau / tron_de).
 Gói cũ (phienBan 1, chỉ có các ô B…) → chạy bản cũ đã đổi tên thành tao_de_v1.py (giữ làm dự phòng).
 Biến môi trường: GOOGLE_CREDENTIALS / đăng nhập WIF, GEMINI_API_KEY…, GOI_ID, KQ_ID.
@@ -87,7 +89,7 @@ def soan_phan(goi, p, cac_model, ghi_chu_loi=""):
              "ĐÚNG %d câu. %s\n\nNGUỒN CÂU HỎI THAM KHẢO TỪ GIÁO VIÊN:\n%s\n\nMẫu JSON:\n%s%s") % (
         p, ch.get("subject", "Vật lí"), ch.get("grade"), ch.get("textbook", ""), dung_danh_muc(t0, p), n, LUAT[p] + quy_dinh_phan(p),
         (t0.get("nganHang") or "")[:6000], MAU[p] + lenh_bo_sung(t0, p), ("\n\nLƯU Ý SỬA LỖI LẦN TRƯỚC: " + ghi_chu_loi) if ghi_chu_loi else "")
-    payload = {"contents": [{"role": "user", "parts": [{"text": nguoi}]}], "systemInstruction": {"parts": [{"text": HE_THONG}]},
+    payload = {"contents": [{"role": "user", "parts": [{"text": nguoi}]}], "systemInstruction": {"parts": [{"text": he_thong_cho(p == 2)}]},
                "generationConfig": {"temperature": 0.3, "responseMimeType": "application/json", "maxOutputTokens": 32768}}
     data, model = X.goi_gemini(payload, cac_model)
     cand = (data.get("candidates") or [{}])[0]
@@ -146,7 +148,87 @@ def lenh_bo_sung(t0, p):
     tt = (t0.get("vtThucTien") or {}).get("p%d" % p) or []
     if tt:
         s.append('Câu số %s (đếm từ 1) PHẢI là %s và ghi "thucTien": true.' % (", ".join(str(i + 1) for i in tt), MO_TA_THUC_TIEN[p]))
+    k = lenh_theo_khoi(t0, p)
+    if k:
+        s.append(k)
     return ("\n\n" + "\n".join(s)) if s else ""
+
+
+# ------------------------------------------------------------------ THEO KHỐI + QUY ĐỊNH TẠO ĐỀ (port Mã.gs: CAU_TRUC_DE_THEO_KHOI, kiemTraTheoKhoi,
+# taoLenhTheoKhoi; DungSai22.gs: ds22KiemTra_; ChucNang.gs: QTD_QUY_DINH)
+CAU_TRUC_DE_THEO_KHOI = {"12": {"p1": 18, "yDS": 16, "p3": 6, "p4": 0, "toiDaKiTuTLN": 4}}   # = Mã.gs (lớp 10, 11 giữ nguyên)
+QTD_DUNG_SAI = (
+    "QUY ĐỊNH BẮT BUỘC VỀ CÂU TRẮC NGHIỆM ĐÚNG/SAI: mỗi câu có đúng 4 ý a), b), c), d), trong đó ĐÚNG 2 ý có đáp án ĐÚNG "
+    "và ĐÚNG 2 ý có đáp án SAI (không được 3–1, 4–0, 1–3, 0–4). Vị trí 2 ý đúng phải thay đổi giữa các câu, không cố định "
+    "(ví dụ câu 1: a, c đúng; câu 2: b, d đúng; câu 3: a, d đúng…). Ý sai phải sai rõ ràng về kiến thức hoặc số liệu, không sai vì chữ nghĩa mập mờ. "
+    "Trước khi trả lời, đếm lại từng câu Đúng/Sai: đủ 2 Đúng và 2 Sai thì mới được giữ; bảng đáp án phải khớp đúng 2 Đ và 2 S mỗi câu.")
+
+
+def he_thong_cho(co_dung_sai):
+    """HE_THONG + quy định Đúng/Sai 2–2 khi lệnh có nhắc câu Đúng/Sai (như qtdGanQuyDinh_ của ChucNang.gs)."""
+    return HE_THONG + ("\n\n" + QTD_DUNG_SAI if co_dung_sai else "")
+
+
+def cau_truc_khoi(t0):
+    return CAU_TRUC_DE_THEO_KHOI.get(str(t0.get("_khoi", "")))
+
+
+def lenh_theo_khoi(t0, p):
+    """p = 0: toàn đề; 1..4: chỉ phần đó (như taoLenhTheoKhoi)."""
+    ct = cau_truc_khoi(t0)
+    if not ct:
+        return ""
+    dong = []
+    if not p and ct["p4"] == 0:
+        dong.append('ĐỀ LỚP %s THEO CẤU TRÚC ĐỀ THI TỐT NGHIỆP THPT: chỉ có Phần I (TNNLC), Phần II (Đúng/Sai), Phần III (Trả lời ngắn); KHÔNG có Phần IV tự luận, trường "phan4" là mảng rỗng [].' % t0.get("_khoi"))
+    if not p or p == 3:
+        dong.append('PHẦN III (phiếu trả lời ngắn TN THPT): mỗi đáp án là MỘT SỐ có TỐI ĐA %d KÍ TỰ, tính cả dấu trừ và dấu phẩy thập phân (VD: 12,5; -1,2; 0,25; 1250). '
+                    'Đề bài phải nêu rõ đơn vị của kết quả và yêu cầu làm tròn (VD: "làm tròn kết quả đến hàng phần mười") để đáp án vừa %d kí tự; trường "dapAn" ghi dấu chấm thập phân.' % (ct["toiDaKiTuTLN"], ct["toiDaKiTuTLN"]))
+    if not p or p == 2:
+        dong.append("PHẦN II: mỗi câu gồm một ngữ cảnh/tình huống chung và 4 ý a, b, c, d xoay quanh ngữ cảnh đó, đúng kiểu câu Đúng/Sai của đề TN THPT.")
+    return ("=== CẤU TRÚC ĐỀ LỚP %s (BẮT BUỘC) ===\n- " % t0.get("_khoi") + "\n- ".join(dong)) if dong else ""
+
+
+def kiem_theo_khoi(de, t0):
+    """kiemTraTheoKhoi: đáp án Phần III vừa phiếu (lớp 12) + mỗi câu Đúng/Sai đúng 2 Đúng – 2 Sai (ds22KiemTra_)."""
+    loi, ct = [], cau_truc_khoi(t0)
+    if ct:
+        for i, c in enumerate(de.get("phan3") or [], 1):
+            so = re.sub(r"\s", "", str(c.get("dapAn") if c.get("dapAn") is not None else "")).replace(".", ",", 1)
+            if so and len(so) > ct["toiDaKiTuTLN"]:
+                loi.append('Phần 3 câu %d: đáp án "%s" có %d kí tự, phiếu trả lời ngắn chỉ ghi tối đa %d kí tự; sửa đề (đổi đơn vị hoặc yêu cầu làm tròn) để đáp án vừa %d kí tự.'
+                           % (i, so, len(so), ct["toiDaKiTuTLN"], ct["toiDaKiTuTLN"]))
+    for i, c in enumerate(de.get("phan2") or [], 1):
+        y = dict(re.findall(r"([a-d])\)\s*(Đ|S)", str(c.get("dapAn") or "")))
+        if len(y) != 4:
+            continue                                  # thiếu ý: kiem_cau_truc đã báo
+        so_d = sum(1 for k in "abcd" if y[k] == "Đ")
+        if so_d != 2:
+            loi.append('Phần 2 câu %d: câu Đúng/Sai đang có %d ý Đúng và %d ý Sai ("%s"), quy định bắt buộc ĐÚNG 2 ý Đúng và 2 ý Sai. '
+                       'Sửa NỘI DUNG ý (không chỉ đổi đáp án) để đủ 2 Đúng – 2 Sai, ý sai phải sai rõ ràng về kiến thức hoặc số liệu.' % (i, so_d, 4 - so_d, str(c.get("dapAn")).strip()))
+    return loi
+
+
+def canh_bao_so_cau_khoi(t0, ph):
+    """kiemTraSoCauTheoKhoi: cảnh báo (không chặn) khi số câu của đặc tả lệch cấu trúc đề của khối."""
+    ct = cau_truc_khoi(t0)
+    if not ct:
+        return
+    yc, so_y = t0["yc"], sum(len(n or []) for n in ((t0.get("dm") or {}).get("p2") or []))
+    lech = []
+    if yc["p1"] != ct["p1"]: lech.append("Phần I có %d câu (cần %d)" % (yc["p1"], ct["p1"]))
+    if so_y != ct["yDS"]: lech.append("Phần II có %d ý Đ/S (cần %d ý = %d câu)" % (so_y, ct["yDS"], ct["yDS"] // 4))
+    if yc["p3"] != ct["p3"]: lech.append("Phần III có %d câu (cần %d)" % (yc["p3"], ct["p3"]))
+    if yc["p4"] != ct["p4"]: lech.append("Phần IV có %d câu tự luận (cần %d)" % (yc["p4"], ct["p4"]))
+    if lech:
+        ph.them_canh_bao("Đặc tả lệch cấu trúc đề lớp %s: %s." % (t0.get("_khoi"), "; ".join(lech)))
+
+
+def ghi_cau_mau(de, ph):
+    """ghiNhatKyCauMau: câu nào phát triển từ câu mẫu nào của Kho chung."""
+    ds = ["Phần %d câu %d ← %s" % (p, i, c["cauMau"]) for p in (1, 2, 3, 4) for i, c in enumerate(de.get("phan%d" % p) or [], 1) if c.get("cauMau")]
+    if ds:
+        ph.ghi_nhat_ky("câu phát triển từ Kho chung", "; ".join(ds)[:380])
 
 
 # ------------------------------------------------------------------ kiểm tra bằng code (0 lượt Gemini)
@@ -292,15 +374,15 @@ def chuan(de, t0):
 
 
 def kiem_tra_day_du(de, t0):
-    loi = kiem_cau_truc(de, t0["yc"]) + kiem_do_dai(de) + kiem_hinh_anh(de) + kiem_thuc_tien(de, t0.get("vtThucTien")) + CD.kiem_tra_latex(de)
+    loi = kiem_cau_truc(de, t0["yc"]) + kiem_do_dai(de) + kiem_hinh_anh(de) + kiem_thuc_tien(de, t0.get("vtThucTien")) + CD.kiem_tra_latex(de) + kiem_theo_khoi(de, t0)
     if t0.get("dsMa"):
         loi += kiem_chi_bao(de, t0["dsMa"])
     return loi
 
 
 # ------------------------------------------------------------------ Gemini: JSON
-def goi_json_de(nguoi, cac_model, nhiet_do=0.3):
-    payload = {"contents": [{"role": "user", "parts": [{"text": nguoi}]}], "systemInstruction": {"parts": [{"text": HE_THONG}]},
+def goi_json_de(nguoi, cac_model, nhiet_do=0.3, quy_dinh_ds=True):
+    payload = {"contents": [{"role": "user", "parts": [{"text": nguoi}]}], "systemInstruction": {"parts": [{"text": he_thong_cho(quy_dinh_ds)}]},
                "generationConfig": {"temperature": nhiet_do, "responseMimeType": "application/json", "maxOutputTokens": 32768}}
     data, model = X.goi_gemini(payload, cac_model)
     cand = (data.get("candidates") or [{}])[0]
@@ -321,7 +403,7 @@ def tu_sua_cau_truc(goi, de, cac_model, ph):
         nguoi = ("Đề thi dạng JSON dưới đây KHÔNG ĐẠT kiểm tra đối chiếu với Bản đặc tả.\n\nDANH SÁCH LỖI CẦN SỬA:\n" + "\n".join("- " + l for l in ds[:60]) +
                  "\n\n=== DANH MỤC CÂU HỎI BẮT BUỘC ===\n" + muc +
                  "\n\nYÊU CẦU:\n- Sửa đúng các lỗi trên (bổ sung câu còn thiếu theo đúng danh mục, bỏ câu thừa), GIỮ NGUYÊN các câu đã đạt.\n"
-                 + "".join("- Phần %d: %s%s\n" % (p, LUAT[p], quy_dinh_phan(p)) for p in (1, 2, 3, 4)) + "".join(lenh_bo_sung(t0, p) for p in (1, 2, 3, 4)) +
+                 + "".join("- Phần %d: %s%s\n" % (p, LUAT[p], quy_dinh_phan(p)) for p in (1, 2, 3, 4)) + "".join(lenh_bo_sung(t0, p) for p in (1, 2, 3, 4)) + ("\n\n" + lenh_theo_khoi(t0, 0) if cau_truc_khoi(t0) else "") +
                  '\n- Trả về TOÀN BỘ đề đã sửa, đúng cấu trúc JSON {"phan1": [...], "phan2": [...], "phan3": [...], "phan4": [...]}, không thêm lời giải thích.'
                  "\n\nĐỀ HIỆN TẠI:\n" + json.dumps(de, ensure_ascii=False))
         try:
@@ -417,7 +499,7 @@ def soan_lai_cau_lech(goi, de, sua, cac_model, ph):
                  "trường \"so\" (số câu như trên) và đúng các trường như mẫu: %s") % (
             p, LUAT[p], quy_dinh_phan(p), json.dumps(cau, ensure_ascii=False), MAU[p])
         try:
-            kq, _ = goi_json_de(nguoi, cac_model, 0.2)
+            kq, _ = goi_json_de(nguoi, cac_model, 0.2, quy_dinh_ds=(p == 2))
         except X.HetHanMuc:
             raise
         except Exception as e:
@@ -566,6 +648,12 @@ def main():
     ph.luot = int(cu.get("luot", 0) or 0) + 1
     ph.tien_do("đọc gói", 3, "loại %s · khối %s · lượt %d" % (goi["loai"], goi["cauHinh"]["grade"], ph.luot))
     t0 = goi["trangThai0"]
+    t0["_khoi"] = str(goi["cauHinh"]["grade"])        # lenh_theo_khoi / kiem_theo_khoi đọc khối từ đây
+    nh = str(t0.get("nganHang") or "")
+    if (goi.get("tuyChon") or {}).get("dungCauMau") is False and nh.startswith("=== CÂU HỎI THẬT TỪ KHO ĐỀ"):
+        j = nh.find("=== HẾT CÂU MẪU ===")                # ô B24 tắt: bỏ khối câu mẫu Kho chung (nếu còn sót)
+        t0["nganHang"] = nh[j + len("=== HẾT CÂU MẪU ==="):].lstrip() if j >= 0 else nh
+    canh_bao_so_cau_khoi(t0, ph)
     hinh_tam = tempfile.mkdtemp()
 
     def luu():                                # ghi đề + tiến độ ra Drive để HOAN/chạy lại không mất việc
@@ -601,6 +689,7 @@ def main():
         if not tien.get("cauTrucXong"):
             ph.tien_do("chuẩn hoá và tự sửa cấu trúc", 62)
             de, _ = tu_sua_cau_truc(goi, de, cac_model, ph)
+            ghi_cau_mau(de, ph)
             tien["cauTrucXong"] = True
             luu()
         else:
