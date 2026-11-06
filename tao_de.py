@@ -10,16 +10,22 @@ Mô-đun tuỳ chọn nạp lỗi → bỏ qua bước đó và ghi cảnh báo,
 Đã port thêm: cấu trúc theo khối (lớp 12), đáp án Phần III vừa phiếu, Đúng/Sai 2–2 (kiểm + quy định gắn vào chỉ dẫn hệ thống), nhật kí câu mẫu Kho chung.
 Câu mẫu Kho chung (ô B24) và YCCĐ Kho chung (ô B25) do Apps Script xử lí khi dựng gói (khoiTaoTrangThaiAgent), xưởng nhận sẵn qua trangThai0.
 Đã thêm: Google Search cho phần có câu thực tiễn (soan_phan; lỗi Search → tự soạn lại không Search như Mã.gs; tắt bằng TIM_KIEM_GOOGLE=0).
-Chưa có: ảnh thực tế (loại "anhthuc"), phiếu làm lại (sua_cau / tron_de).
+Đã thêm: thẩm định khớp chỉ báo bằng AI (kiemDinhKhopChiBaoBangAI), ảnh thực tế (Wikimedia → Openverse → Google CSE nếu có khoá → AI tạo ảnh,
+như layAnhChoHinh), hình vẽ lỗi thì thử web/AI, mẫu Word ô B4 (tuỳ chọn, DUNG_MAU_B4=1).
+Đã thêm: làm sạch nhãn thừa trong câu (lamSachDeThi), tuỳ chọn gói (cheDo=nhanh, xacMinh, hinhAnh).
+Chưa có: phiếu làm lại (sua_cau / tron_de).
 Gói cũ (phienBan 1, chỉ có các ô B…) → chạy bản cũ đã đổi tên thành tao_de_v1.py (giữ làm dự phòng).
 Biến môi trường: GOOGLE_CREDENTIALS / đăng nhập WIF, GEMINI_API_KEY…, GOI_ID, KQ_ID.
 """
+import base64
 import json
 import os
 import re
 import shutil
 import sys
 import tempfile
+
+import requests
 
 import chuan_de as CD
 import doc_de as X                      # goi_gemini (xoay khoá, model từ tab CauHinh), HetHanMuc, doc_cau_hinh
@@ -147,7 +153,11 @@ def soan_phan(goi, p, cac_model, ghi_chu_loi="", ph=None):
 GIOI_HAN_DO_DAI = {"p1CauHoi": 200, "p1PhuongAn": 100, "p2Dan": 280, "p2Y": 200, "p3": 280, "p4": 380}   # = Mã.gs
 SO_VONG_SUA_CAU_TRUC = 2                                                   # = SO_VONG_SUA_TOI_DA của agentKiemTraVaTuSuaDe
 SO_VONG_SUA_DAP_AN = int(os.environ.get("SO_VONG_SUA_DAP_AN", "1"))        # số lần soạn lại câu lệch sau cổng chất lượng
-TOI_DA_HINH_VE = int(os.environ.get("TOI_DA_HINH_VE", "8"))
+TOI_DA_HINH_VE = int(os.environ.get("TOI_DA_HINH_VE", "8"))      # hình vẽ + ảnh thực tế mỗi lượt (Apps Script: SO_ANH_TAO_TOI_DA = 6)
+SO_VONG_SUA_CHI_BAO = 1                                              # số lần soạn lại câu chưa khớp chỉ báo
+MODEL_TAO_ANH = [m.strip() for m in os.environ.get("MODEL_TAO_ANH", "gemini-2.5-flash-image").split(",") if m.strip()]
+DUNG_MAU_B4 = os.environ.get("DUNG_MAU_B4", "0").strip().lower() in ("1", "true", "yes", "on")
+UA_WEB = {"User-Agent": "DeThiVatLi/1.0 (GitHub Actions; xuong Python)"}
 LA_MA = {"I": 1, "II": 2, "III": 3, "IV": 4}
 MO_TA_THUC_TIEN = {
     1: "câu hỏi gắn ngữ cảnh THỰC TIỄN (hiện tượng đời sống, thiết bị, kĩ thuật, tự nhiên), chỉ ở mức Nhận biết hoặc Thông hiểu đúng như mức độ của chỉ báo",
@@ -407,8 +417,22 @@ def sap_xep_theo_ma(de, ds_ma):
     return de
 
 
+def lam_sach_de(de):
+    """lamSachDeThi: bỏ nhãn AI lỡ chép từ đặc tả ([CBxx], [CHỦ ĐỀ…/Bài…], (Mức…)), tiền tố "Câu n:" và nhãn "A."/"a)" bị lặp ở phương án."""
+    for p in (1, 2, 3, 4):
+        for c in de.get("phan%d" % p) or []:
+            if isinstance(c, dict):
+                if c.get("cauHoi") is not None:
+                    c["cauHoi"] = lam_sach(c["cauHoi"])
+                for k in "ABCD":
+                    if c.get(k) is not None:
+                        c[k] = lam_sach(c[k], True)
+    return de
+
+
 def chuan(de, t0):
     de, _ = CD.chuan_hoa_de(de if isinstance(de, dict) else {})
+    lam_sach_de(de)
     if t0.get("dsMa"):
         sap_xep_theo_ma(de, t0["dsMa"])
     return de
@@ -591,34 +615,244 @@ def cong_chat_luong(goi, de, model_soan, cac_model, ph):
     return de, bao_cao, tt
 
 
-# ------------------------------------------------------------------ VẼ HÌNH (ve_hinh.py)
+# ------------------------------------------------------------------ THẨM ĐỊNH KHỚP CHỈ BÁO BẰNG AI (kiemDinhKhopChiBaoBangAI + agentKiemDinhChiBao)
+def kiem_dinh_chi_bao_ai(de, t0, cac_model):
+    """→ [(phần, số câu, lý do)]: câu/ý RÕ RÀNG chưa đo đúng chỉ báo được gán. Lỗi gọi AI → [] (như Mã.gs); hết hạn mức → ném lên."""
+    ds_ma, dm = t0.get("dsMa"), t0.get("dm") or {}
+    if not ds_ma:
+        return []
+    cat = lambda v, n: str(v if v is not None else "")[:n]
+    lay = lambda ds, i: (ds[i] if ds and i < len(ds) else None)
+    cap = []
+    for p in (1, 2, 3, 4):
+        for i, c in enumerate(de.get("phan%d" % p) or []):
+            if p == 2:
+                kv, yc = lay(ds_ma.get("p2"), i) or [], lay(dm.get("p2"), i) or []
+                for k, m in enumerate(kv):
+                    if m:
+                        cap.append({"viTri": "P2-C%d%s" % (i + 1, "abcd"[k]), "ma": m, "chiBao": cat(yc[k] if k < len(yc) else "", 220),
+                                    "cauHoi": "Dẫn: %s | Ý %s) %s" % (cat(c.get("cauHoi"), 250), "abcd"[k], cat(c.get("ABCD"[k]), 200))})
+            else:
+                m = lay(ds_ma.get("p%d" % p), i)
+                if not m:
+                    continue
+                nd = cat(c.get("cauHoi"), 350)
+                if p == 1:
+                    nd += " | " + " ".join("%s. %s" % (k, cat(c.get(k), 80)) for k in "ABCD")
+                cap.append({"viTri": "P%d-C%d" % (p, i + 1), "ma": m, "chiBao": cat(lay(dm.get("p%d" % p), i), 220), "cauHoi": nd})
+    if not cap:
+        return []
+    nguoi = ("Bạn là chuyên gia thẩm định đề kiểm tra Vật lí. Đối chiếu từng câu/ý với chỉ báo hạt nhân được gán. Chỉ trả về JSON.\n\n"
+             "Với mỗi mục, đánh giá câu/ý có đo ĐÚNG chỉ báo được gán không: đúng nội dung kiến thức, đúng hành vi (động từ), mức độ phù hợp, "
+             "không lấy chỉ báo khác làm trọng tâm.\nChỉ đặt \"khop\": false khi RÕ RÀNG không khớp; trường hợp chấp nhận được thì \"khop\": true.\n\n"
+             "DỮ LIỆU:\n%s\n\nTrả về JSON: {\"ketQua\": [ {\"viTri\": \"P1-C1\", \"khop\": true, \"lyDo\": \"ngắn gọn nếu không khớp\"} ]}" % json.dumps(cap, ensure_ascii=False))
+    try:
+        kq, _ = goi_json_de(nguoi, cac_model, 0.1, quy_dinh_ds=False)
+    except X.HetHanMuc:
+        raise
+    except Exception as e:
+        print("⚠️ Thẩm định chỉ báo lỗi, bỏ qua: %s" % str(e)[:120], flush=True)
+        return []
+    ds = kq.get("ketQua") if isinstance(kq, dict) else kq
+    gop = {}
+    for r in (ds if isinstance(ds, list) else []):
+        if not isinstance(r, dict) or str(r.get("khop")).lower() != "false":
+            continue
+        m = re.match(r"^P(\d)-C(\d+)([a-d])?$", str(r.get("viTri") or ""), re.I)
+        muc = next((x for x in cap if x["viTri"].lower() == str(r.get("viTri")).lower()), None)
+        if not m or not muc:
+            continue
+        ly = '%snội dung CHƯA khớp chỉ báo [%s] "%s"%s. Soạn lại cho khớp đúng chỉ báo này.' % (
+            ("ý %s) " % m.group(3).lower()) if m.group(3) else "", muc["ma"], cat(muc["chiBao"], 160), (" (%s)" % cat(r.get("lyDo"), 160)) if r.get("lyDo") else "")
+        gop.setdefault((int(m.group(1)), int(m.group(2))), []).append(ly)
+    return [(p, i, " ".join(v)) for (p, i), v in sorted(gop.items())]
+
+
+def tham_dinh_chi_bao(goi, de, cac_model, ph):
+    t0 = goi["trangThai0"]
+    if not t0.get("dsMa"):
+        return de
+    for vong in range(SO_VONG_SUA_CHI_BAO + 1):
+        ph.tien_do("thẩm định khớp chỉ báo", None, "lượt %d/%d" % (vong + 1, SO_VONG_SUA_CHI_BAO + 1))
+        sua = kiem_dinh_chi_bao_ai(de, t0, cac_model)
+        ph.ghi_nhat_ky("thẩm định chỉ báo", "%d câu chưa khớp%s" % (len(sua), (": " + "; ".join("P%d-C%d" % (p, i) for p, i, _ in sua))[:200] if sua else ""))
+        if not sua:
+            break
+        if vong >= SO_VONG_SUA_CHI_BAO:
+            for p, i, ly in sua[:15]:
+                ph.them_canh_bao("Phần %d câu %d: %s" % (p, i, ly[:220]))
+            break
+        de = chuan(soan_lai_cau_lech(goi, de, sua, cac_model, ph), t0)
+    return de
+
+
+# ------------------------------------------------------------------ ẢNH THỰC TẾ + HÌNH DỰ PHÒNG (layAnhChoHinh: web → AI tạo ảnh)
+def _tai_anh(url, thu_muc, ten):
+    if not url:
+        return None
+    try:
+        r = requests.get(url, headers=UA_WEB, timeout=30)
+    except requests.RequestException:
+        return None
+    m = re.match(r"image/(png|jpeg|jpg|gif)", (r.headers.get("Content-Type") or "").lower())
+    if r.status_code != 200 or not m or len(r.content) > 8 * 1024 * 1024:
+        return None
+    ra = os.path.join(thu_muc, ten + (".jpg" if m.group(1) in ("jpeg", "jpg") else "." + m.group(1)))
+    with open(ra, "wb") as f:
+        f.write(r.content)
+    return ra
+
+
+def anh_wikimedia(tu_khoa, thu_muc, ten):
+    r = requests.get("https://commons.wikimedia.org/w/api.php", headers=UA_WEB, timeout=30, params={
+        "action": "query", "format": "json", "generator": "search", "gsrnamespace": 6, "gsrlimit": 10, "gsrsearch": tu_khoa,
+        "prop": "imageinfo", "iiprop": "url|mime|extmetadata", "iiurlwidth": 1000})
+    if r.status_code != 200:
+        raise RuntimeError("Wikimedia lỗi %d" % r.status_code)
+    pages = (((r.json() or {}).get("query") or {}).get("pages")) or {}
+    for pg in sorted(pages.values(), key=lambda x: x.get("index", 0)):
+        ii = (pg.get("imageinfo") or [{}])[0]
+        mime = ii.get("mime") or ""
+        if not re.search(r"image/(jpeg|png|svg)", mime) or ("svg" in mime and not ii.get("thumburl")):
+            continue
+        ra = _tai_anh(ii.get("thumburl") if "svg" in mime else (ii.get("thumburl") or ii.get("url")), thu_muc, ten)   # SVG: dùng bản PNG Wikimedia dựng sẵn
+        if ra:
+            gp = (((ii.get("extmetadata") or {}).get("LicenseShortName")) or {}).get("value", "")
+            return ra, "Wikimedia Commons" + (", " + str(gp) if gp else "")
+    return None
+
+
+def anh_openverse(tu_khoa, thu_muc, ten):
+    r = requests.get("https://api.openverse.org/v1/images/", headers=UA_WEB, timeout=30, params={"page_size": 8, "mature": "false", "q": tu_khoa})
+    if r.status_code != 200:
+        raise RuntimeError("Openverse lỗi %d" % r.status_code)
+    for d in (r.json() or {}).get("results") or []:
+        ra = _tai_anh(d.get("url"), thu_muc, ten) or _tai_anh(d.get("thumbnail"), thu_muc, ten)
+        if ra:
+            return ra, "Openverse" + (", CC " + str(d["license"]).upper() if d.get("license") else "")
+    return None
+
+
+def anh_google_cse(tu_khoa, thu_muc, ten):
+    khoa, cx = os.environ.get("GOOGLE_CSE_KEY", "").strip(), os.environ.get("GOOGLE_CSE_CX", "").strip()
+    if not khoa or not cx:
+        return None
+    r = requests.get("https://www.googleapis.com/customsearch/v1", timeout=30, params={
+        "searchType": "image", "num": 6, "safe": "active", "rights": "cc_publicdomain|cc_attribute|cc_sharealike", "key": khoa, "cx": cx, "q": tu_khoa})
+    if r.status_code != 200:
+        raise RuntimeError("Google CSE lỗi %d" % r.status_code)
+    for it in (r.json() or {}).get("items") or []:
+        ra = _tai_anh(it.get("link"), thu_muc, ten)
+        if ra:
+            return ra, it.get("displayLink") or "web"
+    return None
+
+
+def anh_gemini(mo_ta, la_anh_thuc, thu_muc, ten):
+    """taoAnhBangGemini: model sinh ảnh (MODEL_TAO_ANH). Lỗi/hết hạn mức → None, không làm HOAN cả đề vì một ảnh."""
+    if not mo_ta or not MODEL_TAO_ANH:
+        return None
+    loi_nhac = (("Tạo một bức ảnh chân thực, rõ nét, bố cục gọn, dùng minh hoạ cho câu hỏi đề kiểm tra Vật lí THPT: %s. Không chèn chữ, logo hay hình mờ." % mo_ta)
+                if la_anh_thuc else
+                ("Vẽ hình minh hoạ cho câu hỏi đề kiểm tra Vật lí THPT theo phong cách hình vẽ sách giáo khoa Việt Nam: hình 2D phẳng, nét đen rõ trên nền trắng, "
+                 "không tô bóng, không trang trí, tỉ lệ hợp lí, dùng đúng kí hiệu vật lí chuẩn (điện trở, nguồn điện, ampe kế, vôn kế, mũi tên véc-tơ lực, vận tốc...): %s" % mo_ta))
+    data, _ = X.goi_gemini({"contents": [{"role": "user", "parts": [{"text": loi_nhac}]}], "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]}}, MODEL_TAO_ANH)
+    for pt in (((data.get("candidates") or [{}])[0].get("content") or {}).get("parts")) or []:
+        d = pt.get("inlineData") or pt.get("inline_data")
+        if d and d.get("data"):
+            mime = d.get("mimeType") or d.get("mime_type") or "image/png"
+            ra = os.path.join(thu_muc, ten + (".jpg" if "jpeg" in mime else ".png"))
+            with open(ra, "wb") as f:
+                f.write(base64.b64decode(d["data"]))
+            return ra
+    return None
+
+
+def tim_anh_thay_the(h, thu_muc, ten, loi, tt):
+    """Web (nếu có từ khoá) rồi AI tạo ảnh → (đường dẫn, nguồn ghi chú) hoặc (None, '')."""
+    tu_khoa = h.get("tuKhoaTimKiem") or ""
+    if not tu_khoa:
+        loi.append("thiếu tuKhoaTimKiem nên không tìm được trên web")
+    else:
+        for ten_cach, f in (("Wikimedia", anh_wikimedia), ("Openverse", anh_openverse), ("Google CSE", anh_google_cse)):
+            try:
+                kq = f(tu_khoa, thu_muc, ten)
+                if kq:
+                    return kq
+            except Exception as e:
+                loi.append("%s: %s" % (ten_cach, str(e)[:80]))
+    if not tt["het_ai"]:
+        try:
+            ra = anh_gemini(h.get("moTa") or tu_khoa, h.get("loai") == "anhthuc", thu_muc, ten)
+            if ra:
+                return ra, ""
+            loi.append("AI tạo ảnh không trả về ảnh")
+        except X.HetHanMuc:
+            tt["het_ai"] = True
+            loi.append("AI tạo ảnh: hết hạn mức")
+        except Exception as e:
+            loi.append("AI tạo ảnh: %s" % str(e)[:100])
+    return None, ""
+
+
+# ------------------------------------------------------------------ VẼ HÌNH (ve_hinh.py) + ẢNH THỰC TẾ
 def ve_hinh_cho_de(de, cac_model, ph, thu_muc):
-    """→ {'P<phần>_C<câu>': đường dẫn PNG}. Lỗi một hình → để chỗ trống ghi chú (xuat_de_v2 tự báo), không dừng cả đề."""
-    hinh_san = {}
-    if VH is None:
-        ph.them_canh_bao("Chưa nạp được ve_hinh – các hình vẽ để chỗ trống.")
-        return hinh_san
-    so = 0
+    """→ {'P<phần>_C<câu>': đường dẫn ảnh}. Hình vẽ: code (ve_hinh) → web → AI. Ảnh thực tế: web → AI.
+    Lỗi một hình → để chỗ trống ghi chú (xuat_de_v2 tự báo), không dừng cả đề."""
+    hinh_san, tt, so = {}, {"het_ai": False}, 0
     for p in (1, 2, 3, 4):
         for i, c in enumerate(de.get("phan%d" % p) or [], 1):
             h = c.get("hinhAnh")
-            if not (h and h.get("hopLe") and h.get("loai") == "hinhve"):
+            if not (h and h.get("hopLe") and h.get("loai") in ("hinhve", "anhthuc")):
                 continue
             if so >= TOI_DA_HINH_VE:
-                ph.them_canh_bao("Phần %d câu %d: vượt %d hình vẽ/lượt, để chỗ trống." % (p, i, TOI_DA_HINH_VE))
+                ph.them_canh_bao("Phần %d câu %d: vượt %d hình/ảnh mỗi lượt, để chỗ trống." % (p, i, TOI_DA_HINH_VE))
                 continue
             so += 1
-            ph.tien_do("vẽ hình", None, "phần %d câu %d" % (p, i))
-            try:
-                ra, ghi_chu = VH.ve_mot_hinh({"cauHoi": c.get("cauHoi", ""), "chuThich": h.get("chuThich", ""), "moTa": h.get("moTa", "")},
-                                             cac_model, thu_muc, so)
+            ph.tien_do("vẽ hình / tìm ảnh", None, "phần %d câu %d" % (p, i))
+            ra, ghi, loi = None, "", []
+            if h["loai"] == "hinhve":
+                if VH is None:
+                    loi.append("chưa nạp ve_hinh")
+                else:
+                    try:
+                        ra, ghi = VH.ve_mot_hinh({"cauHoi": c.get("cauHoi", ""), "chuThich": h.get("chuThich", ""), "moTa": h.get("moTa", "")}, cac_model, thu_muc, so)
+                    except X.HetHanMuc:
+                        raise
+                    except Exception as e:
+                        loi.append("vẽ bằng code: %s" % str(e)[:100])
+            if not ra:
+                ra, nguon = tim_anh_thay_the(h, thu_muc, "anhweb%d" % so, loi, tt)
+                if ra:
+                    ghi = "ảnh web" + (" · " + nguon if nguon else " · AI tạo ảnh")
+                    if nguon and not re.search(r"\(Nguồn:", h.get("chuThich") or ""):
+                        h["chuThich"] = (h.get("chuThich") or "Hình") + " (Nguồn: %s)" % nguon       # GHI_NGUON_ANH_WEB
+            if ra:
                 hinh_san["P%d_C%d" % (p, i)] = ra
-                ph.ghi_nhat_ky("vẽ hình", "phần %d câu %d: %s" % (p, i, ghi_chu))
-            except X.HetHanMuc:
-                raise
-            except Exception as e:
-                ph.them_canh_bao("Phần %d câu %d: không vẽ được hình – %s" % (p, i, str(e)[:150]))
+                ph.ghi_nhat_ky("hình/ảnh", "phần %d câu %d: %s" % (p, i, ghi))
+            else:
+                ph.them_canh_bao("Phần %d câu %d: không tạo/tìm được hình (%s)" % (p, i, "; ".join(loi)[:300]))
     return hinh_san
+
+
+def tai_mau_b4(drive, goi, thu_muc):
+    """Mẫu đề ô B4 (Google Doc hoặc .docx) → tệp .docx làm reference-doc cho pandoc. Lỗi → None (dùng mẫu mặc định)."""
+    raw = str((goi.get("thamSo") or {}).get("B4") or "")
+    m = re.search(r"/d/([\w-]{20,})", raw) or re.fullmatch(r"\s*([\w-]{20,})\s*", raw)
+    if not m:
+        return None
+    ra = os.path.join(thu_muc, "mau_b4.docx")
+    try:
+        try:
+            data = drive.files().export(fileId=m.group(1), mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document").execute()
+        except Exception:
+            data = drive.files().get_media(fileId=m.group(1)).execute()
+        with open(ra, "wb") as f:
+            f.write(data)
+        return ra
+    except Exception as e:
+        print("⚠️ Không tải được mẫu B4 (%s) – dùng mẫu mặc định." % str(e)[:100], flush=True)
+        return None
 
 
 # ------------------------------------------------------------------ KIỂM TRÙNG VỚI NGÂN HÀNG CÂU HỎI (xuat_de.py = chỉ mục chống trùng)
@@ -695,6 +929,10 @@ def main():
         j = nh.find("=== HẾT CÂU MẪU ===")                # ô B24 tắt: bỏ khối câu mẫu Kho chung (nếu còn sót)
         t0["nganHang"] = nh[j + len("=== HẾT CÂU MẪU ==="):].lstrip() if j >= 0 else nh
     canh_bao_so_cau_khoi(t0, ph)
+    tc = goi.get("tuyChon") or {}
+    nhanh = str(tc.get("cheDo") or "").lower() == "nhanh"                     # "Tạo đề nhanh": chỉ soạn + tự sửa cấu trúc, bỏ các bước AI kiểm định
+    xac_minh = (tc.get("xacMinh") is not False) and not nhanh
+    co_hinh = tc.get("hinhAnh") is not False
     hinh_tam = tempfile.mkdtemp()
 
     def luu():                                # ghi đề + tiến độ ra Drive để HOAN/chạy lại không mất việc
@@ -736,8 +974,15 @@ def main():
         else:
             de = chuan(de, t0)
 
+        # --- thẩm định khớp chỉ báo bằng AI + soạn lại câu chưa khớp (agentKiemDinhChiBao) ---
+        if not tien.get("chiBaoXong") and xac_minh:
+            ph.tien_do("thẩm định khớp chỉ báo", 66)
+            de = tham_dinh_chi_bao(goi, de, cac_model, ph)
+            tien["chiBaoXong"] = True
+            luu()
+
         # --- BƯỚC 4b/5: cổng chất lượng – giải độc lập bằng code (Gemini model khác + Groq), soạn lại câu lệch ---
-        if not tien.get("kiemDinhXong"):
+        if not tien.get("kiemDinhXong") and xac_minh:
             ph.tien_do("kiểm định đáp án độc lập", 70)
             de, bao_cao, tt = cong_chat_luong(goi, de, model, cac_model, ph)
             tien.update({"kiemDinhXong": True, "kiemDinh": tt, "baoCao": bao_cao[:15000]})
@@ -751,17 +996,18 @@ def main():
             tien["trungXong"] = True
 
         ph.tien_do("chuẩn hoá và kiểm công thức", 82)
-        de, ghi = CD.chuan_hoa_de(de)
+        de = chuan(de, t0)
         for l in CD.kiem_tra_latex(de):
             ph.them_canh_bao(l)
 
         # --- vẽ hình bằng code (ve_hinh) ---
-        ph.tien_do("vẽ hình", 84)
-        hinh_san = ve_hinh_cho_de(de, cac_model, ph, hinh_tam)
+        ph.tien_do("vẽ hình / tìm ảnh", 84)
+        hinh_san = ve_hinh_cho_de(de, cac_model, ph, hinh_tam) if co_hinh else {}
 
         ph.tien_do("xuất Word HS và GV", 90)
         thu = tempfile.mkdtemp()
-        kq = XD.xuat_de(de, goi["cauHinh"], thu, hinh_san=hinh_san, ten_goc="De")
+        mau_b4 = tai_mau_b4(drive, goi, thu) if DUNG_MAU_B4 else None
+        kq = XD.xuat_de(de, goi["cauHinh"], thu, hinh_san=hinh_san, ten_goc="De", mau_word=mau_b4)
         for c in kq["canhBao"]:
             ph.them_canh_bao(c)
         GT.ghi_docx_vao_tep(drive, goi["dich"]["docxHS"], kq["hs"])
