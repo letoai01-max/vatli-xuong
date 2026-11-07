@@ -83,10 +83,26 @@ def dung_danh_muc(t0, p):
     return "\n".join(dong)
 
 
+_RE_ESC = re.compile(r'\\\\|\\(?=[bfnrt][a-z])|\\(?!["/bfnrtu\\]|u[0-9a-fA-F]{4})')
+
+
+def _sua_escape(s):
+    """Gemini hay trả LaTeX với MỘT dấu \\ (\\omega, \\frac, \\text) làm JSON sai/sai nghĩa: gấp đôi các dấu \\ không phải escape JSON hợp lệ;
+    \\f \\t \\b \\r \\n đứng trước chữ thường (\\frac, \\text, \\beta, \\rho, \\nu) cũng là LaTeX. Cặp \\\\ đã đúng thì giữ nguyên."""
+    return _RE_ESC.sub(lambda m: m.group(0) if m.group(0) == "\\\\" else "\\\\", s)
+
+
 def doc_json(text):
     s = re.sub(r"```json|```", "", str(text or "")).strip()
     a, b = s.find("{"), s.rfind("}")
-    return json.loads(s[a:b + 1] if a != -1 and b > a else s)
+    chuoi = s[a:b + 1] if a != -1 and b > a else s
+    try:
+        return json.loads(chuoi)
+    except json.JSONDecodeError as loi_goc:      # thường do LaTeX một dấu \\ hoặc xuống dòng thật trong chuỗi
+        try:
+            return json.loads(_sua_escape(chuoi), strict=False)
+        except json.JSONDecodeError:
+            raise loi_goc
 
 
 TIM_KIEM_GOOGLE = os.environ.get("TIM_KIEM_GOOGLE", "1").strip().lower() not in ("0", "false", "no", "off", "tat")
@@ -143,7 +159,13 @@ def soan_phan(goi, p, cac_model, ghi_chu_loi="", ph=None):
             else:
                 print("⚠️ Search lỗi phần %d: %s" % (p, str(e)[:100]), flush=True)
     data, model = X.goi_gemini(dung_payload(False), cac_model)
-    return lay_mang(data), model
+    try:
+        return lay_mang(data), model
+    except ValueError as e:                      # JSONDecodeError ⊂ ValueError: JSON hỏng không sửa được → gọi lại đúng một lần
+        if ph:
+            ph.them_canh_bao("Phần %d: Gemini trả JSON hỏng (%s) → soạn lại một lần." % (p, str(e)[:80]))
+        data, model = X.goi_gemini(dung_payload(False), cac_model)
+        return lay_mang(data), model
 
 
 # =====================================================================================================================
