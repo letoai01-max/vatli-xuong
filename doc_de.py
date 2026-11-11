@@ -333,7 +333,7 @@ def _goi_gemini_mot_khoa(payload, ds_model, key, ten_khoa=""):
                 msg = (r.json().get("error") or {}).get("message", r.text)[:220]
             except ValueError:
                 msg = r.text[:220]
-            if r.status_code != 429:
+            if r.status_code not in (429, 402):
                 co_loi_khac = True
             else:
                 het_ngay, giay = phan_tich_429(r)
