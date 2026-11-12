@@ -1,0 +1,39 @@
+# .github/workflows/chuyen_de.yml – SOẠN CHUYÊN ĐỀ ÔN TẬP (gọi từ XuongChuyenDe.gs của dự án Tạo đề)
+# Cùng khuôn với de_cuong.yml: tham số ma, goi, ket_qua; chỉ dùng khoá miễn phí GEMINI_API_KEY.
+# Lỗi bất kì → ket_qua ghi LOI → Apps Script tự soạn lại như cũ.
+name: chuyen_de
+on:
+  workflow_dispatch:
+    inputs:
+      ma:
+        description: "Mã chuyên đề"
+        required: false
+      goi:
+        description: "File ID gói việc (goi_<mã>.json trên Drive)"
+        required: true
+      ket_qua:
+        description: "File ID kết quả (ket_qua_<mã>.json trên Drive)"
+        required: true
+# Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
+permissions:
+  contents: read
+
+jobs:
+  soan_chuyen_de:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+      - name: Soạn chuyên đề từng phần
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOI_ID: ${{ inputs.goi }}
+          KQ_ID: ${{ inputs.ket_qua }}
+        run: python trung_tam.py chuyen_de.py
