@@ -176,11 +176,11 @@ def main():
         khong_co += 0 if kq else 1
         print("🔎 %-80s → %2d kết quả sau %d truy vấn (%s)" % (cd[:80], len(kq), len(da_dung), nguon), flush=True)
         dong.append([cd, " | ".join(da_dung), luc, len(kq), json.dumps(kq, ensure_ascii=False)[:45000], nguon])
+    if ds and tong == 0:
+        sys.exit("Không tìm được kết quả nào – nguồn tìm kiếm có thể đang bị chặn. Giữ nguyên kết quả cũ trong tab %s." % TAB_KQ)
     tab.clear()
     tab.update(range_name="A1", values=dong, value_input_option="RAW")
     print("📦 Đã ghi %d chủ đề (%d chủ đề không có kết quả), %d kết quả vào tab %s." % (len(ds), khong_co, tong, TAB_KQ))
-    if ds and tong == 0:
-        sys.exit("Không tìm được kết quả nào – nguồn tìm kiếm có thể đang bị chặn.")
 
 
 if __name__ == "__main__":
