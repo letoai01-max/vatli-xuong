@@ -27,7 +27,7 @@ jobs:
         env:
           CHU_DE: ${{ github.event.inputs.chu_de }}
           # Dùng lại đúng tên secret mà tao_de.yml đang dùng (đổi cho khớp kho của thầy):
-          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
         run: python tai_tai_lieu.py
