@@ -49,6 +49,6 @@ jobs:
         env:
           LOP: ${{ steps.lop.outputs.lop }}
           SO_TIET: ${{ github.event.inputs.so_tiet || '1' }}
-          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python soan_giao_an.py --lop "$LOP" --so-tiet "$SO_TIET"
