@@ -1,0 +1,33 @@
+# .github/workflows/tai_tai_lieu.yml – Download Agent chạy trên xưởng Python (thay vbChay / vbChayTiep / chayNgam của Apps Script)
+name: tai-tai-lieu
+on:
+  schedule:
+    - cron: '0 18 * * *'        # 18:00 UTC = 01:00 sáng giờ Việt Nam, mỗi ngày một lượt
+  workflow_dispatch:
+    inputs:
+      chu_de:
+        description: 'Chủ đề cần tải (để trống = làm theo Sheet Download Agent – Quản lý)'
+        required: false
+        default: ''
+concurrency:
+  group: tai-tai-lieu            # không chạy hai lượt cùng lúc
+  cancel-in-progress: false
+jobs:
+  chay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25          # chặn lượt treo, giữ quỹ phút của kho riêng tư
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Chạy Download Agent
+        env:
+          CHU_DE: ${{ github.event.inputs.chu_de }}
+          # Dùng lại đúng tên secret mà tao_de.yml đang dùng (đổi cho khớp kho của thầy):
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
+        run: python tai_tai_lieu.py
