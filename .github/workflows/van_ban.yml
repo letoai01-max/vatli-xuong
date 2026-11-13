@@ -1,8 +1,8 @@
 # .github/workflows/van_ban.yml – Agent văn bản (thay vbChay / vbChayTiep của Apps Script)
 name: van-ban
 on:
-  schedule:
-    - cron: '0 19 * * *'         # 19:00 UTC = 02:00 sáng giờ Việt Nam
+ # schedule:
+  #  - cron: '0 19 * * *'         # 19:00 UTC = 02:00 sáng giờ Việt Nam
   workflow_dispatch:
     inputs:
       luot:
