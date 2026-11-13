@@ -1,0 +1,21 @@
+name: thu-drive
+on:
+  workflow_dispatch:
+    inputs:
+      folder_id:
+        description: 'ID thư mục Downloads_Agent'
+        required: true
+jobs:
+  thu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install google-api-python-client google-auth
+      - env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          FOLDER_ID: ${{ github.event.inputs.folder_id }}
+        run: python thu_drive.py
