@@ -29,7 +29,7 @@ jobs:
       - name: Chạy Agent văn bản
         id: vb
         env:
-          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python van_ban.py
       - name: Nối tiếp nếu còn việc (tối đa 3 lượt/đêm)
