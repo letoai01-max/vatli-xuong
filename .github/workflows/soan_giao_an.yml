@@ -1,74 +1,54 @@
-# .github/workflows/soan_giao_an.yml – XƯỞNG SOẠN GIÁO ÁN (KHBD, CV 5512)
-# Không có lịch: chỉ chạy khi được gọi, nên không trùng với các lịch soanGiaoAnLop… của Apps Script.
-#   • Apps Script ra lệnh: gửi ma, goi, ket_qua (File ID gói việc / kết quả trên Drive) – cùng khuôn với de_cuong.yml.
-#   • Soạn tay để thử: bỏ trống goi/ket_qua, điền ten_bai (lop, yccd tuỳ chọn) → tải Word ở mục Artifacts.
-# [BẢO MẬT] Dữ liệu nhập vào KHÔNG chèn thẳng vào lệnh shell: đi qua biến môi trường.
-name: soan_giao_an
+# .github/workflows/soan_giao_an.yml – phần "chờ Gemini" của agent giáo án chạy ở đây; Apps Script chỉ dựng Docs/Word
+name: soan-giao-an
 on:
+  schedule:                      # luân phiên: mỗi ngày một lớp (UTC 00:00 = 07:00 giờ Việt Nam)
+    - cron: '0 0 * * 1,4'        # thứ Hai, thứ Năm  → lớp 10
+    - cron: '0 0 * * 2,5'        # thứ Ba, thứ Sáu   → lớp 11
+    - cron: '0 0 * * 3,6'        # thứ Tư, thứ Bảy   → lớp 12
   workflow_dispatch:
     inputs:
-      ma:
-        description: "Mã giáo án (Apps Script gửi, không bắt buộc)"
-        required: false
-      goi:
-        description: "File ID gói việc (goi_<mã>.json trên Drive) – để trống nếu soạn tay"
-        required: false
-      ket_qua:
-        description: "File ID kết quả (ket_qua_<mã>.json trên Drive) – để trống nếu soạn tay"
-        required: false
       lop:
-        description: "Lớp (chỉ dùng khi soạn tay)"
+        description: 'Lớp (10, 11 hoặc 12)'
+        required: true
+        default: '10'
+      so_tiet:
+        description: 'Số tiết soạn mỗi lượt'
         required: false
-        default: "10"
-        type: choice
-        options: ["10", "11", "12"]
-      ten_bai:
-        description: "Tên bài học (soạn tay)"
-        required: false
-      yccd:
-        description: "Yêu cầu cần đạt (soạn tay, có thể bỏ trống)"
-        required: false
-
-permissions:
-  contents: read
-
+        default: '1'
 concurrency:
-  group: soan_giao_an
+  group: soan-giao-an
   cancel-in-progress: false
-
 jobs:
-  soan:
+  chay:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.12'
           cache: pip
-      - name: Cài pandoc (xuất bảng và công thức thành Word thật), phông chữ vẽ hình và thư viện
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq pandoc fonts-noto-core > /dev/null
-          pip install -q -r requirements.txt
-      - name: Soạn giáo án
+      - run: pip install -r requirements.txt
+      - name: Chọn lớp theo lịch
+        id: lop
         env:
-          PYTHONUNBUFFERED: "1"
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          NHAP_LOP: ${{ github.event.inputs.lop }}
+          LICH: ${{ github.event.schedule }}
+        run: |
+          if [ -n "$NHAP_LOP" ]; then L="$NHAP_LOP"
+          else
+            case "$LICH" in
+              "0 0 * * 1,4") L=10 ;;
+              "0 0 * * 2,5") L=11 ;;
+              "0 0 * * 3,6") L=12 ;;
+              *) echo "Lịch không nhận ra: $LICH"; exit 1 ;;
+            esac
+          fi
+          echo "lop=$L" >> "$GITHUB_OUTPUT"
+      - name: Soạn nội dung giáo án
+        env:
+          LOP: ${{ steps.lop.outputs.lop }}
+          SO_TIET: ${{ github.event.inputs.so_tiet || '1' }}
+          GOOGLE_SA_JSON: ${{ secrets.GOOGLE_SA_JSON }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          KHO_ANH_SGK_ID: ${{ vars.KHO_ANH_SGK_ID || secrets.KHO_ANH_SGK_ID }}
-          GOI_ID: ${{ inputs.goi }}
-          KQ_ID: ${{ inputs.ket_qua }}
-          LOP: ${{ inputs.lop }}
-          TEN_BAI: ${{ inputs.ten_bai }}
-          YCCD: ${{ inputs.yccd }}
-        run: python trung_tam.py soan_giao_an.py
-      - name: Lưu bản Word (soạn tay)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: khbd-word
-          path: out/*.docx
-          if-no-files-found: ignore
-          retention-days: 14
+        run: python soan_giao_an.py --lop "$LOP" --so-tiet "$SO_TIET"
