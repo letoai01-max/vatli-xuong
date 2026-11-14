@@ -53,5 +53,4 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
           GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
-          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
         run: python soan_giao_an.py --lop "$LOP" --so-tiet "$SO_TIET"
