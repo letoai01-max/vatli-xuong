@@ -30,7 +30,7 @@ def chay(ten, kich_ban, khoa, models=("m1", "m2")):
     for k in list(os.environ):
         if k.startswith("GEMINI_API_KEY"): del os.environ[k]
     os.environ.update(khoa)
-    X.TRANG_THAI_KHOA.update({"tra_phi": False, "da_dung_tra_phi": 0, "het": set()})
+    X.TRANG_THAI_KHOA.update({"tra_phi": False, "da_dung_tra_phi": 0, "het": set(), "hong": set()})
     goi = []
     def post(url, headers=None, data=None, timeout=0):
         goi.append((url.split("/models/")[1].split(":")[0], headers["x-goog-api-key"]))
@@ -58,3 +58,26 @@ chay("5. phản hồi rỗng ở model 1 → model 2",
 chay("6. 404 model ngừng → lấy model Google gợi ý",
      lambda c, n: R(404, {"error": {"message": "models/m1 is not found. Try models/gemini-9.9-flash"}}) if c[0] == "m1" else ok("model gợi ý"),
      {"GEMINI_API_KEY": "K1"}, models=("m1",))
+
+def e400_khoa():
+    return R(400, {"error": {"code": 400, "message": "API key not valid. Please pass a valid API key.", "status": "INVALID_ARGUMENT",
+                             "details": [{"@type": "type.googleapis.com/google.rpc.ErrorInfo", "reason": "API_KEY_INVALID"}]}})
+chay("7. khoá 1 HỎNG (400 API_KEY_INVALID) → bỏ khoá, sang khoá 2, không thử model 2 bằng khoá hỏng",
+     lambda c, n: e400_khoa() if c[1] == "K1" else ok("từ khoá 2"), {"GEMINI_API_KEY": "K1", "GEMINI_API_KEY_2": "K2"})
+chay("8. lượt gọi sau đó không đụng lại khoá hỏng (TRANG_THAI_KHOA nhớ trong lượt chạy)",
+     lambda c, n: e400_khoa() if c[1] == "K1" else ok("từ khoá 2"), {"GEMINI_API_KEY": "K1", "GEMINI_API_KEY_2": "K2"})
+kq8 = X.goi_gemini({"contents": [], "generationConfig": {}}, ["m1", "m2"])
+assert [x for x in X.TRANG_THAI_KHOA["hong"]] == ["GEMINI_API_KEY"], X.TRANG_THAI_KHOA
+print("   lượt gọi thứ 2:", kq8[1])
+chay("9. mọi khoá miễn phí hỏng, không có khoá trả phí → KhoaHong (không giả làm hết hạn mức)",
+     lambda c, n: e400_khoa(), {"GEMINI_API_KEY": "K1", "GEMINI_API_KEY_2": "K2"})
+chay("10. khoá miễn phí hỏng + khoá 2 hết NGÀY → dùng khoá trả phí",
+     lambda c, n: e400_khoa() if c[1] == "K1" else (e429("PerDay") if c[1] == "K2" else ok("trả phí")),
+     {"GEMINI_API_KEY": "K1", "GEMINI_API_KEY_2": "K2", "GEMINI_API_KEY_TRA_PHI": "KP"})
+chay("11. 400 KHÔNG liên quan khoá (thinking) vẫn xử lý như cũ, không đánh dấu khoá hỏng",
+     lambda c, n: R(400, {"error": {"message": "Thinking config is not supported for this model"}}) if n == 1 else ok("đã bỏ thinking"),
+     {"GEMINI_API_KEY": "K1"})
+assert not X.TRANG_THAI_KHOA["hong"], X.TRANG_THAI_KHOA
+assert X.la_loi_khoa(400, "API key not valid") and X.la_loi_khoa(403, "Your API key was reported as leaked.")
+assert not X.la_loi_khoa(400, "Thinking config") and not X.la_loi_khoa(429, "API key")
+print("\nOK: la_loi_khoa + nhớ khoá hỏng đạt")
