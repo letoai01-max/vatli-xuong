@@ -78,9 +78,9 @@ TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0, "het": set(), "hong":
 
 
 def ds_khoa_mien_phi():
-    """GEMINI_API_KEY, GEMINI_API_KEY_2 … GEMINI_API_KEY_5 (bỏ ô trống, bỏ khoá trùng)."""
+    """GEMINI_API_KEY, GEMINI_API_KEY_1 … GEMINI_API_KEY_5 (bỏ ô trống, bỏ khoá trùng theo giá trị)."""
     ds = []
-    for ten in ["GEMINI_API_KEY"] + ["GEMINI_API_KEY_%d" % i for i in range(2, 6)]:
+    for ten in ["GEMINI_API_KEY"] + ["GEMINI_API_KEY_%d" % i for i in range(1, 6)]:
         k = os.environ.get(ten, "").strip()
         if k and k not in [x[1] for x in ds]:
             ds.append((ten, k))
