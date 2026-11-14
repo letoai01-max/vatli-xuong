@@ -18,6 +18,8 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 
+import doc_de as X   # goi_gemini dùng chung: xoay khoá miễn phí → trả phí, chờ 429 theo phút, xử lí 404, ghi quota
+
 ID_KHO_CHUNG = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
 MODEL_MAC_DINH, MODEL_DU_PHONG_MAC_DINH = "gemini-3.8-flash", ["gemini-3.5-flash-lite"]
 SAI_SO_CHO_PHEP = 0.02
@@ -30,8 +32,7 @@ LUAT_KIEM_TRA_SO = (
     "không dùng biến chữ; dapSo là số đúng như đã ghi trong đáp án (dấu chấm thập phân).")
 
 
-class HetHanMuc(Exception):
-    pass
+HetHanMuc = X.HetHanMuc   # cùng một lớp với doc_de: nơi gọi bắt DC.HetHanMuc hay X.HetHanMuc đều được
 
 
 def ket_noi():
@@ -83,44 +84,23 @@ def ds_model(gc):
 
 
 def goi_gemini(he, nguoi, co_code, cac_model):
-    key = os.environ.get("GEMINI_API_KEY_TRA_PHI") or os.environ["GEMINI_API_KEY"]
-    cac_model, loi, khac_quota = list(cac_model), [], False
-    for model in cac_model[:6]:
-        payload = {"systemInstruction": {"parts": [{"text": he}]},
-                   "contents": [{"role": "user", "parts": [{"text": nguoi}]}],
-                   "generationConfig": {"temperature": 0.4, "maxOutputTokens": 16384,
-                                        "thinkingConfig": {"thinkingBudget": 0} if model.startswith("gemini-2.") else {"thinkingLevel": "low"}}}
-        if co_code:
-            payload["tools"] = [{"code_execution": {}}]
-        lan = 0
-        while lan < 3:
-            try:
-                r = requests.post("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent" % model,
-                                  headers={"x-goog-api-key": key, "Content-Type": "application/json"}, data=json.dumps(payload), timeout=600)
-            except requests.RequestException as e:
-                loi.append("%s: %s" % (model, str(e)[:100])); khac_quota = True
-                break
-            if r.status_code == 200:
-                cand = (r.json().get("candidates") or [{}])[0]
-                text = "".join(p.get("text", "") for p in (cand.get("content") or {}).get("parts", []))
-                if text.strip():
-                    return text, model
-                loi.append("%s: phản hồi rỗng (%s)" % (model, cand.get("finishReason"))); khac_quota = True
-                break
-            try:
-                msg = (r.json().get("error") or {}).get("message", r.text)[:200]
-            except ValueError:
-                msg = r.text[:200]
-            if r.status_code != 429:
-                khac_quota = True
-            if r.status_code == 400 and "thinking" in msg.lower() and "thinkingConfig" in payload["generationConfig"]:
-                del payload["generationConfig"]["thinkingConfig"]; continue
-            if r.status_code in (500, 502, 503, 504) and lan < 2:
-                time.sleep((lan + 1) * 10); lan += 1; continue
-            loi.append("%s lỗi %d: %s" % (model, r.status_code, msg))
-            break
-    if not khac_quota:
-        raise HetHanMuc("HET_HAN_MUC – " + " | ".join(loi))
+    """Trả (chữ, tên model). Gọi qua doc_de.goi_gemini nên có đủ: xoay GEMINI_API_KEY … _5 rồi mới đến khoá trả phí,
+    chờ khi chạm giới hạn theo phút, tự thêm model Google gợi ý khi gặp 404, ghi lượt dùng vào Quota_SuDung.
+    Phản hồi rỗng thì thử model kế tiếp trong danh sách."""
+    payload = {"systemInstruction": {"parts": [{"text": he}]},
+               "contents": [{"role": "user", "parts": [{"text": nguoi}]}],
+               "generationConfig": {"temperature": 0.4, "maxOutputTokens": 16384}}   # thinkingConfig do doc_de đặt theo từng model
+    if co_code:
+        payload["tools"] = [{"code_execution": {}}]
+    con_lai, loi = list(cac_model)[:6], []
+    while con_lai:
+        data, model = X.goi_gemini(json.loads(json.dumps(payload)), con_lai)
+        cand = (data.get("candidates") or [{}])[0]
+        text = "".join(p.get("text", "") for p in (cand.get("content") or {}).get("parts", []))
+        if text.strip():
+            return text, model
+        loi.append("%s: phản hồi rỗng (%s)" % (model, cand.get("finishReason")))
+        con_lai = con_lai[con_lai.index(model) + 1:] if model in con_lai else []
     raise RuntimeError(" | ".join(loi) or "Không gọi được Gemini")
 
 
