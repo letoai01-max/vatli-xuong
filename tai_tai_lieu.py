@@ -12,7 +12,8 @@ Hướng A (Gmail cá nhân): Python làm phần NẶNG, Apps Script chỉ làm 
   Apps Script (TaiTuSanSang.gs): đọc SanSangTai, gọi download_document_ (giữ nguyên chống trùng MD5, DaTai, thư mục nhóm).
 
 Biến môi trường (GitHub Secrets): GOOGLE_CREDENTIALS (như doc_de.py).
-  Không cần khoá Gemini: bản này tìm bằng DuckDuckGo/Bing (xem tim_kiem() để gắn xưởng tìm kiếm riêng của bạn).
+  Không cần khoá Gemini. Tìm kiếm dùng tim_kiem.py (DuckDuckGo qua thư viện ddgs; có BRAVE_API_KEY thì thêm Brave).
+  Workflow phải cài: gspread google-auth google-api-python-client requests ddgs (cùng bộ với workflow của tim_kiem.py và doc_de.py).
   THOI_GIAN_TOI_DA_PHUT (mặc định 20), SO_FILE_TOI_DA (mặc định 25).
 
 LƯU Ý QUYỀN: tài khoản dịch vụ phải là NGƯỜI CHỈNH SỬA (Editor) của sheet "Download Agent - Quản lý",
@@ -28,6 +29,7 @@ from urllib.parse import unquote, urljoin
 import requests
 
 import doc_de as D   # dùng chung ID_BANG_DOWNLOAD, ket_noi(), TZ
+import tim_kiem as TK   # xưởng tìm kiếm có sẵn (cần pip install ddgs)
 
 # ---------------- CẤU HÌNH ----------------
 TAB_CHU_DE, TAB_DA_TAI, TAB_NHAT_KY, TAB_SAN_SANG = "ChuDe", "DaTai", "NhatKyChay", "SanSangTai"
@@ -39,6 +41,7 @@ SO_FILE_MOI_TRANG = 10          # tối đa link lấy từ một trang
 SO_LINK_QUET_TOI_DA = 30        # tối đa link file đọc từ một trang
 SO_TRANG_QUET_TOI_DA = 8        # tối đa trang quét mỗi lượt
 SO_KET_QUA_TIM = 10
+SO_TRUY_VAN_TOI_DA = 4          # số truy vấn thử tối đa mỗi lượt
 KICH_THUOC_TOI_THIEU = 20 * 1024            # giống Mã.gs
 KICH_THUOC_TOI_DA = 45 * 1024 * 1024        # UrlFetchApp của Apps Script tối đa ~50 MB
 NAM_HOC_TOI_DA = 4
@@ -219,42 +222,10 @@ def _gon(s):
 
 
 def tim_kiem(truy_van):
-    """Trả về [(tiêu đề, url)]. Gắn xưởng tìm kiếm riêng của bạn bằng cách thay thân hàm này
-    (giữ nguyên kiểu trả về). Mặc định: DuckDuckGo (HTML) rồi Bing, giống timKiemDuPhong_ trong Mã.gs."""
-    ket_qua, da_co = [], set()
-
-    def them(url, tieu_de):
-        if not re.match(r"https?://", url, re.I) or url in da_co or re.search(r"duckduckgo\.com|bing\.com|microsoft\.com", url, re.I):
-            return
-        da_co.add(url)
-        ket_qua.append((_gon(tieu_de), url))
-
-    cac_truy_van = [truy_van, truy_van + " filetype:pdf"]
-    for q in cac_truy_van:
-        try:
-            r = requests.post("https://html.duckduckgo.com/html/", data={"q": q, "kl": "vn-vi"}, headers=UA, timeout=20)
-            if r.status_code != 200:
-                print("[Cảnh báo] DuckDuckGo trả mã %d (có thể bị chặn)." % r.status_code)
-                continue
-            for href, tieu_de in re.findall(r'<a[^>]*class="result__a"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)</a>', r.text, re.I):
-                href = href.replace("&amp;", "&")
-                m = re.search(r"[?&]uddg=([^&]+)", href)
-                href = unquote(m.group(1)) if m else ("https:" + href if href.startswith("//") else href)
-                them(href, tieu_de)
-        except Exception as e:
-            print("[Cảnh báo] DuckDuckGo lỗi:", e)
-    if not ket_qua:
-        for q in cac_truy_van:
-            try:
-                r = requests.get("https://www.bing.com/search", params={"setlang": "vi", "q": q}, headers=UA, timeout=20)
-                if r.status_code != 200:
-                    print("[Cảnh báo] Bing trả mã %d." % r.status_code)
-                    continue
-                for href, tieu_de in re.findall(r'<li class="b_algo"[\s\S]*?<h2[^>]*>\s*<a[^>]*href="([^"]+)"[^>]*>([\s\S]*?)</a>', r.text, re.I):
-                    them(href.replace("&amp;", "&"), tieu_de)
-            except Exception as e:
-                print("[Cảnh báo] Bing lỗi:", e)
-    return ket_qua[:SO_KET_QUA_TIM * 2]
+    """Trả về [(tiêu đề, url)] bằng xưởng tìm kiếm tim_kiem.py (thư viện ddgs, có chờ khi bị giới hạn, Brave nếu có khoá)."""
+    kq, nguon, _ = TK.tim([truy_van])
+    print("   nguồn tìm: %s" % nguon)
+    return [(r["tieuDe"], r["url"]) for r in kq]
 
 
 def lay_link_file_trong_trang(url, loai):
@@ -427,7 +398,7 @@ def main():
 
     nam_ky_thi = nh["muc_tieu"] + 1 if loai == "TN" else nh["muc_tieu"]
     q1 = "%s %s file PDF" % (chu_de, ("kì thi %d" % nam_ky_thi) if loai == "TN" else ("năm học %d-%d" % (nh["muc_tieu"], nh["muc_tieu"] + 1)))
-    q2 = "%s %d-%d tải về PDF" % (chu_de, max(nh["muc_tieu"] - 1, nh["cu_nhat"]), max(nh["muc_tieu"] - 1, nh["cu_nhat"]) + 1)
+    ds_truy_van = list(dict.fromkeys([q1] + TK.cac_truy_van(chu_de)))[:SO_TRUY_VAN_TOI_DA]
 
     thong_ke = {"tim": 0, "ket_qua": 0, "loai_tru": 0, "trung": 0, "kiem_tra_loi": 0, "trang": 0, "xep": 0}
     xep_hang = []
@@ -458,11 +429,11 @@ def main():
     loi_tim = ""
     try:
         trang_cho = []
-        for q in (q1, q2):
+        for idx, q in enumerate(ds_truy_van):
             if not con_thoi_gian(120) or thong_ke["xep"] >= SO_FILE_TOI_DA:
                 break
-            if q == q2 and (thong_ke["xep"] > 0 or trang_cho):
-                break   # chỉ tìm lần hai khi lần đầu không có gì phù hợp (giống SO_TIM_TOI_DA trong Mã.gs)
+            if idx > 0 and (thong_ke["xep"] > 0 or trang_cho):
+                break   # chỉ thử truy vấn tiếp khi truy vấn trước chưa cho gì phù hợp
             thong_ke["tim"] += 1
             kq = tim_kiem(q)
             thong_ke["ket_qua"] += len(kq)
