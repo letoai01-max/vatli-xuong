@@ -74,7 +74,7 @@ RE_CT_CU = re.compile(r"\b(" + "|".join([
 BAT_DAU = time.time()
 TOI_DA_LUOT_TRA_PHI = int(os.environ.get("TOI_DA_LUOT_TRA_PHI", "40"))   # chặn chi phí mỗi lượt chạy
 CHO_PHEP_DOC_DE = True                                              # công tắc bật/tắt (tab CauHinh)
-TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0, "het": set()}
+TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0, "het": set(), "hong": set()}   # het = hết lượt ngày; hong = Google từ chối khoá
 
 
 def ds_khoa_mien_phi():
@@ -89,6 +89,19 @@ def ds_khoa_mien_phi():
 
 class HetHanMuc(Exception):
     pass
+
+
+class KhoaHong(RuntimeError):
+    """Google từ chối chính khoá API (400 API_KEY_INVALID / 401 / 403 về khoá). Không phải hết hạn mức:
+    thử model khác bằng cùng khoá chỉ phí thời gian, nên bỏ khoá này và chuyển sang khoá kế tiếp."""
+
+
+def la_loi_khoa(ma, noi_dung):
+    """True khi 400/401/403 mà nội dung nói về chính khoá API (không hợp lệ, hết hạn, bị thu hồi vì lộ...)."""
+    if ma not in (400, 401, 403):
+        return False
+    return bool(re.search(r"API_KEY_INVALID|API key not valid|API key expired|API key was reported as leaked|pass a valid API key",
+                          str(noi_dung or ""), re.I))
 
 
 def bay_gio():
@@ -272,15 +285,21 @@ def goi_gemini(payload, ds_model):
     khoa_tp = os.environ.get("GEMINI_API_KEY_TRA_PHI", "").strip()
     if not TRANG_THAI_KHOA["tra_phi"]:
         for ten, k in ds_khoa_mien_phi():
-            if ten in TRANG_THAI_KHOA["het"]:
+            if ten in TRANG_THAI_KHOA["het"] or ten in TRANG_THAI_KHOA["hong"]:
                 continue
             try:
                 return _goi_gemini_mot_khoa(payload, ds_model, k, ten)
             except HetHanMuc:
                 TRANG_THAI_KHOA["het"].add(ten)
                 print("⏭️ %s hết lượt trong ngày, thử khoá tiếp theo." % ten)
+            except KhoaHong as e:
+                TRANG_THAI_KHOA["hong"].add(ten)
+                print("🔑 %s bị Google từ chối (khoá hỏng), bỏ khoá này trong lượt chạy và thử khoá tiếp theo: %s" % (ten, str(e)[:160]), flush=True)
         if not khoa_tp:
-            raise HetHanMuc("HET_HAN_MUC – mọi khoá miễn phí đã hết lượt: " + ", ".join(sorted(TRANG_THAI_KHOA["het"])))
+            if TRANG_THAI_KHOA["hong"] and not TRANG_THAI_KHOA["het"]:
+                raise KhoaHong("KHOA_HONG – mọi khoá miễn phí đều bị Google từ chối: " + ", ".join(sorted(TRANG_THAI_KHOA["hong"])))
+            raise HetHanMuc("HET_HAN_MUC – mọi khoá miễn phí đã hết lượt: " + ", ".join(sorted(TRANG_THAI_KHOA["het"]))
+                            + ((" (khoá hỏng: " + ", ".join(sorted(TRANG_THAI_KHOA["hong"])) + ")") if TRANG_THAI_KHOA["hong"] else ""))
         TRANG_THAI_KHOA["tra_phi"] = True
         print("💳 Mọi khoá miễn phí hết lượt → chuyển sang khoá trả phí (tối đa %d lượt gọi)." % TOI_DA_LUOT_TRA_PHI)
     if TRANG_THAI_KHOA["da_dung_tra_phi"] >= TOI_DA_LUOT_TRA_PHI:
@@ -333,6 +352,8 @@ def _goi_gemini_mot_khoa(payload, ds_model, key, ten_khoa=""):
                 msg = (r.json().get("error") or {}).get("message", r.text)[:220]
             except ValueError:
                 msg = r.text[:220]
+            if la_loi_khoa(r.status_code, r.text):
+                raise KhoaHong("%s lỗi %d: %s" % (ten_khoa or "khoá", r.status_code, msg))
             if r.status_code not in (429, 402):
                 co_loi_khac = True
             else:
