@@ -44,7 +44,7 @@ from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 import doc_de as X   # goi_gemini dùng chung: xoay khoá, chờ 429 theo phút, ghi quota
 
 ID_KHO_CHUNG = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
-MODEL_MAC_DINH, MODEL_DU_PHONG_MAC_DINH = "gemini-3.8-flash", ["gemini-3.5-flash-lite"]
+MODEL_MAC_DINH, MODEL_DU_PHONG_MAC_DINH = X.MODEL_MAC_DINH, X.MODEL_DU_PHONG_MAC_DINH   # một nơi duy nhất: doc_de.py
 SAI_SO_CHO_PHEP = 0.02
 TZ = dt.timezone(dt.timedelta(hours=7))
 TRAN_TOKEN = [16384, 32768]        # lần đầu như Apps Script; bị cắt cụt thì thử lại với trần gấp đôi
