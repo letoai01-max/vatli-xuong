@@ -1,20 +1,33 @@
-# .github/workflows/soan_giao_an.yml – phần "chờ Gemini" của agent giáo án chạy ở đây; Apps Script chỉ dựng Docs/Word
+# .github/workflows/soan_giao_an.yml – XƯỞNG SOẠN GIÁO ÁN (phần "chờ Gemini"; Apps Script chỉ dựng Docs/Word)
+# [14/11/2026] Sửa cho KHỚP soan_giao_an.py: tệp Python không đọc --lop / --so-tiet mà đọc biến môi trường
+# GOI_ID + KQ_ID (Apps Script ra lệnh) hoặc TEN_BAI (soạn tay để thử). Bản cũ không truyền biến nào nên luôn báo
+# "Không có việc để làm". Bỏ lịch cron vì soan_giao_an.py ghi rõ "chỉ chạy khi được gọi" (lịch riêng nằm bên Apps Script).
+# Chỉ dùng khoá miễn phí (không truyền GEMINI_API_KEY_TRA_PHI).
 name: soan-giao-an
 on:
-  schedule:                      # luân phiên: mỗi ngày một lớp (UTC 00:00 = 07:00 giờ Việt Nam)
-    - cron: '0 0 * * 1,4'        # thứ Hai, thứ Năm  → lớp 10
-    - cron: '0 0 * * 2,5'        # thứ Ba, thứ Sáu   → lớp 11
-    - cron: '0 0 * * 3,6'        # thứ Tư, thứ Bảy   → lớp 12
   workflow_dispatch:
     inputs:
-      lop:
-        description: 'Lớp (10, 11 hoặc 12)'
-        required: true
-        default: '10'
-      so_tiet:
-        description: 'Số tiết soạn mỗi lượt'
+      ma:
+        description: "Mã giáo án (Apps Script truyền; có thể bỏ trống)"
         required: false
-        default: '1'
+      goi:
+        description: "File ID gói việc goi_<mã>.json (Apps Script truyền; bỏ trống khi soạn tay)"
+        required: false
+      ket_qua:
+        description: "File ID kết quả ket_qua_<mã>.json (Apps Script truyền; bỏ trống khi soạn tay)"
+        required: false
+      ten_bai:
+        description: "SOẠN TAY để thử: tên bài (ví dụ: Bài 1. Dao động điều hòa). Bỏ trống nếu chạy bằng gói việc"
+        required: false
+      lop:
+        description: "Lớp khi soạn tay (10, 11 hoặc 12)"
+        required: false
+        default: "10"
+      yccd:
+        description: "Yêu cầu cần đạt (tuỳ chọn, soạn tay)"
+        required: false
+permissions:
+  contents: read
 concurrency:
   group: soan-giao-an
   cancel-in-progress: false
@@ -26,31 +39,31 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
           cache: pip
-      - run: pip install -r requirements.txt
-      - name: Chọn lớp theo lịch
-        id: lop
-        env:
-          NHAP_LOP: ${{ github.event.inputs.lop }}
-          LICH: ${{ github.event.schedule }}
+      - name: Cài pandoc (xuất Word có bảng và phương trình) và thư viện
         run: |
-          if [ -n "$NHAP_LOP" ]; then L="$NHAP_LOP"
-          else
-            case "$LICH" in
-              "0 0 * * 1,4") L=10 ;;
-              "0 0 * * 2,5") L=11 ;;
-              "0 0 * * 3,6") L=12 ;;
-              *) echo "Lịch không nhận ra: $LICH"; exit 1 ;;
-            esac
-          fi
-          echo "lop=$L" >> "$GITHUB_OUTPUT"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq pandoc > /dev/null
+          pip install -q -r requirements.txt
       - name: Soạn nội dung giáo án
         env:
-          LOP: ${{ steps.lop.outputs.lop }}
-          SO_TIET: ${{ github.event.inputs.so_tiet || '1' }}
+          PYTHONUNBUFFERED: "1"
+          GOI_ID: ${{ inputs.goi }}
+          KQ_ID: ${{ inputs.ket_qua }}
+          TEN_BAI: ${{ inputs.ten_bai }}
+          LOP: ${{ inputs.lop }}
+          YCCD: ${{ inputs.yccd }}
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
           GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
-        run: python soan_giao_an.py --lop "$LOP" --so-tiet "$SO_TIET"
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: python soan_giao_an.py
+      - name: Lưu bản Word soạn tay (nếu có)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: giao-an
+          path: out/
+          if-no-files-found: ignore
