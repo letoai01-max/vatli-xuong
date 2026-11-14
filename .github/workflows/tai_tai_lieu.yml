@@ -1,8 +1,8 @@
 # .github/workflows/tai_tai_lieu.yml – Download Agent chạy trên xưởng Python (thay vbChay / vbChayTiep / chayNgam của Apps Script)
 name: tai-tai-lieu
 on:
-  # schedule:
-  #   - cron: '0 18 * * *'
+  schedule:
+    - cron: '17 */3 * * *'
   workflow_dispatch:
     inputs:
       chu_de:
