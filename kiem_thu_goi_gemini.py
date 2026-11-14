@@ -81,3 +81,9 @@ assert not X.TRANG_THAI_KHOA["hong"], X.TRANG_THAI_KHOA
 assert X.la_loi_khoa(400, "API key not valid") and X.la_loi_khoa(403, "Your API key was reported as leaked.")
 assert not X.la_loi_khoa(400, "Thinking config") and not X.la_loi_khoa(429, "API key")
 print("\nOK: la_loi_khoa + nhớ khoá hỏng đạt")
+
+chay("12. đọc đủ GEMINI_API_KEY_1 … _5, bỏ khoá trùng giá trị",
+     lambda c, n: e429("PerDay") if c[1] in ("K0", "K1", "K2") else ok("từ khoá 4"),
+     {"GEMINI_API_KEY": "K0", "GEMINI_API_KEY_1": "K1", "GEMINI_API_KEY_2": "K2", "GEMINI_API_KEY_3": "K0", "GEMINI_API_KEY_4": "K4", "GEMINI_API_KEY_5": "K5"}, models=("m1",))
+assert [k for _, k in X.ds_khoa_mien_phi()] == ["K0", "K1", "K2", "K4", "K5"], X.ds_khoa_mien_phi()
+print("\nOK: ds_khoa_mien_phi đọc _1.._5 và bỏ trùng")
