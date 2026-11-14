@@ -41,8 +41,10 @@ SO_LAN_THU_KHAC_NHAU = 300
 
 # ---------------- đọc đáp án ----------------
 def doc_dap_an_p1(s):
-    m = re.search(r"[ABCD]", str(s or "").upper())
-    return m.group(0) if m else ""
+    """Đọc đáp án A/B/C/D của câu Phần I. Chỉ nhận chữ cái đứng riêng ('B', 'Đáp án: B', 'Chọn B', 'B.', '(B)');
+    không lấy chữ nằm trong từ khác (chữ C của 'Chọn') và trả '' khi có nhiều đáp án khác nhau ('Cả A và B')."""
+    tim = set(re.findall(r"(?<!\w)[ABCD](?!\w)", str(s or "").upper()))
+    return tim.pop() if len(tim) == 1 else ""
 
 
 def doc_dap_an_p2(s):
