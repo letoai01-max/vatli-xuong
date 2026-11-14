@@ -1,0 +1,57 @@
+# Đường dẫn trong kho: .github/workflows/kiem_thu.yml
+# Chạy kiểm thử tự động mỗi khi đẩy code Python lên nhánh main (và khi mở pull request).
+# Không cần khoá Gemini hay Google thật: các bài test tự giả lập phản hồi.
+name: Kiem thu
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.py"
+      - "requirements.txt"
+      - ".github/workflows/kiem_thu.yml"
+  pull_request:
+    paths:
+      - "**.py"
+      - "requirements.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kiem-thu-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  kiem-thu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONUTF8: "1"
+
+    steps:
+      - name: Lấy mã nguồn
+        uses: actions/checkout@v4
+
+      - name: Cài Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cài pandoc (kiem_thu_v2 cần để xuất Word)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq pandoc
+
+      - name: Cài thư viện
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Biên dịch mọi tệp Python (bắt lỗi cú pháp)
+        run: python -m compileall -q -x "_chua_dung|images" .
+
+      - name: Kiểm thử gọi Gemini (xoay khoá, 429, khoá hỏng, 404)
+        run: python kiem_thu_goi_gemini.py
+
+      - name: Kiểm thử giao thức v2 và xuất Word
+        run: python kiem_thu_v2.py ket_qua_kiem_thu
