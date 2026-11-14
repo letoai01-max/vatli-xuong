@@ -61,6 +61,15 @@ def con_thoi_gian(du_tru=0):
     return time.time() - BAT_DAU < THOI_GIAN_TOI_DA_PHUT * 60 - du_tru
 
 
+def bay_gio_so():
+    """Ngày-giờ hiện tại (giờ VN) dạng số ngày của Google Sheets, để ô luôn là ngày thật chứ không phải chữ."""
+    bay_gio = dt.datetime.now(D.TZ).replace(tzinfo=None)
+    return (bay_gio - dt.datetime(1899, 12, 30)).total_seconds() / 86400.0
+
+
+DINH_DANG_NGAY = {"numberFormat": {"type": "DATE_TIME", "pattern": "dd/MM/yyyy HH:mm:ss"}}
+
+
 def bay_gio_iso():
     # ISO được Google Sheets nhận là ngày-giờ ở mọi ngôn ngữ/vùng
     return dt.datetime.now(D.TZ).strftime("%Y-%m-%d %H:%M:%S")
@@ -484,14 +493,21 @@ def main():
                   thong_ke["loai_tru"], thong_ke["kiem_tra_loi"], (" | lỗi: " + loi_tim) if loi_tim else ""))
     print("📊", tom_tat)
 
-    luc = bay_gio_iso()
+    luc_so = bay_gio_so()
     if thanh_cong:
-        tab_cd.update(range_name="C%d" % dong, values=[[luc]], value_input_option="USER_ENTERED")
+        tab_cd.update(range_name="C%d" % dong, values=[[luc_so]], value_input_option="RAW")
+        tab_cd.format("C%d" % dong, DINH_DANG_NGAY)
     tab_cd.update(range_name="D%d" % dong, values=[[tom_tat[:500]]], value_input_option="RAW")
-    tab_cd.update(range_name="F%d" % dong, values=[[luc]], value_input_option="USER_ENTERED")
+    tab_cd.update(range_name="F%d" % dong, values=[[luc_so]], value_input_option="RAW")
+    tab_cd.format("F%d" % dong, DINH_DANG_NGAY)
     # Cột E (số file đã tải) do Apps Script cộng thêm khi tải thật xong
-    tab_nk.append_row([luc, chu_de, thong_ke["xep"], tom_tat[:1000], trang_thai], value_input_option="USER_ENTERED", table_range="A1")
-
+    kq_ghi = tab_nk.append_row([luc_so, chu_de, thong_ke["xep"], tom_tat[:1000], trang_thai], value_input_option="RAW", table_range="A1")
+    try:
+        m = re.search(r"!A(\d+)", kq_ghi["updates"]["updatedRange"])
+        if m:
+            tab_nk.format("A%s" % m.group(1), DINH_DANG_NGAY)
+    except Exception as e:
+        print("[Cảnh báo] Không định dạng được ô thời gian của NhatKyChay:", e)
 
 if __name__ == "__main__":
     main()
