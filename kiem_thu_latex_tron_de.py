@@ -20,7 +20,7 @@ import latex_chuan as L
 import tron_de as T
 
 DANH_SACH = []
-DA_BIET = []   # lỗi đã biết: chỉ báo, không làm đỏ
+DA_BIET = []   # lỗi đã biết: chỉ báo, không làm đỏ (hiện chưa có)
 
 
 def kich_ban(f):
@@ -137,10 +137,16 @@ def tron_01_doc_dap_an_p1():
     assert T.doc_dap_an_p1("123") == ""
 
 
-@la_loi_da_biet
-def tron_01b_doc_dap_an_p1_chuoi_co_chu_C_dau():
-    """'Chọn B' bị đọc thành 'C' vì hàm lấy chữ A–D đầu tiên trong cả chuỗi (kể cả chữ C của 'Chọn')."""
+@kich_ban
+def tron_01b_doc_dap_an_p1_khong_lay_chu_trong_tu():
+    """Trước đây 'Chọn B' bị đọc thành 'C' (chữ C của 'Chọn'). Nay chỉ nhận chữ cái đứng riêng."""
     assert T.doc_dap_an_p1("Chọn B") == "B"
+    assert T.doc_dap_an_p1("Câu B") == "B"
+    assert T.doc_dap_an_p1("Đáp án đúng là d") == "D"
+    assert T.doc_dap_an_p1("B.") == "B" and T.doc_dap_an_p1("(C)") == "C" and T.doc_dap_an_p1("A) gia tốc") == "A"
+    assert T.doc_dap_an_p1("Cả A và B") == ""       # hai đáp án khác nhau → coi là không đọc được
+    assert T.doc_dap_an_p1("A, vì A đúng") == "A"   # lặp cùng một chữ vẫn là một đáp án
+    assert T.doc_dap_an_p1("ABCD") == ""            # không có chữ đứng riêng
 
 
 @kich_ban
