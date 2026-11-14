@@ -35,6 +35,10 @@ import tim_kiem as TK   # xưởng tìm kiếm có sẵn (cần pip install ddgs
 TAB_CHU_DE, TAB_DA_TAI, TAB_NHAT_KY, TAB_SAN_SANG = "ChuDe", "DaTai", "NhatKyChay", "SanSangTai"
 COT_SS = ["Thời gian", "URL", "Tên file", "Chủ đề", "Loại", "Thư mục", "Kích thước (byte)", "Trạng thái", "Số lần thử", "Ghi chú"]
 
+# Bảng tính của Agent tải tài liệu = bảng mà Apps Script mở (thuộc tính KHOA_BANG), tên "Download Agent - Quản lý".
+# ID này KHÁC ID_BANG_DOWNLOAD trong doc_de.py. Nếu sai, lấy ID trong địa chỉ của sheet (giữa /d/ và /edit) hoặc đặt biến môi trường ID_BANG_TAI.
+ID_BANG_TAI = os.environ.get("ID_BANG_TAI", "").strip() or "1GhOqNxqIeXrPYRFLJiZtoS7zr_u-EPVE_O38KMa-dAw"
+
 THOI_GIAN_TOI_DA_PHUT = float(os.environ.get("THOI_GIAN_TOI_DA_PHUT", "20"))
 SO_FILE_TOI_DA = int(os.environ.get("SO_FILE_TOI_DA", "25"))   # tối đa link xếp hàng mỗi lượt
 SO_FILE_MOI_TRANG = 10          # tối đa link lấy từ một trang
@@ -376,7 +380,8 @@ def chon_chu_de(duoc_lieu):
 def main():
     gc, _drive, email_sa = D.ket_noi()
     print("Tài khoản dịch vụ:", email_sa)
-    bang = gc.open_by_key(D.ID_BANG_DOWNLOAD)
+    bang = gc.open_by_key(ID_BANG_TAI)
+    print('Bảng tính: "%s" (%s)' % (bang.title, ID_BANG_TAI))
     tab_cd, tab_dt, tab_nk = bang.worksheet(TAB_CHU_DE), bang.worksheet(TAB_DA_TAI), bang.worksheet(TAB_NHAT_KY)
     tab_ss = lay_tab_san_sang(bang)
 
