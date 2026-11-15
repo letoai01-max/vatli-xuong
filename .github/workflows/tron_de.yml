@@ -1,0 +1,51 @@
+# .github/workflows/tron_de.yml – TRỘN ĐỀ BẰNG PYTHON (chạy tron_de.py, loại gói "tron_de")
+# Cùng khuôn với tao_de.yml: đầu vào ma, goi, ket_qua. Không cần khoá Gemini (trộn đề không gọi AI).
+# tron_de.py đăng nhập bằng google.auth.default nên PHẢI có bước google-github-actions/auth (như tao_de.yml).
+name: tron_de
+on:
+  workflow_dispatch:
+    inputs:
+      ma:
+        description: "Mã việc trộn đề"
+        required: false
+      goi:
+        description: "File ID gói việc (goi_de_<mã>.json trên Drive, loai = tron_de)"
+        required: true
+      ket_qua:
+        description: "File ID kết quả (ket_qua_<mã>.json trên Drive)"
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  tron_de:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Mỗi việc một lượt: gửi trùng mã thì chạy nối tiếp, không đè kết quả của nhau
+    concurrency:
+      group: tron-de-${{ inputs.ma || inputs.goi }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Đăng nhập Google bằng key JSON
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Cài pandoc (xuất Word) và thư viện
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq pandoc > /dev/null
+          pip install -q -r requirements.txt
+      - name: Trộn đề
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GOI_ID: ${{ inputs.goi }}
+          KQ_ID: ${{ inputs.ket_qua }}
+        run: python trung_tam.py tron_de.py
