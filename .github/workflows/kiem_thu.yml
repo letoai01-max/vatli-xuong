@@ -53,6 +53,9 @@ jobs:
       - name: Kiểm thử gọi Gemini (xoay khoá, 429, khoá hỏng, 404)
         run: python kiem_thu_goi_gemini.py
 
+      - name: Kiểm thử hoãn việc khi hết hạn mức Gemini (theo ngày / theo phút)
+        run: python kiem_thu_hoan.py
+
       - name: Kiểm thử chuẩn LaTeX và trộn đề
         run: python kiem_thu_latex_tron_de.py
 
