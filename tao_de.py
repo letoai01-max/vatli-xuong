@@ -50,6 +50,32 @@ TB = _nap("thong_bao")           # Telegram (tuỳ chọn)
 
 CHO_HOAN_PHUT = {"phut": 3, "ngay": 8}   # giống ChanVongLap.gs: hết lượt theo phút chờ 3', theo ngày chờ 8'
 
+
+def phut_den_reset_gemini(luc=None):
+    """[15/11] Số phút từ `luc` (mặc định: bây giờ) đến lần Gemini đặt lại hạn mức NGÀY (0h giờ Thái Bình Dương) + 10 phút dự phòng.
+    Không tính được (thiếu zoneinfo/tzdata) → trả CHO_HOAN_PHUT['ngay'] như cũ."""
+    try:
+        import datetime as dt
+        from zoneinfo import ZoneInfo
+        la, utc = ZoneInfo("America/Los_Angeles"), dt.timezone.utc
+        bay = (luc or dt.datetime.now(utc)).astimezone(la)
+        mai = (bay + dt.timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+        phut = int((mai.astimezone(utc) - bay.astimezone(utc)).total_seconds() // 60) + 10     # trừ ở UTC để đúng cả ngày đổi giờ mùa hè
+        return max(CHO_HOAN_PHUT["ngay"], phut)
+    except Exception as e:
+        print("⚠️ Không tính được mốc reset Gemini, dùng %d phút: %s" % (CHO_HOAN_PHUT["ngay"], str(e)[:100]), flush=True)
+        return CHO_HOAN_PHUT["ngay"]
+
+
+def phan_loai_hoan(e, luc=None):
+    """Trả (theo_ngay, số phút hoãn) cho một HetHanMuc.
+    Công tắc HOAN_THEO_MOC_RESET (biến môi trường, mặc định bật; đặt 0 = y như bản cũ: đoán theo chữ trong thông báo, chờ 3'/8')."""
+    cu = bool(re.search(r"ngày|day|RPD", str(e), re.I))
+    if str(os.environ.get("HOAN_THEO_MOC_RESET", os.environ.get("CFG_HOAN_THEO_MOC_RESET", "1"))).strip() == "0":
+        return cu, CHO_HOAN_PHUT["ngay" if cu else "phut"]
+    theo_ngay = bool(getattr(e, "theo_ngay", False)) or cu
+    return theo_ngay, (phut_den_reset_gemini(luc) if theo_ngay else CHO_HOAN_PHUT["phut"])
+
 HE_THONG = (
     "Bạn là AI Agent Khảo thí môn Vật lí THPT (Chương trình GDPT 2018, Kết nối tri thức với cuộc sống). "
     "Soạn đề TUÂN THỦ CHÍNH XÁC DANH MỤC CÂU HỎI được giao. Đáp án phải đúng về vật lí, số liệu tính toán chính xác. "
@@ -1041,9 +1067,9 @@ def main():
         print("✅ Xong đề %s: %s" % (goi["ma"], json.dumps(tom_tat, ensure_ascii=False)), flush=True)
         bao_telegram("✅ Xưởng Python đã soạn xong đề %s (%d cảnh báo). %s" % (goi["ma"], len(ph.canh_bao), json.dumps(tt_kd, ensure_ascii=False)[:200]))
     except X.HetHanMuc as e:
-        theo_ngay = bool(re.search(r"ngày|day|RPD", str(e), re.I))
-        ph.hoan(str(e), CHO_HOAN_PHUT["ngay" if theo_ngay else "phut"], de_dang_soan=de, tien_do_luu=tien)
-        print("⏸️ Hết hạn mức Gemini – Apps Script sẽ gửi lại:", str(e)[:150], flush=True)
+        theo_ngay, phut_cho = phan_loai_hoan(e)
+        ph.hoan(str(e), phut_cho, de_dang_soan=de, tien_do_luu=tien)
+        print("⏸️ Hết hạn mức Gemini (%s) – Apps Script sẽ gửi lại sau %d phút: %s" % ("theo NGÀY" if theo_ngay else "theo phút", phut_cho, str(e)[:150]), flush=True)
     except Exception as e:
         ph.loi(str(e))
         for k in ("docxHS", "docxGV"):
