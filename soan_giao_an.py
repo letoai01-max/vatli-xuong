@@ -43,9 +43,11 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
+import time
 import unicodedata
 
 import requests
@@ -1282,7 +1284,77 @@ def soan_tay(lop, ten_bai, yccd, cac_model, drive=None):
     return tep
 
 
-def main():
+# ---------------- HẠN THỜI GIAN CỦA LƯỢT CHẠY (job GitHub tối đa 30 phút) ----------------
+# Bản đầu không có hạn tổng: một lời gọi Gemini chờ hạn mức quá lâu thì runner huỷ job ở phút 30 và KHÔNG ghi được LOI,
+# Apps Script phải chờ rất lâu mới biết. Giờ có hai mốc (đổi bằng biến môi trường HAN_MEM_PHUT, HAN_CUNG_PHUT):
+#   • HẠN MỀM (20 phút): không bắt đầu thêm lời gọi Gemini / vẽ hình nào nữa. Phần nào đã có "except Exception" (Phụ lục, từng hình)
+#     thì bỏ qua phần đó và đi tiếp → vẫn xuất Word phần chính, kèm cảnh báo thiếu Phụ lục / hình. Chưa có khung bài thì ghi LOI.
+#   • HẠN CỨNG (26 phút) hoặc runner huỷ (SIGTERM / SIGINT): ngắt ngay, ghi LOI vào ket_qua rồi thoát.
+T_BAT_DAU = time.time()
+HAN_MEM_PHUT = float(os.environ.get("HAN_MEM_PHUT", "20"))
+HAN_CUNG_PHUT = float(os.environ.get("HAN_CUNG_PHUT", "26"))
+
+
+class HetGio(Exception):
+    """Quá hạn mềm. Là Exception để các khối 'except Exception' sẵn có (Phụ lục, từng hình) tự bỏ qua phần đó."""
+
+
+class HetGioCung(BaseException):
+    """Quá hạn cứng hoặc runner huỷ. Cố ý là BaseException để không khối 'except Exception' nào nuốt mất; main ghi LOI."""
+
+
+def phut_da_chay():
+    return (time.time() - T_BAT_DAU) / 60.0
+
+
+def kiem_han_mem(viec=""):
+    if phut_da_chay() > HAN_MEM_PHUT:
+        raise HetGio("Quá hạn %.1f phút của xưởng giáo án (đã chạy %.1f phút)%s." % (HAN_MEM_PHUT, phut_da_chay(), (", bỏ qua: " + viec) if viec else ""))
+
+
+if not getattr(DC.goi_gemini, "_co_han", False):
+    _goi_gemini_goc = DC.goi_gemini
+
+    def _goi_gemini_co_han(*a, **k):
+        kiem_han_mem("gọi Gemini")
+        t0 = time.time()
+        try:
+            return _goi_gemini_goc(*a, **k)
+        finally:
+            print("⏱️ Gọi Gemini %.0f giây (đã chạy %.1f phút)" % (time.time() - t0, phut_da_chay()), flush=True)
+
+    _goi_gemini_co_han._co_han = True
+    DC.goi_gemini = _goi_gemini_co_han
+
+_ve_hinh_xuong_goc = _ve_hinh_xuong
+
+
+def _ve_hinh_xuong(*a, **k):                      # chen_hinh gọi tên này lúc chạy; lỗi HetGio được nó ghi vào loiHinh (để chỗ cho GV chèn)
+    kiem_han_mem("vẽ hình")
+    return _ve_hinh_xuong_goc(*a, **k)
+
+
+def _bi_ngat(signum, frame):
+    raise HetGioCung("Quá hạn cứng %.1f phút hoặc runner GitHub huỷ (tín hiệu %s) sau %.1f phút" % (HAN_CUNG_PHUT, signum, phut_da_chay()))
+
+
+def cai_han_cung():
+    try:
+        signal.signal(signal.SIGTERM, _bi_ngat)
+        signal.signal(signal.SIGALRM, _bi_ngat)
+        signal.setitimer(signal.ITIMER_REAL, max(1.0, HAN_CUNG_PHUT * 60 - (time.time() - T_BAT_DAU)))
+    except (ValueError, OSError, AttributeError):
+        pass                                       # không phải luồng chính / hệ điều hành không hỗ trợ: chỉ còn hạn mềm
+
+
+def go_han_cung():
+    try:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+    except (ValueError, OSError, AttributeError):
+        pass
+
+
+def _chay_chinh():
     print("--- BẮT ĐẦU CHẠY XƯỞNG SOẠN GIÁO ÁN (DUAL-AI) ---")
     if not os.environ.get("GOOGLE_CREDENTIALS"):
         sys.exit("❌ Chưa thiết lập biến môi trường GOOGLE_CREDENTIALS.")
@@ -1317,6 +1389,27 @@ def main():
         print(f"⏸️ Công tắc SOAN_GIAO_AN_LOP_{lop} đang tắt. Dừng thực thi.")
         return
     soan_tay(lop, ten_bai, os.environ.get("YCCD", "").strip(), cac_model, drive)
+
+
+def main():
+    cai_han_cung()
+    goi_id, kq_id = os.environ.get("GOI_ID", "").strip(), os.environ.get("KQ_ID", "").strip()
+    try:
+        _chay_chinh()
+    except (HetGioCung, KeyboardInterrupt) as e:
+        ly_do = str(e) or "Runner GitHub huỷ hoặc quá giờ"
+        print("⛔ " + ly_do, flush=True)
+        go_han_cung()
+        if goi_id and kq_id:
+            try:
+                _, drive = DC.ket_noi()
+                DC.ghi_tep(drive, kq_id, {"trangThai": "LOI", "loi": ly_do[:500], "luc": dt.datetime.now(TZ).isoformat()})
+                print("Đã ghi LOI vào ket_qua để Apps Script biết.", flush=True)
+            except Exception as e2:
+                print("Không ghi được LOI:", str(e2)[:150], flush=True)
+        sys.exit(1)
+    finally:
+        go_han_cung()
 
 
 if __name__ == "__main__":
