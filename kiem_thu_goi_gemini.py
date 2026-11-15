@@ -32,7 +32,7 @@ def chay(ten, kich_ban, khoa, models=("m1", "m2")):
     for k in list(os.environ):
         if k.startswith("GEMINI_API_KEY"): del os.environ[k]
     os.environ.update(khoa)
-    X.TRANG_THAI_KHOA.update({"tra_phi": False, "da_dung_tra_phi": 0, "het": set(), "hong": set()})
+    X.TRANG_THAI_KHOA.update({"tra_phi": False, "da_dung_tra_phi": 0, "het": set(), "hong": set(), "ngay": False})
     goi = []
     def post(url, headers=None, data=None, timeout=0):
         goi.append((url.split("/models/")[1].split(":")[0], headers["x-goog-api-key"]))
@@ -111,4 +111,22 @@ kq, loi, goi = chay("12. đọc đủ GEMINI_API_KEY_1 … _5, bỏ khoá trùng
 assert [k for _, k in X.ds_khoa_mien_phi()] == ["K0", "K1", "K2", "K4", "K5"], X.ds_khoa_mien_phi()
 assert kq == ("từ khoá 4", "m1"), (kq, goi)
 
-print("\nTẤT CẢ ĐẠT (12 kịch bản gọi Gemini)")
+# ---- [15/11] phân loại HOAN theo ngày / theo phút (lỗi "gửi lại 11 lần": thông báo không có chữ "ngày" nên luôn bị coi là theo phút)
+kq, loi, goi = chay("13. mọi khoá hết NGÀY, không có khoá trả phí → HetHanMuc.theo_ngay=True",
+     lambda c, n: e429("PerDay"), {"GEMINI_API_KEY": "K1", "GEMINI_API_KEY_2": "K2"})
+assert isinstance(loi, X.HetHanMuc) and loi.theo_ngay is True, (repr(loi), getattr(loi, "theo_ngay", None))
+
+kq, loi, goi = chay("14. 429 theo PHÚT mãi không hết → HetHanMuc.theo_ngay=False (không hoãn cả ngày oan)",
+     lambda c, n: e429("PerMinute"), {"GEMINI_API_KEY": "K1"})
+assert isinstance(loi, X.HetHanMuc) and loi.theo_ngay is False, (repr(loi), getattr(loi, "theo_ngay", None))
+
+print("\n== 15. chạm trần chi phí khoá trả phí → HetHanMuc.theo_ngay=True (chạy lại ngay chỉ tốn thêm tiền)")
+X.TRANG_THAI_KHOA.update({"tra_phi": True, "da_dung_tra_phi": X.TOI_DA_LUOT_TRA_PHI, "het": {"GEMINI_API_KEY"}, "hong": set(), "ngay": True})
+os.environ["GEMINI_API_KEY"] = "K1"; os.environ["GEMINI_API_KEY_TRA_PHI"] = "KP"
+try:
+    DC.goi_gemini("he", "nguoi", False, ["m1"]); raise SystemExit("phải ném HetHanMuc khi chạm trần trả phí")
+except X.HetHanMuc as e:
+    assert e.theo_ngay is True, repr(e)
+    print("   NÉM đúng:", str(e)[:80])
+
+print("\nTẤT CẢ ĐẠT (15 kịch bản gọi Gemini)")
