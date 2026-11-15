@@ -74,7 +74,7 @@ RE_CT_CU = re.compile(r"\b(" + "|".join([
 BAT_DAU = time.time()
 TOI_DA_LUOT_TRA_PHI = int(os.environ.get("TOI_DA_LUOT_TRA_PHI", "40"))   # chặn chi phí mỗi lượt chạy
 CHO_PHEP_DOC_DE = True                                              # công tắc bật/tắt (tab CauHinh)
-TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0, "het": set(), "hong": set()}   # het = hết lượt ngày; hong = Google từ chối khoá
+TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0, "het": set(), "hong": set(), "ngay": False}   # het = hết lượt ngày; hong = Google từ chối khoá
 
 
 def ds_khoa_mien_phi():
@@ -88,7 +88,15 @@ def ds_khoa_mien_phi():
 
 
 class HetHanMuc(Exception):
-    pass
+    """Hết hạn mức Gemini. [15/11] theo_ngay=True: hết lượt theo NGÀY (RPD) hoặc đã chạm trần chi phí khoá trả phí,
+    nên thử lại sau vài phút là vô ích (nơi gọi nên hoãn đến mốc Gemini đặt lại hạn mức). Mặc định False = như cũ."""
+    theo_ngay = False
+
+
+def _het_han_muc(thong_bao, theo_ngay=False):
+    e = HetHanMuc(thong_bao)
+    e.theo_ngay = bool(theo_ngay)
+    return e
 
 
 class KhoaHong(RuntimeError):
@@ -289,8 +297,10 @@ def goi_gemini(payload, ds_model):
                 continue
             try:
                 return _goi_gemini_mot_khoa(payload, ds_model, k, ten)
-            except HetHanMuc:
+            except HetHanMuc as e:
                 TRANG_THAI_KHOA["het"].add(ten)
+                if getattr(e, "theo_ngay", False):
+                    TRANG_THAI_KHOA["ngay"] = True        # [15/11] có ít nhất một khoá bị 429 theo NGÀY thật
                 print("⏭️ %s hết lượt trong ngày, thử khoá tiếp theo." % ten)
             except KhoaHong as e:
                 TRANG_THAI_KHOA["hong"].add(ten)
@@ -298,12 +308,13 @@ def goi_gemini(payload, ds_model):
         if not khoa_tp:
             if TRANG_THAI_KHOA["hong"] and not TRANG_THAI_KHOA["het"]:
                 raise KhoaHong("KHOA_HONG – mọi khoá miễn phí đều bị Google từ chối: " + ", ".join(sorted(TRANG_THAI_KHOA["hong"])))
-            raise HetHanMuc("HET_HAN_MUC – mọi khoá miễn phí đã hết lượt: " + ", ".join(sorted(TRANG_THAI_KHOA["het"]))
-                            + ((" (khoá hỏng: " + ", ".join(sorted(TRANG_THAI_KHOA["hong"])) + ")") if TRANG_THAI_KHOA["hong"] else ""))
+            raise _het_han_muc("HET_HAN_MUC – mọi khoá miễn phí đã hết lượt: " + ", ".join(sorted(TRANG_THAI_KHOA["het"]))
+                               + ((" (khoá hỏng: " + ", ".join(sorted(TRANG_THAI_KHOA["hong"])) + ")") if TRANG_THAI_KHOA["hong"] else ""),
+                               theo_ngay=TRANG_THAI_KHOA.get("ngay", False))
         TRANG_THAI_KHOA["tra_phi"] = True
         print("💳 Mọi khoá miễn phí hết lượt → chuyển sang khoá trả phí (tối đa %d lượt gọi)." % TOI_DA_LUOT_TRA_PHI)
     if TRANG_THAI_KHOA["da_dung_tra_phi"] >= TOI_DA_LUOT_TRA_PHI:
-        raise HetHanMuc("HET_HAN_MUC – đã dùng đủ %d lượt khoá trả phí trong lượt chạy này" % TOI_DA_LUOT_TRA_PHI)
+        raise _het_han_muc("HET_HAN_MUC – đã dùng đủ %d lượt khoá trả phí trong lượt chạy này" % TOI_DA_LUOT_TRA_PHI, theo_ngay=True)   # trần chi phí: chạy lại ngay chỉ tốn thêm tiền
     TRANG_THAI_KHOA["da_dung_tra_phi"] += 1
     return _goi_gemini_mot_khoa(payload, ds_model, khoa_tp, "GEMINI_API_KEY_TRA_PHI")
 
@@ -329,6 +340,7 @@ def phan_tich_429(r):
 
 def _goi_gemini_mot_khoa(payload, ds_model, key, ten_khoa=""):
     ds_model, ds_loi, co_loi_khac = list(ds_model), [], False
+    thay_ngay = False                              # [15/11] có lần 429 thuộc loại theo NGÀY
     m = 0
     while m < len(ds_model) and m < 6:
         model = ds_model[m]
@@ -358,6 +370,7 @@ def _goi_gemini_mot_khoa(payload, ds_model, key, ten_khoa=""):
                 co_loi_khac = True
             else:
                 het_ngay, giay = phan_tich_429(r)
+                thay_ngay = thay_ngay or het_ngay
                 if not het_ngay and 0 < giay <= 90 and lan < 2:
                     print("⏳ %s chạm giới hạn theo phút, chờ %.0fs rồi thử lại." % (ten_khoa or model, giay), flush=True)
                     time.sleep(giay + 2); lan += 1
@@ -379,7 +392,7 @@ def _goi_gemini_mot_khoa(payload, ds_model, key, ten_khoa=""):
         m += 1
     tom_tat = " | ".join(ds_loi)
     if not co_loi_khac:
-        raise HetHanMuc("HET_HAN_MUC – " + tom_tat)
+        raise _het_han_muc("HET_HAN_MUC – " + tom_tat, theo_ngay=thay_ngay)
     raise RuntimeError(tom_tat or "Không gọi được Gemini")
 
 
