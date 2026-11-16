@@ -1,7 +1,4 @@
-```python
-# Tạo tệp index.html hoàn chỉnh với tính năng Gemini tự giải ngầm đã tích hợp trực tiếp vào tệp
-
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -16,7 +13,7 @@ html_content = """<!DOCTYPE html>
     <!-- MathJax cho hiển thị công thức Vật lí -->
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+            tex: { inlineMath: [['$', '$'], ['\(', '\)']], displayMath: [['$$', '$$'], ['\[', '\]']], processEscapes: true },
             svg: { fontCache: 'global' }
         };
     </script>
@@ -425,30 +422,30 @@ html_content = """<!DOCTYPE html>
         }
 
         const LATEX_UNICODE = {
-            'α': '\\alpha', 'β': '\\beta', 'γ': '\\gamma', 'δ': '\\delta', 'ε': '\\varepsilon', 'θ': '\\theta',
-            'λ': '\\lambda', 'μ': '\\mu', 'π': '\\pi', 'ρ': '\\rho', 'σ': '\\sigma', 'τ': '\\tau', 'φ': '\\varphi',
-            'ω': '\\omega', 'Δ': '\\Delta', 'Ω': '\\Omega', 'Φ': '\\Phi', 'Σ': '\\Sigma', 'Θ': '\\Theta', 'Λ': '\\Lambda',
-            '≈': '\\approx', '≤': '\\le ', '≥': '\\ge ', '≠': '\\ne ', '±': '\\pm ', '×': '\\times ', '·': '\\cdot ', '∙': '\\cdot ',
-            '→': '\\to ', '⇒': '\\Rightarrow ', '∞': '\\infty ', '∝': '\\propto ', '−': '-', '–': '-', '°': '^\\circ '
+            'α': '\alpha', 'β': '\beta', 'γ': '\gamma', 'δ': '\delta', 'ε': '\varepsilon', 'θ': '\theta',
+            'λ': '\lambda', 'μ': '\mu', 'π': '\pi', 'ρ': '\rho', 'σ': '\sigma', 'τ': '\tau', 'φ': '\varphi',
+            'ω': '\omega', 'Δ': '\Delta', 'Ω': '\Omega', 'Φ': '\Phi', 'Σ': '\Sigma', 'Θ': '\Theta', 'Λ': '\Lambda',
+            '≈': '\approx', '≤': '\le ', '≥': '\ge ', '≠': '\ne ', '±': '\pm ', '×': '\times ', '·': '\cdot ', '∙': '\cdot ',
+            '→': '\to ', '⇒': '\Rightarrow ', '∞': '\infty ', '∝': '\propto ', '−': '-', '–': '-', '°': '^\circ '
         };
         const SO_MU = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-' };
 
         function chuanHoaToan(m) {
             let s = String(m == null ? '' : m);
-            s = s.replace(/\\\\(?=[A-Za-z])/g, '\\');
+            s = s.replace(/\\(?=[A-Za-z])/g, '\');
             s = s.replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, c => {
                 const t = c.replace(/./g, k => SO_MU[k]);
                 return t.length > 1 ? '^{' + t + '}' : '^' + t;
             });
             s = s.replace(/[αβγδεθλμπρστφωΔΩΦΣΘΛ≈≤≥≠±×·∙→⇒∞∝−–°]/g, c => LATEX_UNICODE[c]);
-            s = s.replace(/√\s*\(([^()]*)\)/g, '\\sqrt{$1}').replace(/√\s*([A-Za-z0-9.,]+)/g, '\\sqrt{$1}');
-            s = s.replace(/\\[dt]frac\b/g, '\\frac').replace(/\\mathrm\{/g, '\\text{');
-            s = s.replace(/(\d)\s*\\times\s*(?=\d)/g, '$1\\cdot ');
-            s = s.replace(/\s*\*\s*/g, '\\cdot ');
+            s = s.replace(/√\s*\(([^()]*)\)/g, '\sqrt{$1}').replace(/√\s*([A-Za-z0-9.,]+)/g, '\sqrt{$1}');
+            s = s.replace(/\[dt]frac/g, '\frac').replace(/\mathrm\{/g, '\text{');
+            s = s.replace(/(\d)\s*\times\s*(?=\d)/g, '$1\cdot ');
+            s = s.replace(/\s*\*\s*/g, '\cdot ');
             s = s.replace(/\^\s*(-?\d{2,}|-\d)(?![\d}])/g, '^{$1}');
-            s = s.replace(/(\d(?:\{,\})?\d*)\s+(km\/h|m\/s|cm|mm|km|kg|mg|ms|Hz|MHz|kHz|mA|mV|mT|kV|rad|[gmsNJWVATΩ])(\^\{?-?\d\}?)?(?![A-Za-z\\{])/g,
-                (x, n, u, e) => n + '\\text{ ' + u + '}' + (e || ''));
-            s = s.replace(/(\d)\s*\\text\{\s*/g, '$1\\text{ ');
+            s = s.replace(/(\d(?:\{,\})?\d*)\s+(km\/h|m\/s|cm|mm|km|kg|mg|ms|Hz|MHz|kHz|mA|mV|mT|kV|rad|[gmsNJWVATΩ])(\^\{?-?\d\}?)?(?![A-Za-z\{])/g,
+                (x, n, u, e) => n + '\text{ ' + u + '}' + (e || ''));
+            s = s.replace(/(\d)\s*\text\{\s*/g, '$1\text{ ');
             s = s.replace(/(\d)\.(?=\d)/g, '$1{,}');
             s = s.replace(/(\d),(?=\d)/g, '$1{,}');
             s = s.replace(/\s+/g, ' ').trim();
@@ -456,16 +453,27 @@ html_content = """<!DOCTYPE html>
         }
 
         function chuanHoaLatex(s) {
-            let t = String(s == null ? '' : s).replace(/\r\n?/g, '\n');
+            let t = String(s == null ? '' : s).replace(/
+?/g, '
+');
             t = t.replace(/\[\s*cite[^\]]*\]/gi, '').replace(/\*\*|`/g, '');
-            t = t.replace(/\\(?:textbf|textit|emph)\{([^{}]*)\}/g, '$1').replace(/\\item\s*/g, '');
-            t = t.replace(/\\\[([\s\S]*?)\\\]/g, (m, x) => '$$' + x + '$$')
-                 .replace(/\\\(([\s\S]*?)\\\)/g, (m, x) => '$' + x + '$');
-            t = t.replace(/\$\$([\s\S]*?)\$\$|\$([^$\n]+?)\$/g, (m, blk, inl) =>
+            t = t.replace(/\(?:textbf|textit|emph)\{([^{}]*)\}/g, '$1').replace(/\item\s*/g, '');
+            t = t.replace(/\\[([\s\S]*?)\\]/g, (m, x) => '$$' + x + '$$')
+                 .replace(/\\(([\s\S]*?)\\)/g, (m, x) => '$' + x + '$');
+            t = t.replace(/\$\$([\s\S]*?)\$\$|\$([^$
+]+?)\$/g, (m, blk, inl) =>
                 blk != null ? '$$' + chuanHoaToan(blk) + '$$' : '$' + chuanHoaToan(inl) + '$');
-            t = t.replace(/([^\n])[ \t]*(\$\$[\s\S]*?\$\$)/g, '$1\n$2')
-                 .replace(/(\$\$[\s\S]*?\$\$)[ \t]*(?=[A-Za-z\u00C0-\u1EF9])/g, '$1\n');
-            t = t.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/[ \t]{2,}/g, ' ');
+            t = t.replace(/([^
+])[ 	]*(\$\$[\s\S]*?\$\$)/g, '$1
+$2')
+                 .replace(/(\$\$[\s\S]*?\$\$)[ 	]*(?=[A-Za-zÀ-ỹ])/g, '$1
+');
+            t = t.replace(/[ 	]+
+/g, '
+').replace(/
+{3,}/g, '
+
+').replace(/[ 	]{2,}/g, ' ');
             return t.trim();
         }
 
@@ -499,23 +507,29 @@ html_content = """<!DOCTYPE html>
             if (!o || !ed) return;
             if (window.MathJax && typeof MathJax.typesetClear === 'function') MathJax.typesetClear([ed]);
             ed.innerHTML = '';
-            const v = String(o.value || '').replace(/\r\n?/g, '\n').trim();
+            const v = String(o.value || '').replace(/
+?/g, '
+').trim();
             if (!v) return;
-            const themChu = t => t.split('\n').forEach((dong, i) => {
+            const themChu = t => t.split('
+').forEach((dong, i) => {
                 if (i > 0) ed.appendChild(document.createElement('br'));
                 if (dong) ed.appendChild(document.createTextNode(dong));
             });
-            const re = /\$\$([\s\S]*?)\$\$|\$([^$\n]+?)\$/g;
+            const re = /\$\$([\s\S]*?)\$\$|\$([^$
+]+?)\$/g;
             let cuoi = 0, m;
             while ((m = re.exec(v))) {
                 const khoi = m[1] != null;
                 let truoc = v.slice(cuoi, m.index);
-                if (khoi) truoc = truoc.replace(/\n$/, '');
+                if (khoi) truoc = truoc.replace(/
+$/, '');
                 themChu(truoc);
                 const tex = (khoi ? m[1] : m[2]).trim();
                 if (tex) ed.appendChild(taoChipCongThuc(tex, khoi));
                 cuoi = re.lastIndex;
-                if (khoi && v[cuoi] === '\n') cuoi++;
+                if (khoi && v[cuoi] === '
+') cuoi++;
             }
             themChu(v.slice(cuoi));
             if (dungNgay) dungCongThuc(ed);
@@ -525,25 +539,40 @@ html_content = """<!DOCTYPE html>
             let out = '';
             const di = node => node.childNodes.forEach(n => {
                 if (n.nodeType === 3) {
-                    out += n.nodeValue.replace(/\u00a0/g, ' ').replace(/[\u200b-\u200d\ufeff]/g, '');
+                    out += n.nodeValue.replace(/ /g, ' ').replace(/[​-‍﻿]/g, '');
                 } else if (n.nodeType === 1) {
                     if (n.classList.contains('ct')) {
                         const t = n.dataset.tex || '';
-                        if (t) out += n.dataset.block === '1' ? '\n$$' + t + '$$\n' : '$' + t + '$';
+                        if (t) out += n.dataset.block === '1' ? '
+$$' + t + '$$
+' : '$' + t + '$';
                     } else if (n.tagName === 'BR') {
-                        out += '\n';
+                        out += '
+';
                     } else if (/^(DIV|P)$/.test(n.tagName)) {
-                        if (out && !out.endsWith('\n')) out += '\n';
+                        if (out && !out.endsWith('
+')) out += '
+';
                         di(n);
-                        if (!out.endsWith('\n')) out += '\n';
+                        if (!out.endsWith('
+')) out += '
+';
                     } else {
                         di(n);
                     }
                 }
             });
             di(ed);
-            out = out.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/^\n+|\n+$/g, '');
-            if (ed.dataset.motDong === '1') out = out.replace(/\s*\n\s*/g, ' ').trim();
+            out = out.replace(/[ 	]+
+/g, '
+').replace(/
+{3,}/g, '
+
+').replace(/^
++|
++$/g, '');
+            if (ed.dataset.motDong === '1') out = out.replace(/\s*
+\s*/g, ' ').trim();
             return out;
         }
 
@@ -573,7 +602,8 @@ html_content = """<!DOCTYPE html>
         function danChuThuan(e, ed) {
             e.preventDefault();
             let t = (e.clipboardData || window.clipboardData).getData('text/plain') || '';
-            if (ed.dataset.motDong === '1') t = t.replace(/\s*\n\s*/g, ' ');
+            if (ed.dataset.motDong === '1') t = t.replace(/\s*
+\s*/g, ' ');
             document.execCommand('insertText', false, t);
             setTimeout(() => { dongBoKhung(ed); if (t.includes('$')) dungKhungTuMa(ed); }, 0);
         }
@@ -704,14 +734,16 @@ html_content = """<!DOCTYPE html>
             if (d.includes('tự luận') || d === 'tl') return 'tuluan';
             if (d.includes('nhiều lựa chọn') || d.includes('trắc nghiệm') || d === 'tn') return 'tn';
             const pa = String(phuongAn || '');
-            if (/(^|\n)\s*a\s*\)/.test(pa) && /(^|\n)\s*b\s*\)/.test(pa)) return 'ds';
+            if (/(^|
+)\s*a\s*\)/.test(pa) && /(^|
+)\s*b\s*\)/.test(pa)) return 'ds';
             return 'tn';
         }
 
         function tachDungSaiWeb(s) {
             const kq = {};
             const t = String(s || '');
-            const re = /([a-d])\s*\)?\s*[:.\-]?\s*(Đúng|Sai|Đ|S)(?![A-Za-z\u00C0-\u1EF9])/gi;
+            const re = /([a-d])\s*\)?\s*[:.\-]?\s*(Đúng|Sai|Đ|S)(?![A-Za-zÀ-ỹ])/gi;
             let m, co = false;
             while ((m = re.exec(t)) !== null) { kq[m[1].toLowerCase()] = /^đ/i.test(m[2]) ? 'Đúng' : 'Sai'; co = true; }
             if (!co) {
@@ -752,11 +784,12 @@ html_content = """<!DOCTYPE html>
         }
 
         function taoKhungTraLoi(index, dang, phuongAnRaw, dapAn) {
-            const cacDong = String(phuongAnRaw || '').split('\n').filter(l => l.trim() !== '');
+            const cacDong = String(phuongAnRaw || '').split('
+').filter(l => l.trim() !== '');
             if (dang === 'tn') {
                 const chu = ['A', 'B', 'C', 'D'];
                 const dongs = cacDong.length > 0 ? cacDong : ['', '', '', ''];
-                const m = String(dapAn || '').match(/(^|[^A-Za-z\u00C0-\u1EF9])([A-D])(?![A-Za-z\u00C0-\u1EF9])/);
+                const m = String(dapAn || '').match(/(^|[^A-Za-zÀ-ỹ])([A-D])(?![A-Za-zÀ-ỹ])/);
                 const dung = m ? m[2] : '';
                 const html = dongs.map((line, idx) => {
                     const c = chu[idx] || String(idx + 1);
@@ -837,8 +870,10 @@ html_content = """<!DOCTYPE html>
             try { goc = cacO.length > 0 ? cacO : JSON.parse(card.dataset.paLuu || '[]'); } catch (e) { goc = []; }
             const than = goc.map(l => l.replace(/^\s*(?:[A-Da-d]|[1-4])\s*[.)]\s*/, ''));
             let paMoi = '';
-            if (dangMoi === 'tn') paMoi = than.map((t, i) => (['A', 'B', 'C', 'D'][i] || (i + 1)) + '. ' + t).join('\n');
-            if (dangMoi === 'ds') paMoi = than.map((t, i) => (['a', 'b', 'c', 'd'][i] || (i + 1)) + ') ' + t).join('\n');
+            if (dangMoi === 'tn') paMoi = than.map((t, i) => (['A', 'B', 'C', 'D'][i] || (i + 1)) + '. ' + t).join('
+');
+            if (dangMoi === 'ds') paMoi = than.map((t, i) => (['a', 'b', 'c', 'd'][i] || (i + 1)) + ') ' + t).join('
+');
             const dapAnCu = (dangCu === 'ngan' || dangCu === 'tuluan') && (dangMoi === 'ngan' || dangMoi === 'tuluan')
                 ? ((document.getElementById(`short_ans_${index}`) || {}).value || '') : '';
             vung.innerHTML = taoKhungTraLoi(index, dangMoi, paMoi, dapAnCu);
@@ -911,14 +946,16 @@ html_content = """<!DOCTYPE html>
 
             try {
                 const noiDungDe = document.getElementById(`noi_dung_${index}`)?.value || '';
-                const cacPhuongAn = Array.from(document.querySelectorAll(`.pa-input-${index}`)).map(o => o.value).join('\n');
+                const cacPhuongAn = Array.from(document.querySelectorAll(`.pa-input-${index}`)).map(o => o.value).join('
+');
                 
                 const card = nut.closest('.question-card');
                 const linkAnh = (card && card._anh && card._anh[0]) ? card._anh[0].goc : '';
 
                 const kq = await guiVeKhoChung({
                     action: 'giaiNhanhGemini',
-                    noiD_de: noiDungDe + '\n' + cacPhuongAn,
+                    noiD_de: noiDungDe + '
+' + cacPhuongAn,
                     link_anh: linkAnh,
                     yeu_cau: 'Hãy giải chi tiết câu này, định dạng LaTeX chuẩn, xác định rõ đáp án đúng.'
                 });
@@ -1231,7 +1268,8 @@ html_content = """<!DOCTYPE html>
             if (card) {
                 const cacOPA = card.querySelectorAll(`.pa-input-${index}`);
                 if (cacOPA.length > 0) {
-                    phuongAnMoi = Array.from(cacOPA).map(o => o.value.trim()).filter(v => v !== '').join('\n');
+                    phuongAnMoi = Array.from(cacOPA).map(o => o.value.trim()).filter(v => v !== '').join('
+');
                 }
             }
             const dangHienTai = card ? card.dataset.dang : undefined;
@@ -1279,22 +1317,3 @@ html_content = """<!DOCTYPE html>
     </script>
 </body>
 </html>
-"""
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-
-print("Đã tạo xong tệp index.html đầy đủ!")
-
-
-```
-
-```text
-Đã tạo xong tệp index.html đầy đủ!
-
-
-```
-
-Tệp HTML (`index.html`) đã được tích hợp đầy đủ nút bấm **⚡ Gemini tự giải** ngay cạnh các nút chuẩn hóa công thức. Khi bấm vào nút này, hệ thống sẽ tự động quét nội dung câu hỏi, phương án và hình vẽ minh họa, gọi ngầm sang Google Apps Script nhờ AI giải và **đổ thẳng kết quả, điền đáp án, chuẩn hóa LaTeX vào khung Lời giải chi tiết** cho thầy ngay lập tức.
-
-Tệp đầy đủ của thầy đã sẵn sàng bên dưới:
