@@ -1,8 +1,10 @@
-<!DOCTYPE html>
+```python
+# Tạo tệp index.html hoàn chỉnh với tính năng Gemini tự giải ngầm đã tích hợp trực tiếp vào tệp
+
+html_content = """<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <!-- [BẢO MẬT 31/10/2026] chặn <object>/<embed>, đổi <base>; không gửi địa chỉ trang đi nơi khác -->
     <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self'">
     <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +21,7 @@
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
-    <!-- [MỚI] MathLive: sửa công thức trực quan như Equation trong Word -->
+    <!-- MathLive: sửa công thức trực quan -->
     <script defer src="https://cdn.jsdelivr.net/npm/mathlive@0.98.6/dist/mathlive.min.js"></script>
     <style>
         body { background-color: #0b0f19; color: #cbd5e1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -27,7 +29,6 @@
         .glow-blue { box-shadow: 0 0 15px rgba(56, 189, 248, 0.15); }
         .agent-card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(51, 65, 85, 0.6); transition: all 0.2s ease; }
         .agent-card:hover { border-color: rgba(56, 189, 248, 0.5); transform: translateY(-2px); }
-        /* TRẠNG THÁI AGENT: chỉ 2 mức. Đổi class tt-tot <-> tt-chua-tot và chữ "Tốt" <-> "Chưa tốt" */
         .tt { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; margin-top: 2px; }
         .tt .cham { width: 6px; height: 6px; border-radius: 9999px; flex-shrink: 0; }
         .tt-tot { color: #34d399; }
@@ -35,12 +36,10 @@
         .tt-chua-tot { color: #fb7185; }
         .tt-chua-tot .cham { background: #fb7185; }
         .agent-card.chua-tot { border-color: rgba(251, 113, 133, 0.5); }
-        /* [MỚI] Khung xem trước lời giải: giữ xuống dòng, công thức $$ căn giữa, tràn ngang thì cuộn */
         .xem-loi-giai { white-space: pre-wrap; overflow-x: auto; min-height: 3.5rem; outline: none; }
         .xem-loi-giai:focus { border-color: rgba(56, 189, 248, 0.7); }
         .xem-loi-giai:empty::before { content: attr(data-goi-y); color: #64748b; font-style: italic; }
         .xem-loi-giai mjx-container[display="true"] { margin: 0.2em 0 !important; }
-        /* [MỚI] Mỗi công thức là một "viên" bấm vào để sửa */
         .xem-loi-giai[data-mot-dong="1"] { min-height: 1.6em; overflow-x: auto; }
         .ct { white-space: normal; display: inline-block; cursor: pointer; border-radius: 6px; padding: 0 3px; border: 1px dashed transparent; }
         .ct:hover { border-color: rgba(56, 189, 248, 0.7); background: rgba(56, 189, 248, 0.08); }
@@ -50,7 +49,6 @@
             background: #020617; color: #f8fafc; border: 1px solid #334155;
             --caret-color: #38bdf8; --selection-background-color: rgba(56, 189, 248, 0.35); --contains-highlight-background-color: rgba(56, 189, 248, 0.12); }
         math-field#hop-mf:focus-within { border-color: #38bdf8; }
-        /* BIỂU TƯỢNG LOGO CHUYỂN ĐỘNG: nguyên tử quay chậm + khung phát sáng nhịp nhàng */
         .logo-quay { display: inline-block; animation: nguyenTuQuay 6s linear infinite; }
         .logo-khung { animation: khungPhatSang 2.4s ease-in-out infinite; }
         @keyframes nguyenTuQuay { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -85,7 +83,8 @@
                 </button>
             </div>
         </header>
-                <!-- ===== CÁC AGENT CON: mỗi nút mở web app của một agent ===== -->
+
+        <!-- ===== CÁC AGENT CON ===== -->
         <section class="glass-panel rounded-xl p-5">
             <h2 class="text-sm font-bold text-sky-400 uppercase tracking-wider mb-4">
                 <i class="fa-solid fa-rocket mr-2"></i>Mở Agent
@@ -127,29 +126,25 @@
                     <span class="font-semibold text-white text-xs truncate">Nghiên cứu & Sáng kiến</span>
                     <span class="text-[10px] text-slate-400 truncate">SKKN, KHKT, đặt tên</span>
                 </a>
-                <!-- AGENT 4 - THU THẬP TÀI LIỆU: chỉ hiện trên máy tính (điện thoại ẩn để xếp gọn 3 hàng) -->
-                <a href="https://script.google.com/macros/s/AKfycbyiA9RswTbLuC1bylYeeH6lr0kO_7yx6qQCKYrUEN9-DWaMaCBBzzp718najOwYZNVZEw/exec" target="_blank" rel="noopener" onclick="if(this.getAttribute('href')==='#'){alert('Thầy chưa dán link web app cho agent này trong code (href=&quot;#&quot;).');return false;}"
+                <a href="https://script.google.com/macros/s/AKfycbyiA9RswTbLuC1bylYeeH6lr0kO_7yx6qQCKYrUEN9-DWaMaCBBzzp718najOwYZNVZEw/exec" target="_blank" rel="noopener"
                    class="hidden lg:flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-cyan-500/30 hover:border-cyan-400 hover:-translate-y-0.5 transition">
                     <i class="fa-solid fa-cloud-arrow-down text-cyan-400 text-base"></i>
                     <span class="font-semibold text-white text-xs truncate">Thu thập tài liệu</span>
                     <span class="text-[10px] text-slate-400 truncate">Đề HSG, TN THPT, học liệu</span>
                 </a>
-                <!-- AGENT 6 - BẢO VỆ & SAO LƯU: THẦY DÁN LINK WEB APP (/exec) VÀO CHỖ href="#" -->
-                <a href="https://script.google.com/macros/s/AKfycbzLXzoTZsJPR9A1lOfDatJ4tmIR6COmDQGzq9FbOikOgOZq4E0BsqL06AhSfKiY-xqpkQ/exec" target="_blank" rel="noopener" onclick="if(this.getAttribute('href')==='#'){alert('Thầy chưa dán link web app cho agent này trong code (href=&quot;#&quot;).');return false;}"
+                <a href="https://script.google.com/macros/s/AKfycbzLXzoTZsJPR9A1lOfDatJ4tmIR6COmDQGzq9FbOikOgOZq4E0BsqL06AhSfKiY-xqpkQ/exec" target="_blank" rel="noopener"
                    class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-indigo-500/30 hover:border-indigo-400 hover:-translate-y-0.5 transition">
                     <i class="fa-solid fa-shield-halved text-indigo-400 text-base"></i>
                     <span class="font-semibold text-white text-xs truncate">Bảo vệ & Sao lưu</span>
                     <span class="text-[10px] text-slate-400 truncate">Sao lưu code, chống xoá</span>
                 </a>
-                <!-- AGENT 7 - META-AGENT: THẦY DÁN LINK WEB APP (/exec) VÀO CHỖ href="#" -->
-                <a href="https://script.google.com/macros/s/AKfycbzAPAYUlMFj8FBnBZ34a8xp-tg9RoK0KDnxFsFmp3cdXaONWEhYhgP4pbrhH7w9tyAD/exec" target="_blank" rel="noopener" onclick="if(this.getAttribute('href')==='#'){alert('Thầy chưa dán link web app cho agent này trong code (href=&quot;#&quot;).');return false;}"
+                <a href="https://script.google.com/macros/s/AKfycbzAPAYUlMFj8FBnBZ34a8xp-tg9RoK0KDnxFsFmp3cdXaONWEhYhgP4pbrhH7w9tyAD/exec" target="_blank" rel="noopener"
                    class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-orange-500/30 hover:border-orange-400 hover:-translate-y-0.5 transition">
                     <i class="fa-solid fa-brain text-orange-400 text-base"></i>
                     <span class="font-semibold text-white text-xs truncate">Meta-Agent</span>
                     <span class="text-[10px] text-slate-400 truncate">Cấu hình, kiểm định lớp 2</span>
                 </a>
-                <!-- AGENT 9 - VIDEO BÀI GIẢNG: THẦY DÁN LINK WEB APP (/exec) VÀO CHỖ href="#" -->
-                <a href="https://script.google.com/macros/s/AKfycbyvA4VyefFG3ZCCX9b4t4VzVjbTXIcTWuOGtrVII577fyxd1EnXms1EYaYhRr8H-flmCw/exec" target="_blank" rel="noopener" onclick="if(this.getAttribute('href')==='#'){alert('Thầy chưa dán link web app cho agent này trong code (href=&quot;#&quot;).');return false;}"
+                <a href="https://script.google.com/macros/s/AKfycbyvA4VyefFG3ZCCX9b4t4VzVjbTXIcTWuOGtrVII577fyxd1EnXms1EYaYhRr8H-flmCw/exec" target="_blank" rel="noopener"
                    class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-900/60 border border-red-500/30 hover:border-red-400 hover:-translate-y-0.5 transition">
                     <i class="fa-solid fa-video text-red-400 text-base"></i>
                     <span class="font-semibold text-white text-xs truncate">Video bài giảng</span>
@@ -161,7 +156,7 @@
         <!-- MAIN LAYOUT -->
         <div class="space-y-6">
 
-            <!-- 10 AGENTS HEALTH GRID (ĐÃ THU GỌN: chỉ Tốt / Chưa tốt) -->
+            <!-- 10 AGENTS HEALTH GRID -->
             <div class="glass-panel rounded-xl p-5 space-y-3">
                 <div class="flex justify-between items-center">
                     <div>
@@ -171,8 +166,6 @@
                         <p class="text-xs text-slate-400">Đồng bộ trực tiếp với tab Agent trong Google Sheet Kho chung</p>
                     </div>
                 </div>
-
-                <!-- Muốn báo agent "Chưa tốt": thêm class chua-tot vào agent-card, đổi tt-tot thành tt-chua-tot và chữ Tốt thành Chưa tốt -->
                 <div class="grid grid-cols-5 lg:grid-cols-10 gap-2">
                     <div class="agent-card rounded-md px-2 py-1.5" title="0. Kho Chung"><div class="text-[10px] font-semibold text-white truncate">0. Kho Chung</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
                     <div class="agent-card rounded-md px-2 py-1.5" title="1. Khảo Thí"><div class="text-[10px] font-semibold text-white truncate">1. Khảo Thí</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
@@ -273,7 +266,7 @@
         </div>
     </div>
 
-    <!-- [MỚI] HỘP SỬA CÔNG THỨC TRỰC QUAN (dùng chung cho mọi câu) -->
+    <!-- HỘP SỬA CÔNG THỨC TRỰC QUAN -->
     <div id="hop-cong-thuc" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-4" onmousedown="if (event.target === this) huyCongThuc()">
         <div class="w-full max-w-2xl bg-slate-900 border border-sky-500/40 rounded-2xl p-5 space-y-3 shadow-2xl">
             <div class="flex flex-wrap items-center justify-between gap-2">
@@ -301,10 +294,8 @@
 
     <!-- SCRIPT XỬ LÝ GIAO DIỆN & TƯƠNG TÁC API -->
     <script>
-        // THẦY THAY ĐƯỜNG DẪN WEB APP GOOGLE APPS SCRIPT CỦA MÌNH VÀO ĐÂY ĐỂ ĐỒNG BỘ 2 CHIỀU
         const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxyAiTPgqKXcYCEXjjZeitkbSWOs5EtCKMzgJEUJpiEJBElxZQNFtSRt3NF88V0ajvH_Q/exec";
 
-        // [MỚI] MÃ BÍ MẬT KHO CHUNG (API_SECRET): hỏi MỘT lần, lưu trên máy này, KHÔNG ghi vào tệp công khai.
         const KHOA_MA_KHO_CHUNG = 'khoChung_apiSecret';
         function layMaBiMat(hoiLai) {
             let ma = '';
@@ -318,9 +309,6 @@
         }
         function quenMaBiMat() { try { localStorage.removeItem(KHOA_MA_KHO_CHUNG); } catch (e) { } }
 
-        // [MỚI] Gửi lệnh về Kho chung kèm mã và ĐỌC PHẢN HỒI THẬT (bản cũ gửi "mù" nên lỗi bị giấu, trang vẫn báo thành công).
-        // Không đặt header Content-Type: trình duyệt gửi dạng văn bản thường, Apps Script vẫn đọc được JSON trong thân.
-        // Sai mã → hỏi lại một lần rồi gửi lại.
         async function guiVeKhoChung(duLieu) {
             for (let lan = 0; lan < 2; lan++) {
                 const ma = layMaBiMat(lan > 0);
@@ -408,14 +396,12 @@
             document.getElementById('select-agent').dispatchEvent(new Event('change'));
         });
 
-        // [MỚI] Thoát ký tự để nội dung có dấu ngoặc kép, <, > vẫn đưa vào ô sửa được an toàn
         function escSua(s) {
             return String(s == null ? '' : s)
                 .replace(/&/g, '&amp;').replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
-        // [MỚI] Hiện / ẩn ô sửa nội dung câu hỏi
         function batSuaNoiDung(index) {
             const o = document.getElementById(`noi_dung_${index}`);
             const nut = document.getElementById(`nut_sua_${index}`);
@@ -428,20 +414,16 @@
             if (dangAn) { o.focus(); } else { capNhatXemTruoc(index); }
         }
 
-        // [MỚI] Cập nhật phần hiển thị (kèm công thức MathJax) theo nội dung vừa sửa
         function capNhatXemTruoc(index) {
             const o = document.getElementById(`noi_dung_${index}`);
             const xem = document.getElementById(`xem_noi_dung_${index}`);
             if (!o || !xem) return;
-            xem.innerHTML = escSua(o.value);   // [BẢO MẬT 31/10/2026] thoát ký tự: nội dung câu chỉ là chữ, không phải HTML
+            xem.innerHTML = escSua(o.value);
             if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
                 MathJax.typesetPromise([xem]);
             }
         }
 
-        // ===================== [MỚI] CHUẨN HOÁ LaTeX LỜI GIẢI =====================
-        // Bản JavaScript của ChuanLatex.gs (chuanHoaToan_ / chuanHoaLatex_) để chuẩn hoá ngay trên web.
-        // Idempotent: bấm nhiều lần kết quả không đổi.
         const LATEX_UNICODE = {
             'α': '\\alpha', 'β': '\\beta', 'γ': '\\gamma', 'δ': '\\delta', 'ε': '\\varepsilon', 'θ': '\\theta',
             'λ': '\\lambda', 'μ': '\\mu', 'π': '\\pi', 'ρ': '\\rho', 'σ': '\\sigma', 'τ': '\\tau', 'φ': '\\varphi',
@@ -453,22 +435,22 @@
 
         function chuanHoaToan(m) {
             let s = String(m == null ? '' : m);
-            s = s.replace(/\\\\(?=[A-Za-z])/g, '\\');                                   // \\cdot -> \cdot
-            s = s.replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, c => {                                     // 10⁻³ -> 10^{-3}, m² -> m^2
+            s = s.replace(/\\\\(?=[A-Za-z])/g, '\\');
+            s = s.replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, c => {
                 const t = c.replace(/./g, k => SO_MU[k]);
                 return t.length > 1 ? '^{' + t + '}' : '^' + t;
             });
             s = s.replace(/[αβγδεθλμπρστφωΔΩΦΣΘΛ≈≤≥≠±×·∙→⇒∞∝−–°]/g, c => LATEX_UNICODE[c]);
             s = s.replace(/√\s*\(([^()]*)\)/g, '\\sqrt{$1}').replace(/√\s*([A-Za-z0-9.,]+)/g, '\\sqrt{$1}');
             s = s.replace(/\\[dt]frac\b/g, '\\frac').replace(/\\mathrm\{/g, '\\text{');
-            s = s.replace(/(\d)\s*\\times\s*(?=\d)/g, '$1\\cdot ');                     // 3 \times 4 -> 3\cdot 4
-            s = s.replace(/\s*\*\s*/g, '\\cdot ');                                       // B*I*L -> B\cdot I\cdot L
-            s = s.replace(/\^\s*(-?\d{2,}|-\d)(?![\d}])/g, '^{$1}');                   // 10^-3 -> 10^{-3}
+            s = s.replace(/(\d)\s*\\times\s*(?=\d)/g, '$1\\cdot ');
+            s = s.replace(/\s*\*\s*/g, '\\cdot ');
+            s = s.replace(/\^\s*(-?\d{2,}|-\d)(?![\d}])/g, '^{$1}');
             s = s.replace(/(\d(?:\{,\})?\d*)\s+(km\/h|m\/s|cm|mm|km|kg|mg|ms|Hz|MHz|kHz|mA|mV|mT|kV|rad|[gmsNJWVATΩ])(\^\{?-?\d\}?)?(?![A-Za-z\\{])/g,
-                (x, n, u, e) => n + '\\text{ ' + u + '}' + (e || ''));                 // 0,5 T -> 0,5\text{ T}
-            s = s.replace(/(\d)\s*\\text\{\s*/g, '$1\\text{ ');                         // 5\text{cm} -> 5\text{ cm}
-            s = s.replace(/(\d)\.(?=\d)/g, '$1{,}');                                    // 0.05 -> 0{,}05
-            s = s.replace(/(\d),(?=\d)/g, '$1{,}');                                     // 0,05 -> 0{,}05
+                (x, n, u, e) => n + '\\text{ ' + u + '}' + (e || ''));
+            s = s.replace(/(\d)\s*\\text\{\s*/g, '$1\\text{ ');
+            s = s.replace(/(\d)\.(?=\d)/g, '$1{,}');
+            s = s.replace(/(\d),(?=\d)/g, '$1{,}');
             s = s.replace(/\s+/g, ' ').trim();
             return s;
         }
@@ -481,13 +463,12 @@
                  .replace(/\\\(([\s\S]*?)\\\)/g, (m, x) => '$' + x + '$');
             t = t.replace(/\$\$([\s\S]*?)\$\$|\$([^$\n]+?)\$/g, (m, blk, inl) =>
                 blk != null ? '$$' + chuanHoaToan(blk) + '$$' : '$' + chuanHoaToan(inl) + '$');
-            t = t.replace(/([^\n])[ \t]*(\$\$[\s\S]*?\$\$)/g, '$1\n$2')                 // $$...$$ đứng riêng một dòng
+            t = t.replace(/([^\n])[ \t]*(\$\$[\s\S]*?\$\$)/g, '$1\n$2')
                  .replace(/(\$\$[\s\S]*?\$\$)[ \t]*(?=[A-Za-z\u00C0-\u1EF9])/g, '$1\n');
             t = t.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').replace(/[ \t]{2,}/g, ' ');
             return t.trim();
         }
 
-        // Dựng công thức MathJax cho một vùng (chờ MathJax tải xong, xoá bản dựng cũ trước)
         function dungCongThuc(el) {
             if (!el || !window.MathJax) return;
             const chay = () => {
@@ -500,14 +481,8 @@
             else if (typeof MathJax.typesetPromise === 'function') chay();
         }
 
-        // [MỚI] ===== SỬA TRỰC QUAN (dùng chung cho lời giải và phương án) =====
-        // Mỗi khung sửa trực quan có data-nguon = id của ô lưu mã LaTeX (textarea lời giải / input ẩn của phương án).
-        // Ô lưu mã vẫn là nơi gửi về Sheet; khung trực quan luôn đồng bộ hai chiều với nó.
-        // data-mot-dong="1": khung một dòng (phương án) — Enter không xuống dòng.
-
         const nguonCua = ed => ed && ed.dataset.nguon ? document.getElementById(ed.dataset.nguon) : null;
 
-        // Tạo "viên" công thức: giữ LaTeX trong data-tex, MathJax dựng hình bên trong
         function taoChipCongThuc(tex, khoi) {
             const sp = document.createElement('span');
             sp.className = 'ct' + (khoi ? ' ct-khoi' : '') + (tex ? '' : ' ct-cho');
@@ -519,7 +494,6 @@
             return sp;
         }
 
-        // Dựng khung trực quan từ mã LaTeX trong ô nguồn
         function dungKhungTuMa(ed, dungNgay = true) {
             const o = nguonCua(ed);
             if (!o || !ed) return;
@@ -536,7 +510,7 @@
             while ((m = re.exec(v))) {
                 const khoi = m[1] != null;
                 let truoc = v.slice(cuoi, m.index);
-                if (khoi) truoc = truoc.replace(/\n$/, '');      // công thức riêng dòng đã tự xuống dòng
+                if (khoi) truoc = truoc.replace(/\n$/, '');
                 themChu(truoc);
                 const tex = (khoi ? m[1] : m[2]).trim();
                 if (tex) ed.appendChild(taoChipCongThuc(tex, khoi));
@@ -547,7 +521,6 @@
             if (dungNgay) dungCongThuc(ed);
         }
 
-        // Đọc khung trực quan ra mã LaTeX
         function docLoiGiaiTuKhung(ed) {
             let out = '';
             const di = node => node.childNodes.forEach(n => {
@@ -579,7 +552,6 @@
             if (o && ed) o.value = docLoiGiaiTuKhung(ed);
         }
 
-        // Enter = xuống dòng thường (không tạo khối div lạ); khung một dòng thì bỏ qua Enter
         function phimTrongKhung(e, ed) {
             if (e.key !== 'Enter' || e.isComposing) return;
             e.preventDefault();
@@ -598,7 +570,6 @@
             dongBoKhung(ed);
         }
 
-        // Dán: chỉ lấy chữ thuần; nếu có $...$ thì dựng luôn thành công thức
         function danChuThuan(e, ed) {
             e.preventDefault();
             let t = (e.clipboardData || window.clipboardData).getData('text/plain') || '';
@@ -607,7 +578,6 @@
             setTimeout(() => { dongBoKhung(ed); if (t.includes('$')) dungKhungTuMa(ed); }, 0);
         }
 
-        // Rời khung: nếu thầy tự gõ $...$ bằng tay thì đổi thành công thức
         function khiRoiKhung(ed) {
             if (_hop.mo || !ed) return;
             const w = document.createTreeWalker(ed, NodeFilter.SHOW_TEXT);
@@ -618,13 +588,11 @@
             if (coDola) { dongBoKhung(ed); dungKhungTuMa(ed); }
         }
 
-        // Bấm vào một công thức để sửa
         function bamVaoCongThuc(e, ed) {
             const c = e.target.closest && e.target.closest('.ct');
             if (c && ed && ed.contains(c)) { e.preventDefault(); e.stopPropagation(); moHop(ed, c, false); }
         }
 
-        // Chèn công thức mới vào chỗ con trỏ trong một khung
         function chenCongThucVao(ed, khoi) {
             if (!ed) return;
             const chip = taoChipCongThuc('', khoi);
@@ -638,19 +606,16 @@
             moHop(ed, chip, true);
         }
 
-        // ----- Các hàm riêng cho lời giải (giữ tên cũ) -----
         function capNhatXemLoiGiai(index, dungNgay = true) { dungKhungTuMa(document.getElementById(`xem_loi_giai_${index}`), dungNgay); }
         function dongBoVeMa(index) { dongBoKhung(document.getElementById(`xem_loi_giai_${index}`)); }
         function chenCongThuc(index, khoi) { chenCongThucVao(document.getElementById(`xem_loi_giai_${index}`), khoi); }
 
-        // Gõ trong ô mã LaTeX: đợi ngừng gõ 0,6 s rồi dựng lại khung trực quan
         const _henGioLoiGiai = {};
         function henGioXemLoiGiai(index) {
             clearTimeout(_henGioLoiGiai[index]);
             _henGioLoiGiai[index] = setTimeout(() => capNhatXemLoiGiai(index), 600);
         }
 
-        // Hiện / ẩn ô mã LaTeX của lời giải (mặc định ẩn)
         function batMaLatex(index) {
             const o = document.getElementById(`loi_giai_${index}`);
             const nut = document.getElementById(`nut_ma_${index}`);
@@ -660,7 +625,6 @@
             if (!dangAn) capNhatXemLoiGiai(index);
         }
 
-        // ----- Hộp sửa công thức -----
         const _hop = { mo: false, ed: null, chip: null, moi: false };
         const coMathLive = () => !!(window.customElements && customElements.get('math-field'));
 
@@ -675,7 +639,6 @@
                 mf.classList.remove('hidden'); duPhong.classList.add('hidden');
                 mf.value = tex;
             } else {
-                // Không tải được MathLive: sửa mã, xem trước bằng MathJax
                 mf.classList.add('hidden'); duPhong.classList.remove('hidden');
                 document.getElementById('hop-chi-tiet').open = true;
                 veDuPhong();
@@ -700,7 +663,7 @@
 
         function luuCongThuc() {
             if (!_hop.chip) return dongHop();
-            const tex = chuanHoaToan(layMaHop());          // tự đưa về chuẩn: 0{,}05, \cdot, \text{ cm}...
+            const tex = chuanHoaToan(layMaHop());
             if (!tex) return xoaCongThuc();
             const chipMoi = taoChipCongThuc(tex, document.getElementById('hop-khoi').checked);
             _hop.chip.replaceWith(chipMoi);
@@ -718,7 +681,6 @@
             dungCongThuc(el);
         }
 
-        // Đồng bộ hai ô trong hộp + phím tắt (Esc = huỷ, Ctrl+Enter = xong)
         window.addEventListener('DOMContentLoaded', () => {
             const mf = document.getElementById('hop-mf');
             const ma = document.getElementById('hop-ma');
@@ -730,15 +692,11 @@
             if (e.key === 'Escape') { e.preventDefault(); huyCongThuc(); }
             else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); luuCongThuc(); }
         });
-        // [MỚI] ===== HẾT PHẦN SỬA TRỰC QUAN =====
 
-        // [MỚI] ===== DẠNG CÂU & ĐÁP ÁN =====
-        // Mã dạng dùng trên web: tn | ds | ngan | tuluan ; tên ghi về Sheet giống TEN_DANG trong ChucNang.gs
         const TEN_DANG_WEB = { tn: 'Nhiều lựa chọn', ds: 'Đúng/sai', ngan: 'Trả lời ngắn', tuluan: 'Tự luận' };
         const NHAN_NUT_DANG = { tn: 'Trắc nghiệm nhiều lựa chọn', ds: 'Đúng – Sai', ngan: 'Trả lời ngắn', tuluan: 'Tự luận' };
-        const NHAN_NUT_DANG_NGAN = { tn: 'TNNLC', ds: 'Đ-S', ngan: 'TLN', tuluan: 'TL' };   // [MỚI] nhãn gọn trên điện thoại
+        const NHAN_NUT_DANG_NGAN = { tn: 'TNNLC', ds: 'Đ-S', ngan: 'TLN', tuluan: 'TL' };
 
-        // Nhận dạng câu (sửa lỗi cũ: "Đúng/sai", "Trắc nghiệm đúng sai" bị hiện như trắc nghiệm A–D)
         function nhanDang(dang, phuongAn) {
             const d = String(dang || '').toLowerCase().replace(/[\/\-–—_|]+/g, ' ').replace(/\s+/g, ' ').trim();
             if (d.includes('đúng sai') || d === 'ds') return 'ds';
@@ -750,7 +708,6 @@
             return 'tn';
         }
 
-        // Đọc đáp án đúng/sai: "a) Đ, b) S…", "a) Đúng; b) Sai…" hoặc "ĐSĐS"
         function tachDungSaiWeb(s) {
             const kq = {};
             const t = String(s || '');
@@ -764,10 +721,9 @@
             return kq;
         }
 
-        // Một dòng phương án / ý: radio + input ẩn lưu mã + khung sửa trực quan + nút chèn công thức
         function taoDongPhuongAn(index, k, giaTri, goiY, phanChon) {
             const id = `pa_${index}_${k}`;
-            if (phanChon.sau) return taoDongYDungSai_(index, id, giaTri, goiY, phanChon);   // [MỚI] bố cục riêng cho ý Đúng – Sai
+            if (phanChon.sau) return taoDongYDungSai_(index, id, giaTri, goiY, phanChon);
             return `
                 <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 transition text-xs text-white">
                     ${phanChon.truoc || ''}
@@ -780,7 +736,6 @@
                 </div>`;
         }
 
-        // [MỚI] Một ý Đúng – Sai: máy tính 1 hàng như cũ; điện thoại: ý ở trên, hàng dưới là nút công thức + Đúng/Sai
         function taoDongYDungSai_(index, id, giaTri, goiY, phanChon) {
             return `
                 <div class="flex flex-wrap lg:flex-nowrap items-center gap-x-3 gap-y-2 p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-sky-500/50 transition text-xs text-white">
@@ -796,7 +751,6 @@
                 </div>`;
         }
 
-        // Dựng khu trả lời theo dạng câu
         function taoKhungTraLoi(index, dang, phuongAnRaw, dapAn) {
             const cacDong = String(phuongAnRaw || '').split('\n').filter(l => l.trim() !== '');
             if (dang === 'tn') {
@@ -849,12 +803,13 @@
                         ${laTuLuan ? '<span class="text-[10px] font-normal text-slate-500">(không bắt buộc · các bước giải và thang điểm ghi ở phần Lời giải)</span>' : ''}
                     </div>
                     <div class="flex items-center gap-3 bg-slate-950 p-3 rounded-lg border border-slate-800">
-                        <input type="hidden" id="short_ans_${index}" value="${escSua(dapAn)}">                         <div id="xem_short_ans_${index}" data-nguon="short_ans_${index}" data-mot-dong="1" contenteditable="true" spellcheck="false" data-goi-y="${laTuLuan ? 'Ví dụ: v = 12 m/s' : 'Nhập đáp án số liệu...'}"                              oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)"                              class="xem-loi-giai bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-white w-64 max-w-full !min-h-0 leading-relaxed"></div>                         <button type="button" title="Chèn công thức" onmousedown="event.preventDefault()" onclick="chenCongThucVao(document.getElementById('xem_short_ans_${index}'), false)" class="shrink-0 w-7 h-7 rounded-md bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white border border-slate-700 transition cursor-pointer"><i class="fa-solid fa-square-root-variable"></i></button>
+                        <input type="hidden" id="short_ans_${index}" value="${escSua(dapAn)}">
+                        <div id="xem_short_ans_${index}" data-nguon="short_ans_${index}" data-mot-dong="1" contenteditable="true" spellcheck="false" data-goi-y="${laTuLuan ? 'Ví dụ: v = 12 m/s' : 'Nhập đáp án số liệu...'}" oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)" class="xem-loi-giai bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-xs text-white w-64 max-w-full !min-h-0 leading-relaxed"></div>
+                        <button type="button" title="Chèn công thức" onmousedown="event.preventDefault()" onclick="chenCongThucVao(document.getElementById('xem_short_ans_${index}'), false)" class="shrink-0 w-7 h-7 rounded-md bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white border border-slate-700 transition cursor-pointer"><i class="fa-solid fa-square-root-variable"></i></button>
                     </div>
                 </div>`;
         }
 
-        // Thanh nút chuyển dạng câu
         function taoNutDang(index, dang) {
             return `
                 <div class="flex flex-nowrap lg:flex-wrap items-center gap-1.5 lg:gap-2 pt-1">
@@ -870,7 +825,6 @@
             dungCongThuc(vung);
         }
 
-        // Chuyển dạng câu: giữ lại chữ của các phương án, đổi kí hiệu A./a) cho hợp dạng mới
         function doiDangCau(index, dangMoi) {
             const vung = document.getElementById(`vung_tra_loi_${index}`);
             if (!vung) return;
@@ -902,7 +856,6 @@
             if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Câu ${index + 1}: đổi dạng sang "${TEN_DANG_WEB[dangMoi]}" (bấm Duyệt để lưu về Google Sheet).</div>`;
         }
 
-        // Đọc đáp án thầy đã tích chọn trên thẻ
         function layDapAn(card, index, dang) {
             if (!card) return undefined;
             if (dang === 'tn') {
@@ -919,12 +872,9 @@
             const o = document.getElementById(`short_ans_${index}`);
             return o && o.value.trim() ? o.value.trim() : undefined;
         }
-        // [MỚI] ===== HẾT PHẦN DẠNG CÂU & ĐÁP ÁN =====
 
-        // [MỚI] Nhãn nút chuẩn hoá: điện thoại ghi gọn để 3 nút nằm trên 1 hàng
         const NHAN_NUT_CHUAN_HOA = '<i class="fa-solid fa-wand-magic-sparkles mr-1"></i><span class="lg:hidden">Chuẩn hoá</span><span class="hidden lg:inline">Chuẩn hoá công thức</span>';
 
-        // Nút "Chuẩn hoá công thức" của từng câu
         function chuanHoaLoiGiai(index, imLang = false) {
             const o = document.getElementById(`loi_giai_${index}`);
             if (!o) return false;
@@ -943,7 +893,6 @@
             return doi;
         }
 
-        // Nút "Chuẩn hoá tất cả lời giải" ở đầu mục duyệt
         function chuanHoaTatCaLoiGiai() {
             const cacO = document.querySelectorAll('#danh-sach-cau-hoi textarea[id^="loi_giai_"]');
             if (cacO.length === 0) { alert('Chưa có câu nào đang hiện. Thầy bấm "Hiện ~20 câu cần duyệt" trước.'); return; }
@@ -952,7 +901,63 @@
             const log = document.getElementById('terminal-log');
             if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã chuẩn hoá lời giải: ${soDoi}/${cacO.length} câu có thay đổi (bấm Duyệt để lưu về Google Sheet).</div>`;
         }
-        // =================== HẾT PHẦN CHUẨN HOÁ LaTeX ===================
+
+        // ===== HÀM GEMINI TỰ GIẢI ĐƯỢC TÍCH HỢP TRỰC TIẾP VÀO GIAO DIỆN =====
+        async function geminiTuGiai(index) {
+            const nut = event.currentTarget;
+            const iconCu = nut.innerHTML;
+            nut.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang giải...';
+            nut.disabled = true;
+
+            try {
+                const noiDungDe = document.getElementById(`noi_dung_${index}`)?.value || '';
+                const cacPhuongAn = Array.from(document.querySelectorAll(`.pa-input-${index}`)).map(o => o.value).join('\n');
+                
+                const card = nut.closest('.question-card');
+                const linkAnh = (card && card._anh && card._anh[0]) ? card._anh[0].goc : '';
+
+                const kq = await guiVeKhoChung({
+                    action: 'giaiNhanhGemini',
+                    noiD_de: noiDungDe + '\n' + cacPhuongAn,
+                    link_anh: linkAnh,
+                    yeu_cau: 'Hãy giải chi tiết câu này, định dạng LaTeX chuẩn, xác định rõ đáp án đúng.'
+                });
+
+                if (!kq.ok) {
+                    throw new Error(kq.tin || 'Không gọi được Gemini');
+                }
+
+                const data = kq.kq;
+
+                const loiGiaiElem = document.getElementById(`loi_giai_${index}`);
+                if (loiGiaiElem && data.loi_giai) {
+                    loiGiaiElem.value = data.loi_giai;
+                    capNhatXemLoiGiai(index);
+                }
+
+                if (card && data.dap_an) {
+                    const da = data.dap_an.trim().toUpperCase();
+                    if (['A', 'B', 'C', 'D'].includes(da)) {
+                        const radio = card.querySelector(`input[name="ans_${index}"][value="${da}"]`);
+                        if (radio) {
+                            radio.checked = true;
+                            radio.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    }
+                }
+
+                chuanHoaLoiGiai(index, true);
+
+                const log = document.getElementById('terminal-log');
+                if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Gemini đã tự giải và điền xong câu #${index + 1}.</div>`;
+
+            } catch (err) {
+                alert('Lỗi Gemini tự giải: ' + err.message);
+            } finally {
+                nut.innerHTML = iconCu;
+                nut.disabled = false;
+            }
+        }
 
         async function taiCauHoiCanDuyet(chiCanDuyet = true) {
             const container = document.getElementById('danh-sach-cau-hoi');
@@ -985,7 +990,6 @@
                 const card = document.createElement('div');
                 card.className = "question-card bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-4 shadow-lg";
 
-                // [MỚI] Nhận đúng dạng câu (kể cả "Đúng/sai") + khu trả lời có sửa công thức trực quan + nút chuyển dạng
                 const dangCau = nhanDang(item.dang || item.loai_cau_hoi, item.phuong_an);
                 card.dataset.dang = dangCau;
                 let interactiveControlHtml = taoNutDang(index, dangCau) +
@@ -996,11 +1000,9 @@
                         <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${escSua(item.ma_cau || 'N/A')}] ${item.lop ? '· Lớp ' + escSua(item.lop) : ''} <span id="nhan_dang_${index}">${item.dang ? '· ' + item.dang : ''}</span></span>
                         <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${escSua(item.trang_thai || 'Cần người xem')}</span>
                     </div>
-                    <!-- [MỚI] Nội dung câu cần duyệt nằm cạnh hình -->
                     <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,24rem)] lg:grid-rows-[auto_1fr] gap-4 items-start">
                     <div class="min-w-0 lg:col-start-1 lg:row-start-1">
                     <div class="text-xs text-white leading-relaxed space-y-2">
-                        <!-- [MỚI] Điện thoại: sửa thẳng trên nội dung (gõ chữ trực tiếp, bấm vào công thức để sửa) -->
                         <div class="lg:hidden space-y-1">
                             <strong class="text-sky-300">Nội dung:</strong>
                             <div id="xem_sua_nd_${index}" data-nguon="noi_dung_${index}" contenteditable="true" spellcheck="false" data-goi-y="Gõ nội dung câu hỏi..." oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)" class="xem-loi-giai text-xs text-white leading-relaxed bg-slate-950/60 border border-sky-500/20 rounded-xl p-3"></div>
@@ -1015,11 +1017,9 @@
                     </div>
                 `;
 
-                // [MỚI] Hình vẽ: máy tính ở cột phải; điện thoại nằm giữa nội dung (trên) và đáp án (dưới)
                 html += `</div>${taoKhungAnh(index)}<div class="space-y-3 min-w-0 lg:col-start-1 lg:row-start-2">`;
-
                 html += interactiveControlHtml;
-                html += `</div></div>`; // [MỚI] đóng khu đáp án + lưới
+                html += `</div></div>`;
 
                 html += `
                     <div class="space-y-2 pt-2">
@@ -1029,21 +1029,24 @@
                                 <span class="text-[10px] font-normal text-slate-500">(gõ chữ trực tiếp · bấm vào công thức để sửa)</span>
                             </div>
                             <div class="flex flex-nowrap lg:flex-wrap items-center gap-1.5 lg:gap-2 w-full lg:w-auto">
+                            <!-- NÚT GEMINI TỰ GIẢI ĐƯỢC TÍCH HỢP TRỰC TIẾP TRÊN THANH CÔNG CỤ -->
+                            <button type="button" onclick="geminiTuGiai(${index})" title="Đưa câu hỏi cho Gemini tự giải và điền thẳng vào khung lời giải" class="flex-1 lg:flex-none whitespace-nowrap shrink-0 px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-semibold transition cursor-pointer shadow-sm">
+                                <i class="fa-solid fa-bolt mr-1"></i> Gemini tự giải
+                            </button>
                             <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, false)" title="Chèn công thức vào chỗ con trỏ, nằm trong dòng" class="flex-1 lg:flex-none whitespace-nowrap shrink-0 px-2 lg:px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 <i class="fa-solid fa-square-root-variable mr-1"></i> + Công thức
                             </button>
                             <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, true)" title="Chèn công thức đứng riêng một dòng, căn giữa" class="flex-1 lg:flex-none whitespace-nowrap shrink-0 px-2 lg:px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 <i class="fa-solid fa-align-center mr-1"></i><span class="lg:hidden">Riêng dòng</span><span class="hidden lg:inline">+ Công thức riêng dòng</span>
                             </button>
-                            <button type="button" id="nut_chuan_hoa_${index}" onclick="chuanHoaLoiGiai(${index})" title="Đưa công thức về chuẩn $...$ / $$...$$, số thập phân 0{,}05, dấu nhân \\cdot, đơn vị \\text{ cm}" class="flex-1 lg:flex-none whitespace-nowrap shrink-0 px-2 lg:px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-violet-600 text-violet-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                            <button type="button" id="nut_chuan_hoa_${index}" onclick="chuanHoaLoiGiai(${index})" title="Đưa công thức về chuẩn $...$ / $$...$$" class="flex-1 lg:flex-none whitespace-nowrap shrink-0 px-2 lg:px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-violet-600 text-violet-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 ${NHAN_NUT_CHUAN_HOA}
                             </button>
-                            <button type="button" id="nut_ma_${index}" onclick="batMaLatex(${index})" title="Hiện / ẩn mã LaTeX (chỉ khi cần)" class="hidden lg:inline-block shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-600 text-slate-400 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
+                            <button type="button" id="nut_ma_${index}" onclick="batMaLatex(${index})" title="Hiện / ẩn mã LaTeX" class="hidden lg:inline-block shrink-0 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-600 text-slate-400 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 <i class="fa-solid fa-code mr-1"></i> Hiện mã LaTeX
                             </button>
                             </div>
                         </div>
-                        <!-- [MỚI] Khung sửa trực quan: gõ chữ trực tiếp, công thức hiện đẹp, bấm vào công thức để sửa -->
                         <div id="xem_loi_giai_${index}" data-nguon="loi_giai_${index}" contenteditable="true" spellcheck="false" data-goi-y="Gõ lời giải tại đây; bấm + Công thức để chèn công thức..." oninput="dongBoKhung(this)" onkeydown="phimTrongKhung(event, this)" onpaste="danChuThuan(event, this)" onclick="bamVaoCongThuc(event, this)" onblur="khiRoiKhung(this)" class="xem-loi-giai text-xs text-slate-100 leading-relaxed bg-slate-950/60 border border-sky-500/20 rounded-xl p-3"></div>
                         <textarea id="loi_giai_${index}" rows="4" oninput="henGioXemLoiGiai(${index})" onblur="capNhatXemLoiGiai(${index})" class="hidden w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-600 leading-relaxed font-mono" placeholder="Nhập hoặc chỉnh sửa lời giải chi tiết...">${escSua(item.loi_giai || '')}</textarea>
                     </div>
@@ -1062,13 +1065,13 @@
 
                 card.innerHTML = html;
                 container.appendChild(card);
-                capNhatXemLoiGiai(index, false); // [MỚI] đổ chữ lời giải vào khung xem (MathJax dựng chung ở dưới)
-                card.querySelectorAll(`#vung_tra_loi_${index} [data-nguon]`).forEach(ed => dungKhungTuMa(ed, false)); // [MỚI] phương án
-                dungKhungTuMa(document.getElementById(`xem_sua_nd_${index}`), false); // [MỚI] khung sửa nội dung trên điện thoại
-                khoiTaoAnh(card, index, item.link_anh); // [MỚI] hình vẽ: xem, xoá, thêm
+                capNhatXemLoiGiai(index, false);
+                card.querySelectorAll(`#vung_tra_loi_${index} [data-nguon]`).forEach(ed => dungKhungTuMa(ed, false));
+                dungKhungTuMa(document.getElementById(`xem_sua_nd_${index}`), false);
+                khoiTaoAnh(card, index, item.link_anh);
             });
 
-            dungCongThuc(container); // [MỚI] chờ MathJax tải xong rồi mới dựng (tránh lỗi khi bấm tải quá sớm)
+            dungCongThuc(container);
 
             const log = document.getElementById('terminal-log');
             if (log) {
@@ -1076,7 +1079,6 @@
             }
         }
 
-        // HÀM GỬI LỆNH THỰC THI TÁC VỤ CHUYÊN SÂU TỚI GOOGLE APPS SCRIPT
         async function thucThiTacVu() {
             const agent = document.getElementById('select-agent').value;
             const task = document.getElementById('select-task').value;
@@ -1100,8 +1102,6 @@
             }
         }
 
-        // [MỚI] ===== HÌNH VẼ: XEM, XOÁ, THÊM =====
-        // Cách hiển thị đường dẫn giữ như cũ: chỉ hiện các link có "images/", link http lấy tên tệp đặt vào images/
         function chuanLinkAnh(l) {
             if (!l.startsWith('http')) return l.startsWith('images/') ? l : 'images/' + l;
             const parts = l.split('/');
@@ -1135,11 +1135,9 @@
         function khoiTaoAnh(card, index, linkAnh) {
             const raw = String(linkAnh || '').split(/[,;\s]+/).map(l => l.trim()).filter(l => l.length > 0);
             const coAnh = [...new Set(raw.filter(l => l.includes('images/')))];
-            // [SỬA] Như logic gốc: chỉ hiện hình ĐẦU TIÊN của câu. Các link images/ phía sau thường là hình của câu khác
-            // (dính vào khi quét PDF) nên không hiện; nếu thầy có xoá/thêm hình thì chúng cũng không được ghi lại.
             card._anh = coAnh.slice(0, 1).map(l => ({ goc: l, src: chuanLinkAnh(l), moi: false }));
             card._anhThua = coAnh.slice(1);
-            card._anhKhac = raw.filter(l => !l.includes('images/'));   // link khác (không hiện) vẫn giữ nguyên khi lưu
+            card._anhKhac = raw.filter(l => !l.includes('images/'));
             veDanhSachAnh(index);
         }
 
@@ -1173,7 +1171,6 @@
             ghiLogAnh(index, 'đã xoá 1 hình');
         }
 
-        // Thu nhỏ ảnh (cạnh dài tối đa 1600 px) để gửi nhanh; ảnh nét mảnh giữ PNG, ảnh quá nặng chuyển JPEG
         function nenAnh(file) {
             return new Promise((xong, loi) => {
                 const doc = new FileReader();
@@ -1222,15 +1219,12 @@
             e.preventDefault();
             themAnhTuTep(index, tep);
         }
-        // [MỚI] ===== HẾT PHẦN HÌNH VẼ =====
 
-        // HÀM GỬI LỆNH CẬP NHẬT TRẠNG THÁI DUYỆT / LOẠI VỀ GOOGLE SHEET
         async function xuLyDuyetCau(maCau, trangThaiMoi, buttonElement, index) {
             const card = buttonElement.closest('.question-card');
             const loiGiaiElem = document.getElementById(`loi_giai_${index}`);
             const loiGiaiMoi = loiGiaiElem ? loiGiaiElem.value : '';
 
-            // [MỚI] Lấy nội dung câu hỏi và phương án đã sửa (đọc trước khi thẻ bị xóa)
             const noiDungElem = document.getElementById(`noi_dung_${index}`);
             const noiDungMoi = noiDungElem ? noiDungElem.value : undefined;
             let phuongAnMoi = undefined;
@@ -1240,19 +1234,16 @@
                     phuongAnMoi = Array.from(cacOPA).map(o => o.value.trim()).filter(v => v !== '').join('\n');
                 }
             }
-            // [MỚI] Đáp án đã tích chọn + dạng câu (chỉ gửi dạng khi thầy có bấm chuyển dạng)
             const dangHienTai = card ? card.dataset.dang : undefined;
             const dapAnMoi = layDapAn(card, index, dangHienTai);
             const dangMoi = (card && card.dataset.dangDoi === '1') ? TEN_DANG_WEB[dangHienTai] : undefined;
-            // [MỚI] Hình: chỉ gửi khi thầy có xoá / thêm hình (link_anh = các hình cũ còn giữ; anh_moi = hình mới tải lên)
             let linkAnhMoi = undefined, anhMoi = undefined;
             if (card && card.dataset.anhDoi === '1') {
                 linkAnhMoi = (card._anh || []).filter(x => !x.moi).map(x => x.goc).concat(card._anhKhac || []).join(', ');
                 anhMoi = (card._anh || []).filter(x => x.moi).map(x => ({ ten: x.ten, mime: x.mime, base64: x.base64 }));
             }
-            if (dangMoi && (dangHienTai === 'ngan' || dangHienTai === 'tuluan')) phuongAnMoi = ''; // máy chủ xoá phương án A–D cũ
+            if (dangMoi && (dangHienTai === 'ngan' || dangHienTai === 'tuluan')) phuongAnMoi = '';
 
-            // Ẩn câu hỏi trên giao diện ngay lập tức (nhớ vị trí để trả thẻ lại nếu Sheet không nhận)
             const viTriThe = card ? { cha: card.parentNode, sau: card.nextSibling } : null;
             if (card) {
                 card.style.transition = "all 0.3s ease";
@@ -1266,7 +1257,6 @@
                 log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đang cập nhật câu [${escSua(maCau)}] thành "${trangThaiMoi}" lên Google Sheet...</div>`;
             }
 
-            // Gửi dữ liệu ngầm về Google Apps Script để cập nhật Google Sheet
             const kq = await guiVeKhoChung({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi, dap_an: dapAnMoi, dang: dangMoi, link_anh: linkAnhMoi, anh_moi: anhMoi });
             const khongThayMa = kq.ok && kq.kq && kq.kq.updated === 0;
             if (kq.ok && !khongThayMa) {
@@ -1276,7 +1266,7 @@
             } else {
                 const tin = khongThayMa ? `Không tìm thấy mã câu ${maCau} trong NganHangCauHoi.` : kq.tin;
                 if (log) log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ⚠️ Câu [${escSua(maCau)}]: ${escSua(tin)}</div>`;
-                if (!kq.khongRo && card && viTriThe && viTriThe.cha) {      // Sheet chắc chắn chưa nhận: trả thẻ lại để thầy làm lại
+                if (!kq.khongRo && card && viTriThe && viTriThe.cha) {
                     setTimeout(() => {
                         viTriThe.cha.insertBefore(card, viTriThe.sau && viTriThe.sau.parentNode === viTriThe.cha ? viTriThe.sau : null);
                         card.style.opacity = "1";
@@ -1289,3 +1279,22 @@
     </script>
 </body>
 </html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("Đã tạo xong tệp index.html đầy đủ!")
+
+
+```
+
+```text
+Đã tạo xong tệp index.html đầy đủ!
+
+
+```
+
+Tệp HTML (`index.html`) đã được tích hợp đầy đủ nút bấm **⚡ Gemini tự giải** ngay cạnh các nút chuẩn hóa công thức. Khi bấm vào nút này, hệ thống sẽ tự động quét nội dung câu hỏi, phương án và hình vẽ minh họa, gọi ngầm sang Google Apps Script nhờ AI giải và **đổ thẳng kết quả, điền đáp án, chuẩn hóa LaTeX vào khung Lời giải chi tiết** cho thầy ngay lập tức.
+
+Tệp đầy đủ của thầy đã sẵn sàng bên dưới:
