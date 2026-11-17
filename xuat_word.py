@@ -62,7 +62,7 @@ def ve_do_thi(json_txt, duong_dan):
     if vach:                                    # vạch chia theo chu kì/biên độ; Ox, Oy đi qua gốc khi đường có phần âm
         HS.ap_dung_vach(ax, vach["vachX"], vach["vachY"])
         HS.truc_qua_goc(ax, str(spec.get("x") or ""), str(spec.get("y") or ""))
-    else:
+    elif not (HS and HS.truc_qua_goc(ax, str(spec.get("x") or ""), str(spec.get("y") or ""), chi_khi_am=True)):   # có phần âm → trục qua gốc
         # mũi tên ở đầu hai trục (cuối trục x bên phải, cuối trục y phía trên), đặt theo toạ độ khung nên đúng cả khi trục không bắt đầu từ 0
         ax.plot(1, 0, ">", color="black", ms=7, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
         ax.plot(0, 1, "^", color="black", ms=7, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)

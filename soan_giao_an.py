@@ -451,9 +451,13 @@ def ve_do_thi_ga(spec, duong_dan):
     for ten in ("top", "right"):
         ax.spines[ten].set_visible(False)
     # mũi tên ở đầu hai trục (cuối trục x bên phải, cuối trục y phía trên) – đặt theo toạ độ khung nên đúng cả khi trục không bắt đầu từ 0
-    if vach:                                    # [17/11/2026] đường hình sin/cos: trục Ot đi qua y = 0, mũi tên ở đầu trục
-        HS.truc_qua_goc(ax, str(spec.get("truc_x") or ""), str(spec.get("truc_y") or ""))
-    else:
+    # [17/11/2026] đồ thị có phần âm (kể cả đường hình sin/cos): trục Ot, Ox đi qua gốc, mũi tên ở đầu trục
+    try:
+        import ham_so_do_thi as HS2
+        da_qua_goc = HS2.truc_qua_goc(ax, str(spec.get("truc_x") or ""), str(spec.get("truc_y") or ""), chi_khi_am=not vach)
+    except ImportError:
+        da_qua_goc = False
+    if not da_qua_goc:
         ax.plot(1, 0, ">", color="black", ms=8, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
         ax.plot(0, 1, "^", color="black", ms=8, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
     if any(d.get("ten") for d in (spec.get("duong") or [])[:4]):

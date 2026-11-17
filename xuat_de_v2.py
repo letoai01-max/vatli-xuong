@@ -81,8 +81,9 @@ def ve_do_thi(h, duong_dan):
         CD.HS.ap_dung_vach(ax, h["vachX"], h["vachY"])
         CD.HS.truc_qua_goc(ax, h.get("nhanTrucX", ""), h.get("nhanTrucY", ""))
     elif kieu != "bar":
-        ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(which="grid"), clip_on=False, markersize=6)
-        ax.plot(0, 1, "^k", transform=ax.get_xaxis_transform(which="grid"), clip_on=False, markersize=6)
+        if not (CD.HS and CD.HS.truc_qua_goc(ax, h.get("nhanTrucX", ""), h.get("nhanTrucY", ""), chi_khi_am=True)):   # có phần âm → trục qua gốc
+            ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(which="grid"), clip_on=False, markersize=6)
+            ax.plot(0, 1, "^k", transform=ax.get_xaxis_transform(which="grid"), clip_on=False, markersize=6)
     if len([s for s in h["duLieu"] if s.get("ten")]) > 1:
         ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.07 if ax.spines["bottom"].get_position() == ("data", 0) else -0.2), ncol=min(4, len(h["duLieu"])), frameon=False)
     fig.tight_layout()

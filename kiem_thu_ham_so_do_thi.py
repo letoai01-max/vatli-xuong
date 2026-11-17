@@ -286,7 +286,34 @@ if co_mpl:
     HS.ap_dung_vach(ax2, {"ds": [0, 4], "min": 0, "max": 4}, {"ds": [1, 4], "min": 1, "max": 4.5})
     HS.truc_qua_goc(ax2, "t", "y")
     ok(ax2.spines["bottom"].get_position() != ("data", 0), "đồ thị không chứa y = 0 thì trục hoành ở mép khung")
+    # đồ thị thường (chi_khi_am=True): chỉ đưa trục qua gốc khi dữ liệu thật sự có phần âm
+    fig3, ax3 = plt.subplots()
+    ax3.plot([0, 1, 2, 3], [3, 1, -1, -3])
+    ok(HS.truc_qua_goc(ax3, "t", "v", chi_khi_am=True) is True and ax3.spines["bottom"].get_position() == ("data", 0),
+       "đồ thị thường có phần âm → trục hoành qua y = 0")
+    fig4, ax4 = plt.subplots()
+    ax4.plot([0, 1, 2, 3], [0, 2, 4, 6])
+    ok(HS.truc_qua_goc(ax4, "t", "v", chi_khi_am=True) is False and ax4.spines["bottom"].get_position() != ("data", 0),
+       "đồ thị thường không có phần âm → giữ nguyên kiểu khung cũ")
+    fig5, ax5 = plt.subplots()
+    ax5.plot([-2, -1, 0, 1], [1, 2, 3, 4])
+    ok(HS.truc_qua_goc(ax5, "x", "y", chi_khi_am=True) is True and ax5.spines["left"].get_position() == ("data", 0),
+       "đồ thị có x âm → trục tung qua x = 0")
+    os.environ["CFG_HAM_SO_DO_THI"] = "false"
+    fig6, ax6 = plt.subplots()
+    ax6.plot([0, 1], [-1, 1])
+    ok(HS.truc_qua_goc(ax6, "t", "v", chi_khi_am=True) is False, "công tắc tắt → đồ thị thường không bị đổi kiểu trục")
+    del os.environ["CFG_HAM_SO_DO_THI"]
     plt.close("all")
+    # ba bộ vẽ với đồ thị thường có phần âm
+    X0 = X.ve_do_thi
+    h_am = CD.chuan_hinh_anh({"loai": "dothi", "kieuDoThi": "line", "nhanTrucX": "t (s)", "nhanTrucY": "v (m/s)",
+                              "duLieu": [{"ten": "", "diem": [[0, 6], [2, 0], [4, -6]]}]})
+    X.ve_do_thi(h_am, os.path.join(ra, "de_thi_thuong_am.png"))
+    ok(os.path.getsize(os.path.join(ra, "de_thi_thuong_am.png")) > 3000, "xuat_de_v2 vẽ đồ thị thường có phần âm")
+    XW.ve_do_thi(json.dumps({"tieuDe": "Hình 3", "x": "t (s)", "y": "v (m/s)", "duong": [{"ten": "A", "diem": [[0, 6], [2, 0], [4, -6]]}]}),
+                 os.path.join(ra, "de_cuong_thuong_am.png"))
+    ok(os.path.getsize(os.path.join(ra, "de_cuong_thuong_am.png")) > 3000, "xuat_word vẽ đồ thị thường có phần âm")
     d2 = os.path.join(ra, "de_cuong_x.png")
     XW.ve_do_thi(json.dumps(spec), d2)
     ok(os.path.getsize(d2) > 5000, "xuat_word.ve_do_thi (đề cương) vẽ được đường có ham")
@@ -305,6 +332,8 @@ if co_mpl:
         ok(os.path.getsize(d4) > 5000, "soan_giao_an.ve_do_thi_ga vẽ được đường có ham")
         GA.ve_do_thi_ga({"truc_x": "t", "truc_y": "v", "duong": [{"ten": "A", "diem": [[0, 0], [1, 2]]}]}, os.path.join(ra, "giao_an_cu.png"))
         ok(os.path.getsize(os.path.join(ra, "giao_an_cu.png")) > 3000, "soan_giao_an đường thẳng cũ vẫn vẽ được")
+        GA.ve_do_thi_ga({"truc_x": "t (s)", "truc_y": "v (m/s)", "duong": [{"ten": "A", "diem": [[0, 6], [2, 0], [4, -6]]}]}, os.path.join(ra, "giao_an_am.png"))
+        ok(os.path.getsize(os.path.join(ra, "giao_an_am.png")) > 3000, "soan_giao_an vẽ đồ thị thường có phần âm")
     except ImportError as e:
         print("⚠️ Bỏ qua ca soan_giao_an (thiếu thư viện: %s)" % e)
 
