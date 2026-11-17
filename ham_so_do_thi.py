@@ -421,3 +421,33 @@ def ve_mui_ten_truc(ax):
     """Mũi tên ở đầu hai trục (cuối trục x bên phải, cuối trục y phía trên), đặt theo toạ độ khung nên đúng cả khi trục không bắt đầu từ 0."""
     ax.plot(1, 0, ">", color="black", ms=8, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
     ax.plot(0, 1, "^", color="black", ms=8, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
+
+
+def truc_qua_goc(ax, nhan_x="", nhan_y=""):
+    """[17/11/2026] Đưa trục hoành đi qua y = 0 và trục tung đi qua x = 0 khi đồ thị có phần âm (kiểu SGK Vật lí):
+    mũi tên nằm ở đầu phải của trục hoành và đầu trên của trục tung; tên trục ghi cạnh mũi tên; số 0 ở trục hoành ẩn để khỏi đè số 0 của trục tung.
+    Gọi SAU ap_dung_vach (cần giới hạn trục đã đặt). Trục không đi qua gốc thì vẫn nằm ở mép khung, mũi tên theo mép khung."""
+    from matplotlib.ticker import FuncFormatter
+    x_lo, x_hi = ax.get_xlim()
+    y_lo, y_hi = ax.get_ylim()
+    ox, oy = y_lo <= 0 <= y_hi, x_lo <= 0 <= x_hi
+    if ox:
+        ax.spines["bottom"].set_position(("data", 0))
+    if oy:
+        ax.spines["left"].set_position(("data", 0))
+    for ten in ("top", "right"):
+        ax.spines[ten].set_visible(False)
+    for ten in ("bottom", "left"):
+        ax.spines[ten].set_linewidth(1.1)
+    tx_ox = ax.get_yaxis_transform() if ox else ax.transAxes          # x theo khung, y theo dữ liệu (hoặc theo khung)
+    tx_oy = ax.get_xaxis_transform() if oy else ax.transAxes
+    ax.plot(1, 0, ">", color="black", ms=8, transform=tx_ox, clip_on=False, zorder=10, scalex=False, scaley=False)
+    ax.plot(0, 1, "^", color="black", ms=8, transform=tx_oy, clip_on=False, zorder=10, scalex=False, scaley=False)
+    ax.set_xlabel("")
+    ax.set_ylabel("")
+    if nhan_x:
+        ax.annotate(nhan_x, xy=(1, 0), xycoords=tx_ox, xytext=(0, -20), textcoords="offset points", ha="right", va="top", clip_on=False)
+    if nhan_y:
+        ax.annotate(nhan_y, xy=(0, 1), xycoords=tx_oy, xytext=(9, -2), textcoords="offset points", ha="left", va="top", clip_on=False)
+    if ox and oy:
+        ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: "" if abs(v) < 1e-12 else ("%g" % (v + 0.0)).replace(".", ",")))

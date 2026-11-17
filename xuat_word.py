@@ -61,15 +61,13 @@ def ve_do_thi(json_txt, duong_dan):
         ax.spines[s].set_visible(False)
     if vach:                                    # vạch chia theo chu kì/biên độ; Ox, Oy đi qua gốc khi đường có phần âm
         HS.ap_dung_vach(ax, vach["vachX"], vach["vachY"])
-        if ax.get_ylim()[0] < 0 < ax.get_ylim()[1]:
-            ax.axhline(0, color="black", linewidth=0.9, zorder=1)
-        if ax.get_xlim()[0] < 0 < ax.get_xlim()[1]:
-            ax.axvline(0, color="black", linewidth=0.9, zorder=1)
-    # mũi tên ở đầu hai trục (cuối trục x bên phải, cuối trục y phía trên), đặt theo toạ độ khung nên đúng cả khi trục không bắt đầu từ 0
-    ax.plot(1, 0, ">", color="black", ms=7, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
-    ax.plot(0, 1, "^", color="black", ms=7, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
+        HS.truc_qua_goc(ax, str(spec.get("x") or ""), str(spec.get("y") or ""))
+    else:
+        # mũi tên ở đầu hai trục (cuối trục x bên phải, cuối trục y phía trên), đặt theo toạ độ khung nên đúng cả khi trục không bắt đầu từ 0
+        ax.plot(1, 0, ">", color="black", ms=7, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
+        ax.plot(0, 1, "^", color="black", ms=7, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
     if len(ds) > 1:
-        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.15), ncol=min(4, len(ds)), frameon=False)
+        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.07 if ax.spines["bottom"].get_position() == ("data", 0) else -0.15), ncol=min(4, len(ds)), frameon=False)
     fig.tight_layout()
     fig.savefig(duong_dan)
     plt.close(fig)

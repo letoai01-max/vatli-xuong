@@ -79,18 +79,12 @@ def ve_do_thi(h, duong_dan):
         ax.spines[s].set_visible(False)
     if co_ham:                                   # vạch chia theo chu kì và biên độ, trục Ox/Oy đi qua gốc, mũi tên ở đầu hai trục
         CD.HS.ap_dung_vach(ax, h["vachX"], h["vachY"])
-        y_lo, y_hi = ax.get_ylim()
-        x_lo, x_hi = ax.get_xlim()
-        if y_lo < 0 < y_hi:
-            ax.axhline(0, color="black", linewidth=0.9, zorder=1)
-        if x_lo < 0 < x_hi:
-            ax.axvline(0, color="black", linewidth=0.9, zorder=1)
-        CD.HS.ve_mui_ten_truc(ax)
+        CD.HS.truc_qua_goc(ax, h.get("nhanTrucX", ""), h.get("nhanTrucY", ""))
     elif kieu != "bar":
         ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(which="grid"), clip_on=False, markersize=6)
         ax.plot(0, 1, "^k", transform=ax.get_xaxis_transform(which="grid"), clip_on=False, markersize=6)
     if len([s for s in h["duLieu"] if s.get("ten")]) > 1:
-        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=min(4, len(h["duLieu"])), frameon=False)
+        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.07 if ax.spines["bottom"].get_position() == ("data", 0) else -0.2), ncol=min(4, len(h["duLieu"])), frameon=False)
     fig.tight_layout()
     fig.savefig(duong_dan)
     plt.close(fig)

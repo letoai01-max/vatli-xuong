@@ -443,10 +443,6 @@ def ve_do_thi_ga(spec, duong_dan):
     ax.yaxis.set_major_formatter(dau_phay)
     if vach:                                    # vạch chia theo chu kì/biên độ (ghi đè định dạng số ở trên, vẫn dấu phẩy)
         HS.ap_dung_vach(ax, vach["vachX"], vach["vachY"])
-        if ax.get_ylim()[0] < 0 < ax.get_ylim()[1]:
-            ax.axhline(0, color="black", linewidth=0.9, zorder=1)
-        if ax.get_xlim()[0] < 0 < ax.get_xlim()[1]:
-            ax.axvline(0, color="black", linewidth=0.9, zorder=1)
     ax.set_xlabel(str(spec.get("truc_x") or ""), fontsize=10)
     ax.set_ylabel(str(spec.get("truc_y") or ""), fontsize=10)
     if spec.get("tieuDe"):
@@ -455,8 +451,11 @@ def ve_do_thi_ga(spec, duong_dan):
     for ten in ("top", "right"):
         ax.spines[ten].set_visible(False)
     # mũi tên ở đầu hai trục (cuối trục x bên phải, cuối trục y phía trên) – đặt theo toạ độ khung nên đúng cả khi trục không bắt đầu từ 0
-    ax.plot(1, 0, ">", color="black", ms=8, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
-    ax.plot(0, 1, "^", color="black", ms=8, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
+    if vach:                                    # [17/11/2026] đường hình sin/cos: trục Ot đi qua y = 0, mũi tên ở đầu trục
+        HS.truc_qua_goc(ax, str(spec.get("truc_x") or ""), str(spec.get("truc_y") or ""))
+    else:
+        ax.plot(1, 0, ">", color="black", ms=8, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
+        ax.plot(0, 1, "^", color="black", ms=8, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
     if any(d.get("ten") for d in (spec.get("duong") or [])[:4]):
         ax.legend(fontsize=8, frameon=False)
     fig.savefig(duong_dan, bbox_inches="tight", pad_inches=0.12, facecolor="white")
