@@ -995,7 +995,7 @@
                 let html = `
                     <div class="flex flex-wrap justify-between items-center gap-2 text-xs border-b border-slate-800 pb-3">
                         <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${escSua(item.ma_cau || 'N/A')}] ${item.lop ? '· Lớp ' + escSua(item.lop) : ''} <span id="nhan_dang_${index}">${item.dang ? '· ' + item.dang : ''}</span></span>
-                        <div class="flex flex-wrap items-center gap-2">${nutGiaiGeminiHtml(index)}<span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${escSua(item.trang_thai || 'Cần người xem')}</span></div>
+                        <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${escSua(item.trang_thai || 'Cần người xem')}</span>
                     </div>
                     ${khungTinGeminiHtml(index)}
                     <!-- [MỚI] Nội dung câu cần duyệt nằm cạnh hình -->
@@ -1031,6 +1031,7 @@
                                 <span class="text-[10px] font-normal text-slate-500">(gõ chữ trực tiếp · bấm vào công thức để sửa)</span>
                             </div>
                             <div class="flex flex-nowrap lg:flex-wrap items-center gap-1.5 lg:gap-2 w-full lg:w-auto">
+                            ${nutGiaiGeminiHtml(index)}
                             <button type="button" onmousedown="event.preventDefault()" onclick="chenCongThuc(${index}, false)" title="Chèn công thức vào chỗ con trỏ, nằm trong dòng" class="flex-1 lg:flex-none whitespace-nowrap shrink-0 px-2 lg:px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-sky-600 text-sky-300 hover:text-white text-[11px] font-semibold border border-slate-700 transition cursor-pointer">
                                 <i class="fa-solid fa-square-root-variable mr-1"></i> + Công thức
                             </button>
@@ -1236,14 +1237,14 @@
         // Trạng thái câu không tự đổi. Tắt tính năng: đặt BAT_GIAI_GEMINI = false (trang chạy y như bản cũ).
         const BAT_GIAI_GEMINI = true;
         const GIAI_GEMINI_SONG_SONG = 2;
-        const NHAN_NUT_GEMINI = '<i class="fa-solid fa-robot mr-1"></i> Giải bằng Gemini';
-        const NHAN_NUT_GEMINI_LAI = '<i class="fa-solid fa-rotate mr-1"></i> Giải lại bằng Gemini';
+        const NHAN_NUT_GEMINI = '<i class="fa-solid fa-robot mr-1"></i><span class="lg:hidden">Gemini</span><span class="hidden lg:inline">Giải bằng Gemini</span>';
+        const NHAN_NUT_GEMINI_LAI = '<i class="fa-solid fa-rotate mr-1"></i><span class="lg:hidden">Giải lại</span><span class="hidden lg:inline">Giải lại bằng Gemini</span>';
         const _hangDoiGemini = [];
         let _dangChayGemini = 0;
 
         function nutGiaiGeminiHtml(index) {
             if (!BAT_GIAI_GEMINI) return '';
-            return `<button type="button" id="nut_gemini_${index}" onclick="giaiBangGemini(${index})" title="Gemini tự giải ngầm, điền lời giải chi tiết và đáp án (chưa lưu, thầy xem rồi bấm Duyệt)" class="px-3 py-1 rounded-lg bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white text-xs font-semibold border border-indigo-500/30 transition cursor-pointer">${NHAN_NUT_GEMINI}</button>`;
+            return `<button type="button" id="nut_gemini_${index}" onclick="giaiBangGemini(${index})" title="Gemini tự giải ngầm, điền lời giải chi tiết và đáp án (chưa lưu, thầy xem rồi bấm Duyệt)" class="flex-1 lg:flex-none whitespace-nowrap shrink-0 px-2 lg:px-2.5 py-1 rounded-lg bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white text-[11px] font-semibold border border-indigo-500/30 transition cursor-pointer">${NHAN_NUT_GEMINI}</button>`;
         }
         function khungTinGeminiHtml(index) {
             return BAT_GIAI_GEMINI ? `<div id="gemini_tin_${index}" class="hidden text-[11px] leading-relaxed rounded-lg px-3 py-2 border"></div>` : '';
@@ -1338,7 +1339,7 @@
                 && !confirm('Câu này nhắc đến hình / đồ thị nhưng chưa có hình, Gemini dễ giải sai. Vẫn giải?')) return;
             if (!layMaBiMat(false)) { alert('Cần nhập mã bí mật Kho chung (API_SECRET) trước khi nhờ Gemini giải.'); return; }
             card.dataset.geminiBan = '1';
-            datNutGemini(index, '<i class="fa-solid fa-hourglass-half mr-1"></i> Đang chờ lượt…', true);
+            datNutGemini(index, '<i class="fa-solid fa-hourglass-half mr-1"></i> Chờ lượt…', true);
             hienTinGemini(index, 'dang', 'Gemini đang giải ngầm câu này. Thầy cứ xem hoặc sửa các câu khác, kết quả tự điền khi xong.');
             _hangDoiGemini.push({
                 index, card, dang, noiDung, phuongAn,
@@ -1358,7 +1359,7 @@
 
         async function giaiMotCauGemini(v) {
             const { index, card } = v;
-            datNutGemini(index, '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Gemini đang giải…', true);
+            datNutGemini(index, '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang giải…', true);
             logGemini(`Câu ${index + 1} [${escSua(v.ma)}]: gửi Gemini giải ngầm…`);
             let kq;
             try {
