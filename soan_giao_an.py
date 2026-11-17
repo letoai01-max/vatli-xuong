@@ -133,7 +133,9 @@ QUY_DINH_HINH = """G. HÌNH ẢNH, BẢNG BIỂU, ĐỒ THỊ CHO TỪNG HOẠT 
    (1) BẢNG SỐ LIỆU: bảng Markdown thường (không phải bảng GV–HS), có dòng tên "**Bảng n. ...**" ngay phía trên, số thập phân dùng dấu phẩy.
    (2) ĐỒ THỊ: MỘT dòng riêng, JSON viết trên MỘT dòng, đúng khuôn:
        [[DO_THI: {"chuThich": "Đồ thị ...", "truc_x": "t (s)", "truc_y": "v (m/s)", "duong": [{"ten": "...", "diem": [[0,0],[1,2],[2,4]]}]}]]
-       (tối đa 4 đường, mỗi đường 2-12 điểm; muốn lưới trống cho học sinh tự vẽ thì bỏ "duong" và thêm "xmax", "ymax", "luoi": true.)
+       (tối đa 4 đường, mỗi đường 2-12 điểm; muốn lưới trống cho học sinh tự vẽ thì bỏ "duong" và thêm "xmax", "ymax", "luoi": true.
+        Đường hình sin/cos (dao động điều hoà, điện xoay chiều, sóng): KHÔNG cho điểm; thay "diem" bằng "ham", ví dụ {"ten": "x", "ham": {"loai": "dieuHoa", "daiLuong": "x", "bienDo": 4, "chuKi": 2, "pha": "-pi/3", "soChuKi": 2}}
+        (daiLuong x, v hoặc a; loai còn có cos, sin, song với buocSong, t0 hoặc x0) để code vẽ đúng chu kì, pha, biên độ.)
    (3) HÌNH VẼ (sơ đồ lực, mặt phẳng nghiêng, vật, lò xo, mạch điện...): MỘT dòng riêng, JSON trên MỘT dòng:
        [[HINH: {"chuThich": "Sơ đồ ...", "moTa": "mô tả thật cụ thể các vật, vị trí, lực, nhãn cần vẽ"}]]
        (hình vẽ bằng code nên dựng chậm: tối đa 2 dòng [[HINH]] trong cả bài; ưu tiên bảng số liệu và đồ thị.)
@@ -407,7 +409,17 @@ def ve_do_thi_ga(spec, duong_dan):
     from matplotlib.ticker import FuncFormatter
     fig, ax = plt.subplots(figsize=(6.4, 4.0), dpi=150)
     co_duong = False
+    vach = None
+    try:                                        # [17/11/2026] đường sin/cos vẽ từ "ham"; lỗi nạp thì vẽ như cũ, tham số sai thì ValueError với lí do rõ
+        import ham_so_do_thi as HS
+        spec, vach = HS.mo_rong_duong_spec(spec)
+    except ImportError as e:
+        print("⚠️ Không nạp được ham_so_do_thi: %s" % str(e)[:120], flush=True)
+    except ValueError:
+        plt.close(fig)
+        raise
     for i, d in enumerate((spec.get("duong") or [])[:4]):
+        co_ham = bool(d.get("moTaHam"))
         diem = []
         for q in d.get("diem") or []:
             try:
@@ -417,8 +429,8 @@ def ve_do_thi_ga(spec, duong_dan):
         if len(diem) < 2:
             continue
         co_duong = True
-        xs, ys = zip(*diem[:30])
-        ax.plot(xs, ys, marker="o", ms=4, lw=1.6, color=MAU_DT[i], label=d.get("ten") or None)
+        xs, ys = zip(*(diem if co_ham else diem[:30]))
+        ax.plot(xs, ys, marker=None if co_ham else "o", ms=4, lw=1.6, color=MAU_DT[i], label=d.get("ten") or None)
     if not co_duong and not (spec.get("xmax") and spec.get("ymax")):
         plt.close(fig)
         raise ValueError("đồ thị không có đường (≥ 2 điểm) và cũng không có xmax/ymax")
@@ -429,6 +441,12 @@ def ve_do_thi_ga(spec, duong_dan):
     dau_phay = FuncFormatter(lambda v, _: ("%g" % v).replace(".", ","))
     ax.xaxis.set_major_formatter(dau_phay)
     ax.yaxis.set_major_formatter(dau_phay)
+    if vach:                                    # vạch chia theo chu kì/biên độ (ghi đè định dạng số ở trên, vẫn dấu phẩy)
+        HS.ap_dung_vach(ax, vach["vachX"], vach["vachY"])
+        if ax.get_ylim()[0] < 0 < ax.get_ylim()[1]:
+            ax.axhline(0, color="black", linewidth=0.9, zorder=1)
+        if ax.get_xlim()[0] < 0 < ax.get_xlim()[1]:
+            ax.axvline(0, color="black", linewidth=0.9, zorder=1)
     ax.set_xlabel(str(spec.get("truc_x") or ""), fontsize=10)
     ax.set_ylabel(str(spec.get("truc_y") or ""), fontsize=10)
     if spec.get("tieuDe"):

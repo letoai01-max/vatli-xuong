@@ -17,6 +17,12 @@ from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 
 import kiem_dinh_de as K        # ket_noi_ghi (quyền sửa Drive)
 
+try:                            # [17/11/2026] đường sin/cos vẽ từ công thức ("ham"); lỗi nạp thì bỏ qua, đồ thị chạy như cũ
+    import ham_so_do_thi as HS
+except Exception as _e:         # noqa: BLE001 – module tuỳ chọn, không được làm hỏng việc chính
+    print("⚠️ Không nạp được ham_so_do_thi: %s" % str(_e)[:120], flush=True)
+    HS = None
+
 RE_DO_THI = re.compile(r"^\s*\[\[DO_THI:\s*(\{.*\})\s*\]\]\s*$")
 MAU = ["#000000", "#1f4e79", "#a61c00", "#38761d"]
 PAGE_BREAK = '\n\n```{=openxml}\n<w:p><w:r><w:br w:type="page"/></w:r></w:p>\n```\n\n'
@@ -29,8 +35,12 @@ def ve_do_thi(json_txt, duong_dan):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     spec = json.loads(json_txt)
+    vach = None
+    if HS:                                      # [17/11/2026] "ham" → điểm + vạch chia trục; tham số sai thì ValueError với lí do rõ
+        spec, vach = HS.mo_rong_duong_spec(spec)
     ds = []
     for d in (spec.get("duong") or [])[:4]:
+        co_ham = bool(d.get("moTaHam")) if isinstance(d, dict) else False
         diem = []
         for p in d.get("diem") or []:
             try:
@@ -38,17 +48,26 @@ def ve_do_thi(json_txt, duong_dan):
             except (TypeError, ValueError, IndexError):
                 pass
         if len(diem) >= 2:
-            ds.append((str(d.get("ten") or spec.get("y") or "y"), sorted(diem[:30])))
+            ds.append((str(d.get("ten") or spec.get("y") or "y"), sorted(diem if co_ham else diem[:30]), co_ham))
     if not ds:
         raise ValueError("đồ thị không có đường nào đủ 2 điểm")
     fig, ax = plt.subplots(figsize=(6.4, 4.2), dpi=150)
-    for k, (ten, diem) in enumerate(ds):
-        ax.plot([p[0] for p in diem], [p[1] for p in diem], color=MAU[k % 4], linewidth=2, marker="o", markersize=4, label=ten)
+    for k, (ten, diem, co_ham) in enumerate(ds):
+        ax.plot([p[0] for p in diem], [p[1] for p in diem], color=MAU[k % 4], linewidth=2, marker=None if co_ham else "o", markersize=4, label=ten)
     ax.set_title(str(spec.get("tieuDe") or ""), fontsize=12)
     ax.set_xlabel(str(spec.get("x") or "")); ax.set_ylabel(str(spec.get("y") or ""))
     ax.grid(True, color="#dddddd", linewidth=0.6)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
+    if vach:                                    # vạch chia theo chu kì/biên độ; Ox, Oy đi qua gốc khi đường có phần âm
+        HS.ap_dung_vach(ax, vach["vachX"], vach["vachY"])
+        if ax.get_ylim()[0] < 0 < ax.get_ylim()[1]:
+            ax.axhline(0, color="black", linewidth=0.9, zorder=1)
+        if ax.get_xlim()[0] < 0 < ax.get_xlim()[1]:
+            ax.axvline(0, color="black", linewidth=0.9, zorder=1)
+    # mũi tên ở đầu hai trục (cuối trục x bên phải, cuối trục y phía trên), đặt theo toạ độ khung nên đúng cả khi trục không bắt đầu từ 0
+    ax.plot(1, 0, ">", color="black", ms=7, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
+    ax.plot(0, 1, "^", color="black", ms=7, transform=ax.transAxes, clip_on=False, zorder=10, scalex=False, scaley=False)
     if len(ds) > 1:
         ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.15), ncol=min(4, len(ds)), frameon=False)
     fig.tight_layout()
@@ -110,7 +129,7 @@ def dung_markdown(goi, thu_muc):
                 dong += ["", "![](%s){width=4.5in}" % ten, ""]
             except Exception as e:
                 loi_hinh += 1
-                dong.append("*(Hình: không vẽ được – %s)*" % str(e)[:80])
+                dong.append("*(Hình: không vẽ được – %s)*" % str(e)[:200])      # [17/11/2026] 80 → 200 để thầy đọc đủ lí do khi "ham" sai
         than.append(sua_md("\n".join(dong)))
     return dau + "\n\n" + PAGE_BREAK.join(than) + "\n", so_hinh, loi_hinh
 

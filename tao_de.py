@@ -50,32 +50,6 @@ TB = _nap("thong_bao")           # Telegram (tuỳ chọn)
 
 CHO_HOAN_PHUT = {"phut": 3, "ngay": 8}   # giống ChanVongLap.gs: hết lượt theo phút chờ 3', theo ngày chờ 8'
 
-
-def phut_den_reset_gemini(luc=None):
-    """[15/11] Số phút từ `luc` (mặc định: bây giờ) đến lần Gemini đặt lại hạn mức NGÀY (0h giờ Thái Bình Dương) + 10 phút dự phòng.
-    Không tính được (thiếu zoneinfo/tzdata) → trả CHO_HOAN_PHUT['ngay'] như cũ."""
-    try:
-        import datetime as dt
-        from zoneinfo import ZoneInfo
-        la, utc = ZoneInfo("America/Los_Angeles"), dt.timezone.utc
-        bay = (luc or dt.datetime.now(utc)).astimezone(la)
-        mai = (bay + dt.timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-        phut = int((mai.astimezone(utc) - bay.astimezone(utc)).total_seconds() // 60) + 10     # trừ ở UTC để đúng cả ngày đổi giờ mùa hè
-        return max(CHO_HOAN_PHUT["ngay"], phut)
-    except Exception as e:
-        print("⚠️ Không tính được mốc reset Gemini, dùng %d phút: %s" % (CHO_HOAN_PHUT["ngay"], str(e)[:100]), flush=True)
-        return CHO_HOAN_PHUT["ngay"]
-
-
-def phan_loai_hoan(e, luc=None):
-    """Trả (theo_ngay, số phút hoãn) cho một HetHanMuc.
-    Công tắc HOAN_THEO_MOC_RESET (biến môi trường, mặc định bật; đặt 0 = y như bản cũ: đoán theo chữ trong thông báo, chờ 3'/8')."""
-    cu = bool(re.search(r"ngày|day|RPD", str(e), re.I))
-    if str(os.environ.get("HOAN_THEO_MOC_RESET", os.environ.get("CFG_HOAN_THEO_MOC_RESET", "1"))).strip() == "0":
-        return cu, CHO_HOAN_PHUT["ngay" if cu else "phut"]
-    theo_ngay = bool(getattr(e, "theo_ngay", False)) or cu
-    return theo_ngay, (phut_den_reset_gemini(luc) if theo_ngay else CHO_HOAN_PHUT["phut"])
-
 HE_THONG = (
     "Bạn là AI Agent Khảo thí môn Vật lí THPT (Chương trình GDPT 2018, Kết nối tri thức với cuộc sống). "
     "Soạn đề TUÂN THỦ CHÍNH XÁC DANH MỤC CÂU HỎI được giao. Đáp án phải đúng về vật lí, số liệu tính toán chính xác. "
@@ -226,13 +200,30 @@ QUY_DINH_HINH = (
     '{"loai":"anhthuc","chuThich":"Hình 3. ...","tuKhoaTimKiem":"2-5 từ khoá tiếng Anh","moTa":"ảnh cần có"}.')
 
 
+QUY_DINH_HAM = (
+    ' ĐƯỜNG HÌNH SIN/COS (dao động điều hoà, điện xoay chiều, sóng): KHÔNG tự cho "diem"; trong "duLieu" thay "diem" bằng "ham" để code vẽ chuẩn, ví dụ '
+    '{"ten":"x","ham":{"loai":"dieuHoa","daiLuong":"x","bienDo":4,"chuKi":2,"pha":"-pi/3","soChuKi":2}} (daiLuong x, v hoặc a; pha viết pi/3, -2pi/3 hoặc số rad) · '
+    '{"ten":"u","ham":{"loai":"cos","bienDo":3,"chuKi":0.02,"pha":0,"soChuKi":2}} (loai cos hoặc sin; có thể thay chuKi bằng tanSo) · '
+    'sóng {"ten":"u","ham":{"loai":"song","truc":"x","bienDo":2,"chuKi":0.5,"buocSong":4,"pha":0,"t0":0.1}} (truc x: u theo toạ độ tại thời điểm t0; truc t: u theo thời gian tại x0). '
+    'Đường thẳng, parabol, đường gấp khúc vẫn dùng "diem".')
+
+
+def _ham_bat():
+    """[17/11/2026] Có hướng dẫn "ham" cho Gemini chỉ khi ham_so_do_thi nạp được và công tắc HAM_SO_DO_THI bật."""
+    try:
+        import ham_so_do_thi as HS
+        return HS.bat()
+    except Exception:                           # noqa: BLE001 – thiếu module thì chạy như cũ
+        return False
+
+
 def quy_dinh_phan(p):
     G = GIOI_HAN_DO_DAI
     dai = {1: " Độ dài: câu hỏi tối đa %d ký tự, mỗi phương án tối đa %d ký tự." % (G["p1CauHoi"], G["p1PhuongAn"]),
            2: " Độ dài: câu dẫn tối đa %d ký tự, mỗi ý tối đa %d ký tự." % (G["p2Dan"], G["p2Y"]),
            3: " Độ dài: đề bài tối đa %d ký tự, chỉ nêu dữ kiện cần để tính." % G["p3"],
            4: " Độ dài: đề bài tối đa %d ký tự." % G["p4"]}[p]
-    return dai + QUY_DINH_HINH
+    return dai + QUY_DINH_HINH + (QUY_DINH_HAM if _ham_bat() else "")
 
 
 def lenh_bo_sung(t0, p):
@@ -548,7 +539,7 @@ def _mo_ta_hinh(h):
         return "[Bảng] " + " | ".join(h["tieuDeCot"]) + "\n" + "\n".join(" | ".join(r) for r in h["dong"])
     if h["loai"] == "dothi":
         return "[Đồ thị %s, trục x: %s, trục y: %s] " % (h["kieuDoThi"], h["nhanTrucX"], h["nhanTrucY"]) + "; ".join(
-            "%s: %s" % (s["ten"], s["diem"]) for s in h["duLieu"])
+            "%s: %s" % (s["ten"], s.get("moTaHam") or s["diem"]) for s in h["duLieu"])      # [17/11/2026] đường có công thức: đưa công thức, không đưa hàng chục điểm
     return "[Hình: %s]" % (h.get("moTa") or h.get("tuKhoaTimKiem") or "")
 
 
@@ -1067,9 +1058,9 @@ def main():
         print("✅ Xong đề %s: %s" % (goi["ma"], json.dumps(tom_tat, ensure_ascii=False)), flush=True)
         bao_telegram("✅ Xưởng Python đã soạn xong đề %s (%d cảnh báo). %s" % (goi["ma"], len(ph.canh_bao), json.dumps(tt_kd, ensure_ascii=False)[:200]))
     except X.HetHanMuc as e:
-        theo_ngay, phut_cho = phan_loai_hoan(e)
-        ph.hoan(str(e), phut_cho, de_dang_soan=de, tien_do_luu=tien)
-        print("⏸️ Hết hạn mức Gemini (%s) – Apps Script sẽ gửi lại sau %d phút: %s" % ("theo NGÀY" if theo_ngay else "theo phút", phut_cho, str(e)[:150]), flush=True)
+        theo_ngay = bool(re.search(r"ngày|day|RPD", str(e), re.I))
+        ph.hoan(str(e), CHO_HOAN_PHUT["ngay" if theo_ngay else "phut"], de_dang_soan=de, tien_do_luu=tien)
+        print("⏸️ Hết hạn mức Gemini – Apps Script sẽ gửi lại:", str(e)[:150], flush=True)
     except Exception as e:
         ph.loi(str(e))
         for k in ("docxHS", "docxGV"):

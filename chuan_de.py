@@ -15,6 +15,12 @@ import re
 
 import latex_chuan as L
 
+try:                                     # [17/11/2026] đường sin/cos vẽ từ công thức ("ham"); lỗi nạp thì bỏ qua, đề vẫn chạy như cũ
+    import ham_so_do_thi as HS
+except Exception as _e:                  # noqa: BLE001 – module tuỳ chọn, không được làm hỏng việc chính
+    print("⚠️ Không nạp được ham_so_do_thi: %s" % str(_e)[:120], flush=True)
+    HS = None
+
 CAC_Y = ("A", "B", "C", "D")
 RE_TOAN = re.compile(r"\$\$[\s\S]*?\$\$|\$[^$\n]+?\$")
 RE_LENH_TRAN = re.compile(r"\\[A-Za-z]{2,}|[\^_]\{")
@@ -161,6 +167,12 @@ def chuan_hinh_anh(h):
         kq["kieuDoThi"] = "bar" if re.search(r"bar|cot|column", kd) else ("scatter" if re.search(r"scatter|diem|cham", kd) else "line")
         kq["nhanTrucX"], kq["nhanTrucY"] = _s(h.get("nhanTrucX") or h.get("xLabel")).strip(), _s(h.get("nhanTrucY") or h.get("yLabel")).strip()
         ds = h.get("duLieu") or h.get("series") or ([{"ten": "", "diem": h["diem"]}] if isinstance(h.get("diem"), list) else [])
+        tt_ham = None
+        if HS and HS.bat() and kq["kieuDoThi"] != "bar":           # [17/11/2026] "ham" → 40–120 điểm đúng công thức
+            ds, loi_ham, tt_ham = HS.mo_rong_du_lieu([s for s in ds if isinstance(s, dict)])
+            if loi_ham:
+                kq["duLieu"], kq["hopLe"], kq["lyDo"] = [], False, loi_ham
+                return kq
         out = []
         for s in ds:
             if not isinstance(s, dict):
@@ -180,11 +192,16 @@ def chuan_hinh_anh(h):
                 if ys == ys and (isinstance(x, str) or x == x):
                     diem.append([x, ys])
             if diem:
-                out.append({"ten": _s(s.get("ten") or s.get("name") or s.get("label")).strip(), "diem": diem})
+                dong = {"ten": _s(s.get("ten") or s.get("name") or s.get("label")).strip(), "diem": diem}
+                if s.get("moTaHam"):
+                    dong["moTaHam"] = s["moTaHam"]
+                out.append(dong)
         kq["duLieu"] = out[:4]
         toi_thieu = 1 if kq["kieuDoThi"] == "bar" else 2
         if not any(len(s["diem"]) >= toi_thieu for s in kq["duLieu"]):
             kq["hopLe"], kq["lyDo"] = False, "đồ thị cần duLieu có ít nhất 2 điểm [x, y] là số"
+        elif tt_ham:
+            HS.gan_vach(kq, tt_ham)                                  # vạch chia trục theo chu kì và biên độ
         return kq
     kq["moTa"], kq["tuKhoaTimKiem"] = _s(h.get("moTa") or h.get("description")).strip(), _s(h.get("tuKhoaTimKiem") or h.get("query")).strip()
     if loai == "hinhve" and not kq["moTa"]:

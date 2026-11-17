@@ -54,6 +54,7 @@ def ve_do_thi(h, duong_dan):
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots(figsize=(6.0, 3.8), dpi=150)
     kieu = h.get("kieuDoThi", "line")
+    co_ham = bool(CD.HS and h.get("vachX") and h.get("vachY") and kieu == "line")     # [17/11/2026] đường sin/cos vẽ từ công thức
     for k, s in enumerate(h["duLieu"]):
         xs, ys = [p[0] for p in s["diem"]], [p[1] for p in s["diem"]]
         mau, ten = MAU[k % 4], s.get("ten") or None
@@ -70,13 +71,22 @@ def ve_do_thi(h, duong_dan):
             ax.scatter(xs, ys, color=mau, s=22, label=ten, zorder=3)
         else:
             ap = sorted(zip(xs, ys))
-            ax.plot([p[0] for p in ap], [p[1] for p in ap], color=mau, linewidth=2, marker="o", markersize=3.5, label=ten)
+            ax.plot([p[0] for p in ap], [p[1] for p in ap], color=mau, linewidth=2, marker=None if s.get("moTaHam") else "o", markersize=3.5, label=ten)
     ax.set_xlabel(h.get("nhanTrucX", ""), loc="right")
     ax.set_ylabel(h.get("nhanTrucY", ""), loc="top")
     ax.grid(True, color="#e3e3e3", linewidth=0.6)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
-    if kieu != "bar":
+    if co_ham:                                   # vạch chia theo chu kì và biên độ, trục Ox/Oy đi qua gốc, mũi tên ở đầu hai trục
+        CD.HS.ap_dung_vach(ax, h["vachX"], h["vachY"])
+        y_lo, y_hi = ax.get_ylim()
+        x_lo, x_hi = ax.get_xlim()
+        if y_lo < 0 < y_hi:
+            ax.axhline(0, color="black", linewidth=0.9, zorder=1)
+        if x_lo < 0 < x_hi:
+            ax.axvline(0, color="black", linewidth=0.9, zorder=1)
+        CD.HS.ve_mui_ten_truc(ax)
+    elif kieu != "bar":
         ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(which="grid"), clip_on=False, markersize=6)
         ax.plot(0, 1, "^k", transform=ax.get_xaxis_transform(which="grid"), clip_on=False, markersize=6)
     if len([s for s in h["duLieu"] if s.get("ten")]) > 1:
