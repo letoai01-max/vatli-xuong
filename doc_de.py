@@ -512,6 +512,61 @@ def dong_bo_danh_sach(gc, tab_xl):
     return len(moi)
 
 
+# ---------------- [MỚI] QUÉT THƯ MỤC NGUỒN: đưa file thầy tự tải lên vào hàng chờ ----------------
+# Trước đây chỉ file do Download Agent ghi vào tab DaTai mới vào hàng chờ; file thầy tự đưa lên Drive thì không ai đọc.
+# Bước này liệt kê file trong thư mục nguồn (kể cả thư mục con) và thêm vào XuLyDe nếu chưa có (so theo File ID).
+# Thư mục phải được chia sẻ (quyền Xem) cho tài khoản dịch vụ. Muốn thêm thư mục khác: đặt biến môi trường
+# THU_MUC_NGUON_THEM = "id1,id2" hoặc sửa danh sách dưới đây.
+THU_MUC_NGUON = [
+    "1vhmU0eHbJv9QSuUY3O0s32y1NU0JfN5u",
+    "13qTafF7j1MEypcETiU3DD4T9rLGNiJqm",
+    "1faJ18MELk-R_e-y8qzRUlNe5xQgbttxZ",
+    "17ekG9WLOP1jZ4-yl1HcopmfnNvkpB_RR",
+    "1ur54UiZ2IPcbI0FMXdZ0Ifr-iwRYKghL",
+]
+MIME_DOC_DUOC = {"application/pdf", "application/msword", "application/vnd.google-apps.document",
+                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
+
+
+def quet_thu_muc_nguon(drive, tab_xl):
+    ds_goc = THU_MUC_NGUON + [x.strip() for x in os.environ.get("THU_MUC_NGUON_THEM", "").split(",") if x.strip()]
+    da_co = {r[0] for r in tab_xl.get_all_values()[1:] if r}
+    moi, da_quet = [], set()
+
+    def liet_ke(thu_muc, ten_duong):
+        if thu_muc in da_quet:
+            return
+        da_quet.add(thu_muc)
+        trang = None
+        while True:
+            kq = drive.files().list(q="'%s' in parents and trashed = false" % thu_muc,
+                                    fields="nextPageToken, files(id,name,mimeType)", pageSize=1000, pageToken=trang,
+                                    supportsAllDrives=True, includeItemsFromAllDrives=True).execute()
+            for f in kq.get("files", []):
+                mime, fid, ten = f.get("mimeType", ""), f["id"], f.get("name", "")
+                if mime == "application/vnd.google-apps.folder":
+                    liet_ke(fid, ten_duong + "/" + ten)
+                elif fid in da_co:
+                    continue
+                elif mime in MIME_DOC_DUOC or re.match(r"^image/(png|jpeg|webp)$", mime) or re.search(r"\.docx?$", ten, re.I):
+                    da_co.add(fid)
+                    moi.append([fid, ten, "https://drive.google.com/file/d/%s/view" % fid, ten_duong.strip("/"),
+                                "Chờ", "", 0, "", "", "", "", "", ""])
+            trang = kq.get("nextPageToken")
+            if not trang:
+                break
+
+    for goc in ds_goc:
+        try:
+            ten_goc = drive.files().get(fileId=goc, fields="name", supportsAllDrives=True).execute().get("name", "")
+            liet_ke(goc, ten_goc)
+        except Exception as e:
+            print("⚠️ Không quét được thư mục %s (đã chia sẻ cho tài khoản dịch vụ chưa?): %s" % (goc, str(e)[:160]))
+    if moi:
+        tab_xl.append_rows(moi, value_input_option="USER_ENTERED", table_range="A1")
+    return len(moi)
+
+
 def lay_file_cho(tab_xl, da_lam):
     for i, r in enumerate(tab_xl.get_all_values()[1:]):
         r = (r + [""] * len(COT_XL))[:len(COT_XL)]
@@ -687,6 +742,9 @@ def main():
     so_moi = dong_bo_danh_sach(gc, tab_xl)
     if so_moi:
         print("📥 Thêm %d file mới vào hàng chờ." % so_moi)
+    so_quet = quet_thu_muc_nguon(drive, tab_xl)
+    if so_quet:
+        print("📂 Quét thư mục nguồn: thêm %d file thầy tự tải vào hàng chờ." % so_quet)
     yccd = doc_yccd(kho)
     if not yccd["ds"]:
         raise SystemExit("Tab YCCD trống.")
