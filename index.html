@@ -248,6 +248,9 @@
                         <button onclick="chuanHoaTatCaLoiGiai()" title="Chuẩn hoá chữ và công thức trong lời giải của mọi câu đang hiện" class="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-violet-600/20 cursor-pointer">
                             <i class="fa-solid fa-wand-magic-sparkles"></i> Chuẩn hoá tất cả lời giải
                         </button>
+                        <button onclick="giaiTatCaGemini(false)" title="Gemini giải ngầm mọi câu đang hiện: một lời giải thống nhất, tích sẵn đáp án (chưa lưu, thầy xem rồi bấm Duyệt)" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-indigo-600/20 cursor-pointer">
+                            <i class="fa-solid fa-robot"></i> Giải tất cả bằng Gemini
+                        </button>
                     </div>
                 </div>
 
@@ -1077,6 +1080,7 @@
             if (log) {
                 log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã tải thành công ${dsHienThi.length} câu hỏi.</div>`;
             }
+            if (BAT_GIAI_GEMINI && TU_GIAI_GEMINI_KHI_TAI) giaiTatCaGemini(true);   // [19/11/2026] tự giải ngầm các câu vừa hiện
         }
 
         // HÀM GỬI LỆNH THỰC THI TÁC VỤ CHUYÊN SÂU TỚI GOOGLE APPS SCRIPT
@@ -1237,6 +1241,10 @@
         // Trạng thái câu không tự đổi. Tắt tính năng: đặt BAT_GIAI_GEMINI = false (trang chạy y như bản cũ).
         const BAT_GIAI_GEMINI = true;
         const GIAI_GEMINI_SONG_SONG = 2;
+        // [19/11/2026] Tự động: vừa hiện danh sách câu cần duyệt là Gemini tự giải ngầm TẤT CẢ các câu đang hiện,
+        // mỗi câu chỉ ra MỘT lời giải thống nhất với đáp án đã tích sẵn (TNNLC/Đ-S tích sẵn, TLN/tự luận điền đáp số). Tắt: đặt false (vẫn còn nút bấm tay).
+        const TU_GIAI_GEMINI_KHI_TAI = true;
+        const HUONG_DAN_MOT_LOI_GIAI = 'Chỉ đưa ra MỘT lời giải duy nhất, một cách giải duy nhất, không nêu nhiều cách hay nhiều đáp án. Đáp án ghi ở dòng cuối lời giải (ví dụ \"Chọn A\" hoặc đáp số) phải trùng khớp tuyệt đối với trường dap_an. Nếu không chắc chắn thì chọn đáp án có khả năng đúng cao nhất, đặt chac_chan = false và ghi lí do vào ghi_chu.';
         const NHAN_NUT_GEMINI = '<i class="fa-solid fa-robot mr-1"></i><span class="lg:hidden">Gemini</span><span class="hidden lg:inline">Giải bằng Gemini</span>';
         const NHAN_NUT_GEMINI_LAI = '<i class="fa-solid fa-rotate mr-1"></i><span class="lg:hidden">Giải lại</span><span class="hidden lg:inline">Giải lại bằng Gemini</span>';
         const _hangDoiGemini = [];
@@ -1326,23 +1334,27 @@
         }
 
         // Bấm nút: kiểm tra nhanh rồi xếp vào hàng đợi, trả quyền điều khiển ngay (giải ngầm)
-        function giaiBangGemini(index) {
+        function giaiBangGemini(index, tuDong = false) {
             const nut = document.getElementById(`nut_gemini_${index}`);
             const card = nut && nut.closest('.question-card');
             if (!card || card.dataset.geminiBan === '1') return;
             const dang = card.dataset.dang;
             const noiDung = (document.getElementById(`noi_dung_${index}`) || {}).value || '';
-            if (!noiDung.trim()) { alert('Câu này chưa có nội dung để Gemini giải.'); return; }
+            const canhThem = [];   // [19/11/2026] cảnh báo nhẹ khi chạy tự động (thay cho hộp hỏi)
+            const baoThieu = tin => { if (tuDong) hienTinGemini(index, 'canh', escSua(tin) + ' Thầy bổ sung rồi bấm \"Giải bằng Gemini\".'); else alert(tin); };
+            if (!noiDung.trim()) { baoThieu('Câu này chưa có nội dung để Gemini giải.'); return; }
             const phuongAn = Array.from(card.querySelectorAll(`.pa-input-${index}`)).map(o => o.value.trim()).filter(Boolean).join('\n');
-            if ((dang === 'tn' || dang === 'ds') && !phuongAn) { alert('Câu này chưa có phương án / các ý để Gemini giải.'); return; }
-            if (!(card._anh || []).length && /(hình\s*(vẽ|bên|dưới|sau|\d)|như hình|đồ thị|sơ đồ|biểu đồ)/i.test(noiDung)
-                && !confirm('Câu này nhắc đến hình / đồ thị nhưng chưa có hình, Gemini dễ giải sai. Vẫn giải?')) return;
-            if (!layMaBiMat(false)) { alert('Cần nhập mã bí mật Kho chung (API_SECRET) trước khi nhờ Gemini giải.'); return; }
+            if ((dang === 'tn' || dang === 'ds') && !phuongAn) { baoThieu('Câu này chưa có phương án / các ý để Gemini giải.'); return; }
+            if (!(card._anh || []).length && /(hình\s*(vẽ|bên|dưới|sau|\d)|như hình|đồ thị|sơ đồ|biểu đồ)/i.test(noiDung)) {
+                if (tuDong) canhThem.push('Câu nhắc đến hình / đồ thị nhưng chưa có hình, Gemini dễ giải sai: thầy kiểm tra kỹ trước khi duyệt.');
+                else if (!confirm('Câu này nhắc đến hình / đồ thị nhưng chưa có hình, Gemini dễ giải sai. Vẫn giải?')) return;
+            }
+            if (!layMaBiMat(false)) { if (!tuDong) alert('Cần nhập mã bí mật Kho chung (API_SECRET) trước khi nhờ Gemini giải.'); return; }
             card.dataset.geminiBan = '1';
             datNutGemini(index, '<i class="fa-solid fa-hourglass-half mr-1"></i> Chờ lượt…', true);
             hienTinGemini(index, 'dang', 'Gemini đang giải ngầm câu này. Thầy cứ xem hoặc sửa các câu khác, kết quả tự điền khi xong.');
             _hangDoiGemini.push({
-                index, card, dang, noiDung, phuongAn,
+                index, card, dang, noiDung, phuongAn, canhThem,
                 lop: card.dataset.lop || '', ma: card.dataset.ma || '',
                 truoc: { dang, loiGiai: (document.getElementById(`loi_giai_${index}`) || {}).value || '', dapAn: layDapAn(card, index, dang) || '' }
             });
@@ -1364,7 +1376,7 @@
             let kq;
             try {
                 const anh = await layAnhChoGemini(card);
-                kq = await guiVeKhoChung({ action: 'giai_gemini', ma_cau: v.ma, lop: v.lop, dang: v.dang, noi_dung: v.noiDung, phuong_an: v.phuongAn, anh: anh });
+                kq = await guiVeKhoChung({ action: 'giai_gemini', ma_cau: v.ma, lop: v.lop, dang: v.dang, noi_dung: v.noiDung, phuong_an: v.phuongAn, anh: anh, huong_dan: HUONG_DAN_MOT_LOI_GIAI });
             } catch (e) { kq = { ok: false, tin: String((e && e.message) || e) }; }
             card.dataset.geminiBan = '0';
             if (!document.body.contains(card)) { logGemini(`Câu [${escSua(v.ma)}] đã được duyệt/loại trước khi Gemini giải xong, bỏ kết quả.`); return; }
@@ -1390,7 +1402,7 @@
             }
             o.value = chuanHoaLatex(d.loi_giai || '');
             capNhatXemLoiGiai(index);
-            const canh = Array.isArray(d.canh_bao) ? d.canh_bao.slice() : [];
+            const canh = (Array.isArray(d.canh_bao) ? d.canh_bao.slice() : []).concat(v.canhThem || []);
             const cungDang = card.dataset.dang === v.dang;
             let sk = null;
             if (cungDang) {
@@ -1400,6 +1412,8 @@
                 canh.push('Thầy đã đổi dạng câu trong lúc Gemini giải nên chỉ điền lời giải, không điền đáp án.');
             }
             if (d.chac_chan === false) canh.push('Gemini chưa chắc chắn' + (d.ghi_chu ? ': ' + d.ghi_chu : '.'));
+            const lech = kiemTraThongNhat(v.dang, o.value, d.dap_an);   // [19/11/2026] lời giải phải kết luận đúng đáp án đã tích
+            if (lech) canh.push(lech);
             card._truocGemini = v.truoc;   // để Hoàn tác
 
             const dapAnHien = d.dap_an ? escSua(d.dap_an) : '—';
@@ -1425,6 +1439,33 @@
             card._truocGemini = null;
             hienTinGemini(index, 'dang', 'Đã hoàn tác: trả lại lời giải và đáp án trước khi Gemini giải.');
             logGemini(`Câu ${index + 1}: đã hoàn tác kết quả Gemini.`);
+        }
+        // [19/11/2026] Giải ngầm tất cả câu đang hiện (tự chạy sau khi hiện danh sách, hoặc bấm nút \"Giải tất cả bằng Gemini\")
+        function giaiTatCaGemini(tuDong) {
+            if (!BAT_GIAI_GEMINI) return;
+            const cacThe = Array.from(document.querySelectorAll('#danh-sach-cau-hoi .question-card'));
+            if (cacThe.length === 0) { if (!tuDong) alert('Chưa có câu nào đang hiện. Thầy bấm \"Hiện ~20 câu cần duyệt\" trước.'); return; }
+            if (!layMaBiMat(false)) { logGemini('Chưa nhập mã bí mật Kho chung nên Gemini chưa tự giải. Bấm \"Giải tất cả bằng Gemini\" sau khi nhập mã.'); return; }
+            let so = 0;
+            cacThe.forEach(card => {
+                const nut = card.querySelector('[id^=\"nut_gemini_\"]');
+                if (!nut || card.dataset.geminiBan === '1') return;
+                giaiBangGemini(parseInt(nut.id.replace('nut_gemini_', ''), 10), true);
+                so++;
+            });
+            logGemini(`Gemini tự giải ngầm ${so} câu (mỗi lần ${GIAI_GEMINI_SONG_SONG} câu). Câu nào xong sẽ tự tích đáp án và điền lời giải, thầy xem rồi bấm Duyệt.`);
+        }
+
+        // Lời giải phải kết luận đúng đáp án đã tích. Chỉ kiểm tra được câu TNNLC (đọc dòng \"Chọn X\" / \"Đáp án: X\" cuối cùng). Trả về chuỗi cảnh báo hoặc ''.
+        function kiemTraThongNhat(dang, loiGiai, dapAn) {
+            if (dang !== 'tn' || !dapAn) return '';
+            const mDa = String(dapAn).match(/[A-D]/i);
+            if (!mDa) return '';
+            const re = /(?:[Cc]họn|[Đđ]áp án)(?:\s+(?:đáp án|đúng|là))*\s*[:：]?\s*\**\s*([A-D])(?![A-Za-z\u00C0-\u1EF9])/g;
+            let m, cuoi = '';
+            while ((m = re.exec(String(loiGiai || ''))) !== null) cuoi = m[1];
+            if (cuoi && cuoi !== mDa[0].toUpperCase()) return `Lời giải kết luận ${cuoi} nhưng đáp án đã tích là ${mDa[0].toUpperCase()}: chưa thống nhất, thầy bấm \"Giải lại bằng Gemini\" hoặc tự chỉnh.`;
+            return '';
         }
         // =================== HẾT PHẦN GIẢI BẰNG GEMINI ===================
 
