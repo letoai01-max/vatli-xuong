@@ -16,8 +16,16 @@ Hết hạn mức Gemini → dừng lượt, lượt sau làm tiếp. Lỗi chun
     (tối đa SO_LO_TOI_DA lô mỗi phần). Mã câu đánh số liên tục; câu đã có mã trong ngân hàng thì không ghi lại.
   • Mỗi lượt gọi Gemini được ghi vào tab Quota_SuDung (dòng "xưởng …") qua quota_xuong.py.
 
+[20/11/2026] ĐỌC FILE NÉN .zip / .rar (có công tắc CHO_PHEP_DOC_NEN – tắt thì chạy y như bản cũ):
+  • Giải nén NGAY TRONG BỘ NHỚ (không ghi đĩa), lấy PDF / Word / ảnh bên trong (tệp nén lồng nhau 1 cấp), bỏ __MACOSX, file ẩn, file tạm ~$.
+    Mỗi file con thành một "phần" gửi Gemini như PDF lớn; mã câu đánh số liên tục cho cả tệp nén, cột "Tên file" ghi "tệp nén › file con (câu N)".
+  • Một file con lỗi (không phải hết hạn mức) thì bỏ qua file đó, các file con khác vẫn đọc; trạng thái ghi "Đã xử lý (một phần)" kèm tên file lỗi.
+  • Chặn zip bomb: tối đa GIOI_HAN_SO_FILE_NEN file và GIOI_HAN_GIAI_NEN dung lượng sau giải nén. Tệp nén có mật khẩu → báo lỗi.
+  • .rar cần thư viện rarfile (pip) và công cụ unar hoặc unrar (apt) trong workflow; .zip dùng thư viện có sẵn của Python.
+
 Biến môi trường (GitHub Secrets): GOOGLE_CREDENTIALS (toàn bộ nội dung credentials.json), GEMINI_API_KEY,
 GEMINI_API_KEY_TRA_PHI (không bắt buộc): dùng khi khoá miễn phí HẾT LƯỢT trong ngày, tối đa TOI_DA_LUOT_TRA_PHI lượt gọi/lượt chạy.
+CHO_PHEP_DOC_NEN (không bắt buộc, mặc định true; tab CauHinh cùng tên sẽ ghi đè): bật/tắt đọc file .zip / .rar.
 """
 import base64, datetime as dt, io, json, os, re, shutil, subprocess, sys, tempfile, time, unicodedata
 
@@ -46,6 +54,7 @@ SO_CAU_KHI_QUA_DAI = 40            # (bản cũ) chỉ còn dùng làm cỡ lô 
 SO_CAU_MOI_LO = int(os.environ.get("SO_CAU_MOI_LO", "40"))
 SO_LO_TOI_DA = int(os.environ.get("SO_LO_TOI_DA", "10"))          # mỗi phần tối đa 10 lô (≈400 câu)
 GIOI_HAN_TAI_VE = 300 * 1024 * 1024                                # file quá lớn mới bỏ qua hẳn
+CHO_PHEP_DOC_NEN = os.environ.get("CHO_PHEP_DOC_NEN", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")   # [20/11/2026] công tắc đọc .zip/.rar
 TZ = dt.timezone(dt.timedelta(hours=7))
 
 COT_XL = ["File ID", "Tên file", "Link", "Chủ đề tải", "Trạng thái", "Số câu", "Số lần thử",
@@ -168,6 +177,104 @@ def chuan_bi_tep(drive, file_id):
     return {"bo_qua": "Định dạng chưa hỗ trợ (%s)" % mime}
 
 
+# ---------------- [20/11/2026] FILE NÉN .zip / .rar ----------------
+MIME_NEN = {"application/zip", "application/x-zip-compressed", "application/vnd.rar",
+            "application/x-rar-compressed", "application/x-rar"}
+GIOI_HAN_SO_FILE_NEN = int(os.environ.get("GIOI_HAN_SO_FILE_NEN", "200"))              # chống tệp nén chứa quá nhiều file
+GIOI_HAN_GIAI_NEN = int(os.environ.get("GIOI_HAN_GIAI_NEN_MB", "500")) * 1024 * 1024   # chống zip bomb (tổng dung lượng sau giải nén)
+DUOI_DOC_DUOC = (".pdf", ".doc", ".docx", ".png", ".jpg", ".jpeg", ".webp")
+MIME_ANH = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp"}
+
+
+def la_tep_nen(mime, ten):
+    return mime in MIME_NEN or bool(re.search(r"\.(zip|rar)$", ten or "", re.I))
+
+
+def _ten_trong_zip(info):
+    """Tên file tiếng Việt trong zip cũ hay bị lỗi mã hoá (cp437) → sửa lại thành UTF-8."""
+    ten = info.filename
+    if not (info.flag_bits & 0x800):
+        try:
+            ten = ten.encode("cp437").decode("utf-8")
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            pass
+    return ten
+
+
+def _bo_qua_muc_nen(ten, la_thu_muc):
+    base = os.path.basename(ten.rstrip("/"))
+    return (la_thu_muc or "__MACOSX" in ten or base.startswith((".", "~$"))
+            or not ten.lower().endswith(DUOI_DOC_DUOC + (".zip", ".rar")))
+
+
+def giai_nen(du_lieu):
+    """Trả [(tên trong tệp nén, bytes)] chỉ gồm PDF/Word/ảnh và tệp nén lồng nhau. Nhận dạng bằng 4 byte đầu, không tin đuôi file."""
+    ra, tong = [], 0
+
+    def nhan(co):
+        nonlocal tong
+        tong += co
+        if tong > GIOI_HAN_GIAI_NEN or len(ra) >= GIOI_HAN_SO_FILE_NEN:
+            raise RuntimeError("Tệp nén quá lớn hoặc quá nhiều file (giới hạn %d file, %d MB sau giải nén)"
+                               % (GIOI_HAN_SO_FILE_NEN, GIOI_HAN_GIAI_NEN // 1048576))
+
+    if du_lieu[:4] == b"PK\x03\x04":
+        import zipfile
+        with zipfile.ZipFile(io.BytesIO(du_lieu)) as z:
+            for info in z.infolist():
+                ten = _ten_trong_zip(info)
+                if _bo_qua_muc_nen(ten, info.is_dir()):
+                    continue
+                nhan(info.file_size)
+                ra.append((ten, z.read(info)))
+    elif du_lieu[:4] == b"Rar!":
+        try:
+            import rarfile
+        except ImportError:
+            raise RuntimeError("Chưa cài thư viện rarfile: thêm 'pip install rarfile' và 'sudo apt-get install -y unar' vào workflow")
+        with rarfile.RarFile(io.BytesIO(du_lieu)) as r:
+            for info in r.infolist():
+                ten = info.filename
+                if _bo_qua_muc_nen(ten, info.is_dir()):
+                    continue
+                nhan(info.file_size)
+                ra.append((ten, r.read(info)))
+    else:
+        raise RuntimeError("Không nhận ra định dạng tệp nén (chỉ hỗ trợ zip, rar)")
+    return ra
+
+
+def _phan_tu_bytes(du_lieu, ten):
+    """Một file đã có bytes → danh sách phần gửi Gemini ([] nếu bỏ qua)."""
+    duoi = os.path.splitext(ten.lower())[1]
+    if duoi in MIME_ANH:
+        return [{"data": du_lieu, "mime": MIME_ANH[duoi], "ten": ten}] if len(du_lieu) <= KICH_THUOC_TOI_DA else []
+    if duoi == ".pdf":
+        pdf = du_lieu
+    elif duoi in (".doc", ".docx"):
+        pdf = word_sang_pdf(du_lieu, ten)
+    else:
+        return []
+    if len(pdf) <= KICH_THUOC_TOI_DA:
+        return [{"data": pdf, "mime": "application/pdf", "ten": ten}]
+    return tach_pdf(pdf, ten)
+
+
+def tep_tu_nen(du_lieu, ten_nen, do_sau=0):
+    """Tệp nén → danh sách phần (mỗi phần có 'ten' = tên file con). File con hỏng thì bỏ qua, không làm sập cả tệp."""
+    phan = []
+    for ten, b in giai_nen(du_lieu):
+        if ten.lower().endswith((".zip", ".rar")):
+            if do_sau < 1:                                   # cho phép lồng 1 cấp
+                phan += tep_tu_nen(b, ten, do_sau + 1)
+            continue
+        try:
+            phan += _phan_tu_bytes(b, ten)
+        except Exception as e:                               # file con hỏng / không đổi được sang PDF: cảnh báo rồi bỏ qua
+            print("  ⚠️ Bỏ qua %s trong %s: %s" % (ten, ten_nen, str(e)[:120]), flush=True)
+    return phan
+
+
 def chuan_bi_tep_day_du(drive, file_id):
     """Như chuan_bi_tep nhưng không bỏ qua file lớn: trả {"phan": [tệp, …]} (PDF lớn được nén / chia theo trang)."""
     f = drive.files().get(fileId=file_id, fields="name,mimeType,size").execute()
@@ -184,6 +291,12 @@ def chuan_bi_tep_day_du(drive, file_id):
         tep = {"data": tai_ve(drive, file_id, xuat_pdf=True), "mime": "application/pdf", "ten": ten}
     elif mime in ("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword") or re.search(r"\.docx?$", ten, re.I):
         tep = {"data": word_sang_pdf(tai_ve(drive, file_id), ten), "mime": "application/pdf", "ten": ten}
+    elif CHO_PHEP_DOC_NEN and la_tep_nen(mime, ten):          # [20/11/2026]
+        phan = tep_tu_nen(tai_ve(drive, file_id), ten)
+        if not phan:
+            return {"bo_qua": "Tệp nén không có PDF/Word/ảnh đọc được"}
+        print("  🗜️ Tệp nén %s: %d phần để đọc." % (ten, len(phan)), flush=True)
+        return {"phan": phan, "tu_nen": True}
     else:
         return {"bo_qua": "Định dạng chưa hỗ trợ (%s)" % mime}
     if len(tep["data"]) <= KICH_THUOC_TOI_DA:
@@ -265,7 +378,7 @@ def tach_pdf(du_lieu, ten):
 
 # ---------------- GEMINI ----------------
 def doc_cau_hinh(kho):
-    global SO_CAU_MOI_LO, SO_LO_TOI_DA, TOI_DA_LUOT_TRA_PHI, CHO_PHEP_DOC_DE, GIOI_HAN_TAI_VE
+    global SO_CAU_MOI_LO, SO_LO_TOI_DA, TOI_DA_LUOT_TRA_PHI, CHO_PHEP_DOC_DE, CHO_PHEP_DOC_NEN, GIOI_HAN_TAI_VE
     try:
         v = kho.worksheet(TAB_CAU_HINH).get_all_values()[1:]
         cfg = {str(r[0]).strip(): (str(r[1]).strip() if len(r) > 1 else "") for r in v if r and str(r[0]).strip()}
@@ -281,6 +394,7 @@ def doc_cau_hinh(kho):
     SO_LO_TOI_DA = max(1, _so("SO_LO_TOI_DA", SO_LO_TOI_DA))
     TOI_DA_LUOT_TRA_PHI = max(0, _so("TOI_DA_LUOT_TRA_PHI", TOI_DA_LUOT_TRA_PHI))
     CHO_PHEP_DOC_DE = cfg.get("CHO_PHEP_DOC_DE", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")
+    CHO_PHEP_DOC_NEN = cfg.get("CHO_PHEP_DOC_NEN", "true" if CHO_PHEP_DOC_NEN else "false").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")   # [20/11/2026]
     GIOI_HAN_TAI_VE = max(50, _so("GIOI_HAN_TAI_MB", GIOI_HAN_TAI_VE // 1048576)) * 1024 * 1024
     chinh = cfg.get("MODEL_CHINH") or MODEL_MAC_DINH
     du_phong = [m.strip() for m in re.split(r"[,;\s]+", cfg.get("MODEL_DU_PHONG", "")) if m.strip()] or MODEL_DU_PHONG_MAC_DINH
@@ -548,7 +662,8 @@ def quet_thu_muc_nguon(drive, tab_xl):
                     liet_ke(fid, ten_duong + "/" + ten)
                 elif fid in da_co:
                     continue
-                elif mime in MIME_DOC_DUOC or re.match(r"^image/(png|jpeg|webp)$", mime) or re.search(r"\.docx?$", ten, re.I):
+                elif mime in MIME_DOC_DUOC or re.match(r"^image/(png|jpeg|webp)$", mime) or re.search(r"\.docx?$", ten, re.I) \
+                        or (CHO_PHEP_DOC_NEN and la_tep_nen(mime, ten)):        # [20/11/2026] tệp nén
                     da_co.add(fid)
                     moi.append([fid, ten, "https://drive.google.com/file/d/%s/view" % fid, ten_duong.strip("/"),
                                 "Chờ", "", 0, "", "", "", "", "", ""])
@@ -599,12 +714,13 @@ def tao_dong_cau_hoi(c, i, d, viec, yccd, luc):
     ma_bai = "-".join(hop_le[0].split("-")[:2]) if hop_le else ""
     lop = int(ma_bai[2:4]) if re.match(r"^VL\d{2}", ma_bai) else (d.get("lop") or "")
     so = re.sub(r"^câu\s*", "", str(c.get("so_cau") or i + 1).strip(), flags=re.I) or str(i + 1)
+    ten_nguon = viec["ten"] if c.get("_nguon") in (None, "", viec["ten"]) else "%s › %s" % (viec["ten"], c["_nguon"])   # [20/11/2026] file con trong tệp nén
     return ["C-%s-%03d" % (str(viec["id"])[:8], i + 1), ", ".join(hop_le), ma_bai, lop,
             TEN_MUC.get(c.get("muc_do"), c.get("muc_do") or ""), TEN_DANG.get(c.get("dang"), c.get("dang") or ""),
             L.chuan_hoa_latex(c.get("noi_dung") or ""), L.chuan_hoa_latex("\n".join(pa)), c.get("dap_an") or "",
             L.chuan_hoa_latex(c.get("loi_giai") or ""), c.get("diem") or "",   # [Mục 24]
             d.get("loai_de") or "", d.get("don_vi") or "", d.get("nam_hoc") or "", d.get("ky_thi") or "",
-            "%s (câu %s)" % (viec["ten"], so), viec["link"], viec["id"], viec["chu_de"], "; ".join(kiem_tra),
+            "%s (câu %s)" % (ten_nguon, so), viec["link"], viec["id"], viec["chu_de"], "; ".join(kiem_tra),
             "Loại" if ngoai else "Chưa duyệt", luc]
 
 
@@ -667,8 +783,23 @@ def xu_ly_mot_file(kho, drive, tab_xl, tab_nh, viec, yccd, ds_model):
                           value_input_option="USER_ENTERED")
             return 0
         d, tat_ca, mot_phan, so_luot, model = None, [], False, 0, ""
+        loi_con = []                                         # [20/11/2026] file con trong tệp nén bị lỗi
         for phan in tep["phan"]:
-            dp, cau, sot, n, model = doc_mot_phan(phan, viec, yccd, ds_model)
+            ten_phan = phan.get("ten") or viec["ten"]
+            if tep.get("tu_nen") and not con_thoi_gian(giay_du_tru=300):
+                raise HetThoiGian("Hết thời gian lượt chạy khi đang đọc tệp nén")
+            try:
+                dp, cau, sot, n, model = doc_mot_phan(phan, dict(viec, ten=ten_phan), yccd, ds_model)
+            except (HetHanMuc, HetThoiGian):
+                raise
+            except Exception as e:
+                if not tep.get("tu_nen"):
+                    raise
+                loi_con.append("%s: %s" % (ten_phan, str(e)[:80]))
+                print("  ⚠️ File con %s lỗi, bỏ qua: %s" % (ten_phan, str(e)[:160]), flush=True)
+                continue
+            for c in cau:
+                c["_nguon"] = ten_phan
             so_luot += n
             mot_phan = mot_phan or sot
             if dp.get("la_tai_lieu_vat_li") and (d is None or not d.get("la_tai_lieu_vat_li")):
@@ -676,6 +807,8 @@ def xu_ly_mot_file(kho, drive, tab_xl, tab_nh, viec, yccd, ds_model):
             elif d is None:
                 d = dp
             tat_ca += cau
+        if d is None:                                        # chỉ xảy ra khi MỌI file con của tệp nén đều lỗi
+            raise RuntimeError(("Mọi file trong tệp nén đều lỗi: " + "; ".join(loi_con))[:290])
         d = dict(d or {})
         d["cau_hoi"] = tat_ca
         kq = {"model": model}
@@ -692,17 +825,21 @@ def xu_ly_mot_file(kho, drive, tab_xl, tab_nh, viec, yccd, ds_model):
         if dong:
             tab_nh.append_rows(dong, value_input_option="RAW", table_range="A1")
         ghi_chu = []
-        if len(tep["phan"]) > 1:
+        if tep.get("tu_nen"):
+            ghi_chu.append("Tệp nén: đọc %d phần từ các file bên trong" % len(tep["phan"]))
+        elif len(tep["phan"]) > 1:
             ghi_chu.append("Tài liệu lớn: đọc theo %d phần" % len(tep["phan"]))
         if so_luot > len(tep["phan"]):
             ghi_chu.append("tài liệu dài: đọc theo lô (%d lượt Gemini)" % so_luot)
         if mot_phan:
             ghi_chu.append("chưa đọc hết: đã đủ %d lô/phần – tăng SO_LO_TOI_DA rồi đặt lại trạng thái \"Chờ\" để đọc tiếp" % SO_LO_TOI_DA)
+        if loi_con:
+            ghi_chu.append("%d file con lỗi, chưa đọc được (%s) – tải riêng file đó vào thư mục nguồn" % (len(loi_con), "; ".join(loi_con)))
         if len(d["cau_hoi"]) > len(dong):
             ghi_chu.append("%d câu đã có sẵn trong ngân hàng, không ghi lại" % (len(d["cau_hoi"]) - len(dong)))
         tab_xl.update(range_name="E%d:M%d" % (viec["dong"], viec["dong"]), values=[[
-            "Đã xử lý (một phần)" if mot_phan else "Đã xử lý", len(dong), viec["lan_thu"] + 1,
-            "; ".join(ghi_chu), luc,
+            "Đã xử lý (một phần)" if (mot_phan or loi_con) else "Đã xử lý", len(dong), viec["lan_thu"] + 1,
+            "; ".join(ghi_chu)[:500], luc,
             d.get("loai_de") or "", d.get("lop") or "", d.get("don_vi") or "", d.get("nam_hoc") or ""]], value_input_option="USER_ENTERED")
         print("✅ %s: %d câu (%s)" % (viec["ten"], len(dong), kq["model"]))
         return len(dong)
@@ -739,6 +876,7 @@ def main():
     print("Tài khoản dịch vụ:", email_sa)
     kho = gc.open_by_key(ID_KHO_CHUNG)
     tab_xl, tab_nh = kho.worksheet(TAB_XU_LY), kho.worksheet(TAB_NGAN_HANG)
+    ds_model = doc_cau_hinh(kho)          # [20/11/2026] đọc tab CauHinh TRƯỚC khi quét, vì công tắc CHO_PHEP_DOC_NEN quyết định có nhận file nén không
     so_moi = dong_bo_danh_sach(gc, tab_xl)
     if so_moi:
         print("📥 Thêm %d file mới vào hàng chờ." % so_moi)
@@ -748,7 +886,6 @@ def main():
     yccd = doc_yccd(kho)
     if not yccd["ds"]:
         raise SystemExit("Tab YCCD trống.")
-    ds_model = doc_cau_hinh(kho)
     print("Model:", ", ".join(ds_model))
     if not CHO_PHEP_DOC_DE:
         print("⏹️ CHO_PHEP_DOC_DE đang tắt – nghỉ lượt này.")
