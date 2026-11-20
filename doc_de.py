@@ -23,9 +23,16 @@ Hết hạn mức Gemini → dừng lượt, lượt sau làm tiếp. Lỗi chun
   • Chặn zip bomb: tối đa GIOI_HAN_SO_FILE_NEN file và GIOI_HAN_GIAI_NEN dung lượng sau giải nén. Tệp nén có mật khẩu → báo lỗi.
   • .rar cần thư viện rarfile (pip) và công cụ unar hoặc unrar (apt) trong workflow; .zip dùng thư viện có sẵn của Python.
 
+[20/11/2026] QUÉT MỤC "ĐƯỢC CHIA SẺ VỚI TÔI" (có công tắc CHO_PHEP_QUET_CHIA_SE – tắt thì chạy y như bản cũ):
+  • Ngoài THU_MUC_NGUON, quét thêm mọi file / thư mục (kể cả thư mục con) đang hiện ở "Được chia sẻ với tôi" của tài khoản đang đăng nhập
+    (Drive API: sharedWithMe = true). File đã có trong XuLyDe (so theo File ID) thì bỏ qua; mỗi lượt chỉ thêm tối đa GIOI_HAN_CHIA_SE_MOI_LUOT file mới.
+  • LƯU Ý: GOOGLE_CREDENTIALS là TÀI KHOẢN DỊCH VỤ nên "Được chia sẻ với tôi" ở đây là của tài khoản dịch vụ, KHÔNG phải trang Drive cá nhân của thầy.
+    Muốn file / thư mục nào vào hàng chờ: chia sẻ (quyền Xem) cho email tài khoản dịch vụ (dòng "Tài khoản dịch vụ:" đầu log).
+
 Biến môi trường (GitHub Secrets): GOOGLE_CREDENTIALS (toàn bộ nội dung credentials.json), GEMINI_API_KEY,
 GEMINI_API_KEY_TRA_PHI (không bắt buộc): dùng khi khoá miễn phí HẾT LƯỢT trong ngày, tối đa TOI_DA_LUOT_TRA_PHI lượt gọi/lượt chạy.
 CHO_PHEP_DOC_NEN (không bắt buộc, mặc định true; tab CauHinh cùng tên sẽ ghi đè): bật/tắt đọc file .zip / .rar.
+CHO_PHEP_QUET_CHIA_SE (không bắt buộc, mặc định true): bật/tắt quét "Được chia sẻ với tôi"; GIOI_HAN_CHIA_SE_MOI_LUOT (mặc định 200).
 """
 import base64, datetime as dt, io, json, os, re, shutil, subprocess, sys, tempfile, time, unicodedata
 
@@ -642,6 +649,16 @@ MIME_DOC_DUOC = {"application/pdf", "application/msword", "application/vnd.googl
                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
 
 
+CHO_PHEP_QUET_CHIA_SE = os.environ.get("CHO_PHEP_QUET_CHIA_SE", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")   # [20/11/2026]
+GIOI_HAN_CHIA_SE_MOI_LUOT = int(os.environ.get("GIOI_HAN_CHIA_SE_MOI_LUOT", "200"))     # chặn hàng chờ phình to trong một lượt
+
+
+def la_file_doc_duoc(mime, ten):
+    """[20/11/2026] Cùng điều kiện nhận file như vòng quét thư mục nguồn bên dưới (PDF / Word / Docs / ảnh / tệp nén)."""
+    return bool(mime in MIME_DOC_DUOC or re.match(r"^image/(png|jpeg|webp)$", mime or "") or re.search(r"\.docx?$", ten or "", re.I)
+                or (CHO_PHEP_DOC_NEN and la_tep_nen(mime, ten)))
+
+
 def quet_thu_muc_nguon(drive, tab_xl):
     ds_goc = THU_MUC_NGUON + [x.strip() for x in os.environ.get("THU_MUC_NGUON_THEM", "").split(",") if x.strip()]
     da_co = {r[0] for r in tab_xl.get_all_values()[1:] if r}
@@ -677,6 +694,33 @@ def quet_thu_muc_nguon(drive, tab_xl):
             liet_ke(goc, ten_goc)
         except Exception as e:
             print("⚠️ Không quét được thư mục %s (đã chia sẻ cho tài khoản dịch vụ chưa?): %s" % (goc, str(e)[:160]))
+    # [20/11/2026] "Được chia sẻ với tôi": thêm sau vòng thư mục nguồn, nên thư mục đã quét ở trên (da_quet) và file đã có (da_co) tự bị bỏ qua.
+    if CHO_PHEP_QUET_CHIA_SE:
+        n_truoc = len(moi)
+        try:
+            trang = None
+            while True:
+                kq = drive.files().list(q="sharedWithMe = true and trashed = false",
+                                        fields="nextPageToken, files(id,name,mimeType)", pageSize=1000, pageToken=trang,
+                                        supportsAllDrives=True, includeItemsFromAllDrives=True).execute()
+                for f in kq.get("files", []):
+                    mime, fid, ten = f.get("mimeType", ""), f["id"], f.get("name", "")
+                    if mime == "application/vnd.google-apps.folder":
+                        liet_ke(fid, "Được chia sẻ/" + ten)
+                    elif fid not in da_co and la_file_doc_duoc(mime, ten):
+                        da_co.add(fid)
+                        moi.append([fid, ten, "https://drive.google.com/file/d/%s/view" % fid, "Được chia sẻ",
+                                    "Chờ", "", 0, "", "", "", "", "", ""])
+                trang = kq.get("nextPageToken")
+                if not trang:
+                    break
+        except Exception as e:                      # phần phụ: lỗi thì cảnh báo, các nguồn khác vẫn chạy
+            print("⚠️ Không quét được \"Được chia sẻ với tôi\": %s" % str(e)[:160], flush=True)
+        if len(moi) - n_truoc > GIOI_HAN_CHIA_SE_MOI_LUOT:
+            print("ℹ️ \"Được chia sẻ với tôi\": có %d file mới, chỉ thêm %d file lượt này (GIOI_HAN_CHIA_SE_MOI_LUOT), phần còn lại lượt sau."
+                  % (len(moi) - n_truoc, GIOI_HAN_CHIA_SE_MOI_LUOT), flush=True)
+            del moi[n_truoc + GIOI_HAN_CHIA_SE_MOI_LUOT:]
+        print("🔗 Được chia sẻ với tôi: %d file mới." % (len(moi) - n_truoc), flush=True)
     if moi:
         tab_xl.append_rows(moi, value_input_option="USER_ENTERED", table_range="A1")
     return len(moi)
