@@ -1158,10 +1158,82 @@
 
         // [MỚI] ===== HÌNH VẼ: XEM, XOÁ, THÊM =====
         // Cách hiển thị đường dẫn giữ như cũ: chỉ hiện các link có "images/", link http lấy tên tệp đặt vào images/
+        // [20/11/2026] Sửa lỗi "nhiều câu không hiện hình từ xưởng":
+        //  - nhận cả link chỉ có tên tệp (không có "images/"), link http, tên có dấu/ký tự đặc biệt
+        //  - mã hoá tên tệp trong URL; thử thêm dạng NFC/NFD; không thấy thì dò theo mã qNNNN + pN_imgN trong thư mục images/ của kho GitHub
+        const DUOI_ANH = /\.(png|jpe?g|gif|webp|bmp|svg)$/i;
+        function tachLinkAnh(linkAnh) {
+            const kq = [];
+            String(linkAnh || '').split(/[,;\n\r]+/).forEach(p => {
+                p.trim().split(/(?<=\.(?:png|jpe?g|gif|webp|bmp|svg))\s+/i).forEach(x => { x = x.trim(); if (x) kq.push(x); });
+            });
+            return kq;
+        }
+        function laLinkAnh(l) { return l.includes('images/') || DUOI_ANH.test(l.split(/[?#]/)[0]); }
+        function tenTepAnh(l) {
+            let t = l.split(/[?#]/)[0].split('/').pop();
+            try { t = decodeURIComponent(t); } catch (e) {}
+            return t;
+        }
         function chuanLinkAnh(l) {
-            if (!l.startsWith('http')) return l.startsWith('images/') ? l : 'images/' + l;
-            const parts = l.split('/');
-            return 'images/' + parts[parts.length - 1];
+            return 'images/' + encodeURIComponent(tenTepAnh(l));
+        }
+        function ungVienAnh(ten) {
+            const ds = [];
+            [ten, ten.normalize('NFC'), ten.normalize('NFD')].forEach(t => {
+                const u = 'images/' + encodeURIComponent(t);
+                if (!ds.includes(u)) ds.push(u);
+            });
+            return ds;
+        }
+        function khoaAnh(ten) {
+            const t = ten.normalize('NFC').toLowerCase();
+            const q = (t.match(/^(q\d+)_/) || [])[1], p = (t.match(/(p\d+_img\d+)\.[a-z]+$/) || [])[1];
+            return q && p ? q + '|' + p : null;
+        }
+        let khoAnhGitHub = null;
+        function layKhoAnh() {
+            if (khoAnhGitHub) return khoAnhGitHub;
+            khoAnhGitHub = (async () => {
+                const map = {};
+                try {
+                    const cache = sessionStorage.getItem('khoAnhXuong');
+                    if (cache) return JSON.parse(cache);
+                } catch (e) {}
+                const h = location.hostname, owner = h.endsWith('.github.io') ? h.split('.')[0] : '';
+                const repo = location.pathname.split('/')[1] || 'vatli-xuong';
+                if (!owner) return map;
+                for (const nhanh of ['main', 'master']) {
+                    try {
+                        const r = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/${nhanh}?recursive=1`);
+                        if (!r.ok) continue;
+                        const j = await r.json();
+                        (j.tree || []).forEach(f => {
+                            if (f.type !== 'blob' || !f.path.startsWith('images/')) return;
+                            const k = khoaAnh(f.path.slice(7));
+                            if (k) (map[k] = map[k] || []).push(f.path);
+                        });
+                        try { sessionStorage.setItem('khoAnhXuong', JSON.stringify(map)); } catch (e) {}
+                        return map;
+                    } catch (e) {}
+                }
+                return map;
+            })();
+            return khoAnhGitHub;
+        }
+        const ANH_LOI = ten => 'data:image/svg+xml;utf8,' + encodeURIComponent(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="420" height="90"><rect width="100%" height="100%" fill="#fff"/><text x="10" y="35" font-size="14" fill="#b91c1c" font-family="sans-serif">Không tìm thấy tệp ảnh trong images/</text><text x="10" y="62" font-size="11" fill="#475569" font-family="sans-serif">${String(ten).replace(/[<>&]/g, '')}</text></svg>`);
+        async function thuLaiAnh(img) {
+            const ten = img.dataset.ten || '';
+            if (!img._ds) { img._ds = ungVienAnh(ten).filter(u => !img.src.endsWith(u)); img._kho = false; }
+            while (img._ds.length) { img.src = img._ds.shift(); return; }   // onerror sẽ gọi lại hàm này nếu vẫn lỗi
+            if (!img._kho) {
+                img._kho = true;
+                const k = khoaAnh(ten), kho = await layKhoAnh();
+                const tim = k && kho[k];
+                if (tim && tim.length) { img._ds = tim.map(p => p.split('/').map(encodeURIComponent).join('/')); return thuLaiAnh(img); }
+            }
+            img.onerror = null; img.src = ANH_LOI(ten);
         }
 
         function taoKhungAnh(index) {
@@ -1189,13 +1261,16 @@
         }
 
         function khoiTaoAnh(card, index, linkAnh) {
-            const raw = String(linkAnh || '').split(/[,;\s]+/).map(l => l.trim()).filter(l => l.length > 0);
-            const coAnh = [...new Set(raw.filter(l => l.includes('images/')))];
-            // [SỬA] Như logic gốc: chỉ hiện hình ĐẦU TIÊN của câu. Các link images/ phía sau thường là hình của câu khác
-            // (dính vào khi quét PDF) nên không hiện; nếu thầy có xoá/thêm hình thì chúng cũng không được ghi lại.
-            card._anh = coAnh.slice(0, 1).map(l => ({ goc: l, src: chuanLinkAnh(l), moi: false }));
-            card._anhThua = coAnh.slice(1);
-            card._anhKhac = raw.filter(l => !l.includes('images/'));   // link khác (không hiện) vẫn giữ nguyên khi lưu
+            const raw = tachLinkAnh(linkAnh);
+            const coAnh = [...new Set(raw.filter(laLinkAnh))];
+            // Chỉ hiện hình ĐẦU TIÊN của câu (các link phía sau thường là hình của câu khác dính vào khi quét PDF)
+            // Link do bản quét theo vị trí (images/fig_...) đã gán đúng câu: hiện tất cả; link cũ vẫn chỉ hiện hình đầu
+            const tin = coAnh.filter(l => /(^|\/)fig_/.test(l));
+            const hien = tin.length ? tin : coAnh.slice(0, 1);
+            card._anh = hien.map(l => ({ goc: l, src: chuanLinkAnh(l), ten: tenTepAnh(l), moi: false }));
+            card._anhThua = coAnh.filter(l => !hien.includes(l));
+            card._anhKhac = raw.filter(l => !laLinkAnh(l));
+            card._lyDoThieuAnh = !String(linkAnh || '').trim() ? 'link_anh trong questions.json đang trống (xưởng chưa gán hình cho câu này).' : (coAnh.length ? '' : 'link_anh có nội dung nhưng không phải tên tệp ảnh: ' + String(linkAnh).slice(0, 80));
             veDanhSachAnh(index);
         }
 
@@ -1205,13 +1280,40 @@
             if (!card || !ds) return;
             const anh = card._anh || [];
             ds.innerHTML = anh.length === 0
-                ? '<div class="py-6 text-xs text-slate-500 italic">Câu này chưa có hình.</div>'
+                ? `<div class="py-6 text-xs text-slate-500 italic">Câu này chưa có hình.${card._lyDoThieuAnh ? '<br><span class="text-amber-400 not-italic">' + escSua(card._lyDoThieuAnh) + '</span>' : ''}</div>`
                 : anh.map((x, i) => `
                     <div class="relative">
-                        <img src="${escSua(x.src)}" alt="Hình ${i + 1}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200?text=Khong+tim+thay+file+anh';">
+                        <img src="${escSua(x.src)}" data-ten="${escSua(x.ten || '')}" alt="Hình ${i + 1}" class="max-h-72 mx-auto rounded border border-slate-700 bg-white p-1" onerror="thuLaiAnh(this)">
                         ${x.moi ? '<span class="absolute top-1 left-1 px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-bold">Mới · bấm Duyệt để lưu</span>' : ''}
                         <button type="button" onclick="xoaAnh(${index}, ${i})" title="Xoá hình này" class="absolute top-1 right-1 px-2 py-1 rounded-md bg-rose-600/90 hover:bg-rose-500 text-white text-[10px] font-semibold cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Xoá</button>
-                    </div>`).join('');
+                    </div>`).join('') + veUngVienAnh(index, card);
+        }
+
+        // [20/11/2026] Hình ứng viên: các link phía sau trong link_anh (hay là hình của câu khác dính vào khi quét PDF).
+        // Hiện thu nhỏ để thầy bấm "Dùng" đúng hình; gắn quá nhiều hình thì có cảnh báo. Hình không chọn sẽ không được ghi lại khi bấm Duyệt.
+        function veUngVienAnh(index, card) {
+            const tong = (card._anh || []).length + (card._anhThua || []).length;
+            if (!(card._anhThua || []).length) return '';
+            const canh = tong > 3 ? `<div class="text-[10px] text-amber-400 text-left">⚠️ Câu này đang gắn ${tong} hình, nhiều khả năng có hình của câu khác. Chỉ giữ hình khớp nội dung.</div>` : '';
+            const the = card._anhThua.slice(0, 12).map((l, j) => `
+                <div class="relative bg-white rounded border border-slate-700 p-1">
+                    <img src="${escSua(chuanLinkAnh(l))}" data-ten="${escSua(tenTepAnh(l))}" loading="lazy" alt="Ứng viên ${j + 1}" class="h-20 w-full object-contain" onerror="thuLaiAnh(this)">
+                    <button type="button" onclick="dungAnhThua(${index}, ${j})" class="mt-1 w-full px-1 py-0.5 rounded bg-sky-600 hover:bg-sky-500 text-white text-[10px] font-semibold cursor-pointer">Dùng hình này</button>
+                </div>`).join('');
+            return `<div class="pt-2 border-t border-slate-800 space-y-2">
+                <div class="text-[10px] text-slate-400 text-left">Hình khác đang gắn với câu (bấm để chọn đúng hình):</div>${canh}
+                <div class="grid grid-cols-3 gap-2">${the}</div></div>`;
+        }
+
+        function dungAnhThua(index, j) {
+            const card = cardCuaAnh(index);
+            if (!card || !card._anhThua || !card._anhThua[j]) return;
+            const l = card._anhThua.splice(j, 1)[0];
+            card._anh = card._anh || [];
+            card._anh.push({ goc: l, src: chuanLinkAnh(l), ten: tenTepAnh(l), moi: false });
+            card.dataset.anhDoi = '1';
+            veDanhSachAnh(index);
+            ghiLogAnh(index, 'đã chọn thêm 1 hình ứng viên');
         }
 
         function ghiLogAnh(index, chu) {
