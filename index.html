@@ -257,10 +257,14 @@
                                 <option>5</option><option selected>6</option><option>7</option><option>8</option>
                             </select> câu
                         </label>
-                        <button id="nut-gom-chat" onclick="gomCauHoiGeminiChat()" title="Gom 5–8 câu chưa giải thành MỘT lời nhắc, sao chép để dán vào Gemini chat (không tốn lượt gọi API), rồi dán câu trả lời về để trang tự chia vào từng câu" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
+                        <span class="text-[11px] text-slate-400 flex items-center gap-1.5">· Đã tích: <b id="dem-chon-gom" class="text-sky-300">0</b>
+                            <button type="button" onclick="tichNhomCauKeTiep()" title="Tự tích nhóm câu chưa giải kế tiếp (theo số câu bên cạnh) để thầy chỉnh lại bằng tay" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 text-[11px] font-semibold border border-slate-700 cursor-pointer">Tích nhóm kế tiếp</button>
+                            <button type="button" onclick="boTichGom()" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold border border-slate-700 cursor-pointer">Bỏ tích</button>
+                        </span>
+                        <button id="nut-gom-chat" onclick="gomCauHoiGeminiChat()" title="Gom các câu thầy đã tích (không tích câu nào thì tự lấy nhóm câu chưa giải kế tiếp) thành MỘT lời nhắc, sao chép để dán vào Gemini chat (không tốn lượt gọi API), rồi dán câu trả lời về để trang tự chia vào từng câu" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
                             <i class="fa-solid fa-comments"></i> Gom câu → Gemini chat
                         </button>
-                        <button id="nut-gom-api" onclick="gomCauGoiGeminiApi()" title="Gom 5–8 câu chưa giải và gọi Gemini API MỘT lần cho cả nhóm, kết quả tự điền vào từng câu" class="px-4 py-2 rounded-lg bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-fuchsia-600/20 cursor-pointer">
+                        <button id="nut-gom-api" onclick="gomCauGoiGeminiApi()" title="Gom các câu thầy đã tích (không tích câu nào thì tự lấy nhóm câu chưa giải kế tiếp) và gọi Gemini API MỘT lần cho cả nhóm, kết quả tự điền vào từng câu" class="px-4 py-2 rounded-lg bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-fuchsia-600/20 cursor-pointer">
                             <i class="fa-solid fa-layer-group"></i> Gom câu → Gọi Gemini API
                         </button>
                     </div>
@@ -1041,7 +1045,7 @@
 
                 let html = `
                     <div class="flex flex-wrap justify-between items-center gap-2 text-xs border-b border-slate-800 pb-3">
-                        <span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${escSua(item.ma_cau || 'N/A')}] ${item.lop ? '· Lớp ' + escSua(item.lop) : ''} <span id="nhan_dang_${index}">${item.dang ? '· ' + item.dang : ''}</span></span>
+                        <div class="flex flex-wrap items-center gap-2"><label title="Tích để đưa câu này vào nhóm gom (tối đa 8 câu) khi bấm nút Gom câu" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold border border-slate-700 flex items-center gap-1.5 cursor-pointer"><input type="checkbox" id="chon_gom_${index}" onchange="capNhatDemGom()" class="chon-gom accent-sky-500 w-3.5 h-3.5 cursor-pointer"> Chọn gom</label><span class="px-3 py-1 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">Câu ${index + 1} [Mã: ${escSua(item.ma_cau || 'N/A')}] ${item.lop ? '· Lớp ' + escSua(item.lop) : ''} <span id="nhan_dang_${index}">${item.dang ? '· ' + item.dang : ''}</span></span></div>
                         <span id="trang-thai-${index}" class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">${escSua(item.trang_thai || 'Cần người xem')}</span>
                     </div>
                     ${khungTinGeminiHtml(index)}
@@ -1124,6 +1128,7 @@
             if (log) {
                 log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Đã tải thành công ${dsHienThi.length} câu hỏi.</div>`;
             }
+            capNhatDemGom();
             if (BAT_GIAI_GEMINI && TU_GIAI_GEMINI_KHI_TAI) giaiTatCaGemini(true);   // [19/11/2026] tự giải ngầm các câu vừa hiện
         }
 
@@ -1519,6 +1524,7 @@
         // Nút "Gom câu → Gọi Gemini API": gom N câu và gọi Kho chung MỘT lần (action "giai_gemini_nhom").
         //   Kho chung trả data là mảng [{ma_cau, stt, dap_an, loi_giai, chac_chan, ghi_chu, canh_bao}] (cùng trường như "giai_gemini").
         //   Nếu Kho chung chưa có action này, trang tự quay về giải từng câu bằng "giai_gemini" (vẫn chạy, nhưng tốn N lượt).
+        // [21/11/2026] Mỗi câu có ô "Chọn gom": thầy tích câu nào thì gom đúng các câu đó (tối đa 8); không tích gì thì tự lấy nhóm kế tiếp.
         // Cả hai chỉ điền trên trang, KHÔNG ghi Sheet; câu đã điền được đánh dấu để lần gom sau lấy nhóm câu kế tiếp.
         const GOM_CAU_MAC_DINH = 6;
         const TEN_DANG_GOM = { tn: 'Trắc nghiệm nhiều lựa chọn (A, B, C, D)', ds: 'Đúng/Sai (4 ý a, b, c, d)', ngan: 'Trả lời ngắn (điền số)', tuluan: 'Tự luận' };
@@ -1548,19 +1554,45 @@
             } };
         }
 
-        // Lấy tối đa n câu đầu tiên chưa giải (bỏ câu đang giải, câu đã có kết quả Gemini, câu đã gom lần trước)
+        // Nhóm gom: ƯU TIÊN các câu thầy đã tích "Chọn gom" (tối đa 8, tích lại câu đã giải cũng được).
+        // Không tích câu nào thì tự lấy n câu đầu tiên chưa giải (bỏ câu đang giải, câu đã có kết quả Gemini, câu đã gom lần trước).
         function chonNhomCauGom(n) {
             const nhom = [], boQua = [];
-            for (const card of document.querySelectorAll('#danh-sach-cau-hoi .question-card')) {
-                if (nhom.length >= n) break;
+            const cacThe = Array.from(document.querySelectorAll('#danh-sach-cau-hoi .question-card'));
+            const daTich = cacThe.filter(c => { const o = c.querySelector('.chon-gom'); return o && o.checked; });
+            const thuCong = daTich.length > 0;
+            if (thuCong && daTich.length > 8) return { loi: `Thầy đang tích ${daTich.length} câu, mỗi lần gom tối đa 8 câu. Thầy bỏ bớt tích rồi bấm lại.` };
+            for (const card of (thuCong ? daTich : cacThe)) {
+                if (nhom.length >= (thuCong ? 8 : n)) break;
                 const nut = card.querySelector('[id^="nut_gemini_"]');
-                if (!nut || card.dataset.geminiBan === '1' || card.dataset.daGomNhom === '1' || card._truocGemini) continue;
+                if (!nut) continue;
                 const index = parseInt(nut.id.replace('nut_gemini_', ''), 10);
+                if (card.dataset.geminiBan === '1') { if (thuCong) boQua.push(`Câu ${index + 1}: đang được Gemini giải`); continue; }
+                if (!thuCong && (card.dataset.daGomNhom === '1' || card._truocGemini)) continue;
                 const kq = chuanBiViecGemini(card, index);
                 if (kq.v) nhom.push(kq.v); else boQua.push(`Câu ${index + 1}: ${kq.loi}`);
             }
-            return { nhom, boQua };
+            return { nhom, boQua, thuCong };
         }
+        function capNhatDemGom() {
+            const o = document.getElementById('dem-chon-gom');
+            if (o) o.textContent = document.querySelectorAll('#danh-sach-cau-hoi .chon-gom:checked').length;
+        }
+        function boTichGom() { document.querySelectorAll('#danh-sach-cau-hoi .chon-gom').forEach(o => { o.checked = false; }); capNhatDemGom(); }
+        function boTichMotCau(card) { const o = card && card.querySelector('.chon-gom'); if (o) o.checked = false; capNhatDemGom(); }
+        // Tự tích nhóm câu chưa giải kế tiếp để thầy chỉnh lại bằng tay
+        function tichNhomCauKeTiep() {
+            boTichGom();
+            const n = soCauCanGom(); let dem = 0;
+            for (const card of document.querySelectorAll('#danh-sach-cau-hoi .question-card')) {
+                if (dem >= n) break;
+                if (card.dataset.geminiBan === '1' || card.dataset.daGomNhom === '1' || card._truocGemini) continue;
+                const o = card.querySelector('.chon-gom'); if (o) { o.checked = true; dem++; }
+            }
+            capNhatDemGom();
+            if (!dem) alert('Không còn câu nào chưa giải để tích.');
+        }
+        (function () { const c = document.getElementById('danh-sach-cau-hoi'); if (c && window.MutationObserver) new MutationObserver(capNhatDemGom).observe(c, { childList: true }); })();
 
         function danhSoCau(nhom) { return nhom.map(v => v.index + 1).join(', '); }
 
@@ -1622,10 +1654,12 @@
         }
 
         async function gomCauHoiGeminiChat() {
-            const { nhom, boQua } = chonNhomCauGom(soCauCanGom());
+            const g = chonNhomCauGom(soCauCanGom());
+            if (g.loi) { alert(g.loi); return; }
+            const { nhom, boQua } = g;
             if (!nhom.length) {
                 alert(document.querySelectorAll('#danh-sach-cau-hoi .question-card').length
-                    ? 'Không còn câu nào chưa giải để gom (câu đã giải, đang giải hoặc thiếu nội dung/phương án).' + (boQua.length ? '\n' + boQua.join('\n') : '')
+                    ? 'Không có câu nào gom được (câu đã giải, đang giải hoặc thiếu nội dung/phương án).' + (boQua.length ? '\n' + boQua.join('\n') : '')
                     : 'Chưa có câu nào đang hiện. Thầy bấm "Hiện ~20 câu cần duyệt" trước.');
                 return;
             }
@@ -1636,7 +1670,7 @@
             document.getElementById('gc-loi-nhac').value = loiNhac;
             document.getElementById('gc-tra-loi').value = '';
             const kqEl = document.getElementById('gc-ket-qua'); kqEl.className = 'hidden'; kqEl.innerHTML = '';
-            document.getElementById('gc-tom-tat').textContent = `Gom ${nhom.length} câu: ${danhSoCau(nhom)}.`;
+            document.getElementById('gc-tom-tat').textContent = `Gom ${nhom.length} câu${g.thuCong ? ' thầy đã tích' : ''}: ${danhSoCau(nhom)}.`;
             const canh = [];
             const coAnh = nhom.filter(v => v.coAnh).map(v => v.index + 1);
             if (coAnh.length) canh.push(`Câu ${coAnh.join(', ')} có hình: lời nhắc chỉ có chữ, thầy đính kèm hình (chụp hoặc kéo thả) vào Gemini cùng lúc.`);
@@ -1706,7 +1740,7 @@
                 if (!document.body.contains(v.card)) { daDuyet.push(v.index + 1); return; }
                 // dạng câu có thể đã đổi trong lúc chờ: apDungKetQuaGemini tự xử lí
                 apDungKetQuaGemini(v, d);
-                v.xong = true; v.card.dataset.daGomNhom = '1'; v.card.dataset.chatCho = '0';
+                v.xong = true; v.card.dataset.daGomNhom = '1'; v.card.dataset.chatCho = '0'; boTichMotCau(v.card);
                 xong.push(v.index + 1);
             });
             const cacSo = Object.keys(kq).map(Number);
@@ -1727,10 +1761,12 @@
         async function gomCauGoiGeminiApi() {
             if (_dangGomApi) return;
             if (!layMaBiMat(false)) { alert('Cần nhập mã bí mật Kho chung (API_SECRET) trước khi gọi Gemini.'); return; }
-            const { nhom, boQua } = chonNhomCauGom(soCauCanGom());
+            const g = chonNhomCauGom(soCauCanGom());
+            if (g.loi) { alert(g.loi); return; }
+            const { nhom, boQua } = g;
             if (!nhom.length) {
                 alert(document.querySelectorAll('#danh-sach-cau-hoi .question-card').length
-                    ? 'Không còn câu nào chưa giải để gom (câu đã giải, đang giải hoặc thiếu nội dung/phương án).' + (boQua.length ? '\n' + boQua.join('\n') : '')
+                    ? 'Không có câu nào gom được (câu đã giải, đang giải hoặc thiếu nội dung/phương án).' + (boQua.length ? '\n' + boQua.join('\n') : '')
                     : 'Chưa có câu nào đang hiện. Thầy bấm "Hiện ~20 câu cần duyệt" trước.');
                 return;
             }
@@ -1773,7 +1809,7 @@
                 if (!d || !d.loi_giai) { thieu.push(v.index + 1); hienTinGemini(v.index, 'loi', '❌ Gemini không trả kết quả cho câu này trong lần gom. Thầy bấm "Giải bằng Gemini" cho riêng câu này.'); return; }
                 datNutGemini(v.index, NHAN_NUT_GEMINI_LAI, false);
                 apDungKetQuaGemini(v, d);
-                v.card.dataset.daGomNhom = '1'; ok++;
+                v.card.dataset.daGomNhom = '1'; boTichMotCau(v.card); ok++;
             });
             logGemini(`Gom nhóm: Gemini giải xong ${ok}/${nhom.length} câu${thieu.length ? ' (thiếu câu ' + thieu.join(', ') + ')' : ''}. Bấm Duyệt từng câu để ghi về Google Sheet.`);
         }
