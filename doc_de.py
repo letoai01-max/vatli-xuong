@@ -34,7 +34,7 @@ GEMINI_API_KEY_TRA_PHI (không bắt buộc): dùng khi khoá miễn phí HẾT 
 CHO_PHEP_DOC_NEN (không bắt buộc, mặc định true; tab CauHinh cùng tên sẽ ghi đè): bật/tắt đọc file .zip / .rar.
 CHO_PHEP_QUET_CHIA_SE (không bắt buộc, mặc định true): bật/tắt quét "Được chia sẻ với tôi"; GIOI_HAN_CHIA_SE_MOI_LUOT (mặc định 200).
 """
-import base64, datetime as dt, io, json, os, re, shutil, subprocess, sys, tempfile, time, unicodedata
+import base64, datetime as dt, io, json, os, re, shutil, subprocess, sys, tempfile, threading, time, unicodedata
 
 import gspread
 import requests
@@ -91,6 +91,22 @@ BAT_DAU = time.time()
 TOI_DA_LUOT_TRA_PHI = int(os.environ.get("TOI_DA_LUOT_TRA_PHI", "40"))   # chặn chi phí mỗi lượt chạy
 CHO_PHEP_DOC_DE = True                                              # công tắc bật/tắt (tab CauHinh)
 TRANG_THAI_KHOA = {"tra_phi": False, "da_dung_tra_phi": 0, "het": set(), "hong": set(), "ngay": False}   # het = hết lượt ngày; hong = Google từ chối khoá
+
+# [21/11/2026] AN TOÀN KHI NHIỀU LUỒNG GỌI GEMINI CÙNG LÚC (duyet_cau.py chạy song song các tầng).
+#   • _KHOA: mọi chỗ đọc/ghi TRANG_THAI_KHOA đi qua khoá này (nhất là bộ đếm lượt khoá trả phí – trần chi phí không bị vượt).
+#   • _CONG_GEMINI: tối đa GEMINI_SONG_SONG lượt gọi cùng lúc (mặc định 3). Đặt 1 = hệ như cũ (lần lượt từng lượt).
+#     Luồng nào gặp 429 theo phút thì chờ khi đang giữ cổng, nên cả xưởng cùng lùi lại thay vì dồn thêm lượt vào khoá đang bị chặn.
+#   Đọc đề (doc_de.py chạy một luồng) không bị ảnh hưởng.
+def _so_nguyen_env(ten, mac_dinh):
+    try:
+        return int(float(os.environ.get(ten, "").strip() or mac_dinh))
+    except ValueError:
+        return mac_dinh
+
+
+GEMINI_SONG_SONG = max(1, _so_nguyen_env("GEMINI_SONG_SONG", 3))
+_KHOA = threading.RLock()
+_CONG_GEMINI = threading.BoundedSemaphore(GEMINI_SONG_SONG)
 
 
 def ds_khoa_mien_phi():
@@ -409,34 +425,48 @@ def doc_cau_hinh(kho):
 
 
 def goi_gemini(payload, ds_model):
+    """[21/11/2026] Cổng ngoài: giới hạn số lượt gọi cùng lúc (GEMINI_SONG_SONG), phần xoay khoá nằm ở _goi_gemini_theo_khoa."""
+    with _CONG_GEMINI:
+        return _goi_gemini_theo_khoa(payload, ds_model)
+
+
+def _goi_gemini_theo_khoa(payload, ds_model):
     """Dùng khoá miễn phí; khoá miễn phí hết lượt (mọi model báo 429) thì chuyển sang khoá trả phí (nếu có)
     cho phần còn lại của lượt chạy, tối đa TOI_DA_LUOT_TRA_PHI lượt gọi."""
     khoa_tp = os.environ.get("GEMINI_API_KEY_TRA_PHI", "").strip()
     if not TRANG_THAI_KHOA["tra_phi"]:
         for ten, k in ds_khoa_mien_phi():
-            if ten in TRANG_THAI_KHOA["het"] or ten in TRANG_THAI_KHOA["hong"]:
+            with _KHOA:
+                bo_qua = ten in TRANG_THAI_KHOA["het"] or ten in TRANG_THAI_KHOA["hong"]
+            if bo_qua:
                 continue
             try:
                 return _goi_gemini_mot_khoa(payload, ds_model, k, ten)
             except HetHanMuc as e:
-                TRANG_THAI_KHOA["het"].add(ten)
-                if getattr(e, "theo_ngay", False):
-                    TRANG_THAI_KHOA["ngay"] = True        # [15/11] có ít nhất một khoá bị 429 theo NGÀY thật
+                with _KHOA:
+                    TRANG_THAI_KHOA["het"].add(ten)
+                    if getattr(e, "theo_ngay", False):
+                        TRANG_THAI_KHOA["ngay"] = True        # [15/11] có ít nhất một khoá bị 429 theo NGÀY thật
                 print("⏭️ %s hết lượt trong ngày, thử khoá tiếp theo." % ten)
             except KhoaHong as e:
-                TRANG_THAI_KHOA["hong"].add(ten)
+                with _KHOA:
+                    TRANG_THAI_KHOA["hong"].add(ten)
                 print("🔑 %s bị Google từ chối (khoá hỏng), bỏ khoá này trong lượt chạy và thử khoá tiếp theo: %s" % (ten, str(e)[:160]), flush=True)
-        if not khoa_tp:
-            if TRANG_THAI_KHOA["hong"] and not TRANG_THAI_KHOA["het"]:
-                raise KhoaHong("KHOA_HONG – mọi khoá miễn phí đều bị Google từ chối: " + ", ".join(sorted(TRANG_THAI_KHOA["hong"])))
-            raise _het_han_muc("HET_HAN_MUC – mọi khoá miễn phí đã hết lượt: " + ", ".join(sorted(TRANG_THAI_KHOA["het"]))
-                               + ((" (khoá hỏng: " + ", ".join(sorted(TRANG_THAI_KHOA["hong"])) + ")") if TRANG_THAI_KHOA["hong"] else ""),
-                               theo_ngay=TRANG_THAI_KHOA.get("ngay", False))
-        TRANG_THAI_KHOA["tra_phi"] = True
-        print("💳 Mọi khoá miễn phí hết lượt → chuyển sang khoá trả phí (tối đa %d lượt gọi)." % TOI_DA_LUOT_TRA_PHI)
-    if TRANG_THAI_KHOA["da_dung_tra_phi"] >= TOI_DA_LUOT_TRA_PHI:
-        raise _het_han_muc("HET_HAN_MUC – đã dùng đủ %d lượt khoá trả phí trong lượt chạy này" % TOI_DA_LUOT_TRA_PHI, theo_ngay=True)   # trần chi phí: chạy lại ngay chỉ tốn thêm tiền
-    TRANG_THAI_KHOA["da_dung_tra_phi"] += 1
+        with _KHOA:
+            if not khoa_tp:
+                if TRANG_THAI_KHOA["hong"] and not TRANG_THAI_KHOA["het"]:
+                    raise KhoaHong("KHOA_HONG – mọi khoá miễn phí đều bị Google từ chối: " + ", ".join(sorted(TRANG_THAI_KHOA["hong"])))
+                raise _het_han_muc("HET_HAN_MUC – mọi khoá miễn phí đã hết lượt: " + ", ".join(sorted(TRANG_THAI_KHOA["het"]))
+                                   + ((" (khoá hỏng: " + ", ".join(sorted(TRANG_THAI_KHOA["hong"])) + ")") if TRANG_THAI_KHOA["hong"] else ""),
+                                   theo_ngay=TRANG_THAI_KHOA.get("ngay", False))
+        with _KHOA:
+            if not TRANG_THAI_KHOA["tra_phi"]:
+                TRANG_THAI_KHOA["tra_phi"] = True
+                print("💳 Mọi khoá miễn phí hết lượt → chuyển sang khoá trả phí (tối đa %d lượt gọi)." % TOI_DA_LUOT_TRA_PHI)
+    with _KHOA:                                                  # [21/11/2026] kiểm tra + tăng bộ đếm là MỘT bước: nhiều luồng không vượt trần chi phí
+        if TRANG_THAI_KHOA["da_dung_tra_phi"] >= TOI_DA_LUOT_TRA_PHI:
+            raise _het_han_muc("HET_HAN_MUC – đã dùng đủ %d lượt khoá trả phí trong lượt chạy này" % TOI_DA_LUOT_TRA_PHI, theo_ngay=True)   # trần chi phí: chạy lại ngay chỉ tốn thêm tiền
+        TRANG_THAI_KHOA["da_dung_tra_phi"] += 1
     return _goi_gemini_mot_khoa(payload, ds_model, khoa_tp, "GEMINI_API_KEY_TRA_PHI")
 
 

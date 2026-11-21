@@ -10,7 +10,7 @@ Dùng:  import quota_xuong as Q
        Q.ghi_sheet(kho)                                              # một lần ở cuối lượt chạy
 Mọi lỗi ở đây đều bị bỏ qua: ghi hạn mức hỏng không bao giờ làm hỏng việc chính.
 """
-import datetime as dt
+import datetime as dt, threading
 
 try:
     from zoneinfo import ZoneInfo
@@ -23,6 +23,7 @@ COT = ["Ngày quota (giờ Mỹ)", "Model", "Lượt gọi", "Thành công", "H�
        "Token vào", "Token ra", "Lần gọi cuối (giờ VN)", "Giới hạn/ngày", "% đã dùng"]
 SO_DONG_DOC = 80
 _DEM = {}
+_KHOA = threading.Lock()   # [21/11/2026] duyet_cau.py gọi Gemini/Groq từ nhiều luồng: cộng số đếm dưới khoá để không mất lượt
 
 
 def nhan_gemini(model, ten_khoa=""):
@@ -38,18 +39,19 @@ def nhan_groq(model):
 
 def ghi_luot(nhan, ma_http=None, tk_vao=0, tk_ra=0, treo=False):
     try:
-        d = _DEM.setdefault(nhan, {"goi": 0, "ok": 0, "q429": 0, "loi": 0, "treo": 0, "tkVao": 0, "tkRa": 0})
-        d["goi"] += 1
-        if treo:
-            d["treo"] += 1
-        elif ma_http == 200:
-            d["ok"] += 1
-            d["tkVao"] += int(tk_vao or 0)
-            d["tkRa"] += int(tk_ra or 0)
-        elif ma_http == 429:
-            d["q429"] += 1
-        else:
-            d["loi"] += 1
+        with _KHOA:
+            d = _DEM.setdefault(nhan, {"goi": 0, "ok": 0, "q429": 0, "loi": 0, "treo": 0, "tkVao": 0, "tkRa": 0})
+            d["goi"] += 1
+            if treo:
+                d["treo"] += 1
+            elif ma_http == 200:
+                d["ok"] += 1
+                d["tkVao"] += int(tk_vao or 0)
+                d["tkRa"] += int(tk_ra or 0)
+            elif ma_http == 429:
+                d["q429"] += 1
+            else:
+                d["loi"] += 1
     except Exception:
         pass
 

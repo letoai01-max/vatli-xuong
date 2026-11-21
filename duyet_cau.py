@@ -18,6 +18,14 @@ LƯU Ý: tắt lịch duyệt cũ của Apps Script (tatDuyetTuDong trong Kho ch
 để giáo viên kiểm tra và đo độ chính xác thật.
 Dùng lại các hàm của doc_de.py (kết nối Google, tải file gốc, gọi Gemini xoay vòng khoá miễn phí).
 
+[21/11/2026] CHẠY SONG SONG ĐỂ NHANH HƠN, GIỮ NGUYÊN 100% CÁC TẦNG VÀ LUẬT XẾP LOẠI (DUYET_SONG_SONG = "true" mặc định; "false" → chạy lần lượt y như trước):
+  • Trong mỗi file, tầng 2, tầng 3, tầng 4 và Groq được gửi CÙNG LÚC (bốn việc độc lập, không cái nào cần kết quả của cái kia);
+    các lô 10 câu của tầng 4 cũng giải song song (tối đa DUYET_SO_LO_SONG_SONG lô, mặc định 3). Luật quyết định (quyet_dinh), tầng 1 và tầng 5 không đổi.
+  • Tầng 4 cần biết model của tầng 2 để chọn model KHÁC: khi chạy song song dùng model chính trong CauHinh làm dự kiến
+    (đúng trừ khi tầng 2 phải chuyển sang model dự phòng; trường hợp đó quyet_dinh đã tự xử lí "cùng một model" và Groq vẫn là bằng chứng khác hãng).
+  • Tải trước file gốc kế tiếp từ Drive trong lúc đang duyệt file hiện tại.
+  • doc_de.py giữ tổng số lượt gọi Gemini cùng lúc ≤ GEMINI_SONG_SONG (mặc định 3) và khoá trạng thái khoá API bằng khoá luồng.
+
 [29/10/2026] TẦNG 4 THÊM LỜI GIẢI KHÁC HÃNG (Groq, groq_xuong.py), cũng KHÔNG cho xem đáp án:
   • GROQ_CHE_DO = "ghi_chu" (mặc định): Groq chỉ THÊM bằng chứng. Khi máy giải Gemini không giải được hoặc chỉ có một model Gemini,
     Groq khớp thì được tính là bằng chứng độc lập thứ hai. Groq giải khác thì chỉ ghi chú vào cột Kiểm tra, không đổi kết luận.
@@ -42,6 +50,7 @@ Mỗi lượt gọi Gemini / Groq được ghi vào tab Quota_SuDung (dòng "xư
   • "Ghép lệch dòng" chỉ còn là ghi chú: từng đáp án vẫn phải qua 2 bằng chứng, khớp thì tự sửa.
 """
 import datetime as dt, json, os, random, re, sys, time
+from concurrent.futures import ThreadPoolExecutor
 
 import doc_de as X   # cùng thư mục: ket_noi, chuan_bi_tep, goi_gemini, doc_cau_hinh, doc_yccd, tu_khoa_ct_cu, CT_CU_MO_TA, HetHanMuc
 
@@ -58,6 +67,11 @@ TRUNG_CHE_DO = os.environ.get("TRUNG_CHE_DO", "ghi_chu").strip().lower()
 CHE_DO_DUYET = os.environ.get("CHE_DO_DUYET", "moi").strip().lower()                    # [21/11] "cu" = như trước
 KHONG_HINH_BAT_DONG = os.environ.get("KHONG_HINH_BAT_DONG", "loai").strip().lower()    # [21/11] câu không hình mà chưa thống nhất: loai | xem
 MOI = CHE_DO_DUYET != "cu"
+SONG_SONG = os.environ.get("DUYET_SONG_SONG", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")   # [21/11] "false" = lần lượt như trước
+try:
+    SO_LO_SONG_SONG = max(1, int(float(os.environ.get("DUYET_SO_LO_SONG_SONG", "3") or 3)))                              # [21/11] số lô tầng 4 giải cùng lúc
+except ValueError:
+    SO_LO_SONG_SONG = 3
 
 TAB_NH, TAB_MAU = "NganHangCauHoi", "KiemTraNgauNhien"
 TT = {"CHUA": "Chưa duyệt", "DANG": "Đang duyệt (Python)", "AI": "AI duyệt", "XEM": "Cần người xem", "LOAI": "Loại"}
@@ -384,28 +398,85 @@ def so_lieu_lech(x, so_lieu_goc):
 
 
 # ============================== TẦNG 4: GIẢI ĐỘC LẬP BẰNG CODE ==============================
+def _giai_mot_lo(lo, thu_tu):
+    """Một lô ≤ LO_GIAI câu → ({mã câu: kết quả}, model đã dùng). Không đụng biến chung nên chạy song song được."""
+    du_lieu = [{"ma_cau": x["ma"], "dang": x["dang"], "noi_dung": x["noi_dung"][:1500], "phuong_an": x["phuong_an"][:800]} for x in lo]
+    loi_nhan = (
+        "Bạn là học sinh giỏi Vật lí. GIẢI ĐỘC LẬP từng câu dưới đây. BẮT BUỘC dùng công cụ chạy code Python để tính mọi phép tính số "
+        "(không tính nhẩm). Với câu nhiều lựa chọn: xét LẦN LƯỢT từng phương án A, B, C, D và ghi mọi phương án đúng vào phuong_an_dung. "
+        "Với câu đúng/sai: xét từng ý a, b, c, d. Với câu trả lời ngắn / tự luận: đáp số cuối và đơn vị SI.\n"
+        "CUỐI CÙNG trả về MỘT khối ```json``` là mảng: [{\"ma_cau\": \"…\", \"phuong_an_dung\": [\"B\"], "
+        "\"y_ds\": {\"a\": \"Đ\", \"b\": \"S\", \"c\": \"Đ\", \"d\": \"S\"}, \"dap_so\": 2.02, \"don_vi\": \"s\", \"tu_tin\": \"cao|vừa|thấp\"}] "
+        "(bỏ trường không dùng; dap_so là số, dấu chấm thập phân).\nCÁC CÂU:\n" + json.dumps(du_lieu, ensure_ascii=False))
+    payload = {"contents": [{"role": "user", "parts": [{"text": loi_nhan}]}], "tools": [{"code_execution": {}}],
+               "generationConfig": {"temperature": 0.2, "maxOutputTokens": 30000}}
+    data, model_dung = X.goi_gemini(payload, thu_tu)
+    text = "".join(p.get("text", "") for p in (data.get("candidates") or [{}])[0].get("content", {}).get("parts", []))
+    return {str(g["ma_cau"]): g for g in (json_cuoi(text) or []) if isinstance(g, dict) and g.get("ma_cau")}, model_dung
+
+
 def tang4(ds, cac_model, model_tang2):
-    """Không cho xem đáp án. Ưu tiên model KHÁC tầng 2, không phải lite."""
+    """Không cho xem đáp án. Ưu tiên model KHÁC tầng 2, không phải lite.
+    [21/11] Các lô giải song song khi SONG_SONG; kết quả gộp theo đúng thứ tự lô, model_dung = model của lô cuối như trước."""
     thu_tu = sorted([m for m in cac_model if m != model_tang2], key=lambda m: "lite" in m) + [model_tang2]
+    cac_lo = [ds[k:k + LO_GIAI] for k in range(0, len(ds), LO_GIAI)]
+    if SONG_SONG and len(cac_lo) > 1:
+        with ThreadPoolExecutor(max_workers=min(SO_LO_SONG_SONG, len(cac_lo))) as ex:
+            ket_qua = list(ex.map(lambda lo: _giai_mot_lo(lo, thu_tu), cac_lo))
+    else:
+        ket_qua = [_giai_mot_lo(lo, thu_tu) for lo in cac_lo]
     kq, model_dung = {}, ""
-    for k in range(0, len(ds), LO_GIAI):
-        lo = ds[k:k + LO_GIAI]
-        du_lieu = [{"ma_cau": x["ma"], "dang": x["dang"], "noi_dung": x["noi_dung"][:1500], "phuong_an": x["phuong_an"][:800]} for x in lo]
-        loi_nhan = (
-            "Bạn là học sinh giỏi Vật lí. GIẢI ĐỘC LẬP từng câu dưới đây. BẮT BUỘC dùng công cụ chạy code Python để tính mọi phép tính số "
-            "(không tính nhẩm). Với câu nhiều lựa chọn: xét LẦN LƯỢT từng phương án A, B, C, D và ghi mọi phương án đúng vào phuong_an_dung. "
-            "Với câu đúng/sai: xét từng ý a, b, c, d. Với câu trả lời ngắn / tự luận: đáp số cuối và đơn vị SI.\n"
-            "CUỐI CÙNG trả về MỘT khối ```json``` là mảng: [{\"ma_cau\": \"…\", \"phuong_an_dung\": [\"B\"], "
-            "\"y_ds\": {\"a\": \"Đ\", \"b\": \"S\", \"c\": \"Đ\", \"d\": \"S\"}, \"dap_so\": 2.02, \"don_vi\": \"s\", \"tu_tin\": \"cao|vừa|thấp\"}] "
-            "(bỏ trường không dùng; dap_so là số, dấu chấm thập phân).\nCÁC CÂU:\n" + json.dumps(du_lieu, ensure_ascii=False))
-        payload = {"contents": [{"role": "user", "parts": [{"text": loi_nhan}]}], "tools": [{"code_execution": {}}],
-                   "generationConfig": {"temperature": 0.2, "maxOutputTokens": 30000}}
-        data, model_dung = X.goi_gemini(payload, thu_tu)
-        text = "".join(p.get("text", "") for p in (data.get("candidates") or [{}])[0].get("content", {}).get("parts", []))
-        for g in json_cuoi(text) or []:
-            if isinstance(g, dict) and g.get("ma_cau"):
-                kq[str(g["ma_cau"])] = g
+    for k, m in ket_qua:
+        kq.update(k)
+        model_dung = m
     return kq, model_dung
+
+
+def chay_cac_tang(tep, can_ai, yccd, cac_model):
+    """[21/11] Chạy tầng 2, 3, 4 và Groq của MỘT file. Trả (g2, bang, model2, so_lieu, g4, model4, g5, model5).
+    Lỗi xử lí đúng như bản lần lượt: tầng 2 / tầng 4 lỗi → ném lên (file để lượt sau); tầng 3 lỗi thường → bỏ qua, HetHanMuc → ném lên; Groq tự nuốt lỗi."""
+    def tang3_an_toan():
+        try:
+            return tang3(tep, can_ai, cac_model)
+        except X.HetHanMuc:
+            raise
+        except Exception as e:                                # phần phụ: lỗi thì cảnh báo, việc chính vẫn chạy
+            print("  Tầng 3 lỗi (bỏ qua):", str(e)[:100], flush=True)
+            return {}
+    if not SONG_SONG:
+        g2, bang, model2 = tang2(tep, can_ai, yccd, cac_model)
+        so_lieu = tang3_an_toan()
+        g4, model4 = tang4(can_ai, cac_model, model2)
+        g5, model5 = tang4_groq(can_ai)
+        return g2, bang, model2, so_lieu, g4, model4, g5, model5
+    with ThreadPoolExecutor(max_workers=4) as ex:
+        f2 = ex.submit(tang2, tep, can_ai, yccd, cac_model)
+        f3 = ex.submit(tang3_an_toan)
+        f4 = ex.submit(tang4, can_ai, cac_model, cac_model[0])      # model tầng 2 dự kiến = model chính
+        f5 = ex.submit(tang4_groq, can_ai)
+        g2, bang, model2 = f2.result()
+        so_lieu = f3.result()
+        g4, model4 = f4.result()
+        g5, model5 = f5.result()
+    return g2, bang, model2, so_lieu, g4, model4, g5, model5
+
+
+def mo_tep_goc(drive, fid):
+    """Tải file gốc (None nếu không có / bỏ qua / lỗi) – lỗi thì cảnh báo, tầng 1 + luật vẫn chạy như cũ."""
+    if fid == "khong_ro":
+        return None
+    try:
+        tep = X.chuan_bi_tep(drive, fid)
+        return None if tep.get("bo_qua") else tep
+    except Exception as e:
+        print("  Không mở được file gốc:", str(e)[:100], flush=True)
+        return None
+
+
+def lay_tep_goc(fid, tep_cho, drive):
+    """Lấy file gốc đã được tải trước (nếu có), không thì tải ngay."""
+    f = tep_cho.pop(fid, None)
+    return f.result() if f is not None else mo_tep_goc(drive, fid)
 
 
 def tang4_groq(ds):
@@ -579,34 +650,36 @@ def main():
     ngay = dt.datetime.now(X.TZ).strftime("%d/%m")
     thong_ke = {"ai": 0, "xem": 0, "loai": 0, "hoan": 0}
     het_han_muc = False
-    for fid, ds in nhom.items():
+    cac_file = list(nhom.items())
+    tep_cho, tai_truoc, drive_tai = {}, None, None
+    if SONG_SONG:                                                   # [21/11] tải trước file gốc kế tiếp bằng kết nối Drive riêng (httplib2 không an toàn đa luồng)
+        try:
+            _, drive_tai, _ = X.ket_noi()
+            tai_truoc = ThreadPoolExecutor(max_workers=1)
+        except Exception as e:
+            print("  Không bật được tải trước file gốc (bỏ qua):", str(e)[:100], flush=True)
+
+    def hen_tai(i):
+        if tai_truoc and 0 <= i < len(cac_file) and cac_file[i][0] != "khong_ro" and cac_file[i][0] not in tep_cho:
+            tep_cho[cac_file[i][0]] = tai_truoc.submit(mo_tep_goc, drive_tai, cac_file[i][0])
+
+    for idx, (fid, ds) in enumerate(cac_file):
         if not con_gio():
             print("⏸️ Hết thời gian lượt này.", flush=True); break
         t0 = time.time()
+        hen_tai(idx + 1)
         for x in ds:
             tang1(x, yccd)
             if chi_muc: tang1_trung(x, chi_muc, vi_tri)
         can_ai = [x for x in ds if not x["loi_nang"]]
         try:
             if can_ai:
-                tep = None
-                try:
-                    if fid != "khong_ro":
-                        tep = X.chuan_bi_tep(drive, fid)
-                        if tep.get("bo_qua"): tep = None
-                except Exception as e:
-                    print("  Không mở được file gốc:", str(e)[:100])
-                g2, bang, model2 = tang2(tep, can_ai, yccd, cac_model)
+                tep = lay_tep_goc(fid, tep_cho, drive)
+                g2, bang, model2, so_lieu, g4, model4, g5, model5 = chay_cac_tang(tep, can_ai, yccd, cac_model)
                 lech = kiem_lech_dong(can_ai, bang)
                 if lech:
                     for x in can_ai:
                         if loai_dang(x["dang"]) == "TN": (x["ghi_chu"] if MOI else x["nghi_van"]).append(lech)   # [21/11] chỉ ghi chú
-                so_lieu = {}
-                try: so_lieu = tang3(tep, can_ai, cac_model)
-                except X.HetHanMuc: raise
-                except Exception as e: print("  Tầng 3 lỗi (bỏ qua):", str(e)[:100])
-                g4, model4 = tang4(can_ai, cac_model, model2)
-                g5, model5 = tang4_groq(can_ai)
                 for x in can_ai:
                     quyet_dinh(x, g2.get(x["ma"]), so_lieu.get(x["ma"], []), g4.get(x["ma"]), model2, model4, yccd,
                                g5.get(x["ma"], ""), model5)
@@ -643,6 +716,8 @@ def main():
         print("📄 File %s: %d câu (%d AI duyệt) trong %d giây" % (fid[:12], len(ds),
               sum(1 for x in ds if not x["loi_nang"] and not x["nghi_van"]), time.time() - t0), flush=True)
 
+    if tai_truoc:
+        tai_truoc.shutdown(wait=False, cancel_futures=True)
     mau_ngau_nhien(kho, d, c)
     tom = "Lượt %s: %d AI duyệt, %d cần người xem, %d loại%s." % (X.bay_gio(), thong_ke["ai"], thong_ke["xem"], thong_ke["loai"],
                                                                  (" (%d câu để lượt sau)" % thong_ke["hoan"] if thong_ke["hoan"] else "") + (" – dừng vì hết hạn mức" if het_han_muc else ""))
