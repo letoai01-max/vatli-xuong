@@ -48,6 +48,13 @@ Mỗi lượt gọi Gemini / Groq được ghi vào tab Quota_SuDung (dòng "xư
     Việc không liên quan đáp án (mã YCCĐ, từ khoá CT cũ, công thức $ lỗi, trùng gần) vẫn để "Cần người xem".
   • Gemini không đánh giá được một câu (không phải bất đồng): giữ "Chưa duyệt", không ghi, lượt sau làm lại.
   • "Ghép lệch dòng" chỉ còn là ghi chú: từng đáp án vẫn phải qua 2 bằng chứng, khớp thì tự sửa.
+
+[21/11/2026] DUYỆT LẠI CÂU "CẦN NGƯỜI XEM" CŨ (DUYET_LAI_CAN_XEM = "false" mặc định → hành xử y như trước ngày này):
+  • "true": các câu đang ở "Cần người xem" được đưa vào hàng duyệt như câu "Chưa duyệt" và chạy qua đúng 5 tầng + luật xếp loại hiện hành.
+  • DUYET_LAI_PHAM_VI = "may" (mặc định): chỉ câu do MÁY đặt "Cần người xem" (cột Kiểm tra có "[5 tầng"), không đụng câu giáo viên tự đánh dấu.
+    "tat_ca": mọi câu "Cần người xem".
+  • Mỗi câu chỉ duyệt lại MỘT lần: kết quả ghi dấu "[5 tầng dd/mm duyệt lại]" ở cột Kiểm tra; câu có dấu này không bị chọn lại
+    (tránh lặp vô hạn khi vẫn cần người xem). Câu Gemini chưa đánh giá được (hoãn) vẫn giữ nguyên để lượt sau làm lại.
 """
 import datetime as dt, json, os, random, re, sys, time
 from concurrent.futures import ThreadPoolExecutor
@@ -67,6 +74,10 @@ TRUNG_CHE_DO = os.environ.get("TRUNG_CHE_DO", "ghi_chu").strip().lower()
 CHE_DO_DUYET = os.environ.get("CHE_DO_DUYET", "moi").strip().lower()                    # [21/11] "cu" = như trước
 KHONG_HINH_BAT_DONG = os.environ.get("KHONG_HINH_BAT_DONG", "loai").strip().lower()    # [21/11] câu không hình mà chưa thống nhất: loai | xem
 MOI = CHE_DO_DUYET != "cu"
+DUYET_LAI_CAN_XEM = os.environ.get("DUYET_LAI_CAN_XEM", "false").strip().lower() in ("true", "1", "yes", "on", "bat", "bật")   # [21/11] duyệt lại câu "Cần người xem" cũ
+DUYET_LAI_PHAM_VI = os.environ.get("DUYET_LAI_PHAM_VI", "may").strip().lower()                                                 # [21/11] may (chỉ câu máy đặt) | tat_ca
+DAU_MAY = "[5 tầng"                                                                                                              # [21/11] dấu máy ghi ở cột Kiểm tra
+DAU_DUYET_LAI = "duyệt lại]"                                                                                                     # [21/11] dấu đã duyệt lại một lần
 SONG_SONG = os.environ.get("DUYET_SONG_SONG", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")   # [21/11] "false" = lần lượt như trước
 try:
     SO_LO_SONG_SONG = max(1, int(float(os.environ.get("DUYET_SO_LO_SONG_SONG", "3") or 3)))                              # [21/11] số lô tầng 4 giải cùng lúc
@@ -633,6 +644,11 @@ def main():
         r = r + [""] * (len(td) - len(r))
         tt = r[c["Trạng thái duyệt"]].strip() or TT["CHUA"]
         vt = van_tay(r[c["Nội dung"]], r[c["Phương án"]])
+        duyet_lai = False
+        if DUYET_LAI_CAN_XEM and tt == TT["XEM"]:                       # [21/11] nhặt lại câu "Cần người xem" (mỗi câu một lần)
+            kt_cu = r[c["Kiểm tra"]]
+            if DAU_DUYET_LAI not in kt_cu and (DUYET_LAI_PHAM_VI == "tat_ca" or DAU_MAY in kt_cu):
+                tt, duyet_lai = TT["CHUA"], True
         if tt not in (TT["CHUA"], TT["DANG"]):
             if vt and tt != TT["LOAI"] and vt not in da_gap: da_gap[vt] = r[c["Mã câu"]]
             continue
@@ -640,7 +656,8 @@ def main():
              "phuong_an": r[c["Phương án"]], "dap_an": r[c["Đáp án"]].strip(), "kiem_tra_cu": r[c["Kiểm tra"]],
              "ma_yccd": [m for m in re.split(r"[,;\s]+", r[c["Mã YCCĐ"]]) if m],
              "vi_tri": (re.search(r"\(câu\s*([^)]*)\)", r[c["Tên file"]]) or [None, ""])[1],
-             "loi_nang": [], "nghi_van": [], "ghi_chu": [], "sua": {}, "bat_dong": [], "co_hinh": False, "hoan": False}
+             "loi_nang": [], "nghi_van": [], "ghi_chu": [], "sua": {}, "bat_dong": [], "co_hinh": False, "hoan": False,
+             "duyet_lai": duyet_lai}
         if vt and vt in da_gap: x["trung_voi"] = da_gap[vt]
         elif vt: da_gap[vt] = x["ma"]
         nhom.setdefault(r[c["File ID"]] or "khong_ro", []).append(x)
@@ -703,7 +720,7 @@ def main():
                 continue
             tt = xep_loai(x)
             ghi = "; ".join(x["loi_nang"] + x["nghi_van"] + x["ghi_chu"]) or "Đạt"
-            kt = (x["kiem_tra_cu"] + " | " if x["kiem_tra_cu"] else "") + "[5 tầng %s] %s" % (ngay, ghi)
+            kt = (x["kiem_tra_cu"] + " | " if x["kiem_tra_cu"] else "") + "[5 tầng %s%s] %s" % (ngay, " duyệt lại" if x.get("duyet_lai") else "", ghi)
             col = lambda t, dh=dong_hien_tai: gspread_a1(c[t] + 1, dh)
             cap += [{"range": col("Trạng thái duyệt"), "values": [[tt]]}, {"range": col("Kiểm tra"), "values": [[kt[:45000]]]}]
             if "dap_an" in x["sua"]: cap.append({"range": col("Đáp án"), "values": [[x["sua"]["dap_an"]]]})
