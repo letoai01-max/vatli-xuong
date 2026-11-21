@@ -41,6 +41,15 @@ TRUNG_TAM_CONFIG = "trung_tam_dieu_phoi.json"
 GHI_SHEET = os.environ.get("GHI_SHEET", "") == "1"
 TIEN_TO_ANH = "fig_"          # tên tệp mới: images/fig_<md5 12 ký tự>.<đuôi> (không phụ thuộc số dòng Sheet)
 TOI_DA_HINH_MOI_CAU = 6
+TOI_DA_HINH_TU_DONG = 3        # [21/11] quá số này => nghi gắn dư, hạ xuống can_xem và KHÔNG ghi đè link cũ
+DIEN_TICH_TOI_THIEU = 0.003    # [21/11 v2] hình nhỏ hơn 0,3% diện tích trang coi là ký hiệu/đường kẻ, bỏ
+NGUONG_CHUAN = 0.9            # [21/11 v2] mức 'cao' đúng < 90% trên hinh_chuan.csv thì KHÔNG ghi Sheet (đặt EP_GHI=1 để ép)
+AI_XAC_NHAN = os.environ.get("AI_XAC_NHAN", "") == "1"   # [v3] bật: Gemini nhìn hình + lời văn để HẠ mức câu nghi gắn sai
+AI_TOI_DA = int(os.environ.get("AI_TOI_DA", "60"))       # [v3] số lần gọi AI tối đa mỗi lần chạy
+AI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+BO_QUA_DA_DUYET = os.environ.get("QUET_CA_DA_DUYET", "") != "1"   # [v3] mặc định KHÔNG đụng câu đã duyệt / thầy đã chọn tay
+TOI_DA_GHI_MOI_LAN = int(os.environ.get("TOI_DA_GHI", "300"))
+RE_LOI_GIAI = re.compile(r"^\s*(H[ƯU][ỚO]NG\s*D[ẪA]N|L[ỜO]I\s*GI[ẢA]I|ĐÁP\s*ÁN|BÀI\s*GI[ẢA]I|GI[ẢA]I\s*CHI\s*TI[ẾE]T)", re.IGNORECASE)
 MUC = {"cao": 0, "trung_binh": 1, "can_xem": 2}
 TEN_MUC = ["cao", "trung_binh", "can_xem"]
 
@@ -99,6 +108,101 @@ def chu_so_huu(neo, pages, p, col, y0):
     return None, None
 
 
+def so_hinh_toi_da(noi_dung):
+    """[21/11 v2] Số hình hợp lý theo lời văn: nhắc 'Hình 1, Hình 2...' hoặc hỏi 'hình nào/đồ thị nào' (đáp án là hình) thì cho nhiều hơn."""
+    nd = nfc(noi_dung or "")
+    nhac = len(set(re.findall(r"[Hh]ình\s*([0-9]+|[a-dA-D])\b", nd)))
+    dap_an_la_hinh = 4 if re.search(r"(hình|đồ thị|sơ đồ|mạch|giản đồ)\s*nào", nd, re.IGNORECASE) else 0
+    return max(TOI_DA_HINH_TU_DONG, nhac, dap_an_la_hinh)
+
+
+def lay_byte_hinh(doc, h):
+    """[v3] Lấy byte ảnh để gửi AI (không ghi đĩa)."""
+    page = doc[h["page"]]
+    if h["raster"]:
+        bi = doc.extract_image(h["xrefs"][0])
+        return bi["image"], "image/" + ("jpeg" if bi["ext"] in ("jpg", "jpeg") else bi["ext"])
+    clip = (fitz.Rect(*h["bbox"]) + (-4, -4, 4, 4)) & page.rect
+    return page.get_pixmap(clip=clip, dpi=130).tobytes("png"), "image/png"
+
+
+def ai_xac_nhan(noi_dung, anh):
+    """[v3] Hỏi Gemini: các hình này có thuộc câu hỏi không? Trả (True/False/None, lý do). None = không hỏi được => không đổi mức.
+    Chỉ dùng để HẠ mức (nghi gắn sai/dư), không bao giờ tự nâng mức."""
+    import urllib.request
+    key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if not key or not anh:
+        return None, ""
+    lenh = ("Đây là một câu hỏi Vật lí THPT và các hình được gắn vào câu này.\n--- CÂU HỎI ---\n" + (noi_dung or "")[:1800] +
+            "\n--- HẾT ---\nHãy kiểm tra: (1) mỗi hình có đúng là hình minh hoạ/đồ thị/sơ đồ của CHÍNH câu này không; "
+            "(2) có hình thừa hoặc thuộc câu khác không; (3) câu cần hình nhưng hình không phải hình đó không. "
+            "Chỉ trả JSON một dòng: {\"khop\": true|false, \"ly_do\": \"ngắn gọn\"}. khop=true chỉ khi TẤT CẢ hình đều đúng và không thừa.")
+    parts = [{"text": lenh}] + [{"inline_data": {"mime_type": m, "data": base64.b64encode(b).decode()}} for b, m in anh]
+    body = json.dumps({"contents": [{"parts": parts}], "generationConfig": {"temperature": 0, "responseMimeType": "application/json"}}).encode()
+    url = "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s" % (AI_MODEL, key)
+    try:
+        rq = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(rq, timeout=60) as rs:
+            kq = json.loads(rs.read().decode("utf-8"))
+        txt = kq["candidates"][0]["content"]["parts"][0]["text"]
+        j = json.loads(re.sub(r"^```json|```$", "", txt.strip()).strip())
+        return bool(j.get("khop")), str(j.get("ly_do", ""))[:160]
+    except Exception as e:
+        print("   (AI xác nhận lỗi, bỏ qua: %s)" % str(e)[:100], flush=True)
+        return None, ""
+
+
+def _dien_tich(b):
+    return max(b[2] - b[0], 0) * max(b[3] - b[1], 0)
+
+
+def loc_hinh_du(hinh):
+    """[21/11] Bỏ hình nằm lọt trong hình khác (mảnh vụn của cùng một hình) và hình trùng vị trí."""
+    giu = []
+    for i, h in enumerate(hinh):
+        du = False
+        for j, k in enumerate(hinh):
+            if i == j or h["page"] != k["page"]:
+                continue
+            gt = (max(h["bbox"][0], k["bbox"][0]), max(h["bbox"][1], k["bbox"][1]),
+                  min(h["bbox"][2], k["bbox"][2]), min(h["bbox"][3], k["bbox"][3]))
+            ah = _dien_tich(h["bbox"])
+            if ah <= 0 or gt[2] <= gt[0] or gt[3] <= gt[1]:
+                continue
+            tl = _dien_tich(gt) / ah
+            if tl >= 0.8 and (_dien_tich(k["bbox"]) > ah or (_dien_tich(k["bbox"]) == ah and j < i)):
+                du = True
+                break
+        if not du:
+            giu.append(h)
+    return giu
+
+
+def hinh_trong_loi_giai(dong, neo_a, h):
+    """[21/11] Hình nằm SAU dòng 'Hướng dẫn giải / Lời giải / Đáp án' (cùng cột, dưới câu chủ) là hình của lời giải, không gắn vào đề."""
+    for d in dong:
+        if d["page"] != h["page"] or not RE_LOI_GIAI.match(d["text"]):
+            continue
+        if d["col"] not in (h["col"], -1) and h["col"] != -1:
+            continue
+        if neo_a["bbox"][1] < d["bbox"][1] <= h["bbox"][1] + 3 and d["page"] == neo_a["page"]:
+            return True
+    return False
+
+
+def hinh_lech_sang_cau_sau(dong, neo, a, h):
+    """[v3] Hình sát ngay trên tiêu đề 'Câu N+1' nhưng cách xa chữ của câu chủ => nhiều khả năng thuộc câu sau."""
+    sau = [x for x in neo if x["page"] == h["page"] and x["bbox"][1] > h["bbox"][3]
+           and (x["col"] in (h["col"], -1) or h["col"] == -1)]
+    if not sau:
+        return False
+    gap_sau = min(x["bbox"][1] for x in sau) - h["bbox"][3]
+    chu_tren = [d["bbox"][3] for d in dong if d["page"] == h["page"] and d["bbox"][3] <= h["bbox"][1] + 3
+                and d["col"] in (h["col"], -1) and d["bbox"][1] >= a["bbox"][1] - 1]
+    gap_chu = (h["bbox"][1] - max(chu_tren)) if chu_tren else 0
+    return gap_sau < 12 and gap_chu > 50
+
+
 def gan_hinh_cho_cau(pages, dong, neo, hinh):
     """Trả {id_neo: {"hinh": [...], "muc": ..., "van_ban": "..."}}"""
     kq = {a["id"]: {"hinh": [], "muc": "cao", "van_ban": [], "neo": a} for a in neo}
@@ -106,11 +210,18 @@ def gan_hinh_cho_cau(pages, dong, neo, hinh):
         a, _ = chu_so_huu(neo, pages, d["page"], d["col"], d["bbox"][1])
         if a:
             kq[a["id"]]["van_ban"].append(d["text"])
-    for h in sorted(hinh, key=thu_tu_doc):
+    for h in sorted(loc_hinh_du(hinh), key=thu_tu_doc):
         a, muc = chu_so_huu(neo, pages, h["page"], h["col"], h["bbox"][1])
         if not a:
             continue
+        if hinh_trong_loi_giai(dong, a, h):
+            continue
+        pg_ = pages[h["page"]]
+        if _dien_tich(h["bbox"]) < DIEN_TICH_TOI_THIEU * pg_["w"] * pg_["h"]:
+            continue                    # [21/11 v2] ký hiệu/đường kẻ nhỏ
         r = kq[a["id"]]
+        if hinh_lech_sang_cau_sau(dong, neo, a, h):
+            muc = "can_xem"             # [v3] vẫn gắn nhưng hạ mức để thầy xem
         r["hinh"].append(h)
         if MUC[muc] > MUC[r["muc"]]:
             r["muc"] = muc
@@ -119,6 +230,8 @@ def gan_hinh_cho_cau(pages, dong, neo, hinh):
         if len(r["hinh"]) > TOI_DA_HINH_MOI_CAU:
             r["hinh"] = r["hinh"][:TOI_DA_HINH_MOI_CAU]
             r["muc"] = "can_xem"
+        elif len(r["hinh"]) > TOI_DA_HINH_TU_DONG:
+            r["nhieu"] = True           # [21/11 v2] quyết định ở vòng chính, vì còn phải xét lời văn của câu
     return kq
 
 
@@ -417,6 +530,20 @@ def quet_drive_va_gan_anh():
     C_LOC = td.index("Lọc hình (AI)") if "Lọc hình (AI)" in td else None
     C_TIN = td.index("Độ tin cậy hình") if "Độ tin cậy hình" in td else None
     so_cot = max(len(td), C_ANH + 1, 23)
+    if os.environ.get("TAO_CHUAN") == "1":     # [v3] sinh hinh_chuan.csv từ các câu thầy đã chọn tay / đã duyệt (chỉ link dạng _pN_imgM)
+        n_ = 0
+        with open("hinh_chuan.csv", "w", encoding="utf-8-sig", newline="") as f:
+            w0 = csv.writer(f)
+            w0.writerow(["ma_cau", "link_dung"])
+            for rv in vals[1:]:
+                rv = (rv + [""] * so_cot)[:so_cot]
+                lk = rv[C_ANH].strip()
+                if rv[C_MA].strip() and re.search(r"_p\d+_img\d+", lk) and (
+                        rv[C_TT].strip() == "Đã duyệt" or (C_TIN is not None and rv[C_TIN].strip() == "tay")):
+                    w0.writerow([rv[C_MA].strip(), lk])
+                    n_ += 1
+        print(f"📝 Đã tạo hinh_chuan.csv với {n_} câu đã xác nhận.", flush=True)
+        return
 
     patterns = config.get("BO_LOC_KY_THUAT", {}).get("bieu_thuc_nhan_dien_hinh", [])
     RE_CUE = re.compile("|".join(patterns), re.IGNORECASE) if patterns else RE_CUE_MAC_DINH
@@ -429,6 +556,9 @@ def quet_drive_va_gan_anh():
         ma, fid = rv[C_MA].strip(), rv[C_ID].strip()
         if rv[C_TT].strip() == "Loại" or not fid or not ma:
             continue
+        if BO_QUA_DA_DUYET and rv[C_ANH].strip() and (rv[C_TT].strip() == "Đã duyệt"
+                                                       or (C_TIN is not None and rv[C_TIN].strip() == "tay")):
+            continue                                   # [v3] đã người duyệt / thầy chọn tay: khoá, không quét đè
         if C_LOC is not None and rv[C_LOC].strip():
             continue                                   # câu đã được LocHinh (AI) xét: tôn trọng
         m = re.search(r"\(câu\s*([^)]+)\)", rv[C_TEN], re.I)
@@ -438,7 +568,9 @@ def quet_drive_va_gan_anh():
     print(f"🔎 {sum(len(v) for v in nhom.values())} câu từ {len(nhom)} file đề gốc.", flush=True)
 
     chuan = doc_hinh_chuan()
+    ti_le_cao = None
     ket_qua, bao_cao = {}, []
+    ai_da_goi = [0]
     for fid, ds in nhom.items():
         try:
             meta = drive.files().get(fileId=fid, fields="name,mimeType", supportsAllDrives=True).execute()
@@ -463,6 +595,16 @@ def quet_drive_va_gan_anh():
             kq_gan = gan_hinh_cho_cau(pages, dong, neo, hinh)
             ten_cache = {}
 
+            md5_neo = {}        # [v3] cùng một ảnh bị gắn cho nhiều câu khác nhau trong một file => nghi
+            for id_, r_ in kq_gan.items():
+                for h_ in r_["hinh"]:
+                    if h_.get("md5"):
+                        md5_neo.setdefault(h_["md5"], set()).add(id_)
+            dem_nid = {}
+            for it0 in ds:      # [21/11 v2] nhiều dòng Sheet cùng khớp 1 'Câu N' => nhập nhằng
+                n0, _ = khop_cau(it0["so_cau"], it0["nd"], neo, kq_gan)
+                if n0 is not None:
+                    dem_nid[n0] = dem_nid.get(n0, 0) + 1
             for it in ds:
                 nid, diem = khop_cau(it["so_cau"], it["nd"], neo, kq_gan)
                 co_cue = bool(RE_CUE.search(it["nd"]))
@@ -484,10 +626,37 @@ def quet_drive_va_gan_anh():
                         ten.append(ten_cache[k])
                     link_moi = ", ".join("images/" + t for t in dict.fromkeys(ten))
                     muc = danh_gia_hang(r["muc"], diem, co_cue)
+                    if r.get("nhieu") and len(r["hinh"]) > so_hinh_toi_da(it["nd"]):
+                        muc = "can_xem"
+                        dong_bc["ghi_chu"] = "gắn %d hình, nhiều hơn mức lời văn gợi ý – nghi gắn dư" % len(r["hinh"])
+                    if dem_nid.get(nid, 0) > 1:
+                        muc = "can_xem"
+                        dong_bc["ghi_chu"] = "nhiều dòng Sheet cùng khớp một câu trong PDF – nghi nhầm câu"
+                    if not co_cue and len(r["hinh"]) >= 2:
+                        muc = "can_xem"   # câu không nhắc hình mà có ≥2 hình: gần như chắc gắn dư
+                    if any(len(md5_neo.get(h_.get("md5"), ())) > 1 for h_ in r["hinh"] if h_.get("md5")):
+                        muc = "can_xem"
+                        dong_bc["ghi_chu"] = "cùng một ảnh bị gắn cho nhiều câu – nghi gắn nhầm"
+                    if AI_XAC_NHAN and muc != "can_xem" and len(r["hinh"]) <= 4 and ai_da_goi[0] < AI_TOI_DA:
+                        try:
+                            anh_ai = [lay_byte_hinh(doc, h_) for h_ in r["hinh"]]
+                            anh_ai = [x for x in anh_ai if len(x[0]) < 3_000_000]
+                            ai_da_goi[0] += 1
+                            khop_ai, ly_do = ai_xac_nhan(it["nd"], anh_ai)
+                            if khop_ai is False:
+                                muc = "can_xem"
+                                dong_bc["ghi_chu"] = "AI: hình không khớp câu – " + ly_do
+                        except Exception as e:
+                            print("   (AI bỏ qua: %s)" % str(e)[:80], flush=True)
                     dong_bc["link_moi"], dong_bc["muc"] = link_moi, muc
                     dong_bc["ids_cu"] = sorted({"%d_img%d" % i for h in r["hinh"] for i in h["ids"]})
                     if link_moi != it["link_cu"]:
-                        ket_qua[it["ma"]] = (link_moi, muc)
+                        if muc == "cao" or not it["link_cu"]:
+                            ket_qua[it["ma"]] = (link_moi, muc)
+                        else:   # [21/11] chưa chắc: giữ link cũ, chỉ đánh dấu mức tin cậy để thầy xem
+                            dong_bc["ghi_chu"] = (dong_bc["ghi_chu"] + " | " if dong_bc["ghi_chu"] else "") + "chưa chắc – giữ link cũ, hình đề xuất nằm ở link_moi"
+                            if C_TIN is not None and it["tin_cu"] != muc:
+                                ket_qua[it["ma"]] = (it["link_cu"], muc)
                 else:
                     dong_bc["ids_cu"] = []
                     if co_cue:
@@ -509,6 +678,13 @@ def quet_drive_va_gan_anh():
         w = csv.DictWriter(f, fieldnames=cot_bc, extrasaction="ignore")
         w.writeheader()
         w.writerows(bao_cao)
+    ly_do_dem = {}      # [v3] thống kê lí do câu bị hạ xuống can_xem để biết sửa ở đâu
+    for b in bao_cao:
+        if b["muc"] == "can_xem" and b["ghi_chu"]:
+            k_ = re.sub(r"\d+", "N", b["ghi_chu"].split(" | ")[0])[:60]
+            ly_do_dem[k_] = ly_do_dem.get(k_, 0) + 1
+    for k_, v_ in sorted(ly_do_dem.items(), key=lambda x: -x[1])[:8]:
+        print(f"   · {v_:4d} câu: {k_}", flush=True)
     dem = {m: sum(1 for b in bao_cao if b["muc"] == m) for m in TEN_MUC}
     print(f"📋 bao_cao_hinh.csv: {len(bao_cao)} câu – cao {dem['cao']}, trung_binh {dem['trung_binh']}, can_xem {dem['can_xem']}", flush=True)
 
@@ -525,13 +701,30 @@ def quet_drive_va_gan_anh():
             if b["muc"] == "cao":
                 c_tong += 1
                 c_dung += ok
+        if c_tong:
+            ti_le_cao = c_dung / c_tong     # [21/11 v2]
         if tong:
             print(f"🎯 Mẫu chuẩn: đúng {dung}/{tong} = {dung / tong:.0%}"
                   + (f" | riêng mức 'cao': {c_dung}/{c_tong} = {c_dung / c_tong:.0%}" if c_tong else ""), flush=True)
         print("   (chỉ so được hình raster; hình vector là hình mới, bản cũ không trích được)", flush=True)
 
     # ---- ghi Sheet
-    if GHI_SHEET and ket_qua:
+    if GHI_SHEET and ket_qua and ti_le_cao is not None and ti_le_cao < NGUONG_CHUAN and os.environ.get("EP_GHI") != "1":
+        print(f"⛔ Mức 'cao' chỉ đúng {ti_le_cao:.0%} < {NGUONG_CHUAN:.0%} trên hinh_chuan.csv – KHÔNG ghi Sheet. "
+              "Xem bao_cao_hinh.csv, chỉnh rồi chạy lại (hoặc EP_GHI=1 để ép ghi).", flush=True)
+    elif GHI_SHEET and ket_qua:
+        # [21/11 v2] sao lưu link cũ trước khi ghi, để hoàn tác được; ghi tối đa TOI_DA_GHI_MOI_LAN câu mỗi lần
+        cu_map = {it["ma"]: (it["link_cu"], it["tin_cu"]) for ds_ in nhom.values() for it in ds_}
+        ds_ghi = list(ket_qua.items())[:TOI_DA_GHI_MOI_LAN]
+        ket_qua = dict(ds_ghi)
+        import time as _t
+        ten_sl = "sao_luu_link_anh_%s.csv" % _t.strftime("%Y%m%d_%H%M%S")
+        with open(ten_sl, "w", encoding="utf-8-sig", newline="") as f:
+            w_ = csv.writer(f)
+            w_.writerow(["ma_cau", "link_cu", "tin_cu"])
+            for ma_, _v in ds_ghi:
+                w_.writerow([ma_, *cu_map.get(ma_, ("", ""))])
+        print(f"💾 Đã sao lưu link cũ của {len(ds_ghi)} câu vào {ten_sl}", flush=True)
         ma_cot = ws.col_values(C_MA + 1)
         vt = {str(v).strip(): k + 1 for k, v in enumerate(ma_cot) if k > 0 and str(v).strip()}
         col_anh = gspread.utils.rowcol_to_a1(1, C_ANH + 1).rstrip("1")
