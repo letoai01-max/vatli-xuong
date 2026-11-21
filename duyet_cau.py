@@ -29,6 +29,17 @@ Mỗi lượt gọi Gemini / Groq được ghi vào tab Quota_SuDung (dòng "xư
   so câu đang duyệt với các câu ĐÃ CÓ TỪ TRƯỚC trong kho (dòng phía trên).
   • Giống chữ ≥ 90% (gần như chép lại): TRUNG_CHE_DO = "ghi_chu" (mặc định) chỉ ghi chú; "chan" → "Cần người xem".
   • Giống dạng ≥ 85% nhưng khác số liệu: luôn chỉ ghi chú "cùng dạng, khác số liệu" (câu đổi số vẫn có ích).
+
+[21/11/2026] LUẬT XẾP LOẠI MỚI (CHE_DO_DUYET = "moi" mặc định; "cu" → chạy y như trước ngày này):
+  • LOẠI NGAY ở tầng 1 (0 lượt Gemini): trắc nghiệm không đủ 4 phương án A–D, hoặc đúng/sai không đủ 4 ý a–d.
+  • THIẾU HDC / ĐÁP ÁN: máy tự giải rồi duyệt luôn khi hai lời giải độc lập khớp nhau (lập luận ở tầng 2 + chạy code ở tầng 4,
+    cho phép cùng một model Gemini vì hai cách giải khác nhau; Groq vẫn là bằng chứng bổ sung). Áp dụng cả tự luận và câu vận dụng cao.
+    Đáp án đã ghi sai dạng được coi như thiếu đáp án → máy giải lại. "Đáp số: …" trong lời giải được hiểu là số cuối.
+  • "CẦN NGƯỜI XEM" CHỈ DÀNH CHO CÂU CÓ HÌNH mà máy và các model chưa thống nhất (hoặc thiếu hình để giải).
+    Câu KHÔNG hình mà chưa thống nhất: KHONG_HINH_BAT_DONG = "loai" (mặc định) → Loại, lí do ghi ở cột Kiểm tra; "xem" → như cũ.
+    Việc không liên quan đáp án (mã YCCĐ, từ khoá CT cũ, công thức $ lỗi, trùng gần) vẫn để "Cần người xem".
+  • Gemini không đánh giá được một câu (không phải bất đồng): giữ "Chưa duyệt", không ghi, lượt sau làm lại.
+  • "Ghép lệch dòng" chỉ còn là ghi chú: từng đáp án vẫn phải qua 2 bằng chứng, khớp thì tự sửa.
 """
 import datetime as dt, json, os, random, re, sys, time
 
@@ -44,6 +55,9 @@ except Exception:
     Q = None
 GROQ_CHE_DO = os.environ.get("GROQ_CHE_DO", "ghi_chu").strip().lower()
 TRUNG_CHE_DO = os.environ.get("TRUNG_CHE_DO", "ghi_chu").strip().lower()
+CHE_DO_DUYET = os.environ.get("CHE_DO_DUYET", "moi").strip().lower()                    # [21/11] "cu" = như trước
+KHONG_HINH_BAT_DONG = os.environ.get("KHONG_HINH_BAT_DONG", "loai").strip().lower()    # [21/11] câu không hình mà chưa thống nhất: loai | xem
+MOI = CHE_DO_DUYET != "cu"
 
 TAB_NH, TAB_MAU = "NganHangCauHoi", "KiemTraNgauNhien"
 TT = {"CHUA": "Chưa duyệt", "DANG": "Đang duyệt (Python)", "AI": "AI duyệt", "XEM": "Cần người xem", "LOAI": "Loại"}
@@ -76,7 +90,10 @@ def tach_ds(s):
 
 
 def lay_so(s):
-    m = re.search(r"[-+]?\d+(?:[.,]\d+)?", re.sub(r"\s", "", str(s or "")))
+    t = str(s or "")
+    ds = [d for d in re.findall(r"(?i)đáp\s*số\s*[:=]?([^\n]*)", t) if re.search(r"\d", d)]   # [21/11] lời giải dài: lấy số sau "Đáp số"
+    if ds: t = ds[-1]
+    m = re.search(r"[-+]?\d+(?:[.,]\d+)?", re.sub(r"\s", "", t))
     return float(m.group(0).replace(",", ".")) if m else float("nan")
 
 
@@ -176,21 +193,65 @@ def don_vi_trong(s):
     return m.group(1) if m else ""
 
 
+# ============================== [21/11] ĐẾM PHƯƠNG ÁN · CÓ HÌNH · XẾP LOẠI ==============================
+RE_NHAC_HINH = re.compile(r"(?i)\b(hình vẽ|như hình|hình bên|đồ thị (như|ở) hình|hình \d)")
+
+
+def dem_phuong_an(loai, noi_dung, phuong_an):
+    """Số phương án (TN: A–D) / số ý (DS: a–d) đang có. Đếm theo dòng HOẶC theo nhãn (kể cả nhiều phương án trên một dòng)
+    và lấy số LỚN hơn → thà bỏ sót câu thiếu còn hơn loại nhầm câu đủ."""
+    pa, nd = str(phuong_an or ""), str(noi_dung or "")
+    dong = len([s for s in pa.split("\n") if s.strip()])
+    mau = "ABCD" if loai == "TN" else "abcd"
+    nhan = set(re.findall(r"(?:^|\s)[*_$(]*([%s])[*_$)]*\s*[.):]\s*\S" % mau, pa + "\n" + nd))
+    return max(dong, len(nhan))
+
+
+def co_hinh(x):
+    """Câu có hình: có mô tả [Hình…] / [[DO_THI…]] hoặc nhắc tới hình trong đề."""
+    van = x["noi_dung"] + " " + x["phuong_an"]
+    return "[Hình" in van or "[[DO_THI" in van or bool(RE_NHAC_HINH.search(x["noi_dung"]))
+
+
+def bat_dong(x, ly_do):
+    """Nghi vấn do máy / các model CHƯA THỐNG NHẤT (khác với nghi vấn về mã YCCĐ, công thức, trùng…)."""
+    x["nghi_van"].append(ly_do)
+    x["bat_dong"].append(ly_do)
+
+
+def xep_loai(x):
+    """Trạng thái cuối của một câu. Chế độ mới: Loại = lỗi nặng; Cần người xem = câu CÓ HÌNH mà máy/model chưa thống nhất
+    (hoặc nghi vấn không liên quan đáp án); câu không hình chưa thống nhất → KHONG_HINH_BAT_DONG."""
+    if x["loi_nang"]: return TT["LOAI"]
+    if not x["nghi_van"]: return TT["AI"]
+    if not MOI or not x["bat_dong"]: return TT["XEM"]
+    if x["co_hinh"] or KHONG_HINH_BAT_DONG == "xem": return TT["XEM"]
+    x["ghi_chu"].append("Loại vì máy và các model chưa thống nhất đáp án, câu không có hình (đặt KHONG_HINH_BAT_DONG=xem nếu muốn GV xem)")
+    return TT["LOAI"]
+
+
 # ============================== TẦNG 1: LUẬT BẰNG CODE ==============================
 def tang1(x, yccd):
     loai = loai_dang(x["dang"])
     if x.get("trung_voi"): x["loi_nang"].append("Trùng hẳn câu " + x["trung_voi"])
     if len(re.sub(r"\s", "", x["noi_dung"])) < 15: x["loi_nang"].append("Nội dung câu quá ngắn / thiếu đề")
-    so_pa = len([s for s in x["phuong_an"].split("\n") if s.strip()]) if x["phuong_an"] else 0
-    if loai == "TN" and so_pa < 4: x["nghi_van"].append("Thiếu phương án (%d/4)" % so_pa)
-    if loai == "DS" and so_pa < 4: x["nghi_van"].append("Thiếu ý đúng/sai (%d/4)" % so_pa)
-    if x["dap_an"] and not dung_dang(loai, x["dap_an"]): x["nghi_van"].append('Đáp án không đúng dạng: "%s"' % x["dap_an"])
+    x["co_hinh"] = co_hinh(x)
+    so_pa = dem_phuong_an(loai, x["noi_dung"], x["phuong_an"]) if loai in ("TN", "DS") else 4
+    thieu = x["loi_nang"] if MOI else x["nghi_van"]          # [21/11] thiếu phương án / ý → Loại ngay (chế độ cũ: Cần người xem)
+    if loai == "TN" and so_pa < 4: thieu.append("Thiếu phương án (%d/4)" % so_pa)
+    if loai == "DS" and so_pa < 4: thieu.append("Thiếu ý đúng/sai (%d/4)" % so_pa)
+    if x["dap_an"] and not dung_dang(loai, x["dap_an"]):
+        if MOI:                                              # [21/11] đáp án sai dạng = như thiếu đáp án → máy giải lại
+            x["ghi_chu"].append('Đáp án đã ghi sai dạng ("%s") – bỏ, máy giải lại' % x["dap_an"])
+            x["dap_an"] = ""
+        else:
+            x["nghi_van"].append('Đáp án không đúng dạng: "%s"' % x["dap_an"])
     if not x["ma_yccd"]: x["nghi_van"].append("Chưa gắn mã YCCĐ")
     sai = [m for m in x["ma_yccd"] if m not in yccd]
     if sai: x["nghi_van"].append("Mã không có trong YCCD: " + ", ".join(sai))
     if (x["noi_dung"] + x["phuong_an"]).count("$") % 2: x["nghi_van"].append("Công thức $…$ không đóng mở đủ")
-    if re.search(r"(?i)\b(hình vẽ|như hình|hình bên|đồ thị (như|ở) hình|hình \d)", x["noi_dung"]) and "[Hình" not in x["noi_dung"]:
-        x["nghi_van"].append("Câu nhắc tới hình nhưng không có mô tả hình")
+    if RE_NHAC_HINH.search(x["noi_dung"]) and "[Hình" not in x["noi_dung"]:
+        bat_dong(x, "Câu nhắc tới hình nhưng không có mô tả hình")
 
 
 def doc_chi_muc(kho):
@@ -248,7 +309,8 @@ def tang2(tep, ds, yccd, cac_model):
           "(nhiều lựa chọn: một chữ A-D; đúng/sai: \"a) Đ, b) S, c) Đ, d) S\"; trả lời ngắn: một con số; tự luận: đáp số cuối). "
           "File không có đáp án thì để mảng rỗng.\n"
         + "2) ket_qua: với MỖI câu bên dưới: co_hdc, dap_an_hdc (đáp án của chính câu đó theo HDC, đối chiếu NỘI DUNG chứ không chỉ số câu); "
-          "tu_giai (chỉ khi không có HDC: tự giải cẩn thận); loi_noi_dung (đề chép sai/thiếu dữ kiện đến mức không giải được); "
+          "tu_giai (chỉ khi không có HDC: tự giải cẩn thận rồi ghi ĐÁP ÁN CUỐI theo đúng khuôn của bang_dap_an: một chữ A-D / "
+          "\"a) Đ, b) S, c) Đ, d) S\" / một con số kèm đơn vị, không viết lời giải dài); loi_noi_dung (đề chép sai/thiếu dữ kiện đến mức không giải được); "
           "thieu_hinh (CHỈ khi câu cần hình mà mô tả [Hình: …] không đủ để giải); ngoai_ct2018 (kiến thức không thuộc CT 2018, kể cả "
           "các nội dung chương trình 2006: " + X.CT_CU_MO_TA + " – ghi ly_do_ct); ma_yccd_hop_li (false nếu mã gán không khớp; "
           "ma_yccd_goi_y là MỘT mã đúng hơn nếu chắc chắn); ghi_chu tối đa 120 kí tự khi có vấn đề.\n\nCÁC CÂU:\n"
@@ -377,31 +439,35 @@ def quyet_dinh(x, g2, so_lieu, g4, model2, model4, yccd, g5="", model5=""):
     gq = chuan(loai, g5) if g5 else ""                                     # đáp án Groq (khác hãng)
     ten_g = (model5 or "groq").split("/")[-1]
     if not g2:
+        if MOI:                                                            # [21/11] chưa đánh giá được ≠ bất đồng → làm lại lượt sau
+            x["hoan"] = True; return
         x["nghi_van"].append("Gemini chưa đánh giá được câu này"); return
     if g2.get("loi_noi_dung"): x["loi_nang"].append("Lỗi nội dung: " + (g2.get("ghi_chu") or "đề không đọc được / thiếu dữ kiện"))
     if g2.get("ngoai_ct2018"):
         x["loi_nang"].append("Ngoài chương trình 2018" + (": " + g2["ly_do_ct"] if g2.get("ly_do_ct") else "")); return
     tk = X.tu_khoa_ct_cu(x["noi_dung"], x["phuong_an"])
     if tk: x["nghi_van"].append('Có từ khoá nội dung chương trình cũ ("%s") – GV xác nhận thuộc CT 2018' % tk)
-    if g2.get("thieu_hinh"): x["nghi_van"].append("Thiếu dữ kiện khi không có hình gốc")
+    if g2.get("thieu_hinh"):
+        x["co_hinh"] = True
+        bat_dong(x, "Thiếu dữ kiện khi không có hình gốc")
     if g2.get("ma_yccd_hop_li") is False:
         gy = str(g2.get("ma_yccd_goi_y") or "").strip().upper()
         if gy and gy in yccd: x["sua"]["ma"] = gy; x["ghi_chu"].append("Sửa mã YCCĐ %s → %s" % (", ".join(x["ma_yccd"]), gy))
         else: x["nghi_van"].append("Mã YCCĐ có thể chưa đúng" + (" (%s)" % g2["ghi_chu"] if g2.get("ghi_chu") else ""))
     # tầng 3
     lech = so_lieu_lech(x, so_lieu) if so_lieu else []
-    if lech: x["nghi_van"].append("Đọc lại đề gốc thấy số liệu chưa có trong bản lưu: " + "; ".join(lech))
+    if lech: bat_dong(x, "Đọc lại đề gốc thấy số liệu chưa có trong bản lưu: " + "; ".join(lech))
     # tầng 4
     may = dap_an_may(loai, g4)
     if loai == "TN" and g4 and len(g4.get("phuong_an_dung") or []) > 1:
-        x["nghi_van"].append("Máy giải thấy %d phương án cùng đúng: %s" % (len(g4["phuong_an_dung"]), ", ".join(g4["phuong_an_dung"])))
-    if g4 and str(g4.get("tu_tin", "")).lower().startswith("thấp"): x["nghi_van"].append("Máy giải không chắc chắn")
+        bat_dong(x, "Máy giải thấy %d phương án cùng đúng: %s" % (len(g4["phuong_an_dung"]), ", ".join(g4["phuong_an_dung"])))
+    if g4 and str(g4.get("tu_tin", "")).lower().startswith("thấp"): bat_dong(x, "Máy giải không chắc chắn")
     hdc = chuan(loai, g2.get("dap_an_hdc")) if g2.get("co_hdc") and g2.get("dap_an_hdc") else ""
     # tầng 5
     if loai in ("TLN", "TL") and g4 and g4.get("don_vi"):
         dv_ss = don_vi_trong(g2.get("dap_an_hdc") or x["dap_an"])
         if cung_thu_nguyen(g4["don_vi"], dv_ss) is False:
-            x["nghi_van"].append("Đơn vị không cùng thứ nguyên: máy giải %s, đáp án ghi %s" % (g4["don_vi"], dv_ss))
+            bat_dong(x, "Đơn vị không cùng thứ nguyên: máy giải %s, đáp án ghi %s" % (g4["don_vi"], dv_ss))
     ss = SAI_SO_MAY_GIAI
     ten2 = " (%s + %s)" % (model2.replace("gemini-", ""), (model4 or "?").replace("gemini-", ""))
     def groq_khop(ref): return bool(gq and ref and khop(loai, gq, ref, ss))
@@ -411,16 +477,16 @@ def quyet_dinh(x, g2, so_lieu, g4, model2, model4, yccd, g5="", model5=""):
             x["ghi_chu"].append("Groq (%s, khác hãng) cũng ra %s" % (ten_g, ref)); return True
         if groq_lech(ref):
             if GROQ_CHE_DO == "chan":
-                x["nghi_van"].append("Groq (%s, khác hãng) giải %s, khác %s" % (ten_g, gq, ref)); return False
+                bat_dong(x, "Groq (%s, khác hãng) giải %s, khác %s" % (ten_g, gq, ref)); return False
             x["ghi_chu"].append("Groq (%s) giải %s – chỉ ghi chú" % (ten_g, gq))
         return True
-    if loai == "TL":
+    if loai == "TL" and (hdc or not MOI):      # [21/11] chế độ mới: tự luận không HDC đi tiếp xuống nhánh "máy tự giải" như các dạng khác
         if not hdc: x["nghi_van"].append("Câu tự luận không có hướng dẫn chấm gốc"); return
         if may and khop("TLN", may, hdc, ss):
             if ghi_groq(hdc): x["ghi_chu"].append("HDC gốc và máy giải bằng code cùng đáp số" + ten2)
-        elif may: x["nghi_van"].append("Đáp số HDC %s, máy giải %s" % (hdc, may) + (", Groq %s" % gq if gq else ""))
+        elif may: bat_dong(x, "Đáp số HDC %s, máy giải %s" % (hdc, may) + (", Groq %s" % gq if gq else ""))
         elif gq and khop("TLN", gq, hdc, ss): x["ghi_chu"].append("HDC gốc và Groq (%s, khác hãng) cùng đáp số" % ten_g)
-        else: x["nghi_van"].append("Chỉ có HDC gốc, máy chưa giải được để đối chiếu" + (" (Groq ra %s)" % gq if gq else ""))
+        else: bat_dong(x, "Chỉ có HDC gốc, máy chưa giải được để đối chiếu" + (" (Groq ra %s)" % gq if gq else ""))
         return
     if hdc:                                    # bằng chứng 1 = HDC gốc; bằng chứng 2 = máy giải bằng code
         if may and khop(loai, may, hdc, ss):
@@ -431,7 +497,7 @@ def quyet_dinh(x, g2, so_lieu, g4, model2, model4, yccd, g5="", model5=""):
             else:
                 x["ghi_chu"].append("Đáp án khớp HDC gốc và máy giải bằng code" + ten2)
         elif may:
-            x["nghi_van"].append("HDC gốc %s, máy giải %s – cần xem" % (hdc, may) + (" (Groq ra %s)" % gq if gq else ""))
+            bat_dong(x, "HDC gốc %s, máy giải %s – cần xem" % (hdc, may) + (" (Groq ra %s)" % gq if gq else ""))
         elif groq_khop(hdc):                    # máy Gemini chưa giải được: Groq khác hãng là bằng chứng thứ hai
             if not khop(loai, hdc, x["dap_an"]):
                 x["sua"]["dap_an"] = hdc
@@ -439,27 +505,38 @@ def quyet_dinh(x, g2, so_lieu, g4, model2, model4, yccd, g5="", model5=""):
             else:
                 x["ghi_chu"].append("Đáp án khớp HDC gốc và Groq (%s, khác hãng)" % ten_g)
         else:
-            x["nghi_van"].append("Chỉ có HDC gốc (%s), máy chưa giải được để đối chiếu" % hdc + (" (Groq ra %s)" % gq if gq else ""))
+            bat_dong(x, "Chỉ có HDC gốc (%s), máy chưa giải được để đối chiếu" % hdc + (" (Groq ra %s)" % gq if gq else ""))
         return
-    # không có HDC: bằng chứng 1 = model tầng 2 tự giải; bằng chứng 2 = máy giải bằng code (model khác)
-    tu = chuan(loai, g2.get("tu_giai"))
-    hai_gemini = bool(tu and may and khop(loai, tu, may, ss) and model4 != model2)
-    tu_va_groq = bool(tu and groq_khop(tu) and (not may or khop(loai, tu, may, ss)))
+    # không có HDC: bằng chứng 1 = model tầng 2 tự giải (lập luận); bằng chứng 2 = máy giải bằng code (tầng 4)
+    # [21/11] chế độ mới: hai cách giải khớp nhau là đủ, kể cả cùng một model Gemini; áp dụng cả tự luận
+    lss = "TLN" if loai == "TL" else loai                                  # tự luận so đáp số cuối như trả lời ngắn
+    tu = chuan(lss, g2.get("tu_giai"))
+    cung_model = (not model4) or model4 == model2
+    hai_gemini = bool(tu and may and khop(lss, tu, may, ss) and (MOI or not cung_model))
+    tu_va_groq = bool(tu and groq_khop(tu) and (not may or khop(lss, tu, may, ss)))
     if hai_gemini:
+        if cung_model: ten2 = " (%s: lập luận + chạy code)" % model2.replace("gemini-", "")
         if not ghi_groq(tu): return
     elif tu_va_groq:                            # Gemini tầng 2 + Groq khác hãng cùng ra (máy giải trống hoặc cùng model)
         ten2 = " (%s + groq %s)" % (model2.replace("gemini-", ""), ten_g)
-    elif not (tu and may and khop(loai, tu, may, ss)):
-        x["nghi_van"].append('Không có HDC; hai lời giải độc lập chưa thống nhất (%s / %s%s)' % (tu or "?", may or "?", " / Groq " + gq if gq else "")); return
+    elif not (tu and may and khop(lss, tu, may, ss)):
+        bat_dong(x, 'Không có HDC; hai lời giải độc lập chưa thống nhất (%s / %s%s)' % (tu or "?", may or "?", " / Groq " + gq if gq else "")); return
     else:
-        x["nghi_van"].append("Không có HDC; chỉ kiểm được bằng một model"); return
+        bat_dong(x, "Không có HDC; chỉ kiểm được bằng một model"); return
     if not x["dap_an"]:
-        x["sua"]["dap_an"] = tu; x["ghi_chu"].append('Không có đáp án gốc; 2 lời giải độc lập cùng ra "%s"%s' % (tu, ten2))
-    elif khop(loai, tu, x["dap_an"], ss):
+        if loai == "TL":                         # tự luận: ghi đáp số cuối kèm đơn vị máy giải
+            dv = (g4 or {}).get("don_vi")
+            x["sua"]["dap_an"] = "Đáp số: %s%s" % (tu, " " + str(dv) if dv else "")
+        else:
+            x["sua"]["dap_an"] = tu
+        x["ghi_chu"].append('Không có đáp án gốc; 2 lời giải độc lập cùng ra "%s"%s' % (tu, ten2))
+    elif khop(lss, tu, x["dap_an"], ss):
         x["ghi_chu"].append("Không có HDC; 2 lời giải độc lập khớp đáp án" + ten2)
     else:
-        x["nghi_van"].append('Đáp án "%s" khác 2 lời giải độc lập "%s"' % (x["dap_an"], tu)); return
-    if re.search(r"(?i)cao", x["muc_do"]): x["nghi_van"].append("Câu vận dụng cao không có hướng dẫn chấm")
+        bat_dong(x, 'Đáp án "%s" khác 2 lời giải độc lập "%s"' % (x["dap_an"], tu)); return
+    if re.search(r"(?i)cao", x["muc_do"]):
+        if MOI: x["ghi_chu"].append("Câu vận dụng cao không có HDC – đáp án do máy giải, nên kiểm tra ngẫu nhiên")
+        else: x["nghi_van"].append("Câu vận dụng cao không có hướng dẫn chấm")
 
 
 # ============================== CHẠY ==============================
@@ -492,7 +569,7 @@ def main():
              "phuong_an": r[c["Phương án"]], "dap_an": r[c["Đáp án"]].strip(), "kiem_tra_cu": r[c["Kiểm tra"]],
              "ma_yccd": [m for m in re.split(r"[,;\s]+", r[c["Mã YCCĐ"]]) if m],
              "vi_tri": (re.search(r"\(câu\s*([^)]*)\)", r[c["Tên file"]]) or [None, ""])[1],
-             "loi_nang": [], "nghi_van": [], "ghi_chu": [], "sua": {}}
+             "loi_nang": [], "nghi_van": [], "ghi_chu": [], "sua": {}, "bat_dong": [], "co_hinh": False, "hoan": False}
         if vt and vt in da_gap: x["trung_voi"] = da_gap[vt]
         elif vt: da_gap[vt] = x["ma"]
         nhom.setdefault(r[c["File ID"]] or "khong_ro", []).append(x)
@@ -500,7 +577,7 @@ def main():
     print("Có %d câu chờ duyệt trong %d file." % (tong, len(nhom)), flush=True)
 
     ngay = dt.datetime.now(X.TZ).strftime("%d/%m")
-    thong_ke = {"ai": 0, "xem": 0, "loai": 0}
+    thong_ke = {"ai": 0, "xem": 0, "loai": 0, "hoan": 0}
     het_han_muc = False
     for fid, ds in nhom.items():
         if not con_gio():
@@ -523,7 +600,7 @@ def main():
                 lech = kiem_lech_dong(can_ai, bang)
                 if lech:
                     for x in can_ai:
-                        if loai_dang(x["dang"]) == "TN": x["nghi_van"].append(lech)
+                        if loai_dang(x["dang"]) == "TN": (x["ghi_chu"] if MOI else x["nghi_van"]).append(lech)   # [21/11] chỉ ghi chú
                 so_lieu = {}
                 try: so_lieu = tang3(tep, can_ai, cac_model)
                 except X.HetHanMuc: raise
@@ -548,7 +625,10 @@ def main():
             dong_hien_tai = vt_hien_tai.get(x["ma"])
             if not dong_hien_tai:
                 continue
-            tt = TT["LOAI"] if x["loi_nang"] else (TT["XEM"] if x["nghi_van"] else TT["AI"])
+            if x["hoan"]:                                   # [21/11] Gemini chưa đánh giá được: giữ "Chưa duyệt", lượt sau làm lại
+                thong_ke["hoan"] += 1
+                continue
+            tt = xep_loai(x)
             ghi = "; ".join(x["loi_nang"] + x["nghi_van"] + x["ghi_chu"]) or "Đạt"
             kt = (x["kiem_tra_cu"] + " | " if x["kiem_tra_cu"] else "") + "[5 tầng %s] %s" % (ngay, ghi)
             col = lambda t, dh=dong_hien_tai: gspread_a1(c[t] + 1, dh)
@@ -565,7 +645,7 @@ def main():
 
     mau_ngau_nhien(kho, d, c)
     tom = "Lượt %s: %d AI duyệt, %d cần người xem, %d loại%s." % (X.bay_gio(), thong_ke["ai"], thong_ke["xem"], thong_ke["loai"],
-                                                                 " – dừng vì hết hạn mức" if het_han_muc else "")
+                                                                 (" (%d câu để lượt sau)" % thong_ke["hoan"] if thong_ke["hoan"] else "") + (" – dừng vì hết hạn mức" if het_han_muc else ""))
     print("📊 " + tom)
     if Q:
         Q.ghi_sheet(kho)
