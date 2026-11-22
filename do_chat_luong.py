@@ -27,6 +27,7 @@ def loai_dang(d):
 
 def nguon_dap_an(kt):
     """Đáp án đến từ HDC gốc hay máy giải? (đoán từ ghi chú lần chạy máy gần nhất)."""
+    if "[mẫu hoá" in kt: return "câu mẫu hoá (đáp án do code tính)"     # [22/11] đo riêng nhóm biến thể sinh tự động
     d = kt.rsplit("[5 tầng", 1)[-1] if "[5 tầng" in kt else ""
     if re.search(r"máy tự giải|không có HDC|thiếu HDC|tự giải", d, re.I): return "máy giải (không HDC)"
     if re.search(r"Cứu bằng bỏ phiếu|duyệt lại|cứu Loại", kt): return "cứu bằng phiếu/duyệt lại"
@@ -106,6 +107,8 @@ def thu():
     tk, lech, bo = so_sanh(mau, kq, D.khop)
     assert tk["TỔNG"] == [3, 2] and [l[0] for l in lech] == ["c2"] and bo == 0, (dict(tk), lech)
     assert tk["có hình"] == [1, 0] and tk["dạng TLN"] == [1, 1]
+    assert nguon_dap_an("[mẫu hoá 22/11: biến thể của C-1] | [5 tầng 22/11] ok") == "câu mẫu hoá (đáp án do code tính)"
+    assert nguon_dap_an("[5 tầng 21/11] máy tự giải") == "máy giải (không HDC)"
     print(bao_cao(tk, lech, bo, len(mau), "giả")); print("\n✅ Tự kiểm tra đạt.")
 
 

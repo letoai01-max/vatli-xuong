@@ -37,6 +37,7 @@
       "tu_giai": {"muc": 3, "loai": "dinh_ky", "phut": 60, "toi_thieu": 8},
       "doc_de": {"muc": 3, "loai": "dinh_ky", "phut": 100, "toi_thieu": 10},
       "chi_muc_trung": {"muc": 3, "loai": "dinh_ky", "phut": 20, "toi_thieu": 5},
+      "cau_mau": {"muc": 3, "loai": "yeu_cau", "phut": 40, "toi_thieu": 5, "lich": false},
       "quet_anh_cron": {"muc": 2, "loai": "dinh_ky", "phut": 120, "toi_thieu": 8},
       "tim_kiem": {"muc": 2, "loai": "dinh_ky", "phut": 25, "toi_thieu": 5},
       "tai_tai_lieu": {"muc": 2, "loai": "dinh_ky", "phut": 25, "toi_thieu": 5},
