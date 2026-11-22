@@ -37,6 +37,8 @@ import calendar, datetime as dt, json, math, os, re, sys, urllib.error, urllib.p
 
 TZ = dt.timezone(dt.timedelta(hours=7))
 TAB_TONG, TAB_NGAY = "Quota_Phut", "Quota_Phut_Ngay"
+TAB_BAN_DO = "Quota_Phut_BanDo"        # [22/11/2026] số liệu cho bản đồ nhiệt: giờ chạy · tỉ trọng ngày/tháng · số ngày có chạy
+GHI_BAN_DO = os.environ.get("QUOTA_PHUT_GHI_BAN_DO", "1") != "0"   # công tắc: đặt 0 thì y như bản cũ
 THU_MUC = os.path.dirname(os.path.abspath(__file__))
 ID_KHO_CHUNG = "1o49XTyBaxqT4NNR2TvRWSW5C2PPHKamRv8MTSeqdsQc"
 MOC_BAO = (70, 90, 100)
@@ -522,6 +524,107 @@ def bang_hien_thi(tt, ke, da_bao=0):
     return hang
 
 
+# ============================== [22/11/2026] SỐ LIỆU CHO BẢN ĐỒ NHIỆT ==============================
+NHAN_HIEN_THI = {"doc_de": "Đọc đề", "duyet_cau": "Duyệt câu", "tu_giai": "Tự giải", "tim_kiem": "Tìm kiếm tài liệu",
+                 "tao_de": "Tạo đề", "quet_anh_cron": "Quét bù hình ảnh", "gan_mo_ta_anh": "Gán mô tả ảnh",
+                 "tai_tai_lieu": "Tải tài liệu", "chuyen_de": "Chuyên đề", "soan_giao_an": "Soạn giáo án", "kiem_thu": "Kiểm thử",
+                 "xuat_de": "Xuất đề & dữ liệu", "chi_muc_trung": "Chỉ mục trùng", "canh_gac": "Canh gác", "de_cuong": "Đề cương",
+                 "thu_drive": "Thử Drive", "xuat_word": "Xuất Word", "pages_build_deployment": "pages_build_deployment"}
+
+
+def _gia_tri_cron(truong, thap, cao):
+    """Một trường cron (số · */n · a,b,c · *) → danh sách số. Dạng lạ (dải a-b…) trả None."""
+    kq = set()
+    for p in truong.split(","):
+        if p == "*":
+            kq |= set(range(thap, cao + 1))
+        elif re.fullmatch(r"\*/\d+", p) and int(p[2:]) > 0:
+            kq |= set(range(thap, cao + 1, int(p[2:])))
+        elif p.isdigit():
+            kq.add(int(p))
+        else:
+            return None
+    return sorted(kq)
+
+
+def gio_chay_tu_yml(van_ban):
+    """Nội dung workflow .yml → danh sách 'HH:MM' giờ Việt Nam (cron là UTC, +7). Không có lịch → []. Không hiểu được → None."""
+    ket = []
+    for m in re.finditer(r"^\s*-?\s*cron:\s*[\"']([^\"']+)[\"']", van_ban, re.M):
+        f = m.group(1).split()
+        if len(f) < 2:
+            return None
+        ph, gi = _gia_tri_cron(f[0], 0, 59), _gia_tri_cron(f[1], 0, 23)
+        if ph is None or gi is None:
+            return None
+        ket += [((g + 7) % 24, p) for g in gi for p in ph]
+    return ["%02d:%02d" % x for x in sorted(set(ket))]
+
+
+def mo_ta_gio_chay(viec, thu_muc_wf=None):
+    """Chuỗi hiển thị cột 'Giờ chạy hằng ngày'. Đọc cron từ .github/workflows của repo (có sau actions/checkout)."""
+    if viec == "pages_build_deployment":
+        return "GitHub tự chạy khi đẩy code"
+    thu_muc_wf = thu_muc_wf or os.path.join(THU_MUC, ".github", "workflows")
+    van_ban = None
+    try:
+        for ten in os.listdir(thu_muc_wf):
+            if chuan_hoa(re.sub(r"\.ya?ml$", "", ten)) == viec:
+                with open(os.path.join(thu_muc_wf, ten), encoding="utf-8") as f:
+                    van_ban = f.read()
+                break
+    except OSError:
+        pass
+    if van_ban is None:
+        return "chưa rõ (không thấy workflow)"
+    gio = gio_chay_tu_yml(van_ban)
+    if gio is None:
+        return "chưa đọc được lịch cron"
+    if gio:
+        return ", ".join(gio)
+    return "khi đẩy code" if re.search(r"^\s*push:", van_ban, re.M) else "theo yêu cầu / chạy tay"
+
+
+def bang_ban_do(tt, thu_muc_wf=None):
+    """Nội dung tab Quota_Phut_BanDo: mỗi việc một dòng, sắp theo phút cả tháng giảm dần. Hàm thuần (test không cần mạng).
+    Tỉ trọng ngày = phút HÔM QUA ÷ tổng phút hôm qua; tỉ trọng tháng = phút cả tháng ÷ tổng phút cả tháng (số ước tính của repo);
+    số ngày có chạy = số ngày trong tháng (tính đến hôm nay) mà việc có ít nhất 1 phút."""
+    thang, hn = tt["thang"], tt["hom_nay"]
+    tong_hq = sum(tt["hom_qua_theo_viec"].values())
+    tong_th = sum(tt["thang_theo_viec"].values())
+    ngay_chay = {}
+    for (n, v), x in tt["uoc"].items():
+        if n.startswith(thang) and x[0] > 0:
+            ngay_chay[v] = ngay_chay.get(v, 0) + 1
+    hang = [["Việc", "Tên hiển thị", "Giờ chạy hằng ngày (giờ VN)", "Phút hôm qua (%s)" % tt["hom_qua"].strftime("%d/%m"),
+             "Tỉ trọng trong ngày (hôm qua)", "Phút cả tháng", "Tỉ trọng tháng", "Số ngày có chạy", "Số ngày đã qua"]]
+    for v in sorted(tt["thang_theo_viec"], key=lambda k: (-tt["thang_theo_viec"][k], k)):
+        hq, th = tt["hom_qua_theo_viec"].get(v, 0), tt["thang_theo_viec"][v]
+        hang.append([v, NHAN_HIEN_THI.get(v, v), mo_ta_gio_chay(v, thu_muc_wf), hq,
+                     round(hq / tong_hq, 4) if tong_hq else 0, th, round(th / tong_th, 4) if tong_th else 0,
+                     ngay_chay.get(v, 0), hn.day])
+    return hang
+
+
+def ghi_ban_do(kho, tt):
+    """Ghi tab Quota_Phut_BanDo (ghi đè). Lỗi bất kì chỉ cảnh báo – không làm hỏng việc chính."""
+    if not GHI_BAN_DO:
+        return
+    try:
+        tab = _tab(kho, TAB_BAN_DO, 9)
+        hang = bang_ban_do(tt)
+        tab.clear()
+        tab.update(range_name="A1", values=hang, value_input_option="RAW")
+        try:
+            n = len(hang)
+            tab.format("E2:E%d" % n, {"numberFormat": {"type": "PERCENT", "pattern": "0.0%"}})
+            tab.format("G2:G%d" % n, {"numberFormat": {"type": "PERCENT", "pattern": "0.0%"}})
+        except Exception as e:
+            print("⚠️ Không định dạng % cho %s (bỏ qua): %s" % (TAB_BAN_DO, str(e)[:80]), flush=True)
+    except Exception as e:
+        print("⚠️ Không ghi được tab %s (bỏ qua): %s" % (TAB_BAN_DO, str(e)[:150]), flush=True)
+
+
 def _doc_da_bao(tab, thang):
     """Mức cảnh báo đã báo của THÁNG NÀY (sang tháng mới thì báo lại từ đầu)."""
     da_bao, thang_cu = 0, ""
@@ -548,6 +651,7 @@ def ghi_sheet(kho, tt, ke):
     moi = [[tt["thang"], n, v, x[0], x[1]] for (n, v), x in sorted(tt["uoc"].items()) if n.startswith(tt["thang"])]
     tn.clear()
     tn.update(range_name="A1", values=[["Tháng", "Ngày", "Việc", "Phút (ước tính)", "Số lượt"]] + cu + moi, value_input_option="RAW")
+    ghi_ban_do(kho, tt)
     return muc, da_bao
 
 
