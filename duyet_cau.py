@@ -55,6 +55,16 @@ Mỗi lượt gọi Gemini / Groq được ghi vào tab Quota_SuDung (dòng "xư
     "tat_ca": mọi câu "Cần người xem".
   • Mỗi câu chỉ duyệt lại MỘT lần: kết quả ghi dấu "[5 tầng dd/mm duyệt lại]" ở cột Kiểm tra; câu có dấu này không bị chọn lại
     (tránh lặp vô hạn khi vẫn cần người xem). Câu Gemini chưa đánh giá được (hoãn) vẫn giữ nguyên để lượt sau làm lại.
+
+[22/11/2026] CỨU CÂU "CẦN NGƯỜI XEM" TỰ ĐỘNG – GIÁO VIÊN KHÔNG PHẢI LÀM GÌ (cuu_nghi_van.py; mọi cờ mặc định TẮT → chạy y như trước):
+  • TU_SUA_NGHI_VAN = "true": (a) dấu $ lẻ → tự cân lại nếu an toàn; (b) câu chưa có / sai mã YCCĐ → model nhẹ chọn lại trong các mã cùng bài,
+    chỉ nhận khi "cao"; (c) từ khoá chương trình cũ → bỏ cờ nếu tầng 2 đã xác nhận không ngoài CT 2018.
+  • CUU_HINH_BANG_ANH = "true": câu CÓ HÌNH mà máy chưa thống nhất → tầng 6: gửi ẢNH THẬT (cột "Link ảnh") cho model tự nhìn hình và giải,
+    không cho xem đáp án. Bỏ phiếu giữa HDC · lập luận · máy giải code · Groq · nhìn hình: nhóm thắng phải có phiếu "nhìn hình",
+    ≥ 2 phiếu và nhiều hơn hẳn nhóm khác thì duyệt (CUU_HINH_TOI_DA câu mỗi file, mặc định 15). Lí do không liên quan đáp án
+    (số liệu lệch đề gốc, đơn vị khác thứ nguyên) không bị cứu.
+  • XEM_CON_LAI = "loai": câu vẫn không tự cứu được sau các bước trên → Loại (ghi lí do ở cột Kiểm tra) thay vì chờ giáo viên; "xem" = như cũ.
+  • DUYET_LAI_CAN_XEM = "true" (cờ cũ) vẫn là công tắc đưa 1.207 câu cũ chạy lại qua luật mới, mỗi câu một lần.
 """
 import datetime as dt, json, os, random, re, sys, time
 from concurrent.futures import ThreadPoolExecutor
@@ -69,6 +79,19 @@ try:
     import quota_xuong as Q
 except Exception:
     Q = None
+try:
+    import cuu_nghi_van as CN   # [22/11] cứu câu "Cần người xem" tự động
+except Exception:
+    CN = None
+def _cong(ten):
+    return os.environ.get(ten, "false").strip().lower() in ("true", "1", "yes", "on", "bat", "bật")
+TU_SUA = _cong("TU_SUA_NGHI_VAN") and CN is not None                  # [22/11] sửa $, gán lại YCCĐ, bỏ cờ CT cũ đã được tầng 2 xác nhận
+CUU_HINH = _cong("CUU_HINH_BANG_ANH") and CN is not None              # [22/11] tầng 6: nhìn hình thật
+XEM_CON_LAI = os.environ.get("XEM_CON_LAI", "xem").strip().lower()    # [22/11] "loai": câu không tự cứu được → Loại, không chờ giáo viên
+try:
+    CUU_HINH_TOI_DA = max(1, int(float(os.environ.get("CUU_HINH_TOI_DA", "15") or 15)))
+except ValueError:
+    CUU_HINH_TOI_DA = 15
 GROQ_CHE_DO = os.environ.get("GROQ_CHE_DO", "ghi_chu").strip().lower()
 TRUNG_CHE_DO = os.environ.get("TRUNG_CHE_DO", "ghi_chu").strip().lower()
 CHE_DO_DUYET = os.environ.get("CHE_DO_DUYET", "moi").strip().lower()                    # [21/11] "cu" = như trước
@@ -245,6 +268,15 @@ def bat_dong(x, ly_do):
 
 
 def xep_loai(x):
+    """[22/11] Bọc _xep_loai_goc: XEM_CON_LAI = \"loai\" thì câu còn \"Cần người xem\" sau mọi bước tự cứu → Loại (ghi lí do)."""
+    kq = _xep_loai_goc(x)
+    if kq == TT["XEM"] and XEM_CON_LAI == "loai":
+        x["ghi_chu"].append("Loại vì không tự xác minh được và không chờ giáo viên (đặt XEM_CON_LAI=xem nếu muốn giáo viên xem)")
+        return TT["LOAI"]
+    return kq
+
+
+def _xep_loai_goc(x):
     """Trạng thái cuối của một câu. Chế độ mới: Loại = lỗi nặng; Cần người xem = câu CÓ HÌNH mà máy/model chưa thống nhất
     (hoặc nghi vấn không liên quan đáp án); câu không hình chưa thống nhất → KHONG_HINH_BAT_DONG."""
     if x["loi_nang"]: return TT["LOAI"]
@@ -271,12 +303,32 @@ def tang1(x, yccd):
             x["dap_an"] = ""
         else:
             x["nghi_van"].append('Đáp án không đúng dạng: "%s"' % x["dap_an"])
-    if not x["ma_yccd"]: x["nghi_van"].append("Chưa gắn mã YCCĐ")
     sai = [m for m in x["ma_yccd"] if m not in yccd]
-    if sai: x["nghi_van"].append("Mã không có trong YCCD: " + ", ".join(sai))
-    if (x["noi_dung"] + x["phuong_an"]).count("$") % 2: x["nghi_van"].append("Công thức $…$ không đóng mở đủ")
+    if TU_SUA and (not x["ma_yccd"] or sai):                  # [22/11] chờ model chọn lại mã (gan_yccd_file); không chọn được mới thành nghi vấn
+        x["can_gan"] = "Chưa gắn mã YCCĐ" if not x["ma_yccd"] else "Mã không có trong YCCD: " + ", ".join(sai)
+    else:
+        if not x["ma_yccd"]: x["nghi_van"].append("Chưa gắn mã YCCĐ")
+        if sai: x["nghi_van"].append("Mã không có trong YCCD: " + ", ".join(sai))
+    if CN_dem_dola_le(x):
+        if TU_SUA:
+            nd, ok1 = CN.sua_dola(x["noi_dung"]); pa, ok2 = CN.sua_dola(x["phuong_an"])
+            if ok1 and ok2:
+                if nd != x["noi_dung"]: x["sua"]["noi_dung"] = x["noi_dung"] = nd
+                if pa != x["phuong_an"]: x["sua"]["phuong_an"] = x["phuong_an"] = pa
+                x["ghi_chu"].append("Tự cân lại dấu $ trong công thức")
+            else:
+                x["nghi_van"].append("Công thức $…$ không đóng mở đủ")
+        else:
+            x["nghi_van"].append("Công thức $…$ không đóng mở đủ")
     if RE_NHAC_HINH.search(x["noi_dung"]) and "[Hình" not in x["noi_dung"]:
         bat_dong(x, "Câu nhắc tới hình nhưng không có mô tả hình")
+
+
+def CN_dem_dola_le(x):
+    """Có lỗi $ lẻ? (cách đếm cũ: gộp nội dung + phương án; chế độ TU_SUA xét riêng từng phần để sửa đúng chỗ)."""
+    if TU_SUA:
+        return CN.dem_dola(x["noi_dung"]) % 2 == 1 or CN.dem_dola(x["phuong_an"]) % 2 == 1
+    return (x["noi_dung"] + x["phuong_an"]).count("$") % 2 == 1
 
 
 def doc_chi_muc(kho):
@@ -528,7 +580,9 @@ def quyet_dinh(x, g2, so_lieu, g4, model2, model4, yccd, g5="", model5=""):
     if g2.get("ngoai_ct2018"):
         x["loi_nang"].append("Ngoài chương trình 2018" + (": " + g2["ly_do_ct"] if g2.get("ly_do_ct") else "")); return
     tk = X.tu_khoa_ct_cu(x["noi_dung"], x["phuong_an"])
-    if tk: x["nghi_van"].append('Có từ khoá nội dung chương trình cũ ("%s") – GV xác nhận thuộc CT 2018' % tk)
+    if tk and TU_SUA and g2.get("ngoai_ct2018") is False:          # [22/11] tầng 2 đã đối chiếu CT 2018 và xác nhận → bỏ cờ
+        x["ghi_chu"].append('Từ khoá "%s" nhưng model xác nhận thuộc CT 2018' % tk)
+    elif tk: x["nghi_van"].append('Có từ khoá nội dung chương trình cũ ("%s") – GV xác nhận thuộc CT 2018' % tk)
     if g2.get("thieu_hinh"):
         x["co_hinh"] = True
         bat_dong(x, "Thiếu dữ kiện khi không có hình gốc")
@@ -562,6 +616,8 @@ def quyet_dinh(x, g2, so_lieu, g4, model2, model4, yccd, g5="", model5=""):
                 bat_dong(x, "Groq (%s, khác hãng) giải %s, khác %s" % (ten_g, gq, ref)); return False
             x["ghi_chu"].append("Groq (%s) giải %s – chỉ ghi chú" % (ten_g, gq))
         return True
+    lss0 = "TLN" if loai == "TL" else loai                                   # [22/11] lưu các phiếu để tầng 6 bỏ phiếu
+    x["bc"] = {"hdc": hdc, "tu": chuan(lss0, g2.get("tu_giai")) if g2.get("tu_giai") else "", "may": may, "gq": gq}
     if loai == "TL" and (hdc or not MOI):      # [21/11] chế độ mới: tự luận không HDC đi tiếp xuống nhánh "máy tự giải" như các dạng khác
         if not hdc: x["nghi_van"].append("Câu tự luận không có hướng dẫn chấm gốc"); return
         if may and khop("TLN", may, hdc, ss):
@@ -621,6 +677,83 @@ def quyet_dinh(x, g2, so_lieu, g4, model2, model4, yccd, g5="", model5=""):
         else: x["nghi_van"].append("Câu vận dụng cao không có hướng dẫn chấm")
 
 
+# ============================== [22/11] TẦNG 6: NHÌN HÌNH THẬT + BỎ PHIẾU ==============================
+def ap_dung_phieu_hinh(x, g6):
+    """g6 = kết quả model tự nhìn hình giải. True nếu cứu được (xoá các lí do bất đồng, sửa đáp án nếu cần)."""
+    if not CN or not x["bat_dong"] or not g6 or x.get("loi_nang"): return False
+    if any(not CN.li_do_giai_duoc(l) for l in x["bat_dong"]): return False       # có lí do không nhìn hình mà giải được (số liệu lệch…)
+    if str(g6.get("tu_tin", "")).lower().startswith("thấp"):
+        x["ghi_chu"].append("Nhìn hình: model không chắc chắn"); return False
+    loai = loai_dang(x["dang"]); lss = "TLN" if loai == "TL" else loai
+    if loai == "TN" and len(g6.get("phuong_an_dung") or []) > 1:
+        x["ghi_chu"].append("Nhìn hình: model thấy nhiều phương án cùng đúng"); return False
+    ans = dap_an_may(loai, g6)
+    if not ans:
+        x["ghi_chu"].append("Nhìn hình: model chưa ra được đáp án"); return False
+    phieu = dict(x.get("bc") or {}); phieu["hinh"] = chuan(lss, ans)
+    kq = CN.bo_phieu(lss, phieu, khop, SAI_SO_MAY_GIAI, "hinh")
+    if not kq:
+        x["ghi_chu"].append("Nhìn hình ra %s nhưng chưa đủ phiếu khớp (%s)" % (ans, "; ".join("%s=%s" % (k, v) for k, v in phieu.items() if v)))
+        return False
+    thang, nguon = kq
+    cu = list(x["bat_dong"])
+    x["nghi_van"] = [n for n in x["nghi_van"] if n not in cu]; x["bat_dong"] = []
+    x["ghi_chu"].append("Cứu bằng nhìn hình: %s (phiếu khớp: %s) – trước đó: %s" % (thang, ", ".join(nguon), " | ".join(cu)[:200]))
+    if not x["dap_an"] or not khop(lss, thang, x["dap_an"], SAI_SO_MAY_GIAI):
+        x["sua"]["dap_an"] = ("Đáp số: %s%s" % (thang, (" " + str(g6["don_vi"])) if g6.get("don_vi") else "")) if loai == "TL" else thang
+    return True
+
+
+def cuu_hinh_file(ds, drive, cac_model):
+    """Câu có hình mà máy chưa thống nhất → tải ảnh (cột Link ảnh) và cho model nhìn hình giải. Lỗi từng câu không làm hỏng file."""
+    ung = [x for x in ds if x["bat_dong"] and x["co_hinh"] and not x["hoan"] and not x["loi_nang"] and x.get("link_anh")][:CUU_HINH_TOI_DA]
+    if not ung: return 0
+    anh_cua = {}
+    for x in ung:                                          # tải tuần tự (kết nối Drive không an toàn đa luồng)
+        anh = [a for a in (CN.tai_anh(drive, u, X.tai_ve) for u in CN.tach_link_anh(x["link_anh"])) if a]
+        if anh: anh_cua[x["ma"]] = anh
+        else: x["ghi_chu"].append("Không tải được ảnh gốc để nhìn hình")
+    def giai(x):
+        return x, CN.giai_co_hinh(x, anh_cua[x["ma"]], X.goi_gemini, cac_model)
+    can = [x for x in ung if x["ma"] in anh_cua]
+    cuu = 0
+    with ThreadPoolExecutor(max_workers=min(SO_LO_SONG_SONG, max(1, len(can)))) as ex:
+        for x, g6 in ex.map(lambda x: _an_toan(giai, x), can):
+            if g6 is not None and ap_dung_phieu_hinh(x, g6): cuu += 1
+    print("  Tầng 6 (nhìn hình): %d/%d câu được cứu" % (cuu, len(can)), flush=True)
+    return cuu
+
+
+def _an_toan(f, x):
+    try:
+        return f(x)
+    except X.HetHanMuc:
+        raise
+    except Exception as e:
+        print("  Tầng 6 lỗi câu %s (bỏ qua): %s" % (x["ma"], str(e)[:100]), flush=True)
+        return x, None
+
+
+def gan_yccd_file(ds, yccd, cac_model):
+    """Câu chưa / sai mã YCCĐ → model nhẹ chọn lại; không chọn được thì mới thành nghi vấn như cũ."""
+    can = [x for x in ds if x.get("can_gan") and not x["loi_nang"]]
+    if not can: return
+    try:
+        chon = CN.chon_yccd(can, yccd, X.goi_gemini, cac_model)
+    except X.HetHanMuc:
+        raise
+    except Exception as e:
+        print("  Gán lại YCCĐ lỗi (bỏ qua):", str(e)[:100], flush=True)
+        chon = {}
+    for x in can:
+        m = chon.get(x["ma"])
+        if m:
+            x["sua"]["ma"] = m; x["ma_yccd"] = [m]
+            x["ghi_chu"].append("Gán mã YCCĐ %s (%s)" % (m, x["can_gan"]))
+        else:
+            x["nghi_van"].append(x["can_gan"])
+
+
 # ============================== CHẠY ==============================
 def main():
     gc, drive, sa = X.ket_noi()
@@ -631,6 +764,7 @@ def main():
     td = d[0]
     c = {t: td.index(t) for t in ["Mã câu", "Mã YCCĐ", "Mã bài", "Lớp", "Mức độ", "Dạng", "Nội dung", "Phương án", "Đáp án",
                                    "Tên file", "File ID", "Kiểm tra", "Trạng thái duyệt"] if t in td}
+    c_anh = next((i for i, t in enumerate(td) if t.strip().lower() == "link ảnh"), None)      # [22/11] ảnh thật của câu (tầng 6)
     yccd = {}
     for r in kho.worksheet(X.TAB_YCCD).get_all_values()[1:]:
         if r and r[0].strip(): yccd[r[0].strip()] = (r + [""] * 7)[6][:200]
@@ -657,7 +791,9 @@ def main():
              "ma_yccd": [m for m in re.split(r"[,;\s]+", r[c["Mã YCCĐ"]]) if m],
              "vi_tri": (re.search(r"\(câu\s*([^)]*)\)", r[c["Tên file"]]) or [None, ""])[1],
              "loi_nang": [], "nghi_van": [], "ghi_chu": [], "sua": {}, "bat_dong": [], "co_hinh": False, "hoan": False,
-             "duyet_lai": duyet_lai}
+             "duyet_lai": duyet_lai,
+             "link_anh": (r[c_anh] if c_anh is not None else "").strip(),
+             "ma_bai": r[c["Mã bài"]].strip() if "Mã bài" in c else "", "lop": r[c["Lớp"]].strip() if "Lớp" in c else ""}
         if vt and vt in da_gap: x["trung_voi"] = da_gap[vt]
         elif vt: da_gap[vt] = x["ma"]
         nhom.setdefault(r[c["File ID"]] or "khong_ro", []).append(x)
@@ -690,6 +826,7 @@ def main():
             if chi_muc: tang1_trung(x, chi_muc, vi_tri)
         can_ai = [x for x in ds if not x["loi_nang"]]
         try:
+            if TU_SUA: gan_yccd_file(ds, yccd, cac_model)                  # [22/11] chọn lại mã YCCĐ trước khi duyệt
             if can_ai:
                 tep = lay_tep_goc(fid, tep_cho, drive)
                 g2, bang, model2, so_lieu, g4, model4, g5, model5 = chay_cac_tang(tep, can_ai, yccd, cac_model)
@@ -700,6 +837,7 @@ def main():
                 for x in can_ai:
                     quyet_dinh(x, g2.get(x["ma"]), so_lieu.get(x["ma"], []), g4.get(x["ma"]), model2, model4, yccd,
                                g5.get(x["ma"], ""), model5)
+                if CUU_HINH: cuu_hinh_file(can_ai, drive, cac_model)       # [22/11] tầng 6: câu có hình mà máy chưa thống nhất
         except X.HetHanMuc as e:
             print("⏸️ Hết hạn mức Gemini – dừng, lượt sau duyệt tiếp:", str(e)[:150], flush=True)
             het_han_muc = True
@@ -724,6 +862,8 @@ def main():
             col = lambda t, dh=dong_hien_tai: gspread_a1(c[t] + 1, dh)
             cap += [{"range": col("Trạng thái duyệt"), "values": [[tt]]}, {"range": col("Kiểm tra"), "values": [[kt[:45000]]]}]
             if "dap_an" in x["sua"]: cap.append({"range": col("Đáp án"), "values": [[x["sua"]["dap_an"]]]})
+            for k_sua, ten_cot in (("noi_dung", "Nội dung"), ("phuong_an", "Phương án")):          # [22/11] đã tự cân dấu $
+                if k_sua in x["sua"] and ten_cot in c: cap.append({"range": col(ten_cot), "values": [[x["sua"][k_sua]]]})
             if "ma" in x["sua"]:
                 m = x["sua"]["ma"]
                 cap += [{"range": col("Mã YCCĐ"), "values": [[m]]}, {"range": col("Mã bài"), "values": [["-".join(m.split("-")[:2])]]},
