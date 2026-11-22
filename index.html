@@ -243,6 +243,26 @@
                 </details>
             </div>
 
+            <!-- [22/11/2026] HẠN MỨC KHOÁ API (Gemini/Groq): chỉ hiện số lượt đã dùng / còn lại / khoá nào hết. KHÔNG hiện tên hay giá trị khoá. Tắt: BAT_MUC_HAN_MUC_KHOA = false -->
+            <div id="han-muc-khoa-section" class="glass-panel rounded-xl p-5 space-y-4 border-violet-500/20">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-gauge-high text-violet-400"></i> Hạn mức khoá API của Xưởng
+                        </h2>
+                        <p class="text-xs text-slate-400">Mỗi khoá đã dùng bao nhiêu lượt, còn lại bao nhiêu, khoá nào đã hết hạn mức. Trang không hiển thị tên hay nội dung khoá.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="hk-nguon" class="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 text-[10px] font-semibold">Đang tải…</span>
+                        <button type="button" onclick="hkTai()" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
+                            <i class="fa-solid fa-rotate"></i> Làm mới hạn mức
+                        </button>
+                    </div>
+                </div>
+                <div id="hk-thong-bao" class="hidden"></div>
+                <div id="hk-noi-dung"></div>
+            </div>
+
             <!-- TRUNG TÂM ĐIỀU HÀNH & TÁC VỤ -->
             <div class="glass-panel rounded-xl p-5 space-y-4">
                 <div>
@@ -2323,7 +2343,88 @@
             document.getElementById('qp-o-ma').value = '';
             qpTai(true);
         }
-        window.addEventListener('DOMContentLoaded', () => { qpTai(false); });
+        // =====================================================================================================
+        // [22/11/2026] MỤC HẠN MỨC KHOÁ API (Gemini/Groq). Đọc tệp tĩnh quota_gemini.json cạnh index.html (giống questions.json),
+        // do xưởng xuất ra cùng lúc ghi tab Quota_SuDung. Tệp CHỈ chứa số liệu ẩn danh, định dạng:
+        //   { "cap_nhat": "2026-11-22T10:15:00+07:00",
+        //     "khoa": [ { "nhan": "Khoá 1", "da_dung": 120, "gioi_han": 250, "trang_thai": "con" | "het" | "hong", "het_den": "ISO (giờ có lại, tuỳ chọn)" } ] }
+        // Trang không bao giờ in tên/giá trị khoá thật: nhãn trông giống khoá bị thay bằng "Khoá <số thứ tự>". Tắt mục: BAT_MUC_HAN_MUC_KHOA = false.
+        // =====================================================================================================
+        const BAT_MUC_HAN_MUC_KHOA = true;
+        const HK_TEP = 'quota_gemini.json', HK_GIO_CU = 12;
+        let hkDangTai = false;
+
+        function hkNhanAnToan(nhan, i) {
+            const t = String(nhan == null ? '' : nhan).trim();
+            return (!t || t.length > 40 || /AIza|gsk_|sk-|[A-Za-z0-9_\-]{28,}/.test(t)) ? 'Khoá ' + (i + 1) : t;
+        }
+        function hkSo(n) { return (n === null || n === undefined || n === '' || isNaN(Number(n))) ? null : Number(n); }
+        function hkGio(iso) {
+            const d = new Date(iso);
+            return isNaN(d) ? '' : d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+        }
+        function hkDat(id, chu, lop) { const el = document.getElementById(id); if (el) { el.className = lop; el.innerHTML = chu; } }
+        function hkNguon(chu, mau) {
+            const m = { emerald: 'text-emerald-300 border-emerald-500/30 bg-emerald-500/10', amber: 'text-amber-300 border-amber-500/30 bg-amber-500/10', slate: 'text-slate-300 border-slate-700 bg-slate-800/80' };
+            hkDat('hk-nguon', qpEsc(chu), 'px-2.5 py-1 rounded-lg border text-[10px] font-semibold ' + (m[mau] || m.slate));
+        }
+        function hkThongBao(chu) {
+            hkDat('hk-thong-bao', chu, chu ? 'text-[11px] leading-relaxed rounded-lg px-3 py-2 border bg-amber-500/10 border-amber-500/40 text-amber-300' : 'hidden');
+        }
+        function hkVe(d) {
+            const ds = Array.isArray(d.khoa) ? d.khoa : [];
+            let conDung = 0, het = 0, hong = 0, conLai = 0, coTong = true;
+            const the = ds.map((k, i) => {
+                const ten = hkNhanAnToan(k.nhan, i), dd = hkSo(k.da_dung), gh = hkSo(k.gioi_han), st = String(k.trang_thai || '').toLowerCase();
+                const laHong = st === 'hong', laHet = !laHong && (st === 'het' || (gh !== null && dd !== null && dd >= gh));
+                const phanTram = gh > 0 && dd !== null ? Math.min(100, 100 * dd / gh) : 0;
+                let tt, mau, vien = 'border-slate-700/60', thanh = phanTram >= 70 ? '#fbbf24' : '#34d399';
+                if (laHong) { tt = 'Khoá lỗi, đã bị bỏ qua'; mau = 'text-rose-300'; vien = 'border-rose-500/50'; thanh = '#fb7185'; hong++; }
+                else if (laHet) { tt = 'Hết hạn mức'; mau = 'text-rose-300'; vien = 'border-rose-500/50'; thanh = '#fb7185'; het++; }
+                else { tt = 'Còn hạn mức'; mau = 'text-emerald-300'; conDung++; if (gh !== null && dd !== null) conLai += Math.max(0, gh - dd); else coTong = false; }
+                const chu = dd === null ? 'Chưa có số lượt đã dùng'
+                    : 'Đã dùng ' + qpSo(dd) + (gh !== null ? ' · còn ' + qpSo(Math.max(0, gh - dd)) + ' / ' + qpSo(gh) + ' lượt' : ' lượt');
+                return '<div class="rounded-lg px-3 py-2 bg-slate-800/40 border ' + vien + '"><div class="flex items-center justify-between gap-2">' +
+                    '<span class="text-xs font-semibold text-white">' + qpEsc(ten) + '</span><span class="text-[10px] font-semibold whitespace-nowrap ' + mau + '">' + tt + '</span></div>' +
+                    '<div class="h-1.5 rounded-full bg-slate-700/60 overflow-hidden mt-1.5"><i class="block h-full rounded-full" style="width:' + phanTram.toFixed(1) + '%;background:' + thanh + '"></i></div>' +
+                    '<div class="text-[10px] text-slate-400 mt-1">' + qpEsc(chu) + '</div>' +
+                    (laHet && k.het_den && hkGio(k.het_den) ? '<div class="text-[10px] text-amber-300">Dự kiến có lại lúc ' + hkGio(k.het_den) + '</div>' : '') + '</div>';
+            }).join('');
+            const chip = (c, ch) => '<span class="px-2.5 py-1 rounded-lg border text-[11px] font-semibold ' + c + '">' + ch + '</span>';
+            const chips = '<div class="flex flex-wrap gap-2">' + chip('border-slate-700 text-slate-300 bg-slate-800/60', ds.length + ' khoá') +
+                chip('border-emerald-500/30 text-emerald-300 bg-emerald-500/10', conDung + ' còn hạn mức') +
+                (het ? chip('border-rose-500/40 text-rose-300 bg-rose-500/10', het + ' hết hạn mức') : '') +
+                (hong ? chip('border-rose-500/40 text-rose-300 bg-rose-500/10', hong + ' khoá lỗi') : '') +
+                (coTong && conDung ? chip('border-slate-700 text-slate-300 bg-slate-800/60', 'Còn tổng ' + qpSo(conLai) + ' lượt') : '') + '</div>';
+            return { html: '<div class="space-y-3">' + chips + '<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">' + the + '</div></div>', soKhoa: ds.length, het: het, hong: hong };
+        }
+        async function hkTai() {
+            const goc = document.getElementById('han-muc-khoa-section');
+            if (!BAT_MUC_HAN_MUC_KHOA) { if (goc) goc.classList.add('hidden'); return; }
+            if (hkDangTai) return;
+            hkDangTai = true;
+            try {
+                let d = null;
+                try { const r = await fetch(HK_TEP + '?t=' + Date.now()); if (r.ok) d = await r.json(); } catch (e) { }
+                if (!d || typeof d !== 'object') {
+                    hkDat('hk-noi-dung', '', '');
+                    hkNguon('Chưa có số liệu', 'amber');
+                    hkThongBao('Chưa đọc được <b>' + HK_TEP + '</b> cạnh index.html. Tệp này do xưởng xuất ra (cùng lúc ghi tab Quota_SuDung) và chỉ chứa số lượt đã dùng, giới hạn, trạng thái theo nhãn ẩn danh.');
+                    return;
+                }
+                const r = hkVe(d), tuoi = Date.parse(d.cap_nhat) ? (Date.now() - Date.parse(d.cap_nhat)) / 36e5 : null;
+                hkDat('hk-noi-dung', r.html, '');
+                if (!r.soKhoa) { hkNguon('Tệp không có khoá nào', 'amber'); hkThongBao('Tệp ' + HK_TEP + ' đọc được nhưng danh sách khoá đang trống.'); return; }
+                const cu = tuoi !== null && tuoi > HK_GIO_CU;
+                hkNguon(tuoi === null ? 'Không rõ giờ cập nhật' : 'Cập nhật ' + hkGio(d.cap_nhat), cu || tuoi === null ? 'amber' : 'emerald');
+                hkThongBao(cu ? 'Số liệu đã hơn ' + HK_GIO_CU + ' giờ chưa cập nhật, có thể không còn đúng.' : '');
+                qpGhiNhatKy('🔑 Hạn mức khoá API: ' + r.soKhoa + ' khoá, ' + r.het + ' hết hạn mức, ' + r.hong + ' lỗi.');
+            } catch (e) {
+                console.warn('Mục hạn mức khoá:', e);
+                hkNguon('Lỗi hiển thị', 'amber');
+            } finally { hkDangTai = false; }
+        }
+        window.addEventListener('DOMContentLoaded', () => { qpTai(false); hkTai(); });
     </script>
 </body>
 </html>
