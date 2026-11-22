@@ -162,6 +162,10 @@ def so_trong(s):
     """Số đầu tiên trong chuỗi (hiểu {,} và 3\\cdot10^{-3}); không có → nan."""
     t = str(s or "").replace("{,}", ",").replace("$", "").replace("−", "-").replace("–", "-")
     t = re.sub(r"\\(?:times|cdot)\s*10\s*\^\s*\{?\s*(-?\d+)\s*\}?", r"e\1", t)
+    def _phan(m):                                           # [22/11] \frac{1}{2} → 0.5 (trước đây đọc nhầm thành 1)
+        a, b = float(m.group(1).replace(",", ".")), float(m.group(2).replace(",", "."))
+        return repr(a / b) if b else m.group(0)
+    t = re.sub(r"\\d?frac\s*\{\s*([-+]?\d+(?:[.,]\d+)?)\s*\}\s*\{\s*([-+]?\d+(?:[.,]\d+)?)\s*\}", _phan, t)
     t = re.sub(r"\s+", "", t)
     m = re.search(r"[-+]?\d+(?:[.,]\d+)?(?:e[-+]?\d+)?", t)
     return float(m.group(0).replace(",", ".")) if m else float("nan")
