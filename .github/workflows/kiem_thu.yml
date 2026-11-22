@@ -65,3 +65,9 @@ jobs:
 
       - name: Kiểm thử điều phối phút GitHub Actions (quota_phut, trung_tam, cấu hình, workflow)
         run: python kiem_thu_quota_phut.py
+
+      - name: Kiểm thử luật duyệt câu 5 tầng
+        run: python kiem_thu_duyet_cau.py
+
+      - name: Kiểm thử cứu câu "Cần người xem" tự động (sửa $, bỏ phiếu, nhìn hình)
+        run: python kiem_thu_cuu_nghi_van.py

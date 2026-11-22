@@ -54,5 +54,12 @@ jobs:
           GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GROQ_CHE_DO: "ghi_chu"
+          # [22/11/2026] CỨU CÂU "CẦN NGƯỜI XEM" TỰ ĐỘNG (xem đầu duyet_cau.py). Muốn về như cũ: đổi "true" → "false", "loai" → "xem".
+          TU_SUA_NGHI_VAN: "true"
+          CUU_HINH_BANG_ANH: "true"
+          CUU_HINH_TOI_DA: "15"
+          DUYET_LAI_CAN_XEM: "true"
+          DUYET_LAI_PHAM_VI: "may"
+          XEM_CON_LAI: "loai"
           THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '150' }}
         run: python trung_tam.py duyet_cau.py
