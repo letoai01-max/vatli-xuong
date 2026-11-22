@@ -128,21 +128,26 @@ def main():
     bo = [{"ma": x["ma"], "dang": x["dang"], "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in mau]
     song = [m for m in model_dang_chay() if "allam" not in m]         # allam-2-7b: yếu và giới hạn 4096 token → bỏ
     print("Model Groq dùng được:", ", ".join(song) or "(không lấy được)", flush=True)
-    thu_lan = ([a.model] if a.model else []) + [m for m in song if m != a.model]
+    uu_tien = {"openai/gpt-oss-120b": 0, "openai/gpt-oss-20b": 1}
+    thu_lan = ([a.model] if a.model else []) + sorted([m for m in song if m != a.model], key=lambda m: (uu_tien.get(m, 9), m))
     if not thu_lan: sys.exit("Không có model Groq nào để dùng.")
     import time
-    kq, dung, het_gio = {}, collections.Counter(), time.time() + a.phut * 60
+    kq, dung, loi, het_gio = {}, collections.Counter(), collections.Counter(), time.time() + a.phut * 60
     for k in range(0, len(bo), a.lo):
         if time.time() > het_gio: print("Hết %d phút, dừng ở câu %d/%d." % (a.phut, k, len(bo))); break
         chunk = bo[k:k + a.lo]
-        for m in thu_lan:                                              # model đầu hết hạn mức → sang model kế, không bỏ lô
+        for m in list(thu_lan):                                        # model đầu hết hạn mức → sang model kế, không bỏ lô
             r, _ = G.giai_lo(chunk, [m])
-            if r: kq.update(r); dung[m] += len(r); break
+            if r: kq.update(r); dung[m] += len(r); loi[m] = 0; break
+            loi[m] += 1
+            if loi[m] >= 2 and len(thu_lan) > 1:
+                thu_lan.remove(m); print("  Bỏ %s (lỗi/hết hạn mức 2 lô liền)." % m, flush=True)
         print("  đã hỏi %d/%d câu, có đáp án %d" % (min(k + a.lo, len(bo)), len(bo), len(kq)), flush=True)
         time.sleep(a.nghi)
     if not kq: sys.exit("Không model Groq nào trả được đáp án (xem danh sách model ở trên; có thể hết hạn mức).")
     model = ", ".join("%s (%d câu)" % kv for kv in dung.most_common())
     gan = lambda d, x, y: d in ("TLN", "TL") and D.khop(d, x, y, sai_so=0.03)
+    tk, lech, boqua = so_sanh(mau, kq, lambda d, x, y: D.khop(d, x, y), gan)
     s = bao_cao(tk, lech, boqua, len(mau), model or a.model)
     print(s)
     if a.ra: open(a.ra, "w", encoding="utf-8").write(s)
