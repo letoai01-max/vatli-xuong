@@ -1,0 +1,46 @@
+name: do_chat_luong
+# [22/11/2026] Chạy tay: đếm câu Loại/Cần người xem theo lí do + đo độ chính xác pipeline duyệt. CHỈ ĐỌC kho.
+on:
+  workflow_dispatch:
+    inputs:
+      n:
+        description: "Số câu AI duyệt lấy mẫu để đo"
+        required: false
+        default: "150"
+      model:
+        description: "Model Groq làm người kiểm (nên khác các model đã bỏ phiếu)"
+        required: false
+        default: "llama-3.3-70b-versatile"
+concurrency:
+  group: ngan_hang
+  cancel-in-progress: false
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  do:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+      - name: Đếm theo lí do + đo chất lượng
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          python dem_ly_do.py --ra dem_ly_do.md
+          python do_chat_luong.py --n "${{ inputs.n }}" --model "${{ inputs.model }}" --ra bao_cao_chat_luong.md
+          cat dem_ly_do.md bao_cao_chat_luong.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bao_cao_chat_luong
+          path: |
+            dem_ly_do.md
+            bao_cao_chat_luong.md
