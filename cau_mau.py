@@ -219,6 +219,23 @@ def sua_latex(t):
     return re.sub(r"\n(?=(?:eq|u\b|abla|ot\b|ewline))", lambda m: "\\n", t)
 
 
+_DON_VI = {"mm": ("L", 1e-3), "cm": ("L", 1e-2), "dm": ("L", 1e-1), "m": ("L", 1.0), "km": ("L", 1e3),
+           "mg": ("M", 1e-6), "g": ("M", 1e-3), "kg": ("M", 1.0), "ms": ("T", 1e-3), "s": ("T", 1.0),
+           "mN": ("F", 1e-3), "N": ("F", 1.0), "kN": ("F", 1e3), "mJ": ("E", 1e-3), "J": ("E", 1.0), "kJ": ("E", 1e3),
+           "mW": ("P", 1e-3), "W": ("P", 1.0), "kW": ("P", 1e3), "Hz": ("f", 1.0), "kHz": ("f", 1e3), "MHz": ("f", 1e6), "GHz": ("f", 1e9)}
+_RE_DV = re.compile(r"(?<![/^\w·*])(mm|cm|dm|km|mg|kg|ms|mN|kN|mJ|kJ|mW|kW|kHz|MHz|GHz|Hz|m|g|s|N|J|W)\b\s*\}?[\s.$;,]*$")
+
+
+def gia_tri_si(t):
+    """(họ đại lượng, đơn vị, giá trị quy về đơn vị chuẩn) của một phương án có đơn vị đơn giản; không đọc được → None."""
+    t = str(t)
+    m = _RE_DV.search(t.replace("\\text", " ").replace("\\mathrm", " ").replace("{", " ").replace("}", " "))
+    v = so_trong(t)
+    if not m or v != v: return None
+    ho, k = _DON_VI[m.group(1)]
+    return ho, m.group(1), v * k
+
+
 def sua_bien_the(b):
     if not isinstance(b, dict): return b
     if isinstance(b.get("de"), str): b["de"] = sua_latex(b["de"])
@@ -254,6 +271,14 @@ def kiem_bien_the(dang, b, g, da_dung):
     if isinstance(ds_, (int, float)) and math.isfinite(ds_):                 # [22/11] chống định dạng cắt phần thập phân của phương án đúng
         hien = so_trong(pa[idx])
         if hien == hien and abs(hien - ds_) > 0.03 * abs(ds_) + 1e-9: return "phương án đúng hiển thị %s lệch số tính %s" % (str(pa[idx])[:20], dinh_dang_so(ds_))
+    gp = g.get("pa") or []
+    if len(gp) == 4 and g.get("idx") in (0, 1, 2, 3) and chuan_chu(pa[idx]) == chuan_chu(gp[g["idx"]]):
+        return "phương án đúng y hệt câu gốc (đáp án không đổi theo số liệu mới)"
+    si = [gia_tri_si(t) for t in pa]
+    for i in range(4):
+        for j in range(i + 1, 4):
+            if si[i] and si[j] and si[i][0] == si[j][0] and si[i][1] != si[j][1] and abs(si[i][2] - si[j][2]) <= 0.08 * max(abs(si[i][2]), abs(si[j][2]), 1e-12):
+                return "hai phương án cùng một giá trị, chỉ khác đơn vị (%s, %s)" % (str(pa[i])[:16], str(pa[j])[:16])
     ch = [chuan_chu(t) for t in pa]
     if "" in ch or len(set(ch)) < 4: return "phương án trống hoặc trùng nhau"
     if any(re.search(r"(?i)cả\s*[a-d]|không có đáp án|tất cả", t) for t in pa): return "phương án kiểu 'cả A và B'"
@@ -338,7 +363,7 @@ def chon_nguon(d, toi_da=None, so_bt=None, tran=None, dang_ok=None):
 
 # ============================== 4. GEMINI ==============================
 SCHEMA = {"type": "OBJECT", "properties": {"ket_qua": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
-    "ma_cau": {"type": "STRING"}, "lam_duoc": {"type": "BOOLEAN"}, "ma_python": {"type": "STRING"}}, "required": ["ma_cau", "lam_duoc"]}}},
+    "ma_cau": {"type": "STRING"}, "lam_duoc": {"type": "BOOLEAN"}, "ma_python": {"type": "STRING"}, "ly_do": {"type": "STRING"}}, "required": ["ma_cau", "lam_duoc"]}}},
     "required": ["ket_qua"]}
 
 HUONG_DAN = (
@@ -346,7 +371,9 @@ HUONG_DAN = (
     "Chỉ import math, random, fractions. Mã PHẢI có đúng các thành phần sau:\n"
     "1) GOC = {...}: dict số liệu của ĐỀ GỐC (khoá tiếng Việt không dấu, giá trị là số), đúng như đề.\n"
     "2) tham_so(rng): rng là random.Random; trả dict CÙNG KHOÁ với GOC, số liệu mới hợp lí về vật lí (cùng đơn vị, cùng cách làm tròn như đề gốc, "
-    "đổi ít nhất 2 số liệu, không trùng GOC, không làm đáp số đổi dấu hay lệch quá 10 lần).\n"
+    "đổi ít nhất 2 số liệu, không trùng GOC, không làm đáp số đổi dấu hay lệch quá 10 lần). Với đề cho số đo để suy ra hằng số/đại lượng đã biết (đo g bằng con lắc, đo tốc độ ánh sáng…), "
+    "hãy CHỌN trước giá trị thật gần giá trị chuẩn rồi TÍNH số đo từ đó (cộng sai số nhỏ), không đổi từng số độc lập làm kết quả sai thực tế; "
+    "đáp án đúng KHÔNG được trùng đáp án đề gốc.\n"
     "3) de_bai(p): trả ĐỀ BÀI đầy đủ, giữ NGUYÊN VĂN câu chữ của đề gốc, chỉ thay số liệu bằng giá trị trong p. Công thức đặt trong $…$; "
     "số thập phân dùng dấu phẩy kiểu 0{,}05; đơn vị kiểu \\text{ cm}. Tự viết hàm phụ định dạng số; hàm này KHÔNG được cắt hay làm tròn thành số nguyên "
     "khi đáp số không nguyên (tối đa 3 chữ số có nghĩa, không in số lẻ dài). Viết mọi chuỗi chứa LaTeX bằng chuỗi THÔ (tiền tố r) hoặc nhân đôi dấu gạch chéo, "
@@ -356,7 +383,7 @@ HUONG_DAN = (
     "đáp án đúng tính bằng công thức; 3 phương án nhiễu sinh từ LỖI SAI THƯỜNG GẶP (quên đổi đơn vị, quên bình phương, nhầm công thức…); "
     "4 phương án khác nhau rõ; chi_so_dung chọn bằng rng.randrange(4); không dùng phương án kiểu 'cả A và B'. "
     "Dạng TN còn PHẢI có dap_so(p): trả số float của đáp án đúng, chưa làm tròn, CÙNG ĐƠN VỊ với phương án đúng hiển thị.\n"
-    "ĐẶT lam_duoc = false (không viết mã) nếu: câu cần hình/đồ thị, chỉ là lập luận định tính, không có công thức tính được, hoặc phụ thuộc "
+    "ĐẶT lam_duoc = false (không viết mã, ghi lí do ngắn vào ly_do) nếu: câu cần hình/đồ thị, chỉ là lập luận định tính, không có công thức tính được, hoặc phụ thuộc "
     "bảng số liệu. Mã khi chạy với GOC PHẢI cho đúng đáp án trong 'dap_an_da_duyet'. Đáp án phải do code TÍNH, tuyệt đối không gõ cứng.\n"
     "CÁC CÂU:\n")
 
@@ -377,6 +404,8 @@ def hoi_gemini(ds, cac_model, goi, loi_truoc=None):
                    "generationConfig": {"responseMimeType": "application/json", "responseSchema": SCHEMA, "temperature": 0.3,
                                         "maxOutputTokens": 30000}}, ds_model)
     j = json.loads("".join(p.get("text", "") for p in data["candidates"][0]["content"]["parts"]))
+    for g in j.get("ket_qua", []):
+        if not g.get("lam_duoc"): print("  ↳ %s: model từ chối mẫu hoá – %s" % (g.get("ma_cau"), str(g.get("ly_do") or "không nêu lí do")[:140]), flush=True)
     return {str(g.get("ma_cau")): (str(g.get("ma_python") or "") if g.get("lam_duoc") else "") for g in j.get("ket_qua", [])}
 
 
@@ -437,7 +466,8 @@ def bao_cao_thu(mau, thong_ke):
         for b in ds[:2]:
             ra.append("- **Biến thể:** " + b["de"][:400].replace("\n", " "))
             if s["loai"] == "TN":
-                ra.append("  - " + " | ".join("%s. %s" % ("ABCD"[i], t) for i, t in enumerate(b["pa"])) + "  → đúng: " + "ABCD"[b["idx"]])
+                ra.append("  - " + " | ".join("%s. %s" % ("ABCD"[i], t) for i, t in enumerate(b["pa"])) + "  → đúng: " + "ABCD"[b["idx"]]
+                          + ("  (số tính: %s)" % dinh_dang_so(b["dap_so"]) if isinstance(b.get("dap_so"), (int, float)) else "  (THIẾU dap_so)"))
             else:
                 ra.append("  - đáp số: " + dinh_dang_so(b["dap_an"]))
     return "\n".join(ra)
