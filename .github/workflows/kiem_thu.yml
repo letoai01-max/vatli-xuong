@@ -74,3 +74,6 @@ jobs:
 
       - name: Kiểm thử cứu câu Loại do lỗi tách đề
         run: python kiem_thu_cuu_loai.py
+
+      - name: Kiểm thử câu mẫu hoá (hộp cát, biến thể đổi số liệu)
+        run: python kiem_thu_cau_mau.py

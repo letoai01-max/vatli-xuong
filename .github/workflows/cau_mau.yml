@@ -1,0 +1,85 @@
+name: cau_mau
+# [22/11/2026] Mục 1 của kế hoạch: nhân bản câu "AI duyệt" thành biến thể đổi số liệu (đáp án do code tính), ghi "Chưa duyệt" để duyet_cau.py chạy 5 tầng.
+# Mặc định chạy THỬ (che_do = thu): KHÔNG ghi vào kho, chỉ in mẫu + báo cáo cau_mau_thu.md để thầy xem. Hài lòng thì chạy tay với che_do = ghi.
+# Muốn chạy hằng đêm sau khi đã yên tâm: bỏ dấu # ở khối schedule, đổi "|| 'thu'" thành "|| 'ghi'" ở CAU_MAU_CHE_DO,
+# và trong trung_tam_dieu_phoi.json đổi "lich": false → true cho việc cau_mau (để báo cáo phút hiển thị đúng giờ chạy).
+on:
+  # schedule:
+  #   - cron: "10 16 * * *"      # 23:10 giờ VN, trước lượt duyet_cau 16:47 UTC hơn 30 phút để biến thể được duyệt ngay đêm đó
+  workflow_dispatch:
+    inputs:
+      che_do:
+        description: "thu = không ghi vào kho (xem mẫu) | ghi = ghi biến thể 'Chưa duyệt' vào NganHangCauHoi"
+        required: false
+        default: "thu"
+      nguon:
+        description: "Số câu nguồn tối đa cho lượt này"
+        required: false
+        default: "12"
+      so_bien_the:
+        description: "Số biến thể mỗi câu nguồn (1–5)"
+        required: false
+        default: "3"
+      phut:
+        description: "Số phút tối đa cho lượt này"
+        required: false
+        default: "30"
+concurrency:
+  group: ngan_hang
+  cancel-in-progress: false
+# [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho (chỉ ghi Google Sheet bằng tài khoản dịch vụ).
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  mau_hoa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cổng ngân sách phút (rẻ – chưa cài thư viện; hoãn thì bỏ qua các bước sau)
+        id: cong
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+        run: python3 quota_phut.py --cong
+      - uses: actions/setup-python@v5
+        if: steps.cong.outputs.chay != 'false'
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+        if: steps.cong.outputs.chay != 'false'
+      - name: Mẫu hoá câu (Gemini viết mã, hộp cát chạy mã, ghi biến thể)
+        if: steps.cong.outputs.chay != 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          GEMINI_API_KEY_4: ${{ secrets.GEMINI_API_KEY_4 }}
+          GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
+          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
+          CAU_MAU_CHE_DO: ${{ inputs.che_do || 'thu' }}
+          CAU_MAU_TOI_DA: ${{ inputs.nguon || '12' }}
+          CAU_MAU_SO_BIEN_THE: ${{ inputs.so_bien_the || '3' }}
+          CAU_MAU_TOI_DA_MOI_YCCD: "30"
+          CAU_MAU_DANG: "TN,TLN"
+          THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '30' }}
+        run: python trung_tam.py cau_mau.py
+      - name: Ghi báo cáo thử vào trang tóm tắt
+        if: always() && steps.cong.outputs.chay != 'false' && hashFiles('cau_mau_thu.md') != ''
+        run: cat cau_mau_thu.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.cong.outputs.chay != 'false'
+        with:
+          name: cau_mau_thu
+          if-no-files-found: ignore
+          path: cau_mau_thu.md
