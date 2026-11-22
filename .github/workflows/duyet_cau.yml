@@ -53,6 +53,13 @@ jobs:
           GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
           GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_API_KEY_1: ${{ secrets.GROQ_API_KEY_1 }}
+          GROQ_API_KEY_2: ${{ secrets.GROQ_API_KEY_2 }}
+          GROQ_API_KEY_3: ${{ secrets.GROQ_API_KEY_3 }}
+          GROQ_API_KEY_4: ${{ secrets.GROQ_API_KEY_4 }}
+          GROQ_API_KEY_5: ${{ secrets.GROQ_API_KEY_5 }}
+          GROQ_THONG_MINH: "true"      # [22/11] 429 theo ngày → đổi khoá ngay; hạ max token khi vượt trần token ra/phút
+          GROQ_NGAT_SAU: "2"           # [22/11] Groq rỗng 2 file liên tiếp → bỏ Groq cho phần còn lại của lượt
           GROQ_CHE_DO: "ghi_chu"
           # [22/11/2026] CỨU CÂU "CẦN NGƯỜI XEM" TỰ ĐỘNG (xem đầu duyet_cau.py). Muốn về như cũ: đổi "true" → "false", "loai" → "xem".
           TU_SUA_NGHI_VAN: "true"
