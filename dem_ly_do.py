@@ -30,7 +30,8 @@ NHOM = [
     ("Từ khoá chương trình cũ",           r"chương trình cũ"),
     ("Công thức $…$ lỗi",                 r"\$…\$|không đóng mở"),
     ("Gần như trùng",                     r"Gần như trùng"),
-    ("Đơn vị / số liệu chưa có",          r"số liệu chưa có|Đơn vị không cùng"),
+    ("Bản lưu thiếu số liệu so với đề gốc", r"số liệu chưa có"),
+    ("Đơn vị không cùng thứ nguyên (đáp án vs máy giải)", r"Đơn vị không cùng"),
     ("Không tự xác minh được (XEM_CON_LAI=loai)", r"không tự xác minh"),
 ]
 NHOM = [(n, re.compile(m, re.I)) for n, m in NHOM]
@@ -41,10 +42,17 @@ def doan_cuoi(kt):
     return kt.rsplit(DAU_MAY, 1)[-1] if DAU_MAY in kt else ""
 
 
+def lan_chay_cu(d):
+    """Dấu máy ghi trước 21/11 (luật 5 tầng cũ) → nên duyệt lại bằng luật mới."""
+    m = re.match(r"\s*(\d{1,2})/(\d{1,2})", d)
+    return bool(m) and (int(m.group(2)), int(m.group(1))) < (11, 21)
+
+
 def phan_loai(kt):
     d = doan_cuoi(kt)
     if not d: return ["(Không có dấu máy – giáo viên/GAS đặt)"]
     got = [n for n, p in NHOM if p.search(d)]
+    if lan_chay_cu(d): got.append("(Lần chạy máy cũ, trước 21/11 – chưa duyệt lại bằng luật mới)")
     return got or ["(Khác – xem mẫu bên dưới)"]
 
 
@@ -76,6 +84,7 @@ def main():
     mot_ly_do = {TT_LOAI: collections.Counter(), TT_XEM: collections.Counter()}
     phu = {TT_LOAI: collections.Counter(), TT_XEM: collections.Counter()}
     mau_khac = []
+    mau_gv = {TT_LOAI: [], TT_XEM: []}
     for r in v[1:]:
         r = r + [""] * (len(td) - len(r))
         tt = r[i_tt].strip(); tong[tt or "(trống)"] += 1
@@ -89,6 +98,8 @@ def main():
         phu[tt]["đã duyệt lại một lần"] += "duyệt lại]" in kt
         phu[tt]["có mô tả [Hình…]"] += (i_nd is not None and "[Hình" in r[i_nd])
         phu[tt]["chưa có ý/phương án (cột Phương án trống)"] += not r[td.index("Phương án")].strip() if "Phương án" in td else 0
+        if not d and len(mau_gv[tt]) < 8:
+            mau_gv[tt].append("[%s] %s | KT: %s" % ((r[td.index("Mã câu")] if "Mã câu" in td else "?"), (r[i_nd][:70].replace("\n", " ") if i_nd is not None else ""), kt.strip()[:100] or "(trống)"))
         if nhom == ["(Khác – xem mẫu bên dưới)"] and len(mau_khac) < 8: mau_khac.append(d.strip()[:160])
 
     ra = ["# Đếm theo lí do – tab %s\n" % TAB_NH, "Tổng theo trạng thái: " +
@@ -101,6 +112,8 @@ def main():
         ra.append("\nPhụ: " + "; ".join("%s = %d" % kv for kv in phu[tt].items()))
     if mau_khac:
         ra += ["\n## Mẫu lí do chưa gom được (để thêm mẫu vào NHOM)\n"] + ["- " + m for m in mau_khac]
+    for tt in (TT_LOAI, TT_XEM):
+        if mau_gv[tt]: ra += ["\n## Mẫu câu %s KHÔNG có dấu máy (xem ai/luật nào đặt)\n" % tt] + ["- " + m for m in mau_gv[tt]]
     s = "\n".join(ra)
     print(s)
     if a.ra:

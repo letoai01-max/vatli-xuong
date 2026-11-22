@@ -8,7 +8,7 @@ KHÔNG nằm trong các phiếu đã duyệt, rồi so với "Đáp án" đã du
 Tách kết quả theo: dạng câu, có/không hình, đáp án có từ HDC gốc hay do máy giải (đọc từ cột Kiểm tra) → biết chỗ nào lỏng.
 
 Chạy (trong repo xưởng, có GROQ_API_KEY + GOOGLE_CREDENTIALS):
-    python do_chat_luong.py --n 150 --model llama-3.3-70b-versatile --ra bao_cao_chat_luong.md
+    python do_chat_luong.py --n 150 --ra bao_cao_chat_luong.md
 Chạy thử không mạng:  python do_chat_luong.py --thu
 """
 import argparse, collections, random, re, sys
@@ -75,6 +75,18 @@ def bao_cao(tk, lech, bo, n_mau, model):
     return "\n".join(ra)
 
 
+def model_dang_chay():
+    """Hỏi Groq danh sách model đang hoạt động (chỉ model chat). Lỗi mạng/khoá → []."""
+    import os, requests
+    try:
+        r = requests.get("https://api.groq.com/openai/v1/models", headers={"Authorization": "Bearer " + os.environ["GROQ_API_KEY"]}, timeout=30)
+        ids = [m["id"] for m in r.json().get("data", []) if m.get("active", True)]
+    except Exception as e:
+        print("Không lấy được danh sách model Groq:", str(e)[:100]); return []
+    bo = re.compile(r"whisper|guard|tts|orpheus|playai|embed|distil-whisper|safeguard", re.I)
+    return [i for i in ids if not bo.search(i)]
+
+
 def thu():
     import types
     td = ["Mã câu", "Dạng", "Nội dung", "Phương án", "Đáp án", "Trạng thái duyệt", "Kiểm tra"]
@@ -95,7 +107,7 @@ def thu():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--n", type=int, default=150); ap.add_argument("--model", default="llama-3.3-70b-versatile")
+    ap.add_argument("--n", type=int, default=150); ap.add_argument("--model", default="", help="để trống = tự chọn model đang hoạt động, ưu tiên model chưa bỏ phiếu")
     ap.add_argument("--ra"); ap.add_argument("--thu", action="store_true")
     a = ap.parse_args()
     if a.thu: return thu()
@@ -105,10 +117,18 @@ def main():
     v = gc.open_by_key(X.ID_KHO_CHUNG).worksheet(TAB_NH).get_all_values()
     td = [t.strip() for t in v[0]]
     mau = chon_mau(v[1:], td, a.n)
-    print("Mẫu %d câu, model kiểm %s ..." % (len(mau), a.model), flush=True)
+    print("Mẫu %d câu ..." % len(mau), flush=True)
     bo = [{"ma": x["ma"], "dang": x["dang"], "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in mau]
-    kq, model = G.giai_lo(bo, [a.model])
-    if not kq: sys.exit("Model %s không trả được đáp án nào (sai tên model hoặc hết hạn mức?)." % a.model)
+    song = model_dang_chay()
+    print("Model Groq đang hoạt động:", ", ".join(song) or "(không lấy được)", flush=True)
+    da_bo_phieu = set(G.MODELS) | set(D.PHIEU_BA_MODELS)           # ưu tiên model chưa tham gia bỏ phiếu → độc lập hơn
+    thu_lan = ([a.model] if a.model else []) + [m for m in song if m not in da_bo_phieu and m != a.model] + [m for m in song if m in da_bo_phieu and m != a.model]
+    kq, model = {}, ""
+    for m in thu_lan[:4]:
+        print("Thử model kiểm: %s ..." % m, flush=True)
+        kq, model = G.giai_lo(bo, [m])
+        if kq: model = model or m; break
+    if not kq: sys.exit("Không model Groq nào trả được đáp án (xem danh sách model ở trên; có thể hết hạn mức).")
     tk, lech, boqua = so_sanh(mau, kq, lambda d, x, y: D.khop(d, x, y))
     s = bao_cao(tk, lech, boqua, len(mau), model or a.model)
     print(s)

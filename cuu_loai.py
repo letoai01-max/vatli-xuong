@@ -20,7 +20,7 @@ except Exception:
     Q = None
 
 DAU = "cứu Loại"
-LI_DO_TACH = re.compile(r"Thiếu phương án|Thiếu ý đúng/sai|Nội dung câu quá ngắn|Lỗi nội dung")
+LI_DO_TACH = re.compile(r"Thiếu phương án|Thiếu ý đúng/sai|Nội dung câu quá ngắn|Lỗi nội dung|số liệu chưa có trong bản lưu")   # [22/11] thêm: bản lưu thiếu số liệu so với đề gốc = lỗi tách đề
 LI_DO_KHONG_CUU = re.compile(r"Trùng hẳn|Ngoài chương trình")
 LO = 12
 TOI_DA = int(float(os.environ.get("CUU_LOAI_TOI_DA", "150") or 150))

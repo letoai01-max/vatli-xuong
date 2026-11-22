@@ -27,6 +27,7 @@ ND = "Một vật chuyển động thẳng đều với vận tốc $5 m/s$ tron
 PA = "A. 10 m\nB. 20 m\nC. 30 m\nD. 40 m"
 
 kiem("Loại vì thiếu phương án, chưa cứu → chọn", L.la_loai_do_tach("[5 tầng 21/11] Thiếu phương án (3/4)"))
+kiem("Loại vì bản lưu thiếu số liệu so với đề gốc → chọn", L.la_loai_do_tach("[5 tầng 22/11] Đọc lại đề gốc thấy số liệu chưa có trong bản lưu: 2,5 kg"))
 kiem("Loại vì lỗi nội dung → chọn", L.la_loai_do_tach("[5 tầng 21/11] Lỗi nội dung: đề chép thiếu dữ kiện"))
 kiem("đã có dấu cứu Loại → không chọn lại", not L.la_loai_do_tach("[5 tầng 21/11] Thiếu phương án (3/4) | [cứu Loại 22/11: không cứu được – x]"))
 kiem("Loại vì trùng → không chọn", not L.la_loai_do_tach("[5 tầng 21/11] Trùng hẳn câu C9"))
