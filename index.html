@@ -88,6 +88,11 @@
         .qp-bando th.qp-hq { color: #f8fafc; font-weight: 700; }
         .qp-bando td.tong { text-align: right; font-size: 11px; font-weight: 700; color: #fff; padding-left: 6px; font-variant-numeric: tabular-nums; }
         .qp-bando tr.chan td { padding-top: 3px; }
+        /* [22/11/2026] 4 cột phụ bên phải bản đồ nhiệt */
+        .qp-bando th.phu { font-size: 10px; font-weight: 600; color: #94a3b8; text-align: right; padding: 0 0 4px 10px; white-space: nowrap; vertical-align: bottom; }
+        .qp-bando th.phu.trai { text-align: left; }
+        .qp-bando td.phu { font-size: 11px; color: #e2e8f0; text-align: right; padding-left: 10px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .qp-bando td.phu.trai { text-align: left; color: #cbd5e1; }
         .qp-bang thead tr.nhom th { text-align: center; color: #38bdf8; border-bottom: 1px solid rgba(56, 189, 248, 0.3); }
     </style>
 </head>
@@ -224,7 +229,7 @@
                         <h2 class="text-base font-bold text-white flex items-center gap-2">
                             <i class="fa-solid fa-stopwatch text-sky-400"></i> Hạn Mức 2.000 Phút Xưởng Python (GitHub Actions)
                         </h2>
-                        <p class="text-xs text-slate-400">Tổng hợp phút đã dùng trong tháng và phân bổ thời gian cho các tác vụ chạy ngầm hằng ngày</p>
+                        <p class="text-xs text-slate-400">Phút đã dùng mỗi ngày và bản đồ nhiệt phút chạy của từng tác vụ (kèm giờ chạy, tỉ trọng, số ngày có chạy)</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
                         <span id="qp-nguon" class="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 text-[10px] font-semibold">Đang tải…</span>
@@ -237,21 +242,7 @@
                 <div id="qp-thong-bao" class="hidden text-[11px] leading-relaxed rounded-lg px-3 py-2 border"></div>
                 <div id="qp-tong-quan"></div>
                 <div id="qp-bieu-do"></div>
-                <div id="qp-hom-qua"></div>
                 <div id="qp-ban-do"></div>
-                <div id="qp-bang-ngam"></div>
-                <div id="qp-bang-yeu-cau"></div>
-
-                <details class="text-xs">
-                    <summary class="cursor-pointer text-slate-400 hover:text-white">Cách chia phút cho các tác vụ (đọc từ quota_phut.py)</summary>
-                    <ul class="mt-2 space-y-1 text-[11px] text-slate-400 list-disc pl-5 leading-relaxed">
-                        <li><b class="text-slate-300">Ngân sách ngày</b> = (hạn mức − dự phòng − phút đã dùng trước hôm nay) ÷ số ngày còn lại (kể cả hôm nay). Hôm nay dùng chưa hết thì dồn sang ngày sau, dùng lố thì ngày sau bị cắt bớt.</li>
-                        <li><b class="text-slate-300">Việc chạy ngầm theo lịch (định kì)</b> chia ngân sách ngày theo trọng số 2^(mức−1): mức 5 nhận gấp 16 lần mức 1. Việc chờ lâu chưa chạy thật được cộng dồn tối đa 8 ngày phần chia; việc đang chạy được mượn một phần ngân sách chưa dùng của việc khác.</li>
-                        <li><b class="text-slate-300">Nhịp</b> = ngân sách ngày ÷ ngân sách chuẩn (chia đều từ đầu tháng). Nhịp thấp nghĩa là đã tiêu quá tay nên việc mức thấp bị tạm dừng trước: ≥0,8 chạy mọi mức · ≥0,55 mức ≥2 · ≥0,3 mức ≥3 · ≥0,12 mức ≥4 · thấp hơn chỉ mức 5.</li>
-                        <li><b class="text-slate-300">Việc khẩn</b> (canh gác, quota phút) luôn được chạy, kể cả bằng phần dự phòng. <b class="text-slate-300">Việc theo yêu cầu</b> (tạo đề, giáo án… hoặc bấm chạy tay) không bị ngân sách ngày chặn, chỉ bị cắt theo số phút còn lại của tháng (chừa nửa dự phòng và quỹ cố định cho lịch cron các ngày sau).</li>
-                        <li>Số phút ở đây là <b class="text-slate-300">ước tính</b> (thời gian chạy làm tròn lên từng lượt); billing GitHub có thể lệch vài phút. Chu kì hạn mức là tháng dương lịch, ngày tính theo giờ Việt Nam.</li>
-                    </ul>
-                </details>
 
                 <details id="qp-thiet-lap" class="text-xs">
                     <summary class="cursor-pointer text-slate-400 hover:text-white">Thiết lập nguồn số liệu (kho GitHub và mã đọc)</summary>
@@ -2104,8 +2095,10 @@
             quet_anh_cron: ['0 2 * * *'], tai_tai_lieu: ['17 */3 * * *'],
             tim_kiem: ['40 22 * * *', '40 6 * * *'], tu_giai: ['30 3 * * *', '30 9 * * *']
         };
+        // [22/11/2026] Việc không chạy theo cron nhưng có cách kích hoạt cố định (hiện ở cột Giờ chạy của bản đồ nhiệt)
+        const QP_GIO_KHAC = { pages_build_deployment: 'GitHub tự chạy khi đẩy code', kiem_thu: 'khi đẩy code lên main' };
         const QP_TEN_VIEC = {
-            canh_gac: 'Canh gác', quota_phut: 'Quota phút', tao_de: 'Tạo đề', xuat_de: 'Xuất đề & dữ liệu', duyet_cau: 'Duyệt câu',
+            pages_build_deployment: 'pages_build_deployment', canh_gac: 'Canh gác', quota_phut: 'Quota phút', tao_de: 'Tạo đề', xuat_de: 'Xuất đề & dữ liệu', duyet_cau: 'Duyệt câu',
             tron_de: 'Trộn đề', kiem_dinh_de: 'Kiểm định đề', de_cuong: 'Đề cương', chuyen_de: 'Chuyên đề', soan_giao_an: 'Soạn giáo án',
             ve_hinh: 'Vẽ hình', xuat_word: 'Xuất Word', video: 'Video', tu_giai: 'Tự giải', doc_de: 'Đọc đề', chi_muc_trung: 'Chỉ mục trùng',
             quet_anh_cron: 'Quét bù hình ảnh', tim_kiem: 'Tìm kiếm tài liệu', tai_tai_lieu: 'Tải tài liệu', van_ban: 'Chuẩn hoá văn bản',
@@ -2544,7 +2537,8 @@
             const nen = (p, m) => p > 0 ? 'background:rgba(56,189,248,' + (0.18 + 0.82 * Math.sqrt(p / m)).toFixed(2) + ');color:' + (p / m > 0.55 ? '#0f172a' : '#e2e8f0') : '';
             let dau = '<th class="nhan"></th>';
             for (let d = 1; d <= so; d++) dau += '<th class="' + (d === hqD ? 'qp-hq' : '') + '">' + d + '</th>';
-            dau += '<th></th>';
+            dau += '<th class="phu">Phút cả tháng</th><th class="phu trai">Giờ chạy hằng ngày</th><th class="phu">Tỉ trọng trong ngày</th><th class="phu">Tỉ trọng tháng</th><th class="phu">Số ngày có chạy</th>';
+            const tongHq = tt.daDungHomQua || 0, tongTh = tt.uocRepoThang || 0;      // mẫu số của hai tỉ trọng (hôm qua · cả tháng, số ước tính của repo)
             let thanBang = '';
             viec.forEach(v => {
                 let o = '';
@@ -2552,14 +2546,26 @@
                     const x = phutO(v, d), tuong = d > homNayD;
                     o += '<td class="qp-o' + (d === hqD ? ' qp-hq' : '') + (tuong ? ' qp-tuong' : '') + '" style="' + nen(x[0], max) + '" title="' + qpEsc(qpTenHienThi(v)) + ' · ' + qpDd(y + '-' + qpHai(d)) + ': ' + qpSo(x[0]) + ' phút, ' + qpSo(x[1]) + ' lượt' + (tuong ? ' (chưa tới)' : '') + '">' + (x[0] > 0 ? qpSo(x[0]) : '') + '</td>';
                 }
-                thanBang += '<tr><td class="nhan" title="' + qpEsc(v) + '">' + qpEsc(qpTenHienThi(v)) + '</td>' + o + '<td class="tong">' + qpSo(tt.thangTheoViec[v]) + '</td></tr>';
+                let ngayChay = 0;
+                for (let d = 1; d <= so; d++) if (phutO(v, d)[0] > 0) ngayChay++;
+                const l = qpLichViec(v), phutQ = tt.homQuaTheoViec[v] || 0, phutT = tt.thangTheoViec[v] || 0;
+                const gio = l ? l.ngan : (QP_GIO_KHAC[v] || 'theo yêu cầu / chạy tay');
+                thanBang += '<tr><td class="nhan" title="' + qpEsc(v) + '">' + qpEsc(qpTenHienThi(v)) + '</td>' + o + '<td class="tong">' + qpSo(phutT) + '</td>' +
+                    '<td class="phu trai" title="' + qpEsc(l ? l.day : gio) + '">' + qpEsc(gio) + '</td>' +
+                    '<td class="phu" title="' + qpSo(phutQ) + ' phút hôm qua">' + (tongHq ? Math.round(100 * phutQ / tongHq) : 0) + '%</td>' +
+                    '<td class="phu">' + qpSo1(tongTh ? 100 * phutT / tongTh : 0) + '%</td>' +
+                    '<td class="phu" title="trên ' + homNayD + ' ngày đã qua">' + ngayChay + '/' + homNayD + '</td></tr>';
             });
             let tongHang = '';
             for (let d = 1; d <= so; d++) {
                 const p = tt.theoNgay[y + '-' + qpHai(d)] || 0, tuong = d > homNayD;
                 tongHang += '<td class="qp-o' + (d === hqD ? ' qp-hq' : '') + (tuong ? ' qp-tuong' : '') + '" style="' + nen(p, maxNgay) + '" title="' + qpDd(y + '-' + qpHai(d)) + ': ' + qpSo(p) + ' phút (tất cả tác vụ)">' + (p > 0 ? qpSo(p) : '') + '</td>';
             }
-            thanBang += '<tr class="chan"><td class="nhan font-semibold" style="color:#fff">Tổng ngày</td>' + tongHang + '<td class="tong">' + qpSo(tt.uocRepoThang) + '</td></tr>';
+            let ngayCoChay = 0;
+            for (let d = 1; d <= so; d++) if ((tt.theoNgay[y + '-' + qpHai(d)] || 0) > 0) ngayCoChay++;
+            thanBang += '<tr class="chan"><td class="nhan font-semibold" style="color:#fff">Tổng ngày</td>' + tongHang + '<td class="tong">' + qpSo(tt.uocRepoThang) + '</td>' +
+                '<td class="phu"></td><td class="phu font-semibold" style="color:#fff">' + (tongHq ? '100%' : '') + '</td><td class="phu font-semibold" style="color:#fff">' + (tongTh ? '100%' : '') + '</td>' +
+                '<td class="phu font-semibold" style="color:#fff">' + ngayCoChay + '/' + homNayD + '</td></tr>';
             const mau = a => '<span style="display:inline-block;width:12px;height:10px;border-radius:2px;background:rgba(56,189,248,' + a + ')"></span>';
             return '<div class="space-y-2"><div class="flex flex-wrap items-center justify-between gap-2">' + tieuDe +
                    '<div class="text-[10px] text-slate-500 flex items-center gap-1">ít ' + mau(0.2) + mau(0.45) + mau(0.7) + mau(1) + ' nhiều · viền trắng = hôm qua · ô nét đứt = ngày chưa tới · số trong ô = phút</div></div>' +
@@ -2570,10 +2576,7 @@
             const set = (id, h) => { const el = document.getElementById(id); if (el) el.innerHTML = h; };
             set('qp-tong-quan', qpVeTongQuan(tt, ke, keHoach));
             set('qp-bieu-do', keHoach ? '' : qpVeBieuDo(tt, ke));
-            set('qp-hom-qua', keHoach ? '' : qpVeHomQua(tt, ke));
             set('qp-ban-do', keHoach ? '' : qpVeBanDo(tt, ke));
-            set('qp-bang-ngam', qpVeBangNgam(tt, ke, keHoach));
-            set('qp-bang-yeu-cau', qpVeBangYeuCau(tt, ke, keHoach));
             return ke;
         }
         function qpGhiNhatKy(chu) {
