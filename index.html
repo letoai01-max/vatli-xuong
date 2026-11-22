@@ -59,6 +59,25 @@
             50% { box-shadow: 0 0 24px rgba(56, 189, 248, 0.75); }
         }
         @media (prefers-reduced-motion: reduce) { .logo-quay, .logo-khung { animation: none; } }
+        /* [22/11/2026] MỤC HẠN MỨC PHÚT GITHUB ACTIONS (xưởng Python) */
+        .qp-bang { width: 100%; font-size: 11px; border-collapse: collapse; }
+        .qp-bang th { text-align: left; font-weight: 600; color: #94a3b8; padding: 6px 8px; border-bottom: 1px solid rgba(51, 65, 85, 0.7); white-space: nowrap; }
+        .qp-bang td { padding: 6px 8px; border-bottom: 1px solid rgba(51, 65, 85, 0.35); vertical-align: middle; }
+        .qp-bang tbody tr:hover td { background: rgba(56, 189, 248, 0.05); }
+        .qp-bang .so { text-align: right; font-variant-numeric: tabular-nums; }
+        .qp-bang th.so { text-align: right; }
+        .qp-bang tfoot td { font-weight: 700; color: #fff; border-top: 1px solid rgba(56, 189, 248, 0.4); border-bottom: 0; }
+        .qp-thanh { height: 10px; border-radius: 9999px; background: #0f172a; border: 1px solid #334155; position: relative; overflow: hidden; }
+        .qp-thanh > i { display: block; height: 100%; border-radius: 9999px; }
+        .qp-du-phong { position: absolute; top: 0; bottom: 0; right: 0; background: repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.4) 0 4px, transparent 4px 8px); }
+        .qp-moc { position: absolute; top: 0; bottom: 0; width: 2px; background: #f59e0b; }
+        .qp-thanh-nho { height: 6px; border-radius: 9999px; background: #0f172a; border: 1px solid #334155; overflow: hidden; min-width: 60px; }
+        .qp-thanh-nho > i { display: block; height: 100%; border-radius: 9999px; }
+        .qp-bieu-do { position: relative; display: flex; align-items: flex-end; gap: 2px; height: 96px; border-bottom: 1px solid #334155; }
+        .qp-cot { flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; }
+        .qp-cot > i { display: block; width: 100%; border-radius: 3px 3px 0 0; min-height: 0; }
+        .qp-chuan { position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(245, 158, 11, 0.8); pointer-events: none; }
+        .qp-huy { display: inline-block; padding: 1px 6px; border-radius: 9999px; font-size: 10px; font-weight: 600; border: 1px solid; white-space: nowrap; }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-6">
@@ -185,6 +204,56 @@
                     <div class="agent-card rounded-md px-2 py-1.5" title="8. Nghiên Cứu & SKKN"><div class="text-[10px] font-semibold text-white truncate">8. Nghiên Cứu & SKKN</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
                     <div class="agent-card rounded-md px-2 py-1.5" title="9. Video Bài Giảng"><div class="text-[10px] font-semibold text-white truncate">9. Video Bài Giảng</div><div class="tt tt-tot"><span class="cham"></span> Tốt</div></div>
                 </div>
+            </div>
+
+            <!-- [22/11/2026] HẠN MỨC 2.000 PHÚT GITHUB ACTIONS CỦA XƯỞNG PYTHON: TỔNG HỢP + PHÂN BỔ THỜI GIAN CÁC TÁC VỤ CHẠY NGẦM HẰNG NGÀY -->
+            <div id="quota-phut-section" class="glass-panel rounded-xl p-5 space-y-4 border-sky-500/20">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-stopwatch text-sky-400"></i> Hạn Mức 2.000 Phút Xưởng Python (GitHub Actions)
+                        </h2>
+                        <p class="text-xs text-slate-400">Tổng hợp phút đã dùng trong tháng và phân bổ thời gian cho các tác vụ chạy ngầm hằng ngày</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="qp-nguon" class="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 text-[10px] font-semibold">Đang tải…</span>
+                        <button type="button" onclick="qpTai(true)" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
+                            <i class="fa-solid fa-rotate"></i> Làm mới số phút
+                        </button>
+                    </div>
+                </div>
+
+                <div id="qp-thong-bao" class="hidden text-[11px] leading-relaxed rounded-lg px-3 py-2 border"></div>
+                <div id="qp-tong-quan"></div>
+                <div id="qp-bieu-do"></div>
+                <div id="qp-bang-ngam"></div>
+                <div id="qp-bang-yeu-cau"></div>
+
+                <details class="text-xs">
+                    <summary class="cursor-pointer text-slate-400 hover:text-white">Cách chia phút cho các tác vụ (đọc từ quota_phut.py)</summary>
+                    <ul class="mt-2 space-y-1 text-[11px] text-slate-400 list-disc pl-5 leading-relaxed">
+                        <li><b class="text-slate-300">Ngân sách ngày</b> = (hạn mức − dự phòng − phút đã dùng trước hôm nay) ÷ số ngày còn lại (kể cả hôm nay). Hôm nay dùng chưa hết thì dồn sang ngày sau, dùng lố thì ngày sau bị cắt bớt.</li>
+                        <li><b class="text-slate-300">Việc chạy ngầm theo lịch (định kì)</b> chia ngân sách ngày theo trọng số 2^(mức−1): mức 5 nhận gấp 16 lần mức 1. Việc chờ lâu chưa chạy thật được cộng dồn tối đa 8 ngày phần chia; việc đang chạy được mượn một phần ngân sách chưa dùng của việc khác.</li>
+                        <li><b class="text-slate-300">Nhịp</b> = ngân sách ngày ÷ ngân sách chuẩn (chia đều từ đầu tháng). Nhịp thấp nghĩa là đã tiêu quá tay nên việc mức thấp bị tạm dừng trước: ≥0,8 chạy mọi mức · ≥0,55 mức ≥2 · ≥0,3 mức ≥3 · ≥0,12 mức ≥4 · thấp hơn chỉ mức 5.</li>
+                        <li><b class="text-slate-300">Việc khẩn</b> (canh gác, quota phút) luôn được chạy, kể cả bằng phần dự phòng. <b class="text-slate-300">Việc theo yêu cầu</b> (tạo đề, giáo án… hoặc bấm chạy tay) không bị ngân sách ngày chặn, chỉ bị cắt theo số phút còn lại của tháng (chừa nửa dự phòng và quỹ cố định cho lịch cron các ngày sau).</li>
+                        <li>Số phút ở đây là <b class="text-slate-300">ước tính</b> (thời gian chạy làm tròn lên từng lượt); billing GitHub có thể lệch vài phút. Chu kì hạn mức là tháng dương lịch, ngày tính theo giờ Việt Nam.</li>
+                    </ul>
+                </details>
+
+                <details id="qp-thiet-lap" class="text-xs">
+                    <summary class="cursor-pointer text-slate-400 hover:text-white">Thiết lập nguồn số liệu (kho GitHub và mã đọc)</summary>
+                    <div class="mt-2 space-y-2">
+                        <p class="text-[11px] text-slate-500 leading-relaxed">Trang đọc danh sách lượt chạy qua GitHub API. Kho công khai đọc được ngay; kho riêng tư cần một mã chỉ-đọc (fine-grained token, quyền <b class="text-slate-400">Actions: Read-only</b> cho kho xưởng). Mã chỉ lưu trên máy này, không ghi vào tệp. Muốn có cả phút của các kho khác trong tài khoản, dùng mã classic có quyền đọc billing.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <input id="qp-o-kho" type="text" placeholder="chủ-tài-khoản/tên-kho (để trống = tự nhận từ địa chỉ trang)" spellcheck="false" autocomplete="off" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-500">
+                            <input id="qp-o-ma" type="password" placeholder="Mã GitHub chỉ-đọc (tuỳ chọn)" spellcheck="false" autocomplete="off" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-sky-500 placeholder-slate-500">
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" onclick="qpLuuThietLap()" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold cursor-pointer"><i class="fa-solid fa-floppy-disk mr-1"></i> Lưu và tải lại</button>
+                            <button type="button" onclick="qpXoaThietLap()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 cursor-pointer">Xoá mã và kho đã lưu</button>
+                        </div>
+                    </div>
+                </details>
             </div>
 
             <!-- TRUNG TÂM ĐIỀU HÀNH & TÁC VỤ -->
@@ -1980,6 +2049,515 @@
                 alert(`Câu ${maCau} chưa được lưu: ${tin}`);
             }
         }
+
+        // =====================================================================================================
+        // [22/11/2026] MỤC HẠN MỨC PHÚT GITHUB ACTIONS (XƯỞNG PYTHON). PHẦN THÊM MỚI, KHÔNG SỬA CÁC TÁC VỤ CŨ.
+        // Cùng công thức với quota_phut.py: ước tính phút từ danh sách lượt chạy, chia ngân sách ngày theo mức quan trọng.
+        // Cấu hình mặc định bên dưới khớp mục NGAN_SACH_PHUT của trung_tam_dieu_phoi.json; nếu trang đọc được tệp đó
+        // (cùng thư mục với trang) thì dùng bản trong tệp, để chỉ có MỘT nguồn sự thật.
+        // =====================================================================================================
+        const QP_MAC_DINH = {
+            quota_thang: 2000, du_phong: 200, dem_cuoi: 1, chi_phi_lich_ngay: 15,
+            viec: {
+                canh_gac:      { muc: 5, loai: 'khan',    phut: 5,   toi_thieu: 1 },
+                quota_phut:    { muc: 5, loai: 'khan',    phut: 10,  toi_thieu: 1 },
+                tao_de:        { muc: 5, loai: 'yeu_cau', phut: 45,  toi_thieu: 5 },
+                xuat_de:       { muc: 4, loai: 'dinh_ky', phut: 10,  toi_thieu: 3 },
+                duyet_cau:     { muc: 4, loai: 'dinh_ky', phut: 150, toi_thieu: 10 },
+                tron_de:       { muc: 4, loai: 'yeu_cau', phut: 30,  toi_thieu: 3 },
+                kiem_dinh_de:  { muc: 4, loai: 'yeu_cau', phut: 40,  toi_thieu: 5 },
+                de_cuong:      { muc: 4, loai: 'yeu_cau', phut: 45,  toi_thieu: 5 },
+                chuyen_de:     { muc: 4, loai: 'yeu_cau', phut: 48,  toi_thieu: 5 },
+                soan_giao_an:  { muc: 4, loai: 'yeu_cau', phut: 26,  toi_thieu: 5 },
+                ve_hinh:       { muc: 3, loai: 'yeu_cau', phut: 20,  toi_thieu: 3 },
+                xuat_word:     { muc: 3, loai: 'yeu_cau', phut: 15,  toi_thieu: 3 },
+                video:         { muc: 3, loai: 'yeu_cau', phut: 40,  toi_thieu: 5 },
+                tu_giai:       { muc: 3, loai: 'dinh_ky', phut: 60,  toi_thieu: 8 },
+                doc_de:        { muc: 3, loai: 'dinh_ky', phut: 100, toi_thieu: 10 },
+                chi_muc_trung: { muc: 3, loai: 'dinh_ky', phut: 20,  toi_thieu: 5 },
+                quet_anh_cron: { muc: 2, loai: 'dinh_ky', phut: 120, toi_thieu: 8 },
+                tim_kiem:      { muc: 2, loai: 'dinh_ky', phut: 25,  toi_thieu: 5 },
+                tai_tai_lieu:  { muc: 2, loai: 'dinh_ky', phut: 25,  toi_thieu: 5 },
+                van_ban:       { muc: 2, loai: 'dinh_ky', phut: 30,  toi_thieu: 5, lich: false },
+                gan_mo_ta_anh: { muc: 1, loai: 'yeu_cau', phut: 60,  toi_thieu: 5 },
+                thu_drive:     { muc: 1, loai: 'yeu_cau', phut: 5,   toi_thieu: 1 },
+                kiem_thu:      { muc: 3, loai: 'yeu_cau', phut: 15,  toi_thieu: 1, ngoai: true }
+            }
+        };
+        // Lịch cron của các workflow (giờ UTC trong tệp .yml, trang tự đổi sang giờ Việt Nam). Việc không có ở đây là chạy theo yêu cầu.
+        const QP_LICH_CRON = {
+            xuat_de: ['30 23 * * *'], canh_gac: ['20 0 * * *'], chi_muc_trung: ['0 16 * * *'],
+            doc_de: ['17 15 * * *', '17 22 * * *'], duyet_cau: ['47 16 * * *', '47 20 * * *'],
+            quet_anh_cron: ['0 2 * * *'], tai_tai_lieu: ['17 */3 * * *'],
+            tim_kiem: ['40 22 * * *', '40 6 * * *'], tu_giai: ['30 3 * * *', '30 9 * * *']
+        };
+        const QP_TEN_VIEC = {
+            canh_gac: 'Canh gác', quota_phut: 'Quota phút', tao_de: 'Tạo đề', xuat_de: 'Xuất đề & dữ liệu', duyet_cau: 'Duyệt câu',
+            tron_de: 'Trộn đề', kiem_dinh_de: 'Kiểm định đề', de_cuong: 'Đề cương', chuyen_de: 'Chuyên đề', soan_giao_an: 'Soạn giáo án',
+            ve_hinh: 'Vẽ hình', xuat_word: 'Xuất Word', video: 'Video', tu_giai: 'Tự giải', doc_de: 'Đọc đề', chi_muc_trung: 'Chỉ mục trùng',
+            quet_anh_cron: 'Quét bù hình ảnh', tim_kiem: 'Tìm kiếm tài liệu', tai_tai_lieu: 'Tải tài liệu', van_ban: 'Chuẩn hoá văn bản',
+            gan_mo_ta_anh: 'Gán mô tả ảnh', thu_drive: 'Thử Drive', kiem_thu: 'Kiểm thử'
+        };
+        const QP_TRONG_SO_MUC = { 1: 1, 2: 2, 3: 4, 4: 8, 5: 16 };
+        const QP_LA = { muc: 2, loai: 'dinh_ky', phut: 30, toi_thieu: 5, lich: false };   // việc chưa khai báo
+        const QP_NGUONG_CHAY_THAT = 3, QP_TOI_DA_NGAY_CHO = 7, QP_MUON_TU_KEM = 0.25, QP_MUON_TU_CAO = 0.1, QP_GIU_DU_PHONG_YEU_CAU = 0.5;
+        const QP_KHOA_KHO = 'quotaPhut_kho', QP_KHOA_MA = 'quotaPhut_maGitHub', QP_KHOA_CACHE = 'quotaPhut_cache', QP_CACHE_GIAY = 180;
+        let QP = JSON.parse(JSON.stringify(QP_MAC_DINH));      // cấu hình đang dùng
+        let QP_CAU_HINH = QP.viec;
+        let qpDangTai = false;
+
+        function qpEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+        function qpChuanHoa(t) { return String(t == null ? '' : t).trim().toLowerCase().replace(/[\s\-]+/g, '_'); }
+        function qpSo(n) { return Math.round(Number(n) || 0).toLocaleString('vi-VN'); }
+        function qpSo1(n) { return (Math.round((Number(n) || 0) * 10) / 10).toLocaleString('vi-VN'); }
+        function qpHai(n) { return (n < 10 ? '0' : '') + n; }
+        function qpNgayVN(ms) { return new Date(ms + 7 * 3600 * 1000).toISOString().slice(0, 10); }      // ngày theo giờ Việt Nam
+        function qpCongNgay(iso, soNgay) { return new Date(Date.parse(iso + 'T00:00:00Z') + soNgay * 864e5).toISOString().slice(0, 10); }
+        function qpDd(iso) { return iso.slice(8, 10) + '/' + iso.slice(5, 7); }
+        function qpTenHienThi(v) { return QP_TEN_VIEC[v] || v; }
+
+        // ---------- HÀM THUẦN (cùng công thức quota_phut.py) ----------
+        function qpGopCauHinh(js) {
+            const kq = JSON.parse(JSON.stringify(QP_MAC_DINH));
+            if (js && typeof js === 'object') {
+                ['quota_thang', 'du_phong', 'dem_cuoi', 'chi_phi_lich_ngay'].forEach(k => { if (js[k] != null && !isNaN(Number(js[k]))) kq[k] = Number(js[k]); });
+                Object.keys(js.viec || {}).forEach(k => {
+                    const v = js.viec[k];
+                    if (!v || typeof v !== 'object' || k.charAt(0) === '_') return;
+                    const ten = qpChuanHoa(k);
+                    if (!kq.viec[ten]) kq.viec[ten] = Object.assign({}, QP_LA);
+                    Object.assign(kq.viec[ten], v);
+                });
+            }
+            return kq;
+        }
+        function qpCauHinhViec(viec) {
+            const c = Object.assign({}, QP_LA, QP_CAU_HINH[qpChuanHoa(viec)] || {});
+            c.muc = Math.max(1, Math.min(5, parseInt(c.muc, 10) || 2));
+            return c;
+        }
+        function qpTrongSo(viec) { const c = qpCauHinhViec(viec); return Number(c.trong_so) || QP_TRONG_SO_MUC[c.muc]; }
+        function qpTenViecTuLuot(r) {
+            const p = String(r.path || r.name || 'khong_ro').split('@')[0];
+            return qpChuanHoa(p.split('/').pop().replace(/\.ya?ml$/, '')) || 'khong_ro';
+        }
+        function qpUocTinh(cacLuot, bayGio) {
+            // {'YYYY-MM-DD|việc': [phút, số lượt]}; lượt đang chạy tính đến bây giờ, lượt xếp hàng chưa tính
+            const kq = {};
+            cacLuot.forEach(r => {
+                const bd = Date.parse(r.bd);
+                if (isNaN(bd)) return;
+                let kt;
+                if (r.st === 'completed') { const e = Date.parse(r.kt); kt = isNaN(e) ? bd : e; }
+                else if (r.st === 'in_progress') kt = bayGio;
+                else return;
+                const phut = Math.ceil(Math.max(0, kt - bd) / 60000);
+                const k = qpNgayVN(bd) + '|' + r.viec;
+                const o = kq[k] || (kq[k] = [0, 0]);
+                o[0] += phut; o[1] += 1;
+            });
+            return kq;
+        }
+        function qpTongTuBilling(j) {
+            const muc = j && j.usageItems;
+            if (!Array.isArray(muc)) return null;
+            let tong = 0;
+            muc.forEach(m => {
+                if (String(m.product || '').toLowerCase() !== 'actions' || String(m.unitType || '').toLowerCase() !== 'minutes') return;
+                tong += Number(m.quantity) || 0;
+            });
+            return { tong: tong };
+        }
+        function qpKeHoach(hn, daThang, daHomNay, khan) {
+            const quota = QP.quota_thang, duChuan = QP.du_phong, duPhong = khan ? 0 : duChuan;
+            const y = parseInt(hn.slice(0, 4), 10), m = parseInt(hn.slice(5, 7), 10), d = parseInt(hn.slice(8, 10), 10);
+            const soNgay = new Date(Date.UTC(y, m, 0)).getUTCDate();
+            const conNgay = soNgay - d + 1;                                         // kể cả hôm nay
+            const truoc = Math.max(0, daThang - daHomNay);
+            const khaDung = Math.max(0, quota - duPhong - truoc);
+            const nganSach = khaDung / conNgay;
+            const chuan = Math.max(0, quota - duChuan) / soNgay;                   // ngân sách mỗi ngày nếu chia đều từ đầu tháng
+            return { quota: quota, duPhong: duPhong, daDungThang: daThang, conLaiThang: quota - daThang, khaDung: khaDung, soNgay: soNgay,
+                     soNgayConLai: conNgay, nganSachNgay: nganSach, nganSachChuan: chuan, nhip: chuan ? nganSach / chuan : 0,
+                     daDungHomNay: daHomNay, conLaiHomNay: Math.max(0, nganSach - daHomNay), duBaoCuoiThang: daThang / d * soNgay };
+        }
+        function qpMucToiThieuChoChay(nhip) {
+            const bac = [[0.8, 1], [0.55, 2], [0.3, 3], [0.12, 4]];
+            for (let i = 0; i < bac.length; i++) if (nhip >= bac[i][0]) return bac[i][1];
+            return 5;
+        }
+        function qpCacViecDinhKy() {
+            return Object.keys(QP_CAU_HINH).filter(v => { const c = QP_CAU_HINH[v]; return c.loai === 'dinh_ky' && c.lich !== false && !c.ngoai; });
+        }
+        function qpPhanBoNgay(ke, them) {
+            const mucCan = qpMucToiThieuChoChay(ke.nhip);
+            const cac = new Set(qpCacViecDinhKy().filter(v => qpCauHinhViec(v).muc >= mucCan));
+            (them || []).forEach(v => cac.add(v));
+            let tongW = 0; cac.forEach(v => { tongW += qpTrongSo(v); });
+            tongW = tongW || 1;
+            const kq = {}; cac.forEach(v => { kq[v] = ke.nganSachNgay * qpTrongSo(v) / tongW; });
+            return kq;
+        }
+        function qpChiaPhan(ke, viec, homNayTheoViec, tuoiCho) {
+            const phan = qpPhanBoNgay(ke, [viec]);
+            const mucToi = qpCauHinhViec(viec).muc;
+            let muon = 0;
+            Object.keys(phan).forEach(v => {
+                if (v === viec) return;
+                const con = Math.max(0, phan[v] - (homNayTheoViec[v] || 0));
+                muon += con * (qpCauHinhViec(v).muc < mucToi ? QP_MUON_TU_KEM : QP_MUON_TU_CAO);
+            });
+            const cuaMinh = Math.max(0, phan[viec] * (1 + ((tuoiCho || {})[viec] || 0)) - (homNayTheoViec[viec] || 0));   // phần chia cộng dồn các ngày chờ
+            return Math.max(0, Math.min(ke.conLaiHomNay, cuaMinh + muon));
+        }
+        function qpTongHop(uoc, hn, billing) {
+            const hq = qpCongNgay(hn, -1), thang = hn.slice(0, 7);
+            const tv = { homNay: {}, homQua: {}, thang: {} }, luot = { homNay: {}, homQua: {}, thang: {} };
+            const cuoi = {};
+            const theoNgay = {};
+            Object.keys(uoc).forEach(k => {
+                const i = k.indexOf('|'), n = k.slice(0, i), v = k.slice(i + 1), x = uoc[k];
+                [['homNay', n === hn], ['homQua', n === hq], ['thang', n.indexOf(thang) === 0]].forEach(p => {
+                    if (!p[1]) return;
+                    tv[p[0]][v] = (tv[p[0]][v] || 0) + x[0];
+                    luot[p[0]][v] = (luot[p[0]][v] || 0) + x[1];
+                });
+                if (n.indexOf(thang) === 0) theoNgay[n] = (theoNgay[n] || 0) + x[0];
+                if (x[0] >= QP_NGUONG_CHAY_THAT && (!cuoi[v] || n > cuoi[v])) cuoi[v] = n;      // ngày gần nhất mỗi việc có lượt chạy thật
+            });
+            const sum = o => Object.keys(o).reduce((a, k) => a + o[k], 0);
+            const uocThang = sum(tv.thang);
+            const tuoiCho = {};
+            const hnNgay = parseInt(hn.slice(8, 10), 10);
+            const tatCa = new Set(Object.keys(QP_CAU_HINH).concat(Object.keys(tv.thang)));
+            tatCa.forEach(v => {
+                const ngayCho = cuoi[v] ? Math.round((Date.parse(hn) - Date.parse(cuoi[v])) / 864e5) - 1 : hnNgay - 1;       // hôm qua có chạy → 0 ngày chờ
+                tuoiCho[v] = Math.max(0, Math.min(QP_TOI_DA_NGAY_CHO, ngayCho));
+            });
+            const daDung = billing ? Math.max(billing.tong, uocThang) : uocThang;      // billing có thể chậm hơn thực tế → lấy số lớn hơn
+            return { homNay: hn, homQua: hq, thang: thang, daDungThang: daDung, uocRepoThang: uocThang, coBilling: !!billing,
+                     homNayTheoViec: tv.homNay, homQuaTheoViec: tv.homQua, thangTheoViec: tv.thang, tuoiCho: tuoiCho,
+                     luotThang: luot.thang, daDungHomNay: sum(tv.homNay), daDungHomQua: sum(tv.homQua), theoNgay: theoNgay };
+        }
+        function qpQuyetDinh(viec, macDinh, tt, suKien) {
+            const c = qpCauHinhViec(viec);
+            macDinh = Number(macDinh == null ? c.phut : macDinh);
+            let loai = c.loai;
+            if (loai === 'dinh_ky' && (suKien === 'workflow_dispatch' || suKien === 'repository_dispatch')) loai = 'yeu_cau';
+            const toiThieu = Number(c.toi_thieu), khan = loai === 'khan';
+            const ke = qpKeHoach(tt.homNay, tt.daDungThang, tt.daDungHomNay, khan);
+            const conThang = Math.max(0, ke.conLaiThang);
+            let ma = 'ok', cap;
+            if (khan) cap = conThang - QP.dem_cuoi;
+            else if (loai === 'yeu_cau') cap = conThang - QP.du_phong * QP_GIU_DU_PHONG_YEU_CAU - QP.chi_phi_lich_ngay * (ke.soNgayConLai - 1) - QP.dem_cuoi;
+            else {
+                const mucCan = qpMucToiThieuChoChay(ke.nhip);
+                if (c.muc < mucCan) { cap = 0; ma = 'nhip_thap'; }
+                else cap = qpChiaPhan(ke, viec, tt.homNayTheoViec, tt.tuoiCho) - QP.dem_cuoi;
+            }
+            let ket = Math.min(macDinh, cap);
+            if (cap < toiThieu) {
+                ket = 0;
+                if (ma === 'ok') ma = (loai === 'khan' || loai === 'yeu_cau' || ke.khaDung <= 0) ? 'het_thang' : 'het_phan';
+            }
+            return { viec: viec, muc: c.muc, loai: c.loai, loaiHieuLuc: loai, phut: ket, choChay: ket > 0, ma: ma, ke: ke };
+        }
+        function qpTrangThaiViec(viec, tt) {
+            const c = qpCauHinhViec(viec);
+            if (c.ngoai) return { chu: 'Ngoài điều phối (chỉ đếm)', mau: 'slate' };
+            const q = qpQuyetDinh(viec, null, tt);
+            if (q.loai === 'khan') return { chu: 'Luôn chạy (khẩn)', mau: 'sky' };
+            if (q.loai === 'yeu_cau') return q.choChay ? { chu: 'Theo yêu cầu, tối đa ' + Math.trunc(q.phut) + ' phút', mau: 'emerald' } : { chu: 'Từ chối: hết hạn mức tháng', mau: 'rose' };
+            if (q.choChay) return { chu: 'Chạy, tối đa ' + Math.trunc(q.phut) + ' phút', mau: 'emerald' };
+            return q.ma === 'nhip_thap' ? { chu: 'Tạm dừng: nhịp thấp', mau: 'amber' } : { chu: 'Hoãn: hết phần hôm nay', mau: 'amber' };
+        }
+        function qpGioVN(cron) {
+            const p = String(cron).trim().split(/\s+/), ph = parseInt(p[0], 10), hh = p[1] || '';
+            let gio = [];
+            if (/^\d+$/.test(hh)) gio = [parseInt(hh, 10)];
+            else { const m = hh.match(/^\*\/(\d+)$/); if (m) for (let h = 0; h < 24; h += parseInt(m[1], 10)) gio.push(h); }
+            return gio.map(h => qpHai((h + 7) % 24) + ':' + qpHai(ph));
+        }
+        function qpLichViec(viec) {
+            const ds = QP_LICH_CRON[viec];
+            if (!ds) return null;
+            let gio = [];
+            ds.forEach(c => { gio = gio.concat(qpGioVN(c)); });
+            gio.sort();
+            const day = gio.join(' · ');
+            return { ngan: gio.length > 3 ? gio.length + ' lượt/ngày (' + gio[0] + ' … ' + gio[gio.length - 1] + ')' : day, day: day };
+        }
+
+        // ---------- ĐỌC SỐ LIỆU ----------
+        function qpLayThietLap() {
+            let kho = '', ma = '';
+            try { kho = (localStorage.getItem(QP_KHOA_KHO) || '').trim(); ma = (localStorage.getItem(QP_KHOA_MA) || '').trim(); } catch (e) { }
+            if (!kho) {
+                const h = location.hostname;
+                const chu = h.endsWith('.github.io') ? h.split('.')[0] : '';
+                const ten = location.pathname.split('/')[1] || 'vatli-xuong';
+                if (chu) kho = chu + '/' + ten.replace(/\.html?$/i, '');
+            }
+            return { kho: kho, ma: ma };
+        }
+        async function qpGoi(url, ma) {
+            const h = { 'Accept': 'application/vnd.github+json' };
+            if (ma) h['Authorization'] = 'Bearer ' + ma;
+            const r = await fetch(url, { headers: h });
+            if (!r.ok) { const e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+            return r.json();
+        }
+        async function qpNapCauHinh() {
+            try {
+                const r = await fetch('trung_tam_dieu_phoi.json?t=' + Date.now());
+                if (!r.ok) return;
+                const j = await r.json();
+                if (j && j.NGAN_SACH_PHUT) { QP = qpGopCauHinh(j.NGAN_SACH_PHUT); QP_CAU_HINH = QP.viec; }
+            } catch (e) { /* không đọc được tệp cấu hình: dùng bản mặc định trong trang */ }
+        }
+        async function qpDocSoLieu(kho, ma, lamMoi) {
+            const bayGio = Date.now(), hn = qpNgayVN(bayGio), khoaCache = kho + '|' + (ma ? 'co-ma' : 'khong-ma') + '|' + hn.slice(0, 7);
+            let luot = null, billing = null, tuCache = false;
+            if (!lamMoi) {
+                try {
+                    const c = JSON.parse(sessionStorage.getItem(QP_KHOA_CACHE) || 'null');
+                    if (c && c.khoa === khoaCache && (bayGio - c.luc) / 1000 < QP_CACHE_GIAY) { luot = c.luot; billing = c.billing; tuCache = true; }
+                } catch (e) { }
+            }
+            if (!luot) {
+                luot = [];
+                // lùi 1 ngày so với đầu tháng để không sót lượt chạy tính theo UTC và có số "hôm qua" vào ngày mùng 1
+                const tu = qpCongNgay(hn.slice(0, 8) + '01', -1);
+                for (let trang = 1; trang <= 10; trang++) {
+                    const j = await qpGoi('https://api.github.com/repos/' + kho + '/actions/runs?per_page=100&page=' + trang + '&created=' + encodeURIComponent('>=' + tu), ma);
+                    const ds = j.workflow_runs || [];
+                    ds.forEach(r => luot.push({ bd: r.run_started_at || r.created_at, kt: r.updated_at, st: r.status, viec: qpTenViecTuLuot(r) }));
+                    if (ds.length < 100) break;
+                }
+                if (ma) {     // billing của cả tài khoản (cần mã classic): không đọc được thì dùng số ước tính
+                    const chu = kho.split('/')[0], y = hn.slice(0, 4), m = parseInt(hn.slice(5, 7), 10);
+                    for (const goc of ['users/', 'organizations/']) {
+                        try { billing = qpTongTuBilling(await qpGoi('https://api.github.com/' + goc + chu + '/settings/billing/usage?year=' + y + '&month=' + m, ma)); if (billing) break; } catch (e) { }
+                    }
+                }
+                try { sessionStorage.setItem(QP_KHOA_CACHE, JSON.stringify({ khoa: khoaCache, luc: bayGio, luot: luot, billing: billing })); } catch (e) { }
+            }
+            return { tt: qpTongHop(qpUocTinh(luot, bayGio), hn, billing), tuCache: tuCache, soLuot: luot.length };
+        }
+
+        // ---------- HIỂN THỊ ----------
+        function qpHuy(chu, mau) {
+            const m = { emerald: 'text-emerald-300 border-emerald-500/40 bg-emerald-500/10', amber: 'text-amber-300 border-amber-500/40 bg-amber-500/10',
+                        rose: 'text-rose-300 border-rose-500/40 bg-rose-500/10', sky: 'text-sky-300 border-sky-500/40 bg-sky-500/10', slate: 'text-slate-300 border-slate-600 bg-slate-700/30' };
+            return '<span class="qp-huy ' + (m[mau] || m.slate) + '">' + qpEsc(chu) + '</span>';
+        }
+        function qpThe(nhan, giaTri, phu, mau) {
+            return '<div class="rounded-lg bg-slate-900/60 border border-slate-700/60 px-3 py-2"><div class="text-[10px] text-slate-400">' + nhan + '</div>' +
+                   '<div class="text-lg font-extrabold leading-tight ' + (mau || 'text-white') + '">' + giaTri + '</div><div class="text-[10px] text-slate-500 truncate" title="' + qpEsc(phu) + '">' + qpEsc(phu) + '</div></div>';
+        }
+        function qpThongBao(chu, mau) {
+            const el = document.getElementById('qp-thong-bao');
+            if (!el) return;
+            if (!chu) { el.className = 'hidden'; el.innerHTML = ''; return; }
+            const m = { amber: 'bg-amber-500/10 border-amber-500/40 text-amber-300', rose: 'bg-rose-500/10 border-rose-500/40 text-rose-300', sky: 'bg-sky-500/10 border-sky-500/40 text-sky-300' };
+            el.className = 'text-[11px] leading-relaxed rounded-lg px-3 py-2 border ' + (m[mau] || m.sky);
+            el.innerHTML = chu;
+        }
+        function qpVeTongQuan(tt, ke, keHoach) {
+            const q = ke.quota, ti = q ? 100 * tt.daDungThang / q : 0;
+            const mauTi = ti >= 90 ? 'text-rose-400' : (ti >= 70 ? 'text-amber-300' : 'text-emerald-400');
+            const mauThanh = ti >= 90 ? '#fb7185' : (ti >= 70 ? '#fbbf24' : '#34d399');
+            const duPhongPhanTram = q ? 100 * QP.du_phong / q : 0;
+            const vuot = ke.duBaoCuoiThang > q;
+            const nguon = keHoach ? 'kế hoạch chuẩn' : (tt.coBilling ? 'billing GitHub' : 'ước tính từ lượt chạy của kho này');
+            const the = [
+                qpThe('Hạn mức tháng ' + tt.thang, qpSo(q) + ' phút', 'dự phòng giữ lại ' + qpSo(QP.du_phong) + ' phút'),
+                keHoach ? qpThe('Đã dùng cả tháng', '—', 'chưa đọc được số liệu', 'text-slate-400')
+                        : qpThe('Đã dùng cả tháng', qpSo(tt.daDungThang) + ' <span class="text-xs font-semibold">(' + Math.round(ti) + '%)</span>', nguon, mauTi),
+                keHoach ? qpThe('Còn lại cả tháng', '—', '', 'text-slate-400') : qpThe('Còn lại cả tháng', qpSo(ke.conLaiThang), 'còn dùng được ' + qpSo(Math.max(0, ke.conLaiThang - QP.du_phong)) + ' ngoài dự phòng', ke.conLaiThang <= QP.du_phong ? 'text-rose-400' : 'text-white'),
+                keHoach ? qpThe('Hôm qua (' + qpDd(tt.homQua) + ')', '—', '', 'text-slate-400') : qpThe('Hôm qua (' + qpDd(tt.homQua) + ')', qpSo(tt.daDungHomQua) + ' phút', 'tổng các việc'),
+                keHoach ? qpThe('Hôm nay (' + qpDd(tt.homNay) + ')', '—', '', 'text-slate-400') : qpThe('Hôm nay (' + qpDd(tt.homNay) + ')', qpSo(tt.daDungHomNay) + ' phút', 'còn ' + qpSo1(ke.conLaiHomNay) + ' trong ngân sách ngày'),
+                qpThe('Ngân sách ngày (hôm nay)', qpSo1(ke.nganSachNgay) + ' phút', 'chuẩn ' + qpSo1(ke.nganSachChuan) + ' phút/ngày'),
+                keHoach ? qpThe('Nhịp tiêu thụ', '1,00', 'giả định dùng đúng chuẩn', 'text-slate-400')
+                        : qpThe('Nhịp tiêu thụ', (Math.round(ke.nhip * 100) / 100).toLocaleString('vi-VN', { minimumFractionDigits: 2 }), ke.nhip >= 1 ? 'dùng ít hơn chuẩn, còn dư' : 'dưới 1 = đã tiêu quá tay', ke.nhip >= 0.8 ? 'text-emerald-400' : 'text-amber-300'),
+                keHoach ? qpThe('Dự báo cuối tháng', '—', '', 'text-slate-400')
+                        : qpThe('Dự báo cuối tháng', '~' + qpSo(ke.duBaoCuoiThang), vuot ? 'vượt hạn mức nếu giữ tốc độ này' : 'nằm trong hạn mức', vuot ? 'text-rose-400' : 'text-white')
+            ].join('');
+            const thanh = keHoach ? '' :
+                '<div class="mt-3"><div class="qp-thanh" title="Đã dùng ' + qpSo(tt.daDungThang) + '/' + qpSo(q) + ' phút">' +
+                '<i style="width:' + Math.min(100, ti).toFixed(1) + '%;background:' + mauThanh + '"></i>' +
+                '<span class="qp-du-phong" style="width:' + duPhongPhanTram.toFixed(1) + '%" title="Vùng dự phòng"></span>' +
+                '<span class="qp-moc" style="left:70%" title="Mốc cảnh báo 70%"></span></div>' +
+                '<div class="flex justify-between text-[10px] text-slate-500 mt-1"><span>0</span><span>mốc báo 70%: ' + qpSo(q * 0.7) + '</span><span>vùng sọc = dự phòng ' + qpSo(QP.du_phong) + '</span><span>' + qpSo(q) + '</span></div></div>';
+            const mucCan = qpMucToiThieuChoChay(ke.nhip);
+            let tietKiem = '';
+            if (!keHoach && mucCan > 1) {
+                const dam = qpCacViecDinhKy().filter(v => qpCauHinhViec(v).muc < mucCan).sort();
+                tietKiem = '<div class="mt-3 text-[11px] rounded-lg px-3 py-2 border bg-amber-500/10 border-amber-500/40 text-amber-300">⚠️ Đang tiết kiệm: tạm dừng việc chạy ngầm mức dưới ' + mucCan + ' (' + (dam.map(v => qpEsc(qpTenHienThi(v))).join(', ') || 'không có') + ').</div>';
+            }
+            return '<div class="grid grid-cols-2 md:grid-cols-4 gap-2">' + the + '</div>' + thanh + tietKiem;
+        }
+        function qpVeBieuDo(tt, ke) {
+            const so = ke.soNgay, y = tt.thang;
+            let max = Math.max(ke.nganSachChuan * 1.5, 1);
+            for (let d = 1; d <= so; d++) max = Math.max(max, tt.theoNgay[y + '-' + qpHai(d)] || 0);
+            let cot = '', nhan = '';
+            const homNayD = parseInt(tt.homNay.slice(8, 10), 10);
+            for (let d = 1; d <= so; d++) {
+                const iso = y + '-' + qpHai(d), p = tt.theoNgay[iso] || 0, tuong = d > homNayD;
+                const mau = d === homNayD ? '#38bdf8' : (p > ke.nganSachChuan ? '#fbbf24' : '#34d399');
+                cot += '<div class="qp-cot" title="' + qpDd(iso) + ': ' + qpSo(p) + ' phút' + (tuong ? ' (chưa tới)' : '') + '"><i style="height:' + (tuong ? 0 : Math.max(p > 0 ? 3 : 0, 100 * p / max)).toFixed(1) + '%;background:' + mau + '"></i></div>';
+                nhan += '<div class="flex-1 min-w-0 text-center">' + ((d === 1 || d % 5 === 0 || d === homNayD) ? d : '') + '</div>';
+            }
+            const dong = 100 * ke.nganSachChuan / max;
+            return '<div class="space-y-1"><div class="flex flex-wrap items-center justify-between gap-2"><div class="text-xs font-semibold text-slate-300">Phút đã dùng mỗi ngày trong tháng ' + qpEsc(y) + '</div>' +
+                   '<div class="text-[10px] text-slate-500"><span style="color:#34d399">■</span> dưới chuẩn · <span style="color:#fbbf24">■</span> vượt chuẩn · <span style="color:#38bdf8">■</span> hôm nay · <span style="color:#f59e0b">┄</span> ngân sách chuẩn ' + qpSo1(ke.nganSachChuan) + ' phút/ngày</div></div>' +
+                   '<div class="qp-bieu-do">' + cot + '<div class="qp-chuan" style="bottom:' + dong.toFixed(1) + '%"></div></div>' +
+                   '<div class="flex gap-[2px] text-[9px] text-slate-500">' + nhan + '</div></div>';
+        }
+        function qpVeBangNgam(tt, ke, keHoach) {
+            const phan = qpPhanBoNgay(ke, []);
+            const dsViec = Object.keys(QP_LICH_CRON);
+            const mucCan = qpMucToiThieuChoChay(ke.nhip);
+            const gioDau = v => qpLichViec(v).day.split(' · ')[0];
+            dsViec.sort((a, b) => (gioDau(a) > gioDau(b)) ? 1 : (gioDau(a) < gioDau(b) ? -1 : (a > b ? 1 : -1)));
+            let hang = '', tongPhan = 0, tongNay = 0, tongQua = 0, tongThang = 0;
+            dsViec.forEach(v => {
+                const c = qpCauHinhViec(v), l = qpLichViec(v), p = phan[v], hn = tt.homNayTheoViec[v] || 0;
+                const st = qpTrangThaiViec(v, tt), khan = c.loai === 'khan';
+                if (p != null) tongPhan += p;
+                tongNay += hn; tongQua += tt.homQuaTheoViec[v] || 0; tongThang += tt.thangTheoViec[v] || 0;
+                const ti = p ? Math.min(100, 100 * hn / p) : 0;
+                const thanh = p ? '<div class="qp-thanh-nho" title="' + qpSo1(hn) + '/' + qpSo1(p) + ' phút"><i style="width:' + ti.toFixed(0) + '%;background:' + (ti >= 100 ? '#fb7185' : (ti >= 70 ? '#fbbf24' : '#34d399')) + '"></i></div>' : '';
+                hang += '<tr><td><div class="font-semibold text-white">' + qpEsc(qpTenHienThi(v)) + '</div><div class="text-[10px] text-slate-500 font-mono">' + qpEsc(v) + '</div></td>' +
+                    '<td class="so">' + c.muc + '</td>' +
+                    '<td class="so">' + (khan ? '<span class="text-slate-500">khẩn</span>' : (p != null ? '<b class="text-white">' + qpSo1(p) + '</b>' : '<span class="text-slate-500">—</span>')) + '</td>' +
+                    '<td title="' + qpEsc(l ? l.day : '') + '" class="whitespace-nowrap text-slate-300">' + qpEsc(l ? l.ngan : '') + '</td>' +
+                    '<td>' + (keHoach ? '' : thanh) + '</td>' +
+                    '<td class="so">' + (keHoach ? '—' : qpSo(hn)) + '</td>' +
+                    '<td class="so">' + (khan ? '<span class="text-slate-500">khẩn</span>' : (p != null ? (keHoach ? qpSo1(p) : qpSo1(Math.max(0, p - hn))) : '<span class="text-slate-500">—</span>')) + '</td>' +
+                    '<td class="so">' + (keHoach ? '—' : qpSo(tt.homQuaTheoViec[v] || 0)) + '</td>' +
+                    '<td class="so">' + (keHoach ? '—' : qpSo(tt.thangTheoViec[v] || 0)) + '</td>' +
+                    '<td class="so">' + (keHoach ? '—' : qpSo(tt.luotThang[v] || 0)) + '</td>' +
+                    '<td>' + qpHuy(st.chu, st.mau) + '</td></tr>';
+            });
+            const chan = '<tfoot><tr><td colspan="2">Tổng các việc chạy ngầm theo lịch</td><td class="so">' + qpSo1(tongPhan) + '</td><td></td><td></td><td class="so">' + (keHoach ? '—' : qpSo(tongNay)) + '</td><td class="so">' + (keHoach ? '—' : qpSo1(Math.max(0, tongPhan - tongNay))) + '</td><td class="so">' + (keHoach ? '—' : qpSo(tongQua)) + '</td><td class="so">' + (keHoach ? '—' : qpSo(tongThang)) + '</td><td></td><td></td></tr></tfoot>';
+            return '<div class="space-y-2"><div class="flex flex-wrap items-end justify-between gap-2"><div>' +
+                   '<div class="text-xs font-semibold text-slate-300"><i class="fa-solid fa-moon text-sky-400 mr-1"></i>Phân bổ thời gian cho các tác vụ chạy ngầm hằng ngày (hôm nay ' + qpDd(tt.homNay) + ')</div>' +
+                   '<div class="text-[10px] text-slate-500">Giờ chạy theo giờ Việt Nam. Phân bổ = ngân sách ngày ' + qpSo1(ke.nganSachNgay) + ' phút chia theo mức quan trọng (mức càng cao phần càng lớn' + (mucCan > 1 ? '; việc dưới mức ' + mucCan + ' đang tạm dừng nên không có phần' : '') + '). Việc khẩn luôn được chạy, kể cả bằng phần dự phòng.</div></div></div>' +
+                   '<div class="overflow-x-auto"><table class="qp-bang"><thead><tr><th>Tác vụ</th><th class="so">Mức</th><th class="so">Phân bổ hôm nay (phút)</th><th>Giờ chạy hằng ngày</th><th>Đã dùng so với phần chia</th><th class="so">Đã dùng hôm nay</th><th class="so">Còn lại hôm nay</th><th class="so">Hôm qua</th><th class="so">Cả tháng</th><th class="so">Lượt/tháng</th><th>Trạng thái hiện tại</th></tr></thead><tbody>' + hang + '</tbody>' + chan + '</table></div>' +
+                   '<div class="text-[10px] text-slate-500">Tổng phần chia = ngân sách ngày. Việc đang chạy được mượn thêm một phần ngân sách chưa dùng của việc khác. Việc theo yêu cầu chừa lại quỹ cố định ' + qpSo(QP.chi_phi_lich_ngay) + ' phút/ngày cho các lượt cron của những ngày còn lại trong tháng.</div></div>';
+        }
+        function qpVeBangYeuCau(tt, ke, keHoach) {
+            const cac = new Set(Object.keys(QP_CAU_HINH).concat(Object.keys(tt.thangTheoViec), Object.keys(tt.homQuaTheoViec), Object.keys(tt.homNayTheoViec)));
+            const ds = Array.from(cac).filter(v => !QP_LICH_CRON[v]).sort((a, b) => ((tt.thangTheoViec[b] || 0) - (tt.thangTheoViec[a] || 0)) || (a > b ? 1 : -1));
+            const ten = { khan: 'khẩn', yeu_cau: 'theo yêu cầu', dinh_ky: 'định kì' };
+            let hang = '';
+            ds.forEach(v => {
+                const c = qpCauHinhViec(v), st = qpTrangThaiViec(v, tt);
+                const thang = tt.thangTheoViec[v] || 0, luot = tt.luotThang[v] || 0;
+                hang += '<tr><td><div class="font-semibold text-white">' + qpEsc(qpTenHienThi(v)) + '</div><div class="text-[10px] text-slate-500 font-mono">' + qpEsc(v) + '</div></td>' +
+                    '<td class="so">' + c.muc + '</td><td>' + qpEsc(ten[c.loai] || c.loai) + (c.lich === false && c.loai === 'dinh_ky' ? ' (chạy tay)' : '') + '</td>' +
+                    '<td class="so">' + qpSo(c.phut) + '</td>' +
+                    '<td class="so">' + (keHoach ? '—' : qpSo(tt.homQuaTheoViec[v] || 0)) + '</td>' +
+                    '<td class="so">' + (keHoach ? '—' : qpSo(tt.homNayTheoViec[v] || 0)) + '</td>' +
+                    '<td class="so">' + (keHoach ? '—' : qpSo(thang)) + '</td>' +
+                    '<td class="so">' + (keHoach ? '—' : qpSo(luot)) + '</td>' +
+                    '<td class="so">' + (keHoach || !luot ? '' : qpSo1(thang / luot)) + '</td>' +
+                    '<td>' + qpHuy(st.chu, st.mau) + '</td></tr>';
+            });
+            return '<details class="text-xs"' + (ds.some(v => (tt.thangTheoViec[v] || 0) > 0) ? ' open' : '') + '><summary class="cursor-pointer text-slate-300 hover:text-white font-semibold"><i class="fa-solid fa-hand-pointer text-sky-400 mr-1"></i>Tác vụ chạy theo yêu cầu / chạy tay (không chia ngân sách ngày)</summary>' +
+                   '<div class="overflow-x-auto mt-2"><table class="qp-bang"><thead><tr><th>Tác vụ</th><th class="so">Mức</th><th>Loại</th><th class="so">Trần mỗi lượt (phút)</th><th class="so">Hôm qua</th><th class="so">Hôm nay</th><th class="so">Cả tháng</th><th class="so">Lượt/tháng</th><th class="so">TB phút/lượt</th><th>Trạng thái hiện tại</th></tr></thead><tbody>' + hang + '</tbody></table></div></details>';
+        }
+        function qpVeTatCa(tt, keHoach) {
+            const ke = qpKeHoach(tt.homNay, tt.daDungThang, tt.daDungHomNay, false);
+            const set = (id, h) => { const el = document.getElementById(id); if (el) el.innerHTML = h; };
+            set('qp-tong-quan', qpVeTongQuan(tt, ke, keHoach));
+            set('qp-bieu-do', keHoach ? '' : qpVeBieuDo(tt, ke));
+            set('qp-bang-ngam', qpVeBangNgam(tt, ke, keHoach));
+            set('qp-bang-yeu-cau', qpVeBangYeuCau(tt, ke, keHoach));
+            return ke;
+        }
+        function qpGhiNhatKy(chu) {
+            const log = document.getElementById('terminal-log');
+            if (log) log.innerHTML += '<div>[' + new Date().toLocaleTimeString() + '] ' + qpEsc(chu) + '</div>';
+        }
+        function qpDatNguon(chu, mau) {
+            const el = document.getElementById('qp-nguon');
+            if (!el) return;
+            const m = { emerald: 'text-emerald-300 border-emerald-500/30 bg-emerald-500/10', amber: 'text-amber-300 border-amber-500/30 bg-amber-500/10', slate: 'text-slate-300 border-slate-700 bg-slate-800/80' };
+            el.className = 'px-2.5 py-1 rounded-lg border text-[10px] font-semibold ' + (m[mau] || m.slate);
+            el.textContent = chu;
+        }
+        // Chưa đọc được số liệu thật: hiện KẾ HOẠCH CHUẨN (giả định dùng đúng nhịp chuẩn từ đầu tháng) để vẫn thấy cách phân bổ
+        function qpTongHopKeHoach() {
+            const hn = qpNgayVN(Date.now()), tt = qpTongHop({}, hn, null);
+            const ke0 = qpKeHoach(hn, 0, 0, false);
+            tt.daDungThang = ke0.nganSachChuan * (parseInt(hn.slice(8, 10), 10) - 1);
+            tt.daDungHomNay = 0;
+            return tt;
+        }
+        async function qpTai(lamMoi) {
+            if (qpDangTai) return;
+            qpDangTai = true;
+            const gio = new Date().toLocaleTimeString();
+            try {
+                await qpNapCauHinh();
+                const s = qpLayThietLap();
+                const oKho = document.getElementById('qp-o-kho');
+                if (oKho && !oKho.value) { try { oKho.value = localStorage.getItem(QP_KHOA_KHO) || ''; } catch (e) { } }
+                if (!s.kho) {
+                    qpVeTatCa(qpTongHopKeHoach(), true);
+                    qpDatNguon('Chưa biết kho GitHub', 'amber');
+                    qpThongBao('Chưa xác định được kho GitHub của xưởng (trang không chạy trên <b>chủ-tài-khoản.github.io</b>). Mở mục <b>Thiết lập nguồn số liệu</b> bên dưới, nhập <b>chủ-tài-khoản/tên-kho</b> rồi bấm Lưu. Trong lúc chờ, bảng hiện <b>kế hoạch chuẩn</b> theo cấu hình, chưa phải số phút đã dùng thật.', 'amber');
+                    return;
+                }
+                qpDatNguon('Đang đọc ' + s.kho + '…', 'slate');
+                let kq = null;
+                try { kq = await qpDocSoLieu(s.kho, s.ma, lamMoi); }
+                catch (e) {
+                    qpVeTatCa(qpTongHopKeHoach(), true);
+                    const lyDo = e && e.status === 404 ? 'Kho <b>' + qpEsc(s.kho) + '</b> không đọc được: kho riêng tư (cần mã GitHub chỉ-đọc) hoặc tên kho chưa đúng.'
+                        : (e && (e.status === 401 || e.status === 403) ? 'GitHub từ chối (mã sai/hết hạn hoặc hết lượt gọi API không mã, tối đa 60 lượt mỗi giờ).' : 'Không gọi được GitHub API (mạng hoặc trình duyệt chặn).');
+                    qpDatNguon('Chưa đọc được số liệu', 'amber');
+                    qpThongBao(lyDo + ' Mở <b>Thiết lập nguồn số liệu</b> bên dưới để nhập kho và mã. Trong lúc chờ, bảng hiện <b>kế hoạch chuẩn</b> theo cấu hình, chưa phải số phút đã dùng thật.', 'amber');
+                    qpGhiNhatKy('⚠️ Hạn mức phút Actions: chưa đọc được số liệu (' + (e && e.status ? 'HTTP ' + e.status : 'lỗi mạng') + ').');
+                    return;
+                }
+                const tt = kq.tt, ke = qpVeTatCa(tt, false);
+                qpDatNguon((tt.coBilling ? 'Billing GitHub' : 'Ước tính từ lượt chạy') + ' · ' + s.kho + ' · ' + gio + (kq.tuCache ? ' (từ bộ nhớ tạm)' : ''), 'emerald');
+                const ti = ke.quota ? 100 * tt.daDungThang / ke.quota : 0;
+                let canh = '';
+                if (ti >= 90) canh = 'Đã dùng từ <b>90%</b> hạn mức tháng: chỉ còn việc khẩn và việc theo yêu cầu được chạy.';
+                else if (ti >= 70) canh = 'Đã dùng từ <b>70%</b> hạn mức tháng: nên theo dõi, việc nhẹ sẽ tự bị hoãn trước.';
+                else if (ke.duBaoCuoiThang > ke.quota && tt.homNay.slice(8, 10) >= '05') canh = 'Giữ tốc độ dùng hiện tại thì cuối tháng khoảng <b>' + qpSo(ke.duBaoCuoiThang) + '</b> phút, vượt hạn mức ' + qpSo(ke.quota) + '.';
+                qpThongBao(canh, ti >= 90 ? 'rose' : 'amber');
+                if (!tt.coBilling) qpGhiNhatKy('ℹ️ Hạn mức phút Actions: số liệu ước tính từ lượt chạy của kho ' + s.kho + (s.ma ? ' (không đọc được billing).' : ' (không có mã, không thấy phút của kho khác).'));
+                qpGhiNhatKy('⏱️ Hạn mức phút Actions tháng ' + tt.thang + ': đã dùng ' + qpSo(tt.daDungThang) + '/' + qpSo(ke.quota) + ' (' + Math.round(ti) + '%), hôm qua ' + qpSo(tt.daDungHomQua) + ' phút, hôm nay ' + qpSo(tt.daDungHomNay) + ' phút.');
+            } catch (e) {
+                console.warn('Mục hạn mức phút:', e);
+                qpThongBao('Mục hạn mức phút gặp lỗi khi hiển thị: ' + qpEsc(e && e.message), 'rose');
+            } finally { qpDangTai = false; }
+        }
+        function qpLuuThietLap() {
+            const kho = (document.getElementById('qp-o-kho').value || '').trim().replace(/^https?:\/\/github\.com\//i, '').replace(/\/+$/, '');
+            const ma = (document.getElementById('qp-o-ma').value || '').trim();
+            if (kho && !/^[\w.\-]+\/[\w.\-]+$/.test(kho)) { alert('Kho cần có dạng chủ-tài-khoản/tên-kho, ví dụ: thay-abc/vatli-xuong'); return; }
+            try {
+                if (kho) localStorage.setItem(QP_KHOA_KHO, kho); else localStorage.removeItem(QP_KHOA_KHO);
+                if (ma) localStorage.setItem(QP_KHOA_MA, ma);
+                sessionStorage.removeItem(QP_KHOA_CACHE);
+            } catch (e) { }
+            document.getElementById('qp-o-ma').value = '';
+            qpTai(true);
+        }
+        function qpXoaThietLap() {
+            try { localStorage.removeItem(QP_KHOA_KHO); localStorage.removeItem(QP_KHOA_MA); sessionStorage.removeItem(QP_KHOA_CACHE); } catch (e) { }
+            document.getElementById('qp-o-kho').value = '';
+            document.getElementById('qp-o-ma').value = '';
+            qpTai(true);
+        }
+        window.addEventListener('DOMContentLoaded', () => { qpTai(false); });
     </script>
 </body>
 </html>
