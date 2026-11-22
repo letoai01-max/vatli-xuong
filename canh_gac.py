@@ -5,6 +5,8 @@ Mỗi sáng 7h20 (giờ Việt Nam) chỉ ĐỌC Kho chung bằng tài khoản d
   1. Tab Agent: agent có "Chu kì tối đa (giờ)" mà quá hạn → báo; lỗi trong 2 ngày gần nhất → báo.
   2. Tab ThoiGianChay: Meta-agent phải ghi dòng TỔNG của hôm qua (lúc 6h). Không có → Meta có thể đã ngừng.
      Có thì so tổng phút trigger với trần 90 phút/ngày.
+  3. Phút GitHub Actions (quota_phut.py): đã dùng bao nhiêu trong tháng, hôm qua, từng việc, việc nào đang bị tạm dừng; gửi tóm tắt Telegram mỗi sáng.
+     ≥90% hạn mức tháng → báo ĐỎ.
 Có vấn đề → lượt chạy báo ĐỎ và GitHub tự gửi email cho chủ kho. Không có vấn đề → lượt chạy XANH.
 Báo cáo đầy đủ nằm ở trang tóm tắt (Summary) của lượt chạy trong tab Actions.
 """
@@ -28,13 +30,29 @@ def doc_ngay(s):
     return dt.datetime(int(m[3]), int(m[2]), int(m[1]), int(m[4] or 23), int(m[5] or 59), tzinfo=TZ)
 
 
-def cong_tac_bat():
-    """Công tắc CANH_GAC_TU_DONG trong trung_tam_dieu_phoi.json (mặc định bật)."""
+def cong_tac_bat(ten="CANH_GAC_TU_DONG"):
+    """Công tắc trong trung_tam_dieu_phoi.json (mặc định bật)."""
     try:
         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "trung_tam_dieu_phoi.json"), encoding="utf-8") as f:
-            return bool(json.load(f).get("CONG_TAC", {}).get("CANH_GAC_TU_DONG", True))
+            return bool(json.load(f).get("CONG_TAC", {}).get(ten, True))
     except Exception:
         return True
+
+
+def phan_phut(van, ghi_chu):
+    """Mục phút GitHub Actions: tháng, hôm qua, từng việc. Trả (đoạn markdown, các dòng tóm tắt); thêm cảnh báo vào van/ghi_chu."""
+    try:
+        import quota_phut as QP
+        doan, muc, ngan = QP.bao_cao_markdown()
+    except Exception as e:
+        ghi_chu.append("Không tính được phút GitHub Actions (%s)." % type(e).__name__)
+        return "", []
+    if doan is None:
+        ghi_chu.append("Không đọc được số phút GitHub Actions: canh_gac.yml cần permissions: actions: read và env GITHUB_TOKEN.")
+        return "", []
+    if muc >= 90:
+        van.append("**Phút GitHub Actions đã dùng ≥%d%% hạn mức tháng** – các việc nhẹ tự hoãn, việc theo yêu cầu bị cắt trần; xem tab Quota_Phut." % muc)
+    return doan, ngan
 
 
 def main():
@@ -103,18 +121,29 @@ def main():
             (ghi_chu if re.search(r"HET_LUOT|429|quota", note, re.I) else van).append("%s lỗi lúc %s: %s" % (ten, r[5], ngan))
     tot.append("%d agent đúng nhịp" % dung_nhip)
 
+    # ---- 3. Phút GitHub Actions (tháng, hôm qua, từng việc) ----
+    doan_phut, ngan_phut = phan_phut(van, ghi_chu)
+
     # ---- Báo cáo ----
     dong = ["# 🛡️ Canh gác hệ thống agent – %s" % bay.strftime("%H:%M %d/%m/%Y"), ""]
     dong += ["## ⚠️ Cần xem ngay"] + ["- " + x for x in van] + [""] if van else ["## ✅ Không phát hiện sự cố", ""]
     if ghi_chu:
         dong += ["## Ghi chú"] + ["- " + x for x in ghi_chu] + [""]
-    dong += ["**Đang ổn:** " + " · ".join(tot)]
+    dong += ["**Đang ổn:** " + " · ".join(tot), ""]
+    if doan_phut:
+        dong += [doan_phut]
     print("3/3 Đã đọc xong, lập báo cáo.", flush=True)
     bao_cao = "\n".join(dong)
     print(bao_cao)
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
             f.write(bao_cao + "\n")
+    if ngan_phut and cong_tac_bat("BAO_PHUT_HANG_NGAY"):
+        try:
+            import thong_bao
+            thong_bao.gui_telegram("🛡️ Canh gác %s\n%s" % (bay.strftime("%d/%m"), "\n".join(ngan_phut + (["⚠️ " + x.replace("**", "") for x in van] if van else []))))
+        except Exception as e:
+            print("Telegram bỏ qua (%s)." % type(e).__name__, flush=True)
     if van:
         sys.exit("Phát hiện %d vấn đề – xem trang Summary của lượt chạy." % len(van))
 
