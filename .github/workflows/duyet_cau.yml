@@ -59,6 +59,7 @@ jobs:
           CUU_HINH_BANG_ANH: "true"
           CUU_HINH_TOI_DA: "15"
           DUYET_LAI_CAN_XEM: "true"
+          DUYET_UU_TIEN_MAU_HOA: "true"      # [22/11] duyệt biến thể câu mẫu hoá trước
           DUYET_LAI_PHAM_VI: "may"
           XEM_CON_LAI: "loai"
           # [22/11/2026] BƯỚC 2 – cứu câu "Loại" do bất đồng đáp án: thêm phiếu Groq khác họ (xem đầu duyet_cau.py). Tên model kiểm tra lại trên console.groq.com.
