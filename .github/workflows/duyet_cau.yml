@@ -63,7 +63,7 @@ jobs:
           XEM_CON_LAI: "loai"
           # [22/11/2026] BƯỚC 2 – cứu câu "Loại" do bất đồng đáp án: thêm phiếu Groq khác họ (xem đầu duyet_cau.py). Tên model kiểm tra lại trên console.groq.com.
           PHIEU_BA: "true"
-          PHIEU_BA_MODELS: "qwen/qwen3.8-27b,llama-3.3-70b-versatile"
+          PHIEU_BA_MODELS: "qwen/qwen3.8-27b"
           DUYET_LAI_LOAI: "true"
           THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '150' }}
         run: python trung_tam.py duyet_cau.py
