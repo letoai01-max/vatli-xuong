@@ -20,7 +20,7 @@ except Exception:                       # thiếu tệp ghi hạn mức: vẫn c
 URL = "https://api.groq.com/openai/v1/chat/completions"
 MODELS = [m.strip() for m in (os.environ.get("GROQ_MODELS") or os.environ.get("CFG_GROQ_MODELS")
           or "openai/gpt-oss-120b,qwen/qwen3.8-27b,openai/gpt-oss-20b").split(",") if m.strip()]
-LO = 10                    # số câu mỗi lượt gọi
+LO = int(os.environ.get("GROQ_LO") or 10)     # số câu mỗi lượt gọi [22/11] chỉnh được; qwen3.8 chỉ cho 1000 token ra/phút nên nên đặt 4–5
 NGHI_GIUA_LUOT = 3         # giây – Groq miễn phí giới hạn token/phút
 _HONG = set()
 
@@ -127,6 +127,9 @@ def giai_lo(ds, models=None):
                     "CHỈ trả về JSON đúng mẫu: {\"ket_qua\":[{\"ma_cau\":\"...\",\"dap_an\":\"...\"}]}, mỗi câu một phần tử.\n"
                     "CÁC CÂU:\n" + json.dumps(du_lieu, ensure_ascii=False))
         text, model = goi(loi_nhan, models=models)
+        if text is None:                               # [22/11] hết token/phút: chờ hết phút rồi thử lại ĐÚNG MỘT lần trước khi bỏ
+            time.sleep(35)
+            text, model = goi(loi_nhan, models=models)
         if text is None:
             break                                      # Groq không dùng được lượt này: phần còn lại để trống
         model_dung = model or model_dung

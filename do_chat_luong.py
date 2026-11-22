@@ -48,7 +48,7 @@ def chon_mau(rows, td, n, seed=2026):
     return ung[:n]
 
 
-def so_sanh(mau, kq, khop):
+def so_sanh(mau, kq, khop, gan=None):
     """kq: {ma: đáp án model kiểm}. Trả (thống kê theo nhóm, danh sách lệch, số câu model không trả lời)."""
     tk = collections.defaultdict(lambda: [0, 0])
     lech, bo = [], 0
@@ -58,7 +58,10 @@ def so_sanh(mau, kq, khop):
         ok = khop(x["dang"], x["dap_an"], g)
         for nhom in ("TỔNG", "dạng " + x["dang"], "có hình" if x["co_hinh"] else "không hình", "nguồn: " + x["nguon"]):
             tk[nhom][0] += 1; tk[nhom][1] += ok
-        if not ok: lech.append((x["ma"], x["dang"], x["dap_an"], g, x["nguon"]))
+        if not ok:
+            nho = bool(gan and gan(x["dang"], x["dap_an"], g))
+            if nho: tk["(trong số lệch) chỉ lệch ≤3%, nhiều khả năng do làm tròn"][0] += 1
+            lech.append((x["ma"], x["dang"], x["dap_an"], g + ("  (≈ làm tròn)" if nho else ""), x["nguon"]))
     return tk, lech, bo
 
 
@@ -68,6 +71,7 @@ def bao_cao(tk, lech, bo, n_mau, model):
           "| Nhóm | Số câu | Khớp | Tỉ lệ khớp |", "|---|---:|---:|---:|"]
     for k in sorted(tk, key=lambda s: (s != "TỔNG", s)):
         t, ok = tk[k]
+        if k.startswith("(trong số lệch)"): ra.append("| %s | %d | – | – |" % (k, t)); continue
         ra.append("| %s | %d | %d | %.1f%% |" % (k, t, ok, 100 * ok / max(t, 1)))
     ra += ["\nLưu ý: lệch ≠ chắc chắn sai. Model kiểm có thể giải sai; hãy để giáo viên soát danh sách lệch (ưu tiên cao).\n",
            "## Câu lệch (%d)\n" % len(lech), "| Mã câu | Dạng | Đáp án đã duyệt | Model kiểm | Nguồn |", "|---|---|---|---|---|"]
@@ -109,6 +113,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=150); ap.add_argument("--model", default="", help="để trống = tự chọn model đang hoạt động, ưu tiên model chưa bỏ phiếu")
     ap.add_argument("--ra"); ap.add_argument("--thu", action="store_true")
+    ap.add_argument("--lo", type=int, default=5, help="số câu mỗi lượt hỏi (nhỏ để khỏi vượt token/phút của Groq)")
+    ap.add_argument("--nghi", type=float, default=8, help="giây nghỉ giữa các lượt")
+    ap.add_argument("--phut", type=float, default=15, help="tối đa bao nhiêu phút")
     a = ap.parse_args()
     if a.thu: return thu()
     import doc_de as X, duyet_cau as D, groq_xuong as G
@@ -119,17 +126,23 @@ def main():
     mau = chon_mau(v[1:], td, a.n)
     print("Mẫu %d câu ..." % len(mau), flush=True)
     bo = [{"ma": x["ma"], "dang": x["dang"], "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in mau]
-    song = model_dang_chay()
-    print("Model Groq đang hoạt động:", ", ".join(song) or "(không lấy được)", flush=True)
-    da_bo_phieu = set(G.MODELS) | set(D.PHIEU_BA_MODELS)           # ưu tiên model chưa tham gia bỏ phiếu → độc lập hơn
-    thu_lan = ([a.model] if a.model else []) + [m for m in song if m not in da_bo_phieu and m != a.model] + [m for m in song if m in da_bo_phieu and m != a.model]
-    kq, model = {}, ""
-    for m in thu_lan[:4]:
-        print("Thử model kiểm: %s ..." % m, flush=True)
-        kq, model = G.giai_lo(bo, [m])
-        if kq: model = model or m; break
+    song = [m for m in model_dang_chay() if "allam" not in m]         # allam-2-7b: yếu và giới hạn 4096 token → bỏ
+    print("Model Groq dùng được:", ", ".join(song) or "(không lấy được)", flush=True)
+    thu_lan = ([a.model] if a.model else []) + [m for m in song if m != a.model]
+    if not thu_lan: sys.exit("Không có model Groq nào để dùng.")
+    import time
+    kq, dung, het_gio = {}, collections.Counter(), time.time() + a.phut * 60
+    for k in range(0, len(bo), a.lo):
+        if time.time() > het_gio: print("Hết %d phút, dừng ở câu %d/%d." % (a.phut, k, len(bo))); break
+        chunk = bo[k:k + a.lo]
+        for m in thu_lan:                                              # model đầu hết hạn mức → sang model kế, không bỏ lô
+            r, _ = G.giai_lo(chunk, [m])
+            if r: kq.update(r); dung[m] += len(r); break
+        print("  đã hỏi %d/%d câu, có đáp án %d" % (min(k + a.lo, len(bo)), len(bo), len(kq)), flush=True)
+        time.sleep(a.nghi)
     if not kq: sys.exit("Không model Groq nào trả được đáp án (xem danh sách model ở trên; có thể hết hạn mức).")
-    tk, lech, boqua = so_sanh(mau, kq, lambda d, x, y: D.khop(d, x, y))
+    model = ", ".join("%s (%d câu)" % kv for kv in dung.most_common())
+    gan = lambda d, x, y: d in ("TLN", "TL") and D.khop(d, x, y, sai_so=0.03)
     s = bao_cao(tk, lech, boqua, len(mau), model or a.model)
     print(s)
     if a.ra: open(a.ra, "w", encoding="utf-8").write(s)
