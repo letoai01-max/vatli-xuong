@@ -1,8 +1,13 @@
-# .github/workflows/gan_mo_ta_anh.yml – GẮN MÔ TẢ CHO ẢNH KHO SGK (chạy tay khi cần, không có lịch)
+# .github/workflows/gan_mo_ta_anh.yml – GẮN MÔ TẢ CHO ẢNH KHO SGK (chạy ngầm tự động hằng ngày 01:30 giờ Việt Nam; vẫn bấm chạy tay được)
 # Gemini đọc từng ảnh chưa có mô tả → ghi số hình, nội dung, từ khoá vào ô "Mô tả" của tệp trên Drive để soan_giao_an.py tìm được ảnh.
 # Cần: biến KHO_ANH_SGK_ID; tài khoản dịch vụ có quyền "Người chỉnh sửa" trên thư mục kho (chỉ "Người xem" thì dùng tệp out/chi_muc_anh.json).
+# [22/11/2026] Thêm lịch cron: mỗi đêm xử lí tối đa 60 ảnh chưa có mô tả (đặt TOI_DA mặc định cho lượt theo lịch), ảnh còn lại để các đêm sau làm tiếp.
+#              Thêm khoá GEMINI_API_KEY_1..5 để xoay khoá khi gặp 429. 01:30 giờ VN tránh giờ của duyệt câu (03:47, 23:47) và đọc đề (05:17, 22:17).
 name: gan_mo_ta_anh
 on:
+  schedule:
+    # 01:30 giờ Việt Nam mỗi ngày (UTC+7) = 18:30 UTC (ngày hôm trước)
+    - cron: "30 18 * * *"
   workflow_dispatch:
     inputs:
       toi_da:
@@ -47,8 +52,14 @@ jobs:
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          GEMINI_API_KEY_4: ${{ secrets.GEMINI_API_KEY_4 }}
+          GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
           KHO_ANH_SGK_ID: ${{ vars.KHO_ANH_SGK_ID || secrets.KHO_ANH_SGK_ID }}
-          TOI_DA: ${{ inputs.toi_da }}
+          # Lượt theo lịch không có inputs → dùng 60; chạy tay thì lấy số đã nhập
+          TOI_DA: ${{ inputs.toi_da || '60' }}
           LAM_LAI: ${{ inputs.lam_lai && '1' || '' }}
         run: python trung_tam.py gan_mo_ta_anh.py
       - name: Lưu chỉ mục mô tả
