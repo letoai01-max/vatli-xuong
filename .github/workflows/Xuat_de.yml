@@ -8,6 +8,7 @@ on:
     types: [trigger_xuat_de]
 
 permissions:
+  actions: read
   contents: write
 
 # [29/10/2026] Không cho hai lượt xuất chạy chồng nhau (lượt sau đợi lượt trước xong)
@@ -23,17 +24,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Cổng ngân sách phút (rẻ – chưa cài thư viện; hoãn thì bỏ qua các bước sau)
+        id: cong
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+        run: python3 quota_phut.py --cong
       - name: Set up Python
+        if: steps.cong.outputs.chay != 'false'
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
 
       - name: Install dependencies quickly
+        if: steps.cong.outputs.chay != 'false'
         run: pip install --no-cache-dir gspread google-auth
 
       - name: Run xuat_de.py
+        if: steps.cong.outputs.chay != 'false'
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           SHEET_ID: ${{ secrets.SHEET_ID }}
@@ -41,6 +55,7 @@ jobs:
 
       # [29/10/2026] Lấy bản mới nhất trước khi commit, tránh bị từ chối khi quet-anh vừa đẩy ảnh lên
       - name: Lấy bản mới nhất trước khi commit
+        if: steps.cong.outputs.chay != 'false'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -49,6 +64,7 @@ jobs:
           git stash pop || true
 
       - name: Commit and push generated files
+        if: steps.cong.outputs.chay != 'false'
         uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5.x.x
         with:
           commit_message: "🤖 Tự động cập nhật questions.json tức thì"

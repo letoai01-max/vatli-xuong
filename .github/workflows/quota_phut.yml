@@ -1,0 +1,30 @@
+# quota_phut.yml – xem NGAY số phút GitHub Actions: tháng, hôm qua, hôm nay, từng việc, việc nào đang bị tạm dừng; ghi tab Quota_Phut (chạy tay, ~1-2 phút mỗi lần).
+# KHÔNG cần đặt lịch: mọi việc đều qua trung_tam.py nên tự cập nhật số liệu này sau mỗi lượt, canh_gac gửi tóm tắt mỗi sáng 7h20.
+name: quota_phut
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: quota_phut
+  cancel-in-progress: false
+jobs:
+  quota_phut:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Quota phút
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python trung_tam.py quota_phut.py

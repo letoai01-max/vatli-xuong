@@ -27,14 +27,27 @@ jobs:
     timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
+      - name: Cổng ngân sách phút (rẻ – chưa cài thư viện; hoãn thì bỏ qua các bước sau)
+        id: cong
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+        run: python3 quota_phut.py --cong
       - uses: actions/setup-python@v5
+        if: steps.cong.outputs.chay != 'false'
         with:
           python-version: "3.11"
           cache: pip
       - run: pip install -q -r requirements.txt
+        if: steps.cong.outputs.chay != 'false'
       - name: Tự giải câu chờ duyệt chưa có lời giải
+        if: steps.cong.outputs.chay != 'false'
         id: tg
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -48,7 +61,7 @@ jobs:
           THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '60' }}
         run: python trung_tam.py tu_giai.py
       - name: Có lời giải mới → xuất lại questions.json cho trang duyệt
-        if: success() && steps.tg.outputs.da_ghi != '' && steps.tg.outputs.da_ghi != '0'
+        if: steps.cong.outputs.chay != 'false' && (success() && steps.tg.outputs.da_ghi != '' && steps.tg.outputs.da_ghi != '0')
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run Xuat_de.yml --ref main

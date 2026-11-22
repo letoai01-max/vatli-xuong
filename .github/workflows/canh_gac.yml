@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -43,6 +44,11 @@ jobs:
           fi
 
       - name: Chạy canh gác (qua trung tâm điều phối)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python trung_tam.py canh_gac.py
 
       # Chạy độc lập với Python: canh_gac.py báo đỏ hay sập đều gửi được Telegram

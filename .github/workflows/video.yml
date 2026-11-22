@@ -8,6 +8,7 @@ on:
 
 # [BẢO MẬT 31/10/2026] Lượt chạy chỉ cần đọc mã nguồn; video lưu bằng upload-artifact (không cần quyền ghi kho).
 permissions:
+  actions: read
   contents: read
 
 jobs:
@@ -38,6 +39,11 @@ jobs:
           sudo apt-get install -y -qq ffmpeg fonts-noto-core > /dev/null
           pip install -q -r requirements.txt
       - name: Dựng video
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python trung_tam.py render.py "$MA"
       - uses: actions/upload-artifact@v4
         with:

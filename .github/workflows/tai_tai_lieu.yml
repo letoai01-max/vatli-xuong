@@ -12,22 +12,39 @@ on:
 concurrency:
   group: tai-tai-lieu            # không chạy hai lượt cùng lúc
   cancel-in-progress: false
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   chay:
     runs-on: ubuntu-latest
     timeout-minutes: 25          # chặn lượt treo, giữ quỹ phút của kho riêng tư
     steps:
       - uses: actions/checkout@v4
+      - name: Cổng ngân sách phút (rẻ – chưa cài thư viện; hoãn thì bỏ qua các bước sau)
+        id: cong
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+        run: python3 quota_phut.py --cong
       - uses: actions/setup-python@v5
+        if: steps.cong.outputs.chay != 'false'
         with:
           python-version: '3.12'
           cache: pip
       - run: pip install -r requirements.txt
+        if: steps.cong.outputs.chay != 'false'
       - name: Chạy Download Agent
+        if: steps.cong.outputs.chay != 'false'
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           CHU_DE: ${{ github.event.inputs.chu_de }}
           # Dùng lại đúng tên secret mà tao_de.yml đang dùng (đổi cho khớp kho của thầy):
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
-        run: python tai_tai_lieu.py
+        run: python trung_tam.py tai_tai_lieu.py

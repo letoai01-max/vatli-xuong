@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: write
 
 concurrency:
@@ -20,24 +21,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Cổng ngân sách phút (rẻ – chưa cài thư viện; hoãn thì bỏ qua các bước sau)
+        id: cong
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+        run: python3 quota_phut.py --cong
       - name: Cài đặt môi trường Python
+        if: steps.cong.outputs.chay != 'false'
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
 
       - name: Cài đặt các thư viện phụ trợ
+        if: steps.cong.outputs.chay != 'false'
         run: pip install -q -r requirements.txt
 
       # [29/10/2026] Bỏ GEMINI_API_KEY, GEMINI_API_KEY_TRA_PHI: quet_bu_hinh_anh.py không gọi Gemini
       - name: Chạy script quét bù hình ảnh từ Google Drive
+        if: steps.cong.outputs.chay != 'false'
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: python trung_tam.py quet_bu_hinh_anh.py
 
       - name: Tự động xuất lại questions.json sau khi quét ảnh
+        if: steps.cong.outputs.chay != 'false'
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GH_VIEC: xuat_de
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           SHEET_ID: ${{ secrets.SHEET_ID }}
@@ -46,6 +66,7 @@ jobs:
       # [29/10/2026] Bỏ DeThi.docx (không còn được tạo). Tự lấy bản mới nhất và thử đẩy lại tối đa 3 lần,
       # để không bị từ chối khi Xuat_de vừa đẩy questions.json lên cùng lúc. Bản vừa xuất luôn được giữ.
       - name: Commit và đẩy questions.json, hình ảnh
+        if: steps.cong.outputs.chay != 'false'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

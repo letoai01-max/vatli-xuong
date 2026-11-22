@@ -9,6 +9,7 @@ on:
     paths:
       - "**.py"
       - "requirements.txt"
+      - "trung_tam_dieu_phoi.json"
       - ".github/workflows/kiem_thu.yml"
   pull_request:
     paths:
@@ -61,3 +62,6 @@ jobs:
 
       - name: Kiểm thử đồ thị sin/cos vẽ từ công thức
         run: python kiem_thu_ham_so_do_thi.py ket_qua_kiem_thu
+
+      - name: Kiểm thử điều phối phút GitHub Actions (quota_phut, trung_tam, cấu hình, workflow)
+        run: python kiem_thu_quota_phut.py

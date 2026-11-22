@@ -16,6 +16,7 @@ on:
         required: true
 # [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
 permissions:
+  actions: read
   contents: read
 
 jobs:
@@ -31,6 +32,10 @@ jobs:
       - run: pip install -q -r requirements.txt
       - name: Soạn đề cương 5 bước & Kiểm tra số bằng SymPy
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

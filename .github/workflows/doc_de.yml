@@ -14,6 +14,7 @@ concurrency:
   cancel-in-progress: false
 # [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
 permissions:
+  actions: read
   contents: read
 
 jobs:
@@ -22,13 +23,26 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Cổng ngân sách phút (rẻ – chưa cài thư viện; hoãn thì bỏ qua các bước sau)
+        id: cong
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+        run: python3 quota_phut.py --cong
       - uses: actions/setup-python@v5
+        if: steps.cong.outputs.chay != 'false'
         with:
           python-version: "3.11"
           cache: pip
       - run: pip install -q -r requirements.txt
+        if: steps.cong.outputs.chay != 'false'
       - name: Đọc đề tải về → ngân hàng câu hỏi
+        if: steps.cong.outputs.chay != 'false'
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PYTHONUNBUFFERED: "1"
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

@@ -29,9 +29,13 @@ jobs:
       - name: Chạy Agent văn bản
         id: vb
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python van_ban.py
+        run: python trung_tam.py van_ban.py
       - name: Nối tiếp nếu còn việc (tối đa 3 lượt/đêm)
         if: steps.vb.outputs.con_viec == 'true' && (github.event.inputs.luot || '1') < 3
         env:
