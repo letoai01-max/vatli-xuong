@@ -269,8 +269,9 @@ def kiem_bien_the(dang, b, g, da_dung):
     if any(re.search(r"\d[.,]\d{6,}", str(t)) for t in pa): return "phương án có số lẻ dài, chưa làm tròn"
     ds_ = b.get("dap_so")
     if isinstance(ds_, (int, float)) and math.isfinite(ds_):                 # [22/11] chống định dạng cắt phần thập phân của phương án đúng
-        hien = so_trong(pa[idx])
-        if hien == hien and abs(hien - ds_) > 0.03 * abs(ds_) + 1e-9: return "phương án đúng hiển thị %s lệch số tính %s" % (str(pa[idx])[:20], dinh_dang_so(ds_))
+        hien, sq = so_trong(pa[idx]), gia_tri_si(pa[idx])
+        khop = lambda x: abs(x - ds_) <= 0.03 * abs(ds_) + 1e-9           # dap_so có thể tính theo đơn vị hiển thị HOẶC đơn vị chuẩn (m, kg, s…)
+        if hien == hien and not khop(hien) and not (sq and khop(sq[2])): return "phương án đúng hiển thị %s lệch số tính %s" % (str(pa[idx])[:20], dinh_dang_so(ds_))
     gp = g.get("pa") or []
     if len(gp) == 4 and g.get("idx") in (0, 1, 2, 3) and chuan_chu(pa[idx]) == chuan_chu(gp[g["idx"]]):
         return "phương án đúng y hệt câu gốc (đáp án không đổi theo số liệu mới)"
