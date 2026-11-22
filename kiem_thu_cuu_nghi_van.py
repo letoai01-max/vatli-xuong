@@ -116,6 +116,33 @@ x = cau()
 kiem("XEM_CON_LAI=loai: câu sạch vẫn AI duyệt", D.xep_loai(x) == D.TT["AI"])
 D.XEM_CON_LAI = "xem"
 
+# ---- BƯỚC 2: phiếu thứ ba (câu không hình) ----
+def cau_ba(bc, bd=("Không có HDC; hai lời giải độc lập chưa thống nhất (B / C)",), dap_an=""):
+    x = cau(dap_an=dap_an); x["bat_dong"] = list(bd); x["nghi_van"] = list(bd); x["bc"] = bc
+    return x
+
+kiem("bo_phieu toi_thieu=3: 2 phiếu chưa đủ", CN.bo_phieu("TN", {"tu": "B", "may": "B"}, kh, 0.02, "", 3, 2) is None)
+kiem("bo_phieu cach_biet=2: 3–2 chưa đủ", CN.bo_phieu("TN", {"tu": "B", "may": "B", "gq": "B", "g2": "C", "g3": "C"}, kh, 0.02, "", 3, 2) is None)
+x = cau_ba({"hdc": "", "tu": "B", "may": "B", "gq": "B", "gq_qwen": "C"})
+kiem("3 phiếu B (Gemini + Groq) vs 1 phiếu C → cứu, ghi B", D.ap_dung_phieu_ba(x) and not x["nghi_van"] and x["sua"].get("dap_an") == "B" and D.xep_loai(x) == D.TT["AI"])
+x = cau_ba({"hdc": "", "tu": "B", "may": "C", "gq": "B", "gq_qwen": "C"})
+kiem("hoà 2–2 → không cứu → Loại (câu không hình)", not D.ap_dung_phieu_ba(x) and D.xep_loai(x) == D.TT["LOAI"])
+x = cau_ba({"hdc": "", "tu": "B", "may": "B", "gq": "", "gq_qwen": ""})
+kiem("chỉ Gemini đồng ý → không đủ độc lập", not D.ap_dung_phieu_ba(x))
+x = cau_ba({"hdc": "B", "tu": "C", "may": "C", "gq": "C"}, bd=("HDC gốc B, máy giải C – cần xem",), dap_an="B")
+kiem("3 phiếu C khác HDC gốc B → chưa đủ 4 để ghi đè", not D.ap_dung_phieu_ba(x))
+x = cau_ba({"hdc": "B", "tu": "C", "may": "C", "gq": "C", "gq_qwen": "C"}, bd=("HDC gốc B, máy giải C – cần xem",), dap_an="B")
+kiem("4 phiếu C khác HDC gốc → ghi đè thành C", D.ap_dung_phieu_ba(x) and x["sua"].get("dap_an") == "C")
+x = cau_ba({"hdc": "B", "tu": "B", "may": "B", "gq": "C", "gq_qwen": "B"}, bd=("Máy giải không chắc chắn",), dap_an="B")
+kiem("HDC + máy + Groq khác họ cùng B → cứu, giữ đáp án B", D.ap_dung_phieu_ba(x) and "dap_an" not in x["sua"])
+x = cau_ba({"hdc": "B", "tu": "B", "may": "B", "gq": "", "gq_qwen": "B"}, bd=("Đọc lại đề gốc thấy số liệu chưa có trong bản lưu: 5 m",))
+kiem("lí do số liệu lệch → không cứu bằng phiếu", not D.ap_dung_phieu_ba(x))
+x = cau_ba({"hdc": "B", "tu": "B", "may": "B", "gq": "B"}); x["co_hinh"] = True
+kiem("câu có hình không dùng phiếu ba (đã có tầng 6)", not D.ap_dung_phieu_ba(x))
+kiem("Loại vì bất đồng → chọn được để chạy lại", D.loai_cuu_duoc_bang_phieu('[5 tầng 21/11] Không có HDC; hai lời giải độc lập chưa thống nhất (B / C); Loại vì máy và các model chưa thống nhất đáp án, câu không có hình'))
+kiem("Loại vì thiếu phương án → không chọn", not D.loai_cuu_duoc_bang_phieu("Thiếu phương án (3/4)"))
+kiem("Loại vì ngoài CT → không chọn", not D.loai_cuu_duoc_bang_phieu("Ngoài chương trình 2018: quang phổ; HDC gốc B"))
+
 print()
 if LOI:
     print("❌ %d ca sai: %s" % (len(LOI), "; ".join(LOI)))

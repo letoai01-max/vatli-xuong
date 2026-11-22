@@ -65,6 +65,14 @@ Mỗi lượt gọi Gemini / Groq được ghi vào tab Quota_SuDung (dòng "xư
     (số liệu lệch đề gốc, đơn vị khác thứ nguyên) không bị cứu.
   • XEM_CON_LAI = "loai": câu vẫn không tự cứu được sau các bước trên → Loại (ghi lí do ở cột Kiểm tra) thay vì chờ giáo viên; "xem" = như cũ.
   • DUYET_LAI_CAN_XEM = "true" (cờ cũ) vẫn là công tắc đưa 1.207 câu cũ chạy lại qua luật mới, mỗi câu một lần.
+
+[22/11/2026] BƯỚC 2 – CỨU CÂU "LOẠI" (cờ mặc định TẮT):
+  • PHIEU_BA = "true": câu KHÔNG hình mà máy chưa thống nhất đáp án → thêm phiếu của các model Groq KHÁC HỌ (PHIEU_BA_MODELS, mặc định
+    "qwen/qwen3.8-27b,llama-3.3-70b-versatile"; model đã dùng ở tầng 4 bị bỏ qua). Thắng khi ≥ 3 phiếu, hơn nhóm sau ≥ 2 phiếu, nhóm thắng có
+    cả Gemini lẫn (Groq hoặc HDC gốc); muốn ghi đè đáp án của HDC gốc phải ≥ 4 phiếu. Không thắng → Loại như cũ.
+  • DUYET_LAI_LOAI = "true": các câu đang "Loại" vì máy chưa thống nhất đáp án (không phải trùng, ngoài CT, lỗi nội dung, thiếu phương án)
+    chạy lại một lần với phiếu thêm; dấu "[5 tầng dd/mm cứu Loại]" ở cột Kiểm tra, câu có dấu này không bị chọn lại.
+  • Câu Loại vì thiếu phương án / lỗi đọc đề: cuu_loai.py (tách lại từ file gốc rồi trả về "Chưa duyệt" cho 5 tầng duyệt lại).
 """
 import datetime as dt, json, os, random, re, sys, time
 from concurrent.futures import ThreadPoolExecutor
@@ -92,6 +100,9 @@ try:
     CUU_HINH_TOI_DA = max(1, int(float(os.environ.get("CUU_HINH_TOI_DA", "15") or 15)))
 except ValueError:
     CUU_HINH_TOI_DA = 15
+DUYET_LAI_LOAI = _cong("DUYET_LAI_LOAI")                                                   # [22/11] bước 2: duyệt lại câu Loại do bất đồng đáp án
+PHIEU_BA = _cong("PHIEU_BA") and CN is not None                                            # [22/11] thêm phiếu Groq khác họ cho câu không hình
+PHIEU_BA_MODELS = [m.strip() for m in os.environ.get("PHIEU_BA_MODELS", "qwen/qwen3.8-27b,llama-3.3-70b-versatile").split(",") if m.strip()]
 GROQ_CHE_DO = os.environ.get("GROQ_CHE_DO", "ghi_chu").strip().lower()
 TRUNG_CHE_DO = os.environ.get("TRUNG_CHE_DO", "ghi_chu").strip().lower()
 CHE_DO_DUYET = os.environ.get("CHE_DO_DUYET", "moi").strip().lower()                    # [21/11] "cu" = như trước
@@ -704,6 +715,57 @@ def ap_dung_phieu_hinh(x, g6):
     return True
 
 
+def loai_cuu_duoc_bang_phieu(doan):
+    """Đoạn Kiểm tra gần nhất của câu Loại có phải do bất đồng đáp án (cứu được bằng thêm phiếu) không."""
+    if re.search(r"Ngoài chương trình|Lỗi nội dung|Trùng hẳn|Thiếu phương án|Thiếu ý|quá ngắn|số liệu chưa có|Đơn vị không cùng", doan): return False
+    return bool(re.search(r'chưa thống nhất|HDC gốc|Đáp số HDC|Chỉ có HDC|Không có HDC|Máy giải|Đáp án "', doan))
+
+
+def ap_dung_phieu_ba(x):
+    """Câu không hình, bất đồng đáp án: bỏ phiếu giữa HDC / lập luận / máy giải / Groq các họ. True nếu cứu được."""
+    if not CN or not x["bat_dong"] or x["co_hinh"] or x.get("loi_nang") or not x.get("bc"): return False
+    if any(not CN.li_do_giai_duoc(l) for l in x["bat_dong"]): return False
+    loai = loai_dang(x["dang"]); lss = "TLN" if loai == "TL" else loai
+    phieu = x["bc"]
+    kq = CN.bo_phieu(lss, phieu, khop, SAI_SO_MAY_GIAI, bat_buoc="", toi_thieu=3, cach_biet=2)
+    if not kq:
+        x["ghi_chu"].append("Thêm phiếu vẫn chưa đủ đa số (%s)" % "; ".join("%s=%s" % (k, v) for k, v in phieu.items() if v))
+        return False
+    thang, nguon = kq
+    if not (any(n in ("tu", "may") for n in nguon) and any(n == "hdc" or n.startswith("gq") for n in nguon)):
+        x["ghi_chu"].append("Đa số chỉ từ một hãng (%s) – không đủ độc lập" % ", ".join(nguon)); return False
+    if phieu.get("hdc") and "hdc" not in nguon and len(nguon) < 4:
+        x["ghi_chu"].append("Đa số %s khác HDC gốc nhưng chưa đủ 4 phiếu để ghi đè" % thang); return False
+    cu = list(x["bat_dong"])
+    x["nghi_van"] = [n for n in x["nghi_van"] if n not in cu]; x["bat_dong"] = []
+    x["ghi_chu"].append("Cứu bằng bỏ phiếu: %s (%d phiếu: %s)%s – trước đó: %s" % (
+        thang, len(nguon), ", ".join(nguon), " khác HDC gốc" if phieu.get("hdc") and "hdc" not in nguon else "", " | ".join(cu)[:200]))
+    if not x["dap_an"] or not khop(lss, thang, x["dap_an"], SAI_SO_MAY_GIAI):
+        x["sua"]["dap_an"] = ("Đáp số: %s" % thang) if loai == "TL" else thang
+    return True
+
+
+def phieu_ba_file(ds, model_da_dung):
+    """Thêm phiếu của các model Groq khác họ cho câu không hình còn bất đồng, rồi bỏ phiếu."""
+    ung = [x for x in ds if x["bat_dong"] and not x["co_hinh"] and not x["hoan"] and not x["loi_nang"] and x.get("bc")
+           and all(CN.li_do_giai_duoc(l) for l in x["bat_dong"])]
+    if not ung or not G or not G.co_khoa(): return 0
+    bo = [{"ma": x["ma"], "dang": loai_dang(x["dang"]), "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in ung]
+    for m in PHIEU_BA_MODELS:
+        if m == model_da_dung: continue
+        try:
+            kq, _ = G.giai_lo(bo, [m])
+        except Exception as e:
+            print("  Phiếu ba (%s) lỗi, bỏ qua: %s" % (m, str(e)[:100]), flush=True); continue
+        ten = "gq_" + m.split("/")[-1][:12]
+        for x in ung:
+            if x["ma"] in kq:
+                loai = loai_dang(x["dang"]); x["bc"][ten] = chuan("TLN" if loai == "TL" else loai, kq[x["ma"]])
+    cuu = sum(1 for x in ung if ap_dung_phieu_ba(x))
+    print("  Phiếu ba (Groq nhiều họ): %d/%d câu được cứu" % (cuu, len(ung)), flush=True)
+    return cuu
+
+
 def cuu_hinh_file(ds, drive, cac_model):
     """Câu có hình mà máy chưa thống nhất → tải ảnh (cột Link ảnh) và cho model nhìn hình giải. Lỗi từng câu không làm hỏng file."""
     ung = [x for x in ds if x["bat_dong"] and x["co_hinh"] and not x["hoan"] and not x["loi_nang"] and x.get("link_anh")][:CUU_HINH_TOI_DA]
@@ -778,7 +840,11 @@ def main():
         r = r + [""] * (len(td) - len(r))
         tt = r[c["Trạng thái duyệt"]].strip() or TT["CHUA"]
         vt = van_tay(r[c["Nội dung"]], r[c["Phương án"]])
-        duyet_lai = False
+        duyet_lai, cuu_loai = False, False
+        if DUYET_LAI_LOAI and tt == TT["LOAI"]:                          # [22/11] bước 2: câu Loại vì bất đồng đáp án chạy lại một lần với phiếu thêm
+            kt_cu = r[c["Kiểm tra"]]
+            if "cứu Loại" not in kt_cu and DAU_MAY in kt_cu and loai_cuu_duoc_bang_phieu(kt_cu.rsplit(DAU_MAY, 1)[-1]):
+                tt, duyet_lai, cuu_loai = TT["CHUA"], True, True
         if DUYET_LAI_CAN_XEM and tt == TT["XEM"]:                       # [21/11] nhặt lại câu "Cần người xem" (mỗi câu một lần)
             kt_cu = r[c["Kiểm tra"]]
             if DAU_DUYET_LAI not in kt_cu and (DUYET_LAI_PHAM_VI == "tat_ca" or DAU_MAY in kt_cu):
@@ -791,7 +857,7 @@ def main():
              "ma_yccd": [m for m in re.split(r"[,;\s]+", r[c["Mã YCCĐ"]]) if m],
              "vi_tri": (re.search(r"\(câu\s*([^)]*)\)", r[c["Tên file"]]) or [None, ""])[1],
              "loi_nang": [], "nghi_van": [], "ghi_chu": [], "sua": {}, "bat_dong": [], "co_hinh": False, "hoan": False,
-             "duyet_lai": duyet_lai,
+             "duyet_lai": duyet_lai, "cuu_loai": cuu_loai,
              "link_anh": (r[c_anh] if c_anh is not None else "").strip(),
              "ma_bai": r[c["Mã bài"]].strip() if "Mã bài" in c else "", "lop": r[c["Lớp"]].strip() if "Lớp" in c else ""}
         if vt and vt in da_gap: x["trung_voi"] = da_gap[vt]
@@ -837,6 +903,7 @@ def main():
                 for x in can_ai:
                     quyet_dinh(x, g2.get(x["ma"]), so_lieu.get(x["ma"], []), g4.get(x["ma"]), model2, model4, yccd,
                                g5.get(x["ma"], ""), model5)
+                if PHIEU_BA: phieu_ba_file(can_ai, (model5 or "").strip())   # [22/11] bước 2: thêm phiếu Groq khác họ cho câu không hình
                 if CUU_HINH: cuu_hinh_file(can_ai, drive, cac_model)       # [22/11] tầng 6: câu có hình mà máy chưa thống nhất
         except X.HetHanMuc as e:
             print("⏸️ Hết hạn mức Gemini – dừng, lượt sau duyệt tiếp:", str(e)[:150], flush=True)
@@ -858,7 +925,7 @@ def main():
                 continue
             tt = xep_loai(x)
             ghi = "; ".join(x["loi_nang"] + x["nghi_van"] + x["ghi_chu"]) or "Đạt"
-            kt = (x["kiem_tra_cu"] + " | " if x["kiem_tra_cu"] else "") + "[5 tầng %s%s] %s" % (ngay, " duyệt lại" if x.get("duyet_lai") else "", ghi)
+            kt = (x["kiem_tra_cu"] + " | " if x["kiem_tra_cu"] else "") + "[5 tầng %s%s] %s" % (ngay, " cứu Loại" if x.get("cuu_loai") else " duyệt lại" if x.get("duyet_lai") else "", ghi)
             col = lambda t, dh=dong_hien_tai: gspread_a1(c[t] + 1, dh)
             cap += [{"range": col("Trạng thái duyệt"), "values": [[tt]]}, {"range": col("Kiểm tra"), "values": [[kt[:45000]]]}]
             if "dap_an" in x["sua"]: cap.append({"range": col("Đáp án"), "values": [[x["sua"]["dap_an"]]]})

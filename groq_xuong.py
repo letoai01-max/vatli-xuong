@@ -54,12 +54,12 @@ def _ghi(model, ma, data=None, treo=False):
     Q.ghi_luot(Q.nhan_groq(model), ma, u.get("prompt_tokens", 0), u.get("completion_tokens", 0), treo)
 
 
-def goi(noi_dung, max_tokens=16000, suy_nghi="medium"):
-    """Gửi một lời nhắn; trả (chữ, tên model) hoặc (None, '')."""
+def goi(noi_dung, max_tokens=16000, suy_nghi="medium", models=None):
+    """Gửi một lời nhắn; trả (chữ, tên model) hoặc (None, ''). [22/11] models: chỉ thử các model này (mặc định MODELS)."""
     key = os.environ.get("GROQ_API_KEY", "").strip()
     if not key:
         return None, ""
-    for model in MODELS:
+    for model in (models or MODELS):
         if model in _HONG:
             continue
         body = {"model": model, "messages": [{"role": "user", "content": noi_dung}], "temperature": 0.2,
@@ -112,8 +112,8 @@ def doc_json(text):
     return j if isinstance(j, list) else (j.get("ket_qua") or [])
 
 
-def giai_lo(ds):
-    """ds: [{ma, dang (TN|DS|TLN|TL hoặc tên dạng), noi_dung, phuong_an}] → ({ma: đáp án}, model). Không thấy đáp án gốc."""
+def giai_lo(ds, models=None):
+    """[22/11] models: chỉ dùng các model này (phiếu thứ ba, thứ tư khác họ model). ds: [{ma, dang (TN|DS|TLN|TL hoặc tên dạng), noi_dung, phuong_an}] → ({ma: đáp án}, model). Không thấy đáp án gốc."""
     kq, model_dung = {}, ""
     if not san_sang() or not ds:
         return kq, model_dung
@@ -126,7 +126,7 @@ def giai_lo(ds):
                     "(đáp số cuối, dấu chấm thập phân, không kèm đơn vị). Câu không giải chắc chắn được thì dap_an để rỗng.\n"
                     "CHỈ trả về JSON đúng mẫu: {\"ket_qua\":[{\"ma_cau\":\"...\",\"dap_an\":\"...\"}]}, mỗi câu một phần tử.\n"
                     "CÁC CÂU:\n" + json.dumps(du_lieu, ensure_ascii=False))
-        text, model = goi(loi_nhan)
+        text, model = goi(loi_nhan, models=models)
         if text is None:
             break                                      # Groq không dùng được lượt này: phần còn lại để trống
         model_dung = model or model_dung

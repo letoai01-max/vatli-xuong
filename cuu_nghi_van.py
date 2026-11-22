@@ -72,9 +72,9 @@ def sua_dola(s):
 
 
 # ============================== 2. BỎ PHIẾU ==============================
-def bo_phieu(loai, phieu, khop, sai_so, bat_buoc="hinh"):
+def bo_phieu(loai, phieu, khop, sai_so, bat_buoc="hinh", toi_thieu=2, cach_biet=1):
     """phieu: {nguồn: đáp án đã chuẩn hoá (rỗng = không có phiếu)}. Trả (đáp án thắng, [nguồn đồng ý]) hoặc None.
-    Điều kiện thắng: ≥ 2 phiếu, nhiều hơn HẲN nhóm đáp án đứng sau, và nhóm thắng có phiếu của `bat_buoc` (nhìn hình)."""
+    Điều kiện thắng: ≥ toi_thieu phiếu, hơn nhóm đứng sau ít nhất cach_biet phiếu, và (nếu có bat_buoc) nhóm thắng có phiếu của nguồn đó."""
     nhom = []
     for nguon, da in phieu.items():
         if not da:
@@ -89,7 +89,7 @@ def bo_phieu(loai, phieu, khop, sai_so, bat_buoc="hinh"):
         return None
     nhom.sort(key=lambda g: -len(g[1]))
     top = nhom[0]
-    if len(top[1]) >= 2 and (len(nhom) == 1 or len(top[1]) > len(nhom[1][1])) and (not bat_buoc or bat_buoc in top[1]):
+    if len(top[1]) >= toi_thieu and (len(nhom) == 1 or len(top[1]) >= len(nhom[1][1]) + cach_biet) and (not bat_buoc or bat_buoc in top[1]):
         return top[0], top[1]
     return None
 
