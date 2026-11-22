@@ -71,3 +71,6 @@ jobs:
 
       - name: Kiểm thử cứu câu "Cần người xem" tự động (sửa $, bỏ phiếu, nhìn hình)
         run: python kiem_thu_cuu_nghi_van.py
+
+      - name: Kiểm thử cứu câu Loại do lỗi tách đề
+        run: python kiem_thu_cuu_loai.py

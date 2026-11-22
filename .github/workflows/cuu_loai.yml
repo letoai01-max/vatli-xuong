@@ -1,0 +1,57 @@
+name: cuu_loai
+on:
+  schedule:
+    - cron: "17 15 * * *"      # trước lượt duyet_cau 16:47 UTC để câu đã tách lại được duyệt ngay
+  workflow_dispatch:
+    inputs:
+      phut:
+        description: "Số phút tối đa cho lượt này"
+        required: false
+        default: "40"
+concurrency:
+  group: ngan_hang
+  cancel-in-progress: false
+# [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  cuu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cổng ngân sách phút (rẻ – chưa cài thư viện; hoãn thì bỏ qua các bước sau)
+        id: cong
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+        run: python3 quota_phut.py --cong
+      - uses: actions/setup-python@v5
+        if: steps.cong.outputs.chay != 'false'
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+        if: steps.cong.outputs.chay != 'false'
+      - name: Cứu câu Loại do lỗi tách đề
+        if: steps.cong.outputs.chay != 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          GEMINI_API_KEY_4: ${{ secrets.GEMINI_API_KEY_4 }}
+          GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
+          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CUU_LOAI_TOI_DA: "150"
+          THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '40' }}
+        run: python trung_tam.py cuu_loai.py
