@@ -117,7 +117,7 @@ def chuan_hoa(ten):
 
 
 _JS = _nap_json()
-CHE_DO = os.environ.get("QUOTA_PHUT_CHE_DO", "dieu_phoi").strip().lower()
+CHE_DO = (os.environ.get("QUOTA_PHUT_CHE_DO") or str(_nap_json().get("che_do") or "dieu_phoi")).strip().lower()   # [22/11] có thể đặt "che_do" trong trung_tam_dieu_phoi.json (repo public: "canh_bao")
 QUOTA = _so("GH_QUOTA_PHUT_THANG", _JS.get("quota_thang", 2000))
 DU_PHONG = _so("GH_DU_PHONG_PHUT", _JS.get("du_phong", 200))
 DEM_CUOI = _so("GH_PHUT_DEM_CUOI", _JS.get("dem_cuoi", 1))
@@ -706,6 +706,8 @@ def cong():
         viec = viec_tu_tep("")
         q = quyet_dinh(viec)
         chay = q["cho_chay"] or q["loai_hieu_luc"] != "dinh_ky"
+        if not q["cho_chay"] and cau_hinh_viec(viec).get("tay"):
+            chay = False      # việc chạy tay thuần (không có Apps Script chờ ket_qua): hoãn thì bỏ qua từ cổng, khỏi tốn phút cài đặt
         if not chay:
             print("⏸️ Cổng phút: việc `%s` (mức %d) hoãn lượt này – %s" % (viec, q["muc"], q["ly_do"]), flush=True)
             if os.environ.get("GITHUB_STEP_SUMMARY"):
