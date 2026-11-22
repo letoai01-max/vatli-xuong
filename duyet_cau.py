@@ -105,6 +105,7 @@ PHIEU_BA = _cong("PHIEU_BA") and CN is not None                                 
 PHIEU_BA_MODELS = [m.strip() for m in os.environ.get("PHIEU_BA_MODELS", "qwen/qwen3.8-27b,llama-3.3-70b-versatile").split(",") if m.strip()]
 GROQ_CHE_DO = os.environ.get("GROQ_CHE_DO", "ghi_chu").strip().lower()
 TRUNG_CHE_DO = os.environ.get("TRUNG_CHE_DO", "ghi_chu").strip().lower()
+UU_TIEN_MAU_HOA = os.environ.get("DUYET_UU_TIEN_MAU_HOA", "false").strip().lower() in ("true", "1", "yes", "on", "bat", "bật")   # [22/11] mặc định TẮT
 CHE_DO_DUYET = os.environ.get("CHE_DO_DUYET", "moi").strip().lower()                    # [21/11] "cu" = như trước
 KHONG_HINH_BAT_DONG = os.environ.get("KHONG_HINH_BAT_DONG", "loai").strip().lower()    # [21/11] câu không hình mà chưa thống nhất: loai | xem
 MOI = CHE_DO_DUYET != "cu"
@@ -870,6 +871,8 @@ def main():
     thong_ke = {"ai": 0, "xem": 0, "loai": 0, "hoan": 0}
     het_han_muc = False
     cac_file = list(nhom.items())
+    if UU_TIEN_MAU_HOA:                                             # [22/11] biến thể do cau_mau.py ghi được duyệt trước để đo chất lượng ngay trong đêm
+        cac_file.sort(key=lambda kv: 0 if any("mẫu hoá" in str(x.get("kiem_tra_cu", "")) and "biến thể của" in str(x.get("kiem_tra_cu", "")) for x in kv[1]) else 1)
     tep_cho, tai_truoc, drive_tai = {}, None, None
     if SONG_SONG:                                                   # [21/11] tải trước file gốc kế tiếp bằng kết nối Drive riêng (httplib2 không an toàn đa luồng)
         try:
