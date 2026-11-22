@@ -192,7 +192,14 @@ def chay_viec(ten_tep, muc_tieu):
                 print("⏸️ [Trung tâm]: Việc định kì được hoãn, sẽ tự chạy lại khi ngân sách phút cho phép.", flush=True)
                 return
             _bao_loi_cho_apps_script(q["ly_do"])
-            sys.exit("Hết hạn mức phút GitHub Actions: " + q["ly_do"])
+            msg = "Hết hạn mức phút GitHub Actions: " + q["ly_do"]
+            if q["loai_hieu_luc"] == "khan":
+                sys.exit(msg)      # việc khẩn (canh gác…) bị từ chối là bất thường → giữ đỏ để workflow báo Telegram
+            # Việc theo yêu cầu: từ chối có chủ ý, không phải lỗi. Apps Script đã nhận ket_qua = LOI (nếu có KQ_ID);
+            # chạy tay thì chỉ cần cảnh báo vàng. Thoát mã 0 để không báo đỏ/gửi thông báo nhầm.
+            print("::warning title=Bỏ qua do hết phút::" + msg, flush=True)
+            _ghi_summary(["- ⏭️ **Bỏ qua** (không phải lỗi): " + msg])
+            return
         co_dong_ho = False
         if q:
             _ap_gioi_han(q)
