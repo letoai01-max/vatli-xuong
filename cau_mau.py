@@ -105,6 +105,9 @@ def mot(p, rng):
     if dang == "TN":
         pa, idx = ns["phuong_an"](p, rng)
         r = {"de": str(de), "pa": [str(x) for x in pa], "idx": int(idx)}
+        if "dap_so" in ns:
+            try: r["dap_so"] = float(ns["dap_so"](p))
+            except Exception: r["dap_so"] = None
     else:
         r = {"de": str(de), "dap_an": float(ns["dap_an"](p))}
     r["p"] = p
@@ -205,12 +208,31 @@ def goc_khop(dang, g, nd_goc, pa_goc, da_goc):
     return None if ok else "phương án đúng tái tạo (%s) khác đáp án đã duyệt (%s)" % (van_moi[:30], van_goc[:30])
 
 
+_DIEU_KHIEN = {"\x07": "\\a", "\x08": "\\b", "\x0b": "\\v", "\x0c": "\\f", "\r": "\\r", "\t": "\\t"}
+
+
+def sua_latex(t):
+    """[22/11] Mã Gemini hay viết "\\text", "\\alpha", "\\frac", "\\tan" trong chuỗi Python thường → \\t, \\a, \\f thành kí tự điều khiển (TAB, BEL, FF) làm hỏng công thức.
+    Trả lại thành dấu \\ + chữ. Dấu xuống dòng thật không đụng, trừ khi theo sau là lệnh LaTeX quen (\\neq, \\nu, \\nabla, \\not, \\newline)."""
+    t = str(t)
+    for k, v in _DIEU_KHIEN.items(): t = t.replace(k, v)
+    return re.sub(r"\n(?=(?:eq|u\b|abla|ot\b|ewline))", lambda m: "\\n", t)
+
+
+def sua_bien_the(b):
+    if not isinstance(b, dict): return b
+    if isinstance(b.get("de"), str): b["de"] = sua_latex(b["de"])
+    if isinstance(b.get("pa"), list): b["pa"] = [sua_latex(x) for x in b["pa"]]
+    return b
+
+
 def kiem_bien_the(dang, b, g, da_dung):
     """None nếu biến thể dùng được; ngược lại lí do. da_dung: set khoá đã dùng (số liệu + đề) để chống trùng."""
     de = b.get("de")
     if not isinstance(de, str) or len(de.strip()) < 40: return "đề quá ngắn"
     if re.search(r"None|\bnan\b|\binf\b|%[sdf]|\{:|\{\w+\[", de): return "đề còn sót chỗ chưa thay"
     if CN.dem_dola(de) % 2: return "dấu $ lẻ"
+    if re.search(r"[\x00-\x08\x0b\x0c\x0e-\x1f\t]", de) or any(re.search(r"[\x00-\x08\x0b\x0c\x0e-\x1f\t]", str(t)) for t in (b.get("pa") or [])): return "còn kí tự điều khiển làm hỏng công thức"
     khoa = json.dumps(b.get("p"), sort_keys=True, ensure_ascii=False)
     if khoa == json.dumps(g.get("p"), sort_keys=True, ensure_ascii=False) or khoa in da_dung or chuan_chu(de) in da_dung:
         return "trùng số liệu"
@@ -227,6 +249,11 @@ def kiem_bien_the(dang, b, g, da_dung):
         return None
     pa, idx = b.get("pa") or [], b.get("idx")
     if len(pa) != 4 or idx not in (0, 1, 2, 3): return "phương án sai dạng"
+    if any(re.search(r"\d[.,]\d{6,}", str(t)) for t in pa): return "phương án có số lẻ dài, chưa làm tròn"
+    ds_ = b.get("dap_so")
+    if isinstance(ds_, (int, float)) and math.isfinite(ds_):                 # [22/11] chống định dạng cắt phần thập phân của phương án đúng
+        hien = so_trong(pa[idx])
+        if hien == hien and abs(hien - ds_) > 0.03 * abs(ds_) + 1e-9: return "phương án đúng hiển thị %s lệch số tính %s" % (str(pa[idx])[:20], dinh_dang_so(ds_))
     ch = [chuan_chu(t) for t in pa]
     if "" in ch or len(set(ch)) < 4: return "phương án trống hoặc trùng nhau"
     if any(re.search(r"(?i)cả\s*[a-d]|không có đáp án|tất cả", t) for t in pa): return "phương án kiểu 'cả A và B'"
@@ -250,7 +277,8 @@ def xu_ly_nguon(s, code, can):
     seed = zlib.crc32(s["ma"].encode("utf-8"))
     kq, ly = chay_hop_cat(code, s["loai"], can + SINH_DU, seed)
     if not kq: return [], "mã chạy lỗi", ly
-    g = kq.get("goc")
+    g = sua_bien_the(kq.get("goc"))
+    kq["bien_the"] = [sua_bien_the(b) for b in kq.get("bien_the", [])]
     if not g: return [], "mã lỗi ở số liệu gốc", kq.get("loi", "")
     ly = goc_khop(s["loai"], g, s["nd"], s["pa"], s["da"])
     if ly: return [], "không tái tạo đúng câu gốc", ly
@@ -320,11 +348,14 @@ HUONG_DAN = (
     "2) tham_so(rng): rng là random.Random; trả dict CÙNG KHOÁ với GOC, số liệu mới hợp lí về vật lí (cùng đơn vị, cùng cách làm tròn như đề gốc, "
     "đổi ít nhất 2 số liệu, không trùng GOC, không làm đáp số đổi dấu hay lệch quá 10 lần).\n"
     "3) de_bai(p): trả ĐỀ BÀI đầy đủ, giữ NGUYÊN VĂN câu chữ của đề gốc, chỉ thay số liệu bằng giá trị trong p. Công thức đặt trong $…$; "
-    "số thập phân dùng dấu phẩy kiểu 0{,}05; đơn vị kiểu \\text{ cm}. Tự viết hàm phụ định dạng số.\n"
+    "số thập phân dùng dấu phẩy kiểu 0{,}05; đơn vị kiểu \\text{ cm}. Tự viết hàm phụ định dạng số; hàm này KHÔNG được cắt hay làm tròn thành số nguyên "
+    "khi đáp số không nguyên (tối đa 3 chữ số có nghĩa, không in số lẻ dài). Viết mọi chuỗi chứa LaTeX bằng chuỗi THÔ (tiền tố r) hoặc nhân đôi dấu gạch chéo, "
+    "để \\text, \\alpha, \\frac, \\tan không bị Python hiểu thành kí tự điều khiển.\n"
     "4) Dạng TLN (trả lời ngắn): dap_an(p) trả MỘT số float, đã làm tròn đúng như đề yêu cầu, tính bằng công thức vật lí từ p.\n"
     "   Dạng TN (nhiều lựa chọn): phuong_an(p, rng) trả (danh_sach_4_chuoi, chi_so_dung). Chuỗi phương án KHÔNG kèm nhãn A. B. và có đơn vị; "
     "đáp án đúng tính bằng công thức; 3 phương án nhiễu sinh từ LỖI SAI THƯỜNG GẶP (quên đổi đơn vị, quên bình phương, nhầm công thức…); "
-    "4 phương án khác nhau rõ; chi_so_dung chọn bằng rng.randrange(4); không dùng phương án kiểu 'cả A và B'.\n"
+    "4 phương án khác nhau rõ; chi_so_dung chọn bằng rng.randrange(4); không dùng phương án kiểu 'cả A và B'. "
+    "Dạng TN còn PHẢI có dap_so(p): trả số float của đáp án đúng, chưa làm tròn, CÙNG ĐƠN VỊ với phương án đúng hiển thị.\n"
     "ĐẶT lam_duoc = false (không viết mã) nếu: câu cần hình/đồ thị, chỉ là lập luận định tính, không có công thức tính được, hoặc phụ thuộc "
     "bảng số liệu. Mã khi chạy với GOC PHẢI cho đúng đáp án trong 'dap_an_da_duyet'. Đáp án phải do code TÍNH, tuyệt đối không gõ cứng.\n"
     "CÁC CÂU:\n")
