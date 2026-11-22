@@ -104,8 +104,17 @@ DUYET_LAI_LOAI = _cong("DUYET_LAI_LOAI")                                        
 PHIEU_BA = _cong("PHIEU_BA") and CN is not None                                            # [22/11] thêm phiếu Groq khác họ cho câu không hình
 PHIEU_BA_MODELS = [m.strip() for m in os.environ.get("PHIEU_BA_MODELS", "qwen/qwen3.8-27b,llama-3.3-70b-versatile").split(",") if m.strip()]
 GROQ_CHE_DO = os.environ.get("GROQ_CHE_DO", "ghi_chu").strip().lower()
+# [22/11] NGẮT MẠCH GROQ (mặc định TẮT → y như cũ): Groq trả rỗng N file liên tiếp (hết hạn mức ngày, khoá hỏng…) → bỏ Groq cho phần còn lại của lượt,
+# khỏi chờ vô ích. GROQ_LO_TOI_DA > 0: phiếu ba gửi tối đa chừng ấy câu mỗi lượt gọi (tránh vượt trần token đầu ra/phút của model nhỏ).
+def _so_nguyen(ten, mac_dinh=0):
+    try: return max(0, int(float(os.environ.get(ten, str(mac_dinh)) or mac_dinh)))
+    except ValueError: return mac_dinh
+GROQ_NGAT_SAU = _so_nguyen("GROQ_NGAT_SAU")
+GROQ_LO_TOI_DA = _so_nguyen("GROQ_LO_TOI_DA")
+_groq_rong = {"lien_tiep": 0, "da_bao": False}
+def groq_da_ngat():
+    return bool(GROQ_NGAT_SAU) and _groq_rong["lien_tiep"] >= GROQ_NGAT_SAU
 TRUNG_CHE_DO = os.environ.get("TRUNG_CHE_DO", "ghi_chu").strip().lower()
-UU_TIEN_MAU_HOA = os.environ.get("DUYET_UU_TIEN_MAU_HOA", "false").strip().lower() in ("true", "1", "yes", "on", "bat", "bật")   # [22/11] mặc định TẮT
 CHE_DO_DUYET = os.environ.get("CHE_DO_DUYET", "moi").strip().lower()                    # [21/11] "cu" = như trước
 KHONG_HINH_BAT_DONG = os.environ.get("KHONG_HINH_BAT_DONG", "loai").strip().lower()    # [21/11] câu không hình mà chưa thống nhất: loai | xem
 MOI = CHE_DO_DUYET != "cu"
@@ -558,11 +567,19 @@ def tang4_groq(ds):
     """Groq (khác hãng) giải độc lập, không xem đáp án. Trả ({mã câu: đáp án}, model); không có khoá / lỗi → ({}, "")."""
     if not G or not G.co_khoa():
         return {}, ""
+    if groq_da_ngat():                                                  # [22/11] ngắt mạch
+        if not _groq_rong["da_bao"]:
+            print("  ⏭️ Groq trả rỗng %d file liên tiếp – bỏ Groq cho phần còn lại của lượt." % _groq_rong["lien_tiep"], flush=True)
+            _groq_rong["da_bao"] = True
+        return {}, ""
     try:
-        return G.giai_lo([{"ma": x["ma"], "dang": loai_dang(x["dang"]), "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in ds])
+        kq = G.giai_lo([{"ma": x["ma"], "dang": loai_dang(x["dang"]), "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in ds])
     except Exception as e:
         print("  Groq lỗi (bỏ qua):", str(e)[:120], flush=True)
-        return {}, ""
+        kq = ({}, "")
+    if GROQ_NGAT_SAU:
+        _groq_rong["lien_tiep"] = 0 if (kq and kq[0]) else _groq_rong["lien_tiep"] + 1
+    return kq
 
 
 def dap_an_may(loai, g):
@@ -751,13 +768,19 @@ def phieu_ba_file(ds, model_da_dung):
     ung = [x for x in ds if x["bat_dong"] and not x["co_hinh"] and not x["hoan"] and not x["loi_nang"] and x.get("bc")
            and all(CN.li_do_giai_duoc(l) for l in x["bat_dong"])]
     if not ung or not G or not G.co_khoa(): return 0
+    if groq_da_ngat(): return 0                                         # [22/11] ngắt mạch
     bo = [{"ma": x["ma"], "dang": loai_dang(x["dang"]), "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in ung]
     for m in PHIEU_BA_MODELS:
         if m == model_da_dung: continue
+        kq = {}
         try:
-            kq, _ = G.giai_lo(bo, [m])
+            cac_lo = [bo[i:i + GROQ_LO_TOI_DA] for i in range(0, len(bo), GROQ_LO_TOI_DA)] if GROQ_LO_TOI_DA else [bo]   # [22/11] chia lô nhỏ
+            for lo in cac_lo:
+                k, _ = G.giai_lo(lo, [m])
+                kq.update(k or {})
         except Exception as e:
-            print("  Phiếu ba (%s) lỗi, bỏ qua: %s" % (m, str(e)[:100]), flush=True); continue
+            print("  Phiếu ba (%s) lỗi, bỏ qua: %s" % (m, str(e)[:100]), flush=True)
+            if not kq: continue
         ten = "gq_" + m.split("/")[-1][:12]
         for x in ung:
             if x["ma"] in kq:
@@ -871,8 +894,6 @@ def main():
     thong_ke = {"ai": 0, "xem": 0, "loai": 0, "hoan": 0}
     het_han_muc = False
     cac_file = list(nhom.items())
-    if UU_TIEN_MAU_HOA:                                             # [22/11] biến thể do cau_mau.py ghi được duyệt trước để đo chất lượng ngay trong đêm
-        cac_file.sort(key=lambda kv: 0 if any("mẫu hoá" in str(x.get("kiem_tra_cu", "")) and "biến thể của" in str(x.get("kiem_tra_cu", "")) for x in kv[1]) else 1)
     tep_cho, tai_truoc, drive_tai = {}, None, None
     if SONG_SONG:                                                   # [21/11] tải trước file gốc kế tiếp bằng kết nối Drive riêng (httplib2 không an toàn đa luồng)
         try:
