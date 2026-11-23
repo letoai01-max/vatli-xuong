@@ -354,6 +354,25 @@
                 </div>
             </div>
 
+            <!-- [23/11/2026] CỨU CÂU BỊ LOẠI TỰ ĐỘNG -->
+            <div id="cuu-cau-section" class="glass-panel rounded-xl p-5 space-y-3 border-emerald-500/30">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-life-ring text-emerald-400"></i> Cứu câu bị loại (tự động)</h2>
+                        <p class="text-xs text-slate-400">Mỗi câu "Loại": chuẩn hoá công thức → kiểm luật bằng code → Gemini giải 2 lần độc lập. Khớp hết thì tự duyệt lại; còn nghi ngờ thì đưa về "Cần người xem"; không cứu được thì giữ "Loại" kèm lý do.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button id="nut-cuu" onclick="cuuCauLoai(false)" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer"><i class="fa-solid fa-life-ring"></i> Cứu tự động</button>
+                        <button onclick="hoanTacLuotCuu()" title="Trả các câu vừa được tự duyệt về trạng thái Loại" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 cursor-pointer"><i class="fa-solid fa-rotate-left mr-1"></i> Hoàn tác lượt cứu</button>
+                    </div>
+                </div>
+                <div id="cuu-tien-do" class="hidden space-y-1">
+                    <div id="cuu-tien-do-chu" class="text-[11px] text-emerald-300"></div>
+                    <div class="h-1.5 rounded bg-slate-800 overflow-hidden"><div id="cuu-thanh" class="h-full bg-emerald-500 transition-all" style="width:0%"></div></div>
+                </div>
+                <div id="cuu-ket-qua" class="text-[11px] leading-relaxed space-y-1"></div>
+            </div>
+
             <!-- [21/11/2026] HỘP GOM CÂU HỎI GEMINI CHAT -->
             <div id="gc-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm overflow-y-auto p-3 md:p-8">
                 <div class="max-w-3xl mx-auto bg-slate-900 border border-slate-700 rounded-2xl p-5 space-y-4 shadow-2xl">
@@ -1695,6 +1714,168 @@
             return '';
         }
         // =================== HẾT PHẦN GIẢI BẰNG GEMINI ===================
+
+        // ===================== [23/11/2026] CỨU CÂU BỊ LOẠI TỰ ĐỘNG =====================
+        // Câu có trạng thái "Loại" (trừ "trùng") đi qua: (1) chuẩn hoá công thức + luật bằng code (0 lượt AI);
+        // (2) Gemini giải 2 lần độc lập qua action giai_gemini. Chỉ tự duyệt khi 2 lời giải cùng đáp án, không trái đáp án gốc,
+        // Gemini chắc chắn, lời giải kết luận đúng đáp án. Nghi ngờ → "Cần người xem". Lỗi cứng (thiếu phương án/hình...) → giữ "Loại".
+        // Hết hạn mức → dừng, các câu chưa xử lý vẫn là "Loại" nên bấm lại là làm tiếp. Tắt tính năng: BAT_CUU_CAU = false.
+        const BAT_CUU_CAU = true;
+        const TU_LUU_CAU_CUU = true;          // true: câu qua đủ kiểm tra tự ghi "AI duyệt"; false: chỉ đưa về "Cần người xem" để thầy duyệt
+        const TU_CUU_KHI_MO_TRANG = false;    // true: tự chạy khi mở trang (tốn lượt Gemini API, mặc định tắt như TU_GIAI_GEMINI_KHI_TAI)
+        const CUU_TOI_DA_MOT_LUOT = 30;
+        const CUU_SONG_SONG = 2;
+        // [23/11/2026] Cải tiến: bỏ phiếu thứ 3 khi 2 lời giải lệch; tự thử lại lỗi tạm; tự chạy lặp đến hết; tự nhờ Agent 0 quét bù hình.
+        const CUU_LAP_PHUT = 10;               // sau mỗi lượt còn câu chưa xử lý (hết hạn mức, lỗi tạm) thì 10 phút tự chạy tiếp khi trang còn mở; 0 = tắt
+        const CUU_LAP_TOI_DA = 12;
+        const CUU_YEU_CAU_QUET_HINH = true;    // câu loại vì thiếu hình: tự gửi tác vụ quet_anh cho Agent 0 (một lần mỗi lần mở trang)
+        const HD_GIAI_LAN_3 = ' Hãy kiểm tra thật kỹ từng bước tính, đổi đơn vị và dấu trước khi chốt đáp án.';
+        let _cuuLanLap = 0, _daYeuCauQuetHinh = false;
+        const KHOA_LUOT_CUU = 'cuuCau_luotCuoi';
+        const HD_GIAI_LAN_2 = ' Hãy giải lại từ đầu bằng một lập luận độc lập, tự kiểm tra thứ nguyên và độ lớn của kết quả trước khi chốt.';
+        let _dangCuu = false;
+        const _cuuDaXet = new Set();
+
+        function laCauLoai(x) { const t = String(x.trang_thai || '').toLowerCase(); return t.includes('loại') && !/cần người xem|trùng/.test(t); }
+
+        function kiemLuatCuu(it) {
+            const dang = nhanDang(it.dang || it.loai_cau_hoi, it.phuong_an);
+            const nd = chuanHoaLatex(String(it.noi_dung || '')), pa = chuanHoaLatex(String(it.phuong_an || ''));
+            const loi = [];
+            if (!nd.trim()) loi.push('thiếu nội dung');
+            const so = pa.split('\n').filter(x => x.trim()).length;
+            if ((dang === 'tn' || dang === 'ds') && so < 4) loi.push(dang === 'tn' ? 'thiếu phương án A–D' : 'thiếu ý a–d');
+            if (((nd + pa).match(/(?<!\\)\$/g) || []).length % 2) loi.push('dấu $ chưa đóng/mở đủ');
+            const coHinh = tachLinkAnh(it.link_anh).filter(laLinkAnh);
+            if (!coHinh.length && /(hình\s*(vẽ|bên|dưới|sau|\d)|như hình|đồ thị|sơ đồ|biểu đồ)/i.test(nd)) loi.push('nhắc đến hình nhưng chưa có hình');
+            return { dang, nd, pa, loi, coHinh };
+        }
+        async function anhChoCuu(ds) {
+            const kq = [];
+            for (const l of ds.slice(0, 2)) {
+                try { const r = await fetch(chuanLinkAnh(l)); if (!r.ok) throw new Error('HTTP ' + r.status); const k = await nenAnh(await r.blob()); kq.push({ mime: k.mime, base64: k.base64 }); } catch (e) { }
+            }
+            return kq;
+        }
+        async function giaiCuu(it, L, anh, lan) {
+            const hd = HUONG_DAN_MOT_LOI_GIAI + (lan === 2 ? HD_GIAI_LAN_2 : lan === 3 ? HD_GIAI_LAN_3 : '');
+            let tin = '';
+            for (let thu = 0; thu < 2; thu++) {                       // lỗi tạm (mạng, quá tải) thử lại một lần sau 5 giây; hết hạn mức thì không thử
+                const kq = await guiVeKhoChung({ action: 'giai_gemini', ma_cau: it.ma_cau, lop: it.lop, dang: L.dang, noi_dung: L.nd, phuong_an: L.pa, anh: anh, huong_dan: hd });
+                if (kq.ok && kq.kq && kq.kq.data) return { d: kq.kq.data };
+                tin = kq.tin || 'Kho chung không trả kết quả';
+                if (/429|quota|hạn mức|hết lượt/i.test(tin)) return { loi: tin, hetHan: true };
+                if (thu === 0) await new Promise(r => setTimeout(r, 5000));
+            }
+            return { loi: tin };
+        }
+
+        // Trả { ma, loai: cuu | xem | khong | hoan, ly }
+        async function xuLyMotCauCuu(it) {
+            const ma = it.ma_cau, L = kiemLuatCuu(it);
+            if (L.loi.length) return { ma, loai: 'khong', ly: L.loi.join('; ') };
+            let anh = [];
+            if (L.coHinh.length) { anh = await anhChoCuu(L.coHinh); if (!anh.length) return { ma, loai: 'khong', ly: 'không đọc được hình để Gemini xem' }; }
+            const g1 = await giaiCuu(it, L, anh, 1);
+            if (g1.loi) return { ma, loai: 'hoan', ly: g1.loi, hetHan: g1.hetHan };
+            const g2 = await giaiCuu(it, L, anh, 2);
+            if (g2.loi) return { ma, loai: 'hoan', ly: g2.loi, hetHan: g2.hetHan };
+            let a = g1.d, b = g2.d; const dang = L.dang;
+            let khop = soSanhDapAnGemini(dang, a.dap_an, b.dap_an) === true;
+            if (!khop && dang !== 'tuluan' && a.dap_an && b.dap_an) {   // lệch nhau: giải lần 3, 2/3 lời giải cùng đáp án thì lấy cặp đó
+                const g3 = await giaiCuu(it, L, anh, 3);
+                if (g3.loi) return { ma, loai: 'hoan', ly: g3.loi, hetHan: g3.hetHan };
+                const c = g3.d;
+                if (soSanhDapAnGemini(dang, a.dap_an, c.dap_an) === true) { b = c; khop = true; }
+                else if (soSanhDapAnGemini(dang, b.dap_an, c.dap_an) === true) { a = b; b = c; khop = true; }
+            }
+            const voiCu = soSanhDapAnGemini(dang, it.dap_an, a.dap_an);
+            const chac = a.chac_chan !== false && b.chac_chan !== false && !(a.canh_bao || []).length && !(b.canh_bao || []).length;
+            const loiGiai = chuanHoaLatex(a.loi_giai || '');
+            const thongNhat = !kiemTraThongNhat(dang, loiGiai, a.dap_an);
+            const cuu = khop && chac && thongNhat && voiCu !== false && !!loiGiai.trim();
+            const lyXem = [];
+            if (!khop) lyXem.push(dang === 'tuluan' ? 'tự luận cần người chấm' : 'hai lời giải Gemini không cùng đáp án');
+            if (voiCu === false) lyXem.push('đáp án Gemini khác đáp án gốc (' + it.dap_an + ')');
+            if (!chac) lyXem.push('Gemini chưa chắc chắn');
+            if (!thongNhat) lyXem.push('lời giải chưa kết luận đúng đáp án');
+            const t = { action: 'update_status', ma_cau: ma, trang_thai: (cuu && TU_LUU_CAU_CUU) ? 'AI duyệt' : 'Cần người xem' };
+            if (cuu) {
+                t.loi_giai = loiGiai;
+                if (!String(it.dap_an || '').trim()) t.dap_an = a.dap_an;
+                if (L.nd !== String(it.noi_dung || '')) t.noi_dung = L.nd;
+                if (L.pa !== String(it.phuong_an || '')) t.phuong_an = L.pa;
+            }
+            const w = await guiVeKhoChung(t);
+            if (!w.ok || (w.kq && w.kq.updated === 0)) return { ma, loai: 'hoan', ly: 'chưa ghi được về Sheet: ' + (w.tin || 'không thấy mã câu') };
+            return cuu ? { ma, loai: 'cuu', ly: 'đáp án ' + (a.dap_an || '') + ' (2 lời giải khớp' + (voiCu === true ? ', khớp đáp án gốc' : '') + ')' + (TU_LUU_CAU_CUU ? '' : ' → Cần người xem') }
+                       : { ma, loai: 'xem', ly: lyXem.join('; ') };
+        }
+
+        async function cuuCauLoai(tuDong) {
+            if (!BAT_CUU_CAU || _dangCuu) return;
+            if (!layMaBiMat(false)) { if (!tuDong) alert('Cần nhập mã bí mật Kho chung trước.'); return; }
+            const kqEl = document.getElementById('cuu-ket-qua'), tdEl = document.getElementById('cuu-tien-do');
+            let data = [];
+            try { const r = await fetch('questions.json?t=' + Date.now()); if (r.ok) data = await r.json(); } catch (e) { }
+            const conXet = data.filter(laCauLoai).filter(x => x.ma_cau && !_cuuDaXet.has(x.ma_cau));
+            const ds = conXet.slice(0, CUU_TOI_DA_MOT_LUOT);
+            if (!tuDong) _cuuLanLap = 0;
+            if (!ds.length) { kqEl.innerHTML = '<div class="text-slate-400">Không còn câu "Loại" nào cần cứu trong questions.json (nếu vừa loại thêm, thầy chạy lại tác vụ xuất dữ liệu).</div>'; return; }
+            if (!tuDong && TU_LUU_CAU_CUU && !confirm(`Cứu tự động ${ds.length} câu "Loại"?\nCâu qua đủ kiểm tra sẽ ghi lại thành "AI duyệt" (có nút Hoàn tác). Lưu ý: câu thầy chủ ý bấm "Loại bỏ" cũng nằm trong số này.`)) return;
+            _dangCuu = true;
+            const nut = document.getElementById('nut-cuu'); if (nut) { nut.disabled = true; nut.classList.add('opacity-60'); }
+            tdEl.classList.remove('hidden'); kqEl.innerHTML = '';
+            const dem = { cuu: 0, xem: 0, khong: 0, hoan: 0 }, daCuu = [];
+            const mau = { cuu: 'text-emerald-300', xem: 'text-amber-300', khong: 'text-rose-300', hoan: 'text-slate-400' };
+            const nhan = { cuu: '✅ Cứu được', xem: '🟡 Cần người xem', khong: '❌ Giữ Loại', hoan: '⏸ Chưa xử lý được' };
+            let i = 0, xong = 0, dung = false; const thieuHinh = [];
+            const capNhat = () => { document.getElementById('cuu-tien-do-chu').textContent = `Đang cứu ${xong}/${ds.length} câu · cứu được ${dem.cuu} · cần người xem ${dem.xem} · giữ Loại ${dem.khong}`; document.getElementById('cuu-thanh').style.width = Math.round(xong / ds.length * 100) + '%'; };
+            capNhat(); logGemini(`Cứu câu loại: bắt đầu xử lý ${ds.length} câu.`);
+            const tho = async () => {
+                while (i < ds.length && !dung) {
+                    const it = ds[i++]; let r;
+                    try { r = await xuLyMotCauCuu(it); } catch (e) { r = { ma: it.ma_cau, loai: 'hoan', ly: String((e && e.message) || e) }; }
+                    if (r.loai !== 'hoan') _cuuDaXet.add(it.ma_cau);
+                    if (r.hetHan) dung = true;
+                    if (r.loai === 'khong' && /chưa có hình/.test(r.ly)) thieuHinh.push(r.ma);
+                    dem[r.loai]++; xong++; if (r.loai === 'cuu' && TU_LUU_CAU_CUU) daCuu.push(r.ma);
+                    kqEl.insertAdjacentHTML('beforeend', `<div class="${mau[r.loai]}">${nhan[r.loai]} · [${escSua(r.ma)}] ${escSua(r.ly)}</div>`);
+                    capNhat();
+                }
+            };
+            await Promise.all(Array.from({ length: CUU_SONG_SONG }, tho));
+            try { localStorage.setItem(KHOA_LUOT_CUU, JSON.stringify(daCuu)); } catch (e) { }
+            document.getElementById('cuu-tien-do-chu').textContent = `Xong: cứu được ${dem.cuu} · cần người xem ${dem.xem} · giữ Loại ${dem.khong} · chưa xử lý ${dem.hoan}` + (dung ? ' · Dừng vì hết hạn mức Gemini, bấm lại sau để làm tiếp.' : '');
+            logGemini(`Cứu câu loại: cứu được ${dem.cuu}, cần người xem ${dem.xem}, giữ Loại ${dem.khong}, chưa xử lý ${dem.hoan}${dung ? ' (hết hạn mức, bấm lại sau)' : ''}.`);
+            _dangCuu = false; if (nut) { nut.disabled = false; nut.classList.remove('opacity-60'); }
+            if (CUU_YEU_CAU_QUET_HINH && thieuHinh.length && !_daYeuCauQuetHinh) {   // thiếu hình: nhờ Agent 0 quét bù từ PDF gốc, lượt sau câu có hình sẽ được cứu
+                _daYeuCauQuetHinh = true;
+                const w = await guiVeKhoChung({ action: 'execute_task', agent: '0', task: 'quet_anh', detail: 'Cứu câu loại: bù hình cho ' + thieuHinh.slice(0, 40).join(', ') });
+                logGemini(w.ok ? `Cứu câu loại: đã nhờ Agent 0 quét bù hình cho ${thieuHinh.length} câu thiếu hình (chạy lại tác vụ xuất dữ liệu rồi bấm Cứu tự động).` : `⚠️ Chưa gửi được lệnh quét bù hình: ${escSua(w.tin)}`);
+            }
+            const conLai = conXet.length - (xong - dem.hoan);
+            if (CUU_LAP_PHUT > 0 && (dung || dem.hoan > 0 || conLai > 0) && _cuuLanLap < CUU_LAP_TOI_DA) {
+                _cuuLanLap++;
+                logGemini(`Cứu câu loại: còn câu chưa xử lý, ${CUU_LAP_PHUT} phút nữa tự chạy tiếp (lần ${_cuuLanLap}/${CUU_LAP_TOI_DA}, cần để trang mở).`);
+                setTimeout(() => cuuCauLoai(true), CUU_LAP_PHUT * 60000);
+            }
+        }
+
+        // Trả các câu vừa được tự duyệt về "Loại" (chỉ đổi trạng thái; nội dung đã chuẩn hoá và lời giải mới được giữ lại)
+        async function hoanTacLuotCuu() {
+            let ds = []; try { ds = JSON.parse(localStorage.getItem(KHOA_LUOT_CUU) || '[]'); } catch (e) { }
+            if (!ds.length) { alert('Chưa có lượt cứu nào để hoàn tác.'); return; }
+            if (!confirm(`Trả ${ds.length} câu vừa được tự duyệt về trạng thái "Loại"?`)) return;
+            let ok = 0;
+            for (const ma of ds) { const w = await guiVeKhoChung({ action: 'update_status', ma_cau: ma, trang_thai: 'Loại' }); if (w.ok) { ok++; _cuuDaXet.delete(ma); } }
+            try { localStorage.removeItem(KHOA_LUOT_CUU); } catch (e) { }
+            logGemini(`Hoàn tác lượt cứu: đã trả ${ok}/${ds.length} câu về "Loại".`);
+            alert(`Đã trả ${ok}/${ds.length} câu về "Loại".`);
+        }
+        if (BAT_CUU_CAU && TU_CUU_KHI_MO_TRANG) window.addEventListener('load', () => setTimeout(() => cuuCauLoai(true), 1500));
+        // =================== HẾT PHẦN CỨU CÂU LOẠI ===================
+
 
         // ===================== [21/11/2026] GOM 5–8 CÂU: HỎI GEMINI CHAT / GỌI GEMINI API MỘT LẦN =====================
         // Nút "Gom câu → Gemini chat": gom N câu CHƯA giải (N chọn 5–8) thành một lời nhắc, tự sao chép; thầy dán vào Gemini chat
