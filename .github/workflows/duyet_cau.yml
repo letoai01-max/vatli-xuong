@@ -74,5 +74,19 @@ jobs:
           PHIEU_BA_MODELS: "qwen/qwen3.8-27b"
           GROQ_LO: "2"
           DUYET_LAI_LOAI: "true"
+          # [24/11/2026] VẼ LẠI HÌNH / ĐỒ THỊ KHỚP ĐỀ (xem ve_lai_hinh.py). LƯỢT ĐẦU CHỈ CHẠY THỬ: không sửa Sheet, không ghi vào kho, PNG xem thử nằm ở artifact "ve_lai_xem_thu".
+          # Hài lòng thì đổi VE_LAI_CHI_BAO → "false" VÀ nâng permissions contents: read → write (cần để đẩy PNG vào images/ve_lai/). Muốn tắt hẳn: VE_LAI_HINH → "false".
+          VE_LAI_HINH: "true"
+          VE_LAI_CHI_BAO: "true"
+          VE_LAI_TOI_DA_CAU: "15"
+          VE_LAI_SO_LAN: "2"
           THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '150' }}
         run: python trung_tam.py duyet_cau.py
+      - name: Lưu hình vẽ thử để thầy xem (chỉ có khi chạy thử)
+        if: always() && steps.cong.outputs.chay != 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ve_lai_xem_thu
+          path: ve_lai_xem_thu/
+          if-no-files-found: ignore
+          retention-days: 7
