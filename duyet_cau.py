@@ -1139,6 +1139,7 @@ def main():
              "loi_nang": [], "nghi_van": [], "ghi_chu": [], "sua": {}, "bat_dong": [], "co_hinh": False, "hoan": False,
              "duyet_lai": duyet_lai, "cuu_loai": cuu_loai,
              "link_anh": (r[c_anh] if c_anh is not None else "").strip(),
+             "hinh_ve_lai": "vẽ lại bằng matplotlib" in r[c["Kiểm tra"]],      # [24/11] hình do cuu_loai.py vẽ từ chữ của đề → không độc lập với đề, không dùng cho tầng 6
              "ma_bai": r[c["Mã bài"]].strip() if "Mã bài" in c else "", "lop": r[c["Lớp"]].strip() if "Lớp" in c else ""}
         if vt and vt in da_gap and not (_ct("CUU_TRUNG_HINH") and CT.khac_hinh(x["link_anh"], link_cua.get(da_gap[vt], ""),
                                                                                (r[c["File ID"]] or "x") == file_cua.get(da_gap[vt], ""))):
