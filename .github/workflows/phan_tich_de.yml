@@ -1,0 +1,50 @@
+# .github/workflows/phan_tich_de.yml – PHÂN TÍCH ĐỀ TN THPT (gọi từ PhanTichDe.gs; chạy phan_tich_de.py qua trung_tam.py để có cổng phút)
+name: phan_tich_de
+on:
+  workflow_dispatch:
+    inputs:
+      ma:
+        description: "Mã việc"
+        required: false
+      goi:
+        description: "File ID gói việc (goi_pt_<mã>.json)"
+        required: true
+      ket_qua:
+        description: "File ID kết quả (ket_qua_pt_<mã>.json)"
+        required: true
+permissions:
+  actions: read
+  contents: read
+concurrency:
+  group: phan-tich-de-${{ inputs.ma || inputs.goi }}
+  cancel-in-progress: false
+jobs:
+  phan_tich:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+      - name: Phân tích đề (6 khối)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_BILLING_TOKEN: ${{ secrets.GH_BILLING_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          GEMINI_API_KEY_4: ${{ secrets.GEMINI_API_KEY_4 }}
+          GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
+          GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GOI_ID: ${{ inputs.goi }}
+          KQ_ID: ${{ inputs.ket_qua }}
+        run: python trung_tam.py phan_tich_de.py
