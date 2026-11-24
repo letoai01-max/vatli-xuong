@@ -18,6 +18,20 @@ LƯU Ý: tắt lịch duyệt cũ của Apps Script (tatDuyetTuDong trong Kho ch
 để giáo viên kiểm tra và đo độ chính xác thật.
 Dùng lại các hàm của doc_de.py (kết nối Google, tải file gốc, gọi Gemini xoay vòng khoá miễn phí).
 
+[24/11/2026] KHẮC PHỤC NHANH ĐỂ LƯỢT SAU CÓ SẢN LƯỢNG NGAY (mặc định BẬT; đặt giá trị 0 / false ở từng biến để về y như cũ):
+  • GROQ_CHUNK = 2: Groq nhận tối đa 2 câu mỗi lần gọi (0 = gửi cả file như cũ); GROQ_MAX_TOKEN = 450 → max_completion_tokens (0 = không truyền).
+    Mục tiêu: prompt + đầu ra < 3.500 token, hết lỗi 413 và tràn 1.000 OTPM. Cần groq_xuong.giai_lo nhận max_completion_tokens (xem _tham_so_groq).
+  • NGẮT SỚM KHI CẠN KHOÁ GROQ: GROQ_HAN_PHUT = 3 (phần Groq của MỘT file chạy tối đa chừng ấy phút, 0 = không giới hạn; phần đã giải xong vẫn được dùng);
+    GROQ_LO_RONG_TOI_DA = 2 (hai lô liên tiếp trả rỗng = đã xoay hết khoá mà vẫn lỗi → bỏ phần còn lại của file);
+    GROQ_NGAT_SAU = 2 (hai file liên tiếp Groq rỗng → bỏ Groq cho phần còn lại của lượt; trước đây mặc định 0 = tắt).
+  • LƯU CUỐN CHIẾU: GHI_CUON_CHIEU = true: câu Loại ngay ở tầng 1 được ghi TRƯỚC khi gọi Gemini/Groq; kết quả còn lại ghi từng nhóm GHI_SO_CAU_MOI_LAN câu
+    (mặc định 1 = từng câu), lỗi ghi một nhóm thì thử lại 3 lần rồi để câu đó \"Chưa duyệt\" cho lượt sau (không mất cả file). false → ghi một lần cuối file như cũ.
+
+  • TANG_HAN_PHUT = 10: cụm tầng 2 + 3 + 4 của MỘT file chạy tối đa chừng ấy phút (0 = không giới hạn). Quá hạn (thường là đang ngủ chờ retryDelay vì cạn khoá)
+    → coi như hết hạn mức Gemini: lượt dừng, câu Loại tầng 1 và các file xong trước đã lưu, lượt sau làm tiếp. Việc quá hạn bị bỏ lại trong luồng nền; cuối lượt thoát bằng os._exit.
+  • DUNG_SAU_FILE_RONG = 3: ba file liên tiếp không ghi được câu nào (lỗi, hoặc Gemini chưa đánh giá được) → dừng lượt, khỏi đốt phút Actions (0 = tắt).
+  • UU_TIEN_FILE_LON = true: duyệt file có NHIỀU câu chờ trước (tầng 2 tốn 1 lượt Gemini mỗi file, file lớn cho nhiều câu nhất trên mỗi lượt gọi); false = thứ tự cũ.
+
 [24/11/2026] VẼ LẠI HÌNH / ĐỒ THỊ KHỚP ĐỀ (mặc định TẮT → chạy y như cũ): đặt VE_LAI_HINH=true. Trước khi duyệt, câu có mô tả hình ([Hình…] / [[DO_THI…]])
   được kiểm hình đang gắn (model nhìn ảnh thật); hình KHÔNG khớp bị gỡ khỏi cột "Link ảnh" (link cũ ghi ở cột Kiểm tra), máy tự vẽ hình / đồ thị đúng bằng
   matplotlib, qua cổng khớp 2 bằng chứng (luật code + model nhìn lại) mới gắn. Hình do máy vẽ không dùng cho tầng 6 (vì không độc lập với đề). Chi tiết: ve_lai_hinh.py.
@@ -85,7 +99,7 @@ Mỗi lượt gọi Gemini / Groq được ghi vào tab Quota_SuDung (dòng "xư
   • CUU_THONG_KE: tab ThongKeLoai (câu Loại theo lí do). CUU_DO_CHINH_XAC: mỗi tuần tự thử lại trên câu giáo viên đã duyệt, tab DoChinhXac;
     độ chính xác tụt → dòng cuối ghi TAT → các bậc cứu tự tắt cho tới khi đo lại đạt (không cần giáo viên).
 """
-import datetime as dt, json, os, random, re, sys, time
+import datetime as dt, inspect, json, os, random, re, sys, threading, time, traceback
 from concurrent.futures import ThreadPoolExecutor
 
 import doc_de as X   # cùng thư mục: ket_noi, chuan_bi_tep, goi_gemini, doc_cau_hinh, doc_yccd, tu_khoa_ct_cu, CT_CU_MO_TA, HetHanMuc
@@ -135,8 +149,27 @@ GROQ_CHE_DO = os.environ.get("GROQ_CHE_DO", "ghi_chu").strip().lower()
 def _so_nguyen(ten, mac_dinh=0):
     try: return max(0, int(float(os.environ.get(ten, str(mac_dinh)) or mac_dinh)))
     except ValueError: return mac_dinh
-GROQ_NGAT_SAU = _so_nguyen("GROQ_NGAT_SAU")
+GROQ_NGAT_SAU = _so_nguyen("GROQ_NGAT_SAU", 2)                    # [24/11] mặc định 2 (trước: 0 = tắt); đặt 0 để tắt
 GROQ_LO_TOI_DA = _so_nguyen("GROQ_LO_TOI_DA")
+GROQ_CHUNK = _so_nguyen("GROQ_CHUNK", 2)                          # [24/11] số câu mỗi lần gọi Groq (0 = cả file như cũ)
+GROQ_MAX_TOKEN = _so_nguyen("GROQ_MAX_TOKEN", 450)                # [24/11] max_completion_tokens (0 = không truyền)
+GROQ_LO_RONG_TOI_DA = max(1, _so_nguyen("GROQ_LO_RONG_TOI_DA", 2))  # [24/11] số lô rỗng liên tiếp thì bỏ phần còn lại của file
+try:
+    GROQ_HAN_PHUT = max(0.0, float(os.environ.get("GROQ_HAN_PHUT", "3") or 0))   # [24/11] phút tối đa cho phần Groq của một file (0 = không giới hạn)
+except ValueError:
+    GROQ_HAN_PHUT = 3.0
+GHI_CUON_CHIEU = os.environ.get("GHI_CUON_CHIEU", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")   # [24/11] ghi từng nhóm câu ngay khi xong
+GHI_SO_CAU_MOI_LAN = max(1, _so_nguyen("GHI_SO_CAU_MOI_LAN", 1))
+GHI_GIAN_CACH = 1.1       # giây tối thiểu giữa hai lần ghi (Sheets: ~60 lần ghi/phút/người dùng)
+_ghi = {"lan_cuoi": 0.0, "loi_lien_tiep": 0}
+try:
+    TANG_HAN_PHUT = max(0.0, float(os.environ.get("TANG_HAN_PHUT", "10") or 0))   # [24/11] phút tối đa cho tầng 2+3+4 của một file (0 = không giới hạn)
+except ValueError:
+    TANG_HAN_PHUT = 10.0
+DUNG_SAU_FILE_RONG = _so_nguyen("DUNG_SAU_FILE_RONG", 3)                          # [24/11] số file liên tiếp không ra câu nào thì dừng lượt (0 = tắt)
+UU_TIEN_FILE_LON = os.environ.get("UU_TIEN_FILE_LON", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")
+_bo_roi = {"co": False}      # có việc bị bỏ lại trong luồng nền → cuối lượt phải thoát cứng
+_groq_canh_bao = {"max_token": False}
 _groq_rong = {"lien_tiep": 0, "da_bao": False}
 def groq_da_ngat():
     return bool(GROQ_NGAT_SAU) and _groq_rong["lien_tiep"] >= GROQ_NGAT_SAU
@@ -557,9 +590,32 @@ def tang4(ds, cac_model, model_tang2):
     return kq, model_dung
 
 
+def _chay_co_han(cac_viec, han_phut):
+    """[24/11] Chạy các việc {tên: hàm} mỗi việc một luồng nền (daemon), chờ tối đa han_phut phút (0 = không giới hạn).
+    Trả {tên: kết quả}. Việc nào lỗi thì ném lại ĐÚNG lỗi đó (theo thứ tự khai báo, như khi gọi .result()). Quá hạn → X.HetHanMuc."""
+    kq, loi = {}, {}
+    def boc(ten, f):
+        def lam():
+            try: kq[ten] = f()
+            except BaseException as e: loi[ten] = e
+        return threading.Thread(target=lam, daemon=True)
+    cac_luong = {ten: boc(ten, f) for ten, f in cac_viec.items()}
+    for th in cac_luong.values(): th.start()
+    han = time.time() + han_phut * 60 if han_phut else None
+    for ten, th in cac_luong.items():
+        th.join(None if han is None else max(0.0, han - time.time()))
+        if th.is_alive():
+            _bo_roi["co"] = True
+            raise X.HetHanMuc("Quá %g phút chờ %s (nghi cạn khoá / chờ retryDelay dài)" % (han_phut, ten))
+    for ten in cac_viec:
+        if ten in loi: raise loi[ten]
+    return kq
+
+
 def chay_cac_tang(tep, can_ai, yccd, cac_model):
     """[21/11] Chạy tầng 2, 3, 4 và Groq của MỘT file. Trả (g2, bang, model2, so_lieu, g4, model4, g5, model5).
-    Lỗi xử lí đúng như bản lần lượt: tầng 2 / tầng 4 lỗi → ném lên (file để lượt sau); tầng 3 lỗi thường → bỏ qua, HetHanMuc → ném lên; Groq tự nuốt lỗi."""
+    Lỗi xử lí đúng như bản lần lượt: tầng 2 / tầng 4 lỗi → ném lên (file để lượt sau); tầng 3 lỗi thường → bỏ qua, HetHanMuc → ném lên; Groq tự nuốt lỗi.
+    [24/11] Cả cụm bị giới hạn TANG_HAN_PHUT phút (_chay_co_han): quá hạn → X.HetHanMuc."""
     def tang3_an_toan():
         try:
             return tang3(tep, can_ai, cac_model)
@@ -569,21 +625,21 @@ def chay_cac_tang(tep, can_ai, yccd, cac_model):
             print("  Tầng 3 lỗi (bỏ qua):", str(e)[:100], flush=True)
             return {}
     if not SONG_SONG:
-        g2, bang, model2 = tang2(tep, can_ai, yccd, cac_model)
-        so_lieu = tang3_an_toan()
-        g4, model4 = tang4(can_ai, cac_model, model2)
-        g5, model5 = tang4_groq(can_ai)
-        return g2, bang, model2, so_lieu, g4, model4, g5, model5
-    with ThreadPoolExecutor(max_workers=4) as ex:
-        f2 = ex.submit(tang2, tep, can_ai, yccd, cac_model)
-        f3 = ex.submit(tang3_an_toan)
-        f4 = ex.submit(tang4, can_ai, cac_model, cac_model[0])      # model tầng 2 dự kiến = model chính
-        f5 = ex.submit(tang4_groq, can_ai)
-        g2, bang, model2 = f2.result()
-        so_lieu = f3.result()
-        g4, model4 = f4.result()
-        g5, model5 = f5.result()
-    return g2, bang, model2, so_lieu, g4, model4, g5, model5
+        def lan_luot():
+            g2, bang, model2 = tang2(tep, can_ai, yccd, cac_model)
+            so_lieu = tang3_an_toan()
+            g4, model4 = tang4(can_ai, cac_model, model2)
+            g5, model5 = tang4_groq(can_ai)
+            return g2, bang, model2, so_lieu, g4, model4, g5, model5
+        return _chay_co_han({"cụm tầng 2-3-4": lan_luot}, TANG_HAN_PHUT)["cụm tầng 2-3-4"]
+    kq = _chay_co_han({"tầng 2": lambda: tang2(tep, can_ai, yccd, cac_model),
+                       "tầng 3": tang3_an_toan,
+                       "tầng 4": lambda: tang4(can_ai, cac_model, cac_model[0]),      # model tầng 2 dự kiến = model chính
+                       "Groq": lambda: tang4_groq(can_ai)}, TANG_HAN_PHUT)
+    g2, bang, model2 = kq["tầng 2"]
+    g4, model4 = kq["tầng 4"]
+    g5, model5 = kq["Groq"]
+    return g2, bang, model2, kq["tầng 3"], g4, model4, g5, model5
 
 
 def mo_tep_goc(drive, fid):
@@ -604,8 +660,62 @@ def lay_tep_goc(fid, tep_cho, drive):
     return f.result() if f is not None else mo_tep_goc(drive, fid)
 
 
+def _tham_so_groq():
+    """[24/11] Tham số thêm cho G.giai_lo: max_completion_tokens (hoặc max_tokens) nếu hàm đó nhận; không nhận thì cảnh báo một lần."""
+    if not GROQ_MAX_TOKEN: return {}
+    try:
+        ps = inspect.signature(G.giai_lo).parameters
+    except (TypeError, ValueError):
+        ps = {}
+    for ten in ("max_completion_tokens", "max_tokens"):
+        if ten in ps: return {ten: GROQ_MAX_TOKEN}
+    if any(p.kind == inspect.Parameter.VAR_KEYWORD for p in ps.values()):
+        return {"max_completion_tokens": GROQ_MAX_TOKEN}
+    if not _groq_canh_bao["max_token"]:
+        print("  ⚠️ groq_xuong.giai_lo chưa nhận max_completion_tokens – cần thêm tham số này trong groq_xuong.py (đang chỉ chia lô nhỏ).", flush=True)
+        _groq_canh_bao["max_token"] = True
+    return {}
+
+
+def _groq_giai(bo, models=None, buoc=None):
+    """[24/11] Gọi Groq theo lô nhỏ, có hạn thời gian, dừng sớm khi cạn khoá. Trả ({mã câu: đáp án}, model).
+    • Chia lô buoc (mặc định GROQ_CHUNK) câu mỗi lần; 0 = cả file một lần như cũ.
+    • GROQ_LO_RONG_TOI_DA lô rỗng liên tiếp (G đã xoay hết khoá mà vẫn 429/413/hết quota) → bỏ phần còn lại.
+    • GROQ_HAN_PHUT phút: quá hạn thì bỏ phần còn lại, vẫn dùng phần đã giải xong. Việc chạy trong luồng nền (daemon) nên không giữ chân workflow."""
+    kq, tt = {}, {"model": "", "dung": False, "rong": 0}
+    kich_co = (GROQ_CHUNK if buoc is None else buoc) or len(bo)
+    them = _tham_so_groq()
+
+    def lam():
+        for i in range(0, len(bo), kich_co):
+            if tt["dung"]: return
+            lo = bo[i:i + kich_co]
+            try:
+                r = G.giai_lo(lo, models, **them) if models else G.giai_lo(lo, **them)
+                k, m = (r[0] or {}), (r[1] if len(r) > 1 else "")
+            except Exception as e:
+                print("  Groq lỗi lô %d (bỏ qua): %s" % (i // kich_co + 1, str(e)[:120]), flush=True)
+                k, m = {}, ""
+            if k:
+                kq.update(k); tt["rong"] = 0
+                if m: tt["model"] = m
+            else:
+                tt["rong"] += 1
+                if tt["rong"] >= GROQ_LO_RONG_TOI_DA:
+                    print("  ⏭️ Groq trả rỗng %d lô liên tiếp (cạn khoá / quota) – bỏ phần còn lại của file." % tt["rong"], flush=True)
+                    return
+    th = threading.Thread(target=lam, daemon=True)
+    th.start()
+    th.join(GROQ_HAN_PHUT * 60 if GROQ_HAN_PHUT else None)
+    if th.is_alive():
+        tt["dung"] = True
+        print("  ⏱️ Groq quá %g phút – bỏ phần còn lại, dùng %d/%d câu đã giải." % (GROQ_HAN_PHUT, len(kq), len(bo)), flush=True)
+    return dict(kq), tt["model"]
+
+
 def tang4_groq(ds):
-    """Groq (khác hãng) giải độc lập, không xem đáp án. Trả ({mã câu: đáp án}, model); không có khoá / lỗi → ({}, "")."""
+    """Groq (khác hãng) giải độc lập, không xem đáp án. Trả ({mã câu: đáp án}, model); không có khoá / lỗi → ({}, \"\").
+    [24/11] Gọi theo lô nhỏ GROQ_CHUNK câu, có hạn GROQ_HAN_PHUT phút (xem _groq_giai)."""
     if not G or not G.co_khoa():
         return {}, ""
     if groq_da_ngat():                                                  # [22/11] ngắt mạch
@@ -613,11 +723,7 @@ def tang4_groq(ds):
             print("  ⏭️ Groq trả rỗng %d file liên tiếp – bỏ Groq cho phần còn lại của lượt." % _groq_rong["lien_tiep"], flush=True)
             _groq_rong["da_bao"] = True
         return {}, ""
-    try:
-        kq = G.giai_lo([{"ma": x["ma"], "dang": loai_dang(x["dang"]), "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in ds])
-    except Exception as e:
-        print("  Groq lỗi (bỏ qua):", str(e)[:120], flush=True)
-        kq = ({}, "")
+    kq = _groq_giai([{"ma": x["ma"], "dang": loai_dang(x["dang"]), "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in ds])
     if GROQ_NGAT_SAU:
         _groq_rong["lien_tiep"] = 0 if (kq and kq[0]) else _groq_rong["lien_tiep"] + 1
     return kq
@@ -814,15 +920,7 @@ def phieu_ba_file(ds, model_da_dung):
     bo = [{"ma": x["ma"], "dang": loai_dang(x["dang"]), "noi_dung": x["noi_dung"], "phuong_an": x["phuong_an"]} for x in ung]
     for m in PHIEU_BA_MODELS:
         if m == model_da_dung: continue
-        kq = {}
-        try:
-            cac_lo = [bo[i:i + GROQ_LO_TOI_DA] for i in range(0, len(bo), GROQ_LO_TOI_DA)] if GROQ_LO_TOI_DA else [bo]   # [22/11] chia lô nhỏ
-            for lo in cac_lo:
-                k, _ = G.giai_lo(lo, [m])
-                kq.update(k or {})
-        except Exception as e:
-            print("  Phiếu ba (%s) lỗi, bỏ qua: %s" % (m, str(e)[:100]), flush=True)
-            if not kq: continue
+        kq, _ = _groq_giai(bo, [m], GROQ_LO_TOI_DA or None)        # [24/11] chia lô nhỏ + hạn thời gian + dừng sớm
         ten = "gq_" + m.split("/")[-1][:12]
         for x in ung:
             if x["ma"] in kq:
@@ -1054,6 +1152,8 @@ def main():
     thong_ke = {"ai": 0, "xem": 0, "loai": 0, "hoan": 0}
     het_han_muc = False
     cac_file = list(nhom.items())
+    if UU_TIEN_FILE_LON:                                            # [24/11] file nhiều câu chờ nhất trước (sort ổn định: bằng nhau giữ thứ tự cũ)
+        cac_file.sort(key=lambda kv: -len(kv[1]))
     tep_cho, tai_truoc, drive_tai = {}, None, None
     if SONG_SONG:                                                   # [21/11] tải trước file gốc kế tiếp bằng kết nối Drive riêng (httplib2 không an toàn đa luồng)
         try:
@@ -1066,6 +1166,7 @@ def main():
         if tai_truoc and 0 <= i < len(cac_file) and cac_file[i][0] != "khong_ro" and cac_file[i][0] not in tep_cho:
             tep_cho[cac_file[i][0]] = tai_truoc.submit(mo_tep_goc, drive_tai, cac_file[i][0])
 
+    file_rong = 0                                                   # [24/11] số file liên tiếp không ghi được câu nào
     for idx, (fid, ds) in enumerate(cac_file):
         if not con_gio():
             print("⏸️ Hết thời gian lượt này.", flush=True); break
@@ -1078,6 +1179,8 @@ def main():
         try:
             if TU_SUA: gan_yccd_file(ds, yccd, cac_model)                  # [22/11] chọn lại mã YCCĐ trước khi duyệt
             if VH and VH.bat(): ve_lai_hinh_file(ds, drive, cac_model)       # [24/11] kiểm hình gắn, gỡ hình sai, tự vẽ lại (mặc định tắt)
+            if GHI_CUON_CHIEU:                                              # [24/11] câu Loại ngay ở tầng 1 đã có kết luận: ghi trước khi gọi Gemini / Groq
+                ghi_ket_qua(tab, c, c_anh, [x for x in ds if x["loi_nang"]], ngay, thong_ke)
             if can_ai:
                 tep = lay_tep_goc(fid, tep_cho, drive)
                 g2, bang, model2, so_lieu, g4, model4, g5, model5 = chay_cac_tang(tep, can_ai, yccd, cac_model)
@@ -1095,38 +1198,20 @@ def main():
             print("⏸️ Hết hạn mức Gemini – dừng, lượt sau duyệt tiếp:", str(e)[:150], flush=True)
             het_han_muc = True
             break
+        except LoiGhiSheet:
+            raise
         except Exception as e:
             print("⚠️ File %s lỗi, để lượt sau: %s" % (fid, str(e)[:200]), flush=True)
+            file_rong += 1
+            if DUNG_SAU_FILE_RONG and file_rong >= DUNG_SAU_FILE_RONG:
+                print("⏸️ %d file liên tiếp không ra câu nào – dừng lượt, lượt sau làm tiếp." % file_rong, flush=True); break
             continue
-        # ghi kết quả file này – tìm dòng theo MÃ CÂU ngay trước khi ghi (không dùng số dòng đã nhớ từ lúc đọc)
-        cap = []
-        ma_cot = tab.col_values(c["Mã câu"] + 1)
-        vt_hien_tai = {v.strip(): i + 1 for i, v in enumerate(ma_cot) if i > 0 and v.strip()}
-        for x in ds:
-            dong_hien_tai = vt_hien_tai.get(x["ma"])
-            if not dong_hien_tai:
-                continue
-            if x["hoan"]:                                   # [21/11] Gemini chưa đánh giá được: giữ "Chưa duyệt", lượt sau làm lại
-                thong_ke["hoan"] += 1
-                continue
-            tt = xep_loai(x)
-            ghi = "; ".join(x["loi_nang"] + x["nghi_van"] + x["ghi_chu"]) or "Đạt"
-            kt = (x["kiem_tra_cu"] + " | " if x["kiem_tra_cu"] else "") + "[5 tầng %s%s] %s" % (ngay, " cứu Loại bậc 2" if x.get("cuu_loai") == "2" else " cứu Loại" if x.get("cuu_loai") else " duyệt lại" if x.get("duyet_lai") else "", ghi)
-            col = lambda t, dh=dong_hien_tai: gspread_a1(c[t] + 1, dh)
-            cap += [{"range": col("Trạng thái duyệt"), "values": [[tt]]}, {"range": col("Kiểm tra"), "values": [[kt[:45000]]]}]
-            if "dap_an" in x["sua"]: cap.append({"range": col("Đáp án"), "values": [[x["sua"]["dap_an"]]]})
-            if "link_anh" in x["sua"] and c_anh is not None:                                    # [24/11] hình mới vẽ lại (hoặc "" = đã gỡ hình sai); link cũ nằm trong cột Kiểm tra
-                cap.append({"range": gspread_a1(c_anh + 1, dong_hien_tai), "values": [[x["sua"]["link_anh"]]]})
-            for k_sua, ten_cot in (("noi_dung", "Nội dung"), ("phuong_an", "Phương án")):          # [22/11] đã tự cân dấu $
-                if k_sua in x["sua"] and ten_cot in c: cap.append({"range": col(ten_cot), "values": [[x["sua"][k_sua]]]})
-            if "ma" in x["sua"]:
-                m = x["sua"]["ma"]
-                cap += [{"range": col("Mã YCCĐ"), "values": [[m]]}, {"range": col("Mã bài"), "values": [["-".join(m.split("-")[:2])]]},
-                        {"range": col("Lớp"), "values": [[int(m[2:4])]]}]
-            thong_ke["ai" if tt == TT["AI"] else "loai" if tt == TT["LOAI"] else "xem"] += 1
-        if cap: tab.batch_update(cap, value_input_option="RAW")
+        ghi_ket_qua(tab, c, c_anh, ds, ngay, thong_ke)          # [24/11] ghi cuốn chiếu (câu Loại tầng 1 đã ghi trước đó)
+        file_rong = 0 if any(x.get("da_ghi") and not x["hoan"] for x in ds) else file_rong + 1
         print("📄 File %s: %d câu (%d AI duyệt) trong %d giây" % (fid[:12], len(ds),
               sum(1 for x in ds if not x["loi_nang"] and not x["nghi_van"]), time.time() - t0), flush=True)
+        if DUNG_SAU_FILE_RONG and file_rong >= DUNG_SAU_FILE_RONG:
+            print("⏸️ %d file liên tiếp không ra câu nào – dừng lượt, lượt sau làm tiếp." % file_rong, flush=True); break
 
     if tai_truoc:
         tai_truoc.shutdown(wait=False, cancel_futures=True)
@@ -1139,6 +1224,79 @@ def main():
     if Q:
         Q.ghi_sheet(kho)
     ghi_nhip(kho, tom)
+
+
+class LoiGhiSheet(Exception):
+    """Ghi Google Sheet hỏng liên tiếp – dừng lượt cho Actions báo đỏ (như khi ghi lỗi ở bản cũ)."""
+
+
+def _cap_cho_cau(x, dong, c, c_anh, ngay):
+    """Trạng thái + danh sách ô cần ghi của MỘT câu (giữ nguyên cột và cách ghi như bản cũ)."""
+    tt = xep_loai(x)
+    ghi = "; ".join(x["loi_nang"] + x["nghi_van"] + x["ghi_chu"]) or "Đạt"
+    kt = (x["kiem_tra_cu"] + " | " if x["kiem_tra_cu"] else "") + "[5 tầng %s%s] %s" % (ngay, " cứu Loại bậc 2" if x.get("cuu_loai") == "2" else " cứu Loại" if x.get("cuu_loai") else " duyệt lại" if x.get("duyet_lai") else "", ghi)
+    col = lambda t: gspread_a1(c[t] + 1, dong)
+    cap = [{"range": col("Trạng thái duyệt"), "values": [[tt]]}, {"range": col("Kiểm tra"), "values": [[kt[:45000]]]}]
+    if "dap_an" in x["sua"]: cap.append({"range": col("Đáp án"), "values": [[x["sua"]["dap_an"]]]})
+    if "link_anh" in x["sua"] and c_anh is not None:                                    # [24/11] hình mới vẽ lại (hoặc "" = đã gỡ hình sai); link cũ nằm trong cột Kiểm tra
+        cap.append({"range": gspread_a1(c_anh + 1, dong), "values": [[x["sua"]["link_anh"]]]})
+    for k_sua, ten_cot in (("noi_dung", "Nội dung"), ("phuong_an", "Phương án")):          # [22/11] đã tự cân dấu $
+        if k_sua in x["sua"] and ten_cot in c: cap.append({"range": col(ten_cot), "values": [[x["sua"][k_sua]]]})
+    if "ma" in x["sua"]:
+        m = x["sua"]["ma"]
+        cap += [{"range": col("Mã YCCĐ"), "values": [[m]]}, {"range": col("Mã bài"), "values": [["-".join(m.split("-")[:2])]]},
+                {"range": col("Lớp"), "values": [[int(m[2:4])]]}]
+    return tt, cap
+
+
+def _ghi_co_thu_lai(tab, cap):
+    """Một lần batch_update, tối đa 3 lần thử, giãn cách ≥ GHI_GIAN_CACH giây giữa hai lần ghi (tránh 429 của Sheets)."""
+    for lan in range(3):
+        cho = GHI_GIAN_CACH - (time.time() - _ghi["lan_cuoi"])
+        if GHI_CUON_CHIEU and cho > 0: time.sleep(cho)
+        try:
+            tab.batch_update(cap, value_input_option="RAW")
+            _ghi["lan_cuoi"] = time.time()
+            return True
+        except Exception as e:
+            _ghi["lan_cuoi"] = time.time()
+            print("  Ghi Sheet lỗi (lần %d/3): %s" % (lan + 1, str(e)[:120]), flush=True)
+            if lan < 2: time.sleep(20 * (lan + 1))
+    return False
+
+
+def ghi_ket_qua(tab, c, c_anh, ds_ghi, ngay, thong_ke):
+    """[24/11] Ghi kết quả các câu trong ds_ghi (bỏ câu đã ghi). Tìm dòng theo MÃ CÂU ngay trước khi ghi (không dùng số dòng nhớ từ lúc đọc).
+    GHI_CUON_CHIEU: ghi từng nhóm GHI_SO_CAU_MOI_LAN câu, xong nhóm nào là có nhóm đó; nhóm ghi hỏng thì câu giữ \"Chưa duyệt\" cho lượt sau.
+    Tắt: một lần batch_update cho cả file như bản cũ. Câu Gemini chưa đánh giá được (hoan) không ghi."""
+    can = [x for x in ds_ghi if not x.get("da_ghi")]
+    if not can: return
+    ma_cot = tab.col_values(c["Mã câu"] + 1)
+    vt_hien_tai = {v.strip(): i + 1 for i, v in enumerate(ma_cot) if i > 0 and v.strip()}
+    cho_ghi = []
+    for x in can:
+        dong = vt_hien_tai.get(x["ma"])
+        if not dong:
+            continue
+        if x["hoan"]:                                    # [21/11] Gemini chưa đánh giá được: giữ "Chưa duyệt", lượt sau làm lại
+            thong_ke["hoan"] += 1
+            x["da_ghi"] = True
+            continue
+        tt, cap = _cap_cho_cau(x, dong, c, c_anh, ngay)
+        cho_ghi.append((x, tt, cap))
+    buoc = GHI_SO_CAU_MOI_LAN if GHI_CUON_CHIEU else max(1, len(cho_ghi))
+    for i in range(0, len(cho_ghi), buoc):
+        nhom = cho_ghi[i:i + buoc]
+        if _ghi_co_thu_lai(tab, [u for _, _, cs in nhom for u in cs]):
+            _ghi["loi_lien_tiep"] = 0
+            for x, tt, _ in nhom:
+                x["da_ghi"] = True
+                thong_ke["ai" if tt == TT["AI"] else "loai" if tt == TT["LOAI"] else "xem"] += 1
+        else:
+            _ghi["loi_lien_tiep"] += 1
+            print("  ⚠️ Không ghi được %d câu (%s…) – giữ \"Chưa duyệt\", lượt sau làm lại." % (len(nhom), nhom[0][0]["ma"]), flush=True)
+            if _ghi["loi_lien_tiep"] >= 2:
+                raise LoiGhiSheet("Ghi Google Sheet hỏng %d nhóm liên tiếp" % _ghi["loi_lien_tiep"])
 
 
 def gspread_a1(cot, dong):
@@ -1189,4 +1347,9 @@ if __name__ == "__main__":
     except Exception:
         if Q:
             Q.ghi_sheet()
+        if _bo_roi["co"]:                                   # [24/11] còn luồng nền đang ngủ chờ → thoát cứng để workflow không bị giữ
+            traceback.print_exc(); sys.stdout.flush(); sys.stderr.flush(); os._exit(1)
         raise
+    if _bo_roi["co"]:
+        print("Thoát cứng: còn việc Gemini bị bỏ lại trong luồng nền (quá hạn TANG_HAN_PHUT).", flush=True)
+        sys.stdout.flush(); os._exit(0)
