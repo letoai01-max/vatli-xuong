@@ -62,7 +62,7 @@ TOI_DA = _so("CUU_LOAI_TOI_DA", 100)          # [24/11] hạ tạm vì hạn m�
 SONG_SONG = max(1, _so("CUU_LOAI_SONG_SONG", 1))    # [24/11] 1 = lần lượt (tiết kiệm quota); nâng 3 khi hạn mức dư
 CHE_DO = (os.environ.get("CUU_LOAI_CHE_DO") or "tat_ca").lower()
 # >>> DÁN ID THƯ MỤC DRIVE CHỨA ẢNH CỨU VÀO GIỮA HAI DẤU NGOẶC KÉP (không cần sửa workflow). Biến môi trường CUU_HINH_THU_MUC_ID, nếu có, được ưu tiên.
-THU_MUC_MAC_DINH = "1JBZWN5hWMqqIBwAYTWKkykfNEr1ftgK_?hl=vi"
+THU_MUC_MAC_DINH = "1JBZWN5hWMqqIBwAYTWKkykfNEr1ftgK_"
 THU_MUC = (os.environ.get("CUU_HINH_THU_MUC_ID") or THU_MUC_MAC_DINH).strip()
 COT_HINH = (os.environ.get("CUU_HINH_COT") or "Link ảnh").strip()      # cùng cột duyet_cau.py đọc cho tầng 6
 DINH_DANG = (os.environ.get("CUU_HINH_DINH_DANG") or "").strip().lower()
