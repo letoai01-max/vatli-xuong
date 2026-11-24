@@ -56,6 +56,7 @@ CAU_HINH_VIEC = {
     "tao_de":        {"muc": 5, "loai": "yeu_cau", "phut": 45,  "toi_thieu": 5},
     "xuat_de":       {"muc": 4, "loai": "dinh_ky", "phut": 10,  "toi_thieu": 3},
     "duyet_cau":     {"muc": 4, "loai": "dinh_ky", "phut": 150, "toi_thieu": 10},
+    "cuu_loai":      {"muc": 3, "loai": "dinh_ky", "phut": 60,  "toi_thieu": 5},    # [24/11] cứu câu Loại (cuu_loai.py) – chạy trước duyet_cau, mức 3 để không giành phần của duyet_cau
     "tron_de":       {"muc": 4, "loai": "yeu_cau", "phut": 30,  "toi_thieu": 3},
     "kiem_dinh_de":  {"muc": 4, "loai": "yeu_cau", "phut": 40,  "toi_thieu": 5},
     "de_cuong":      {"muc": 4, "loai": "yeu_cau", "phut": 45,  "toi_thieu": 5},
@@ -526,7 +527,7 @@ def bang_hien_thi(tt, ke, da_bao=0):
 
 
 # ============================== [22/11/2026] SỐ LIỆU CHO BẢN ĐỒ NHIỆT ==============================
-NHAN_HIEN_THI = {"doc_de": "Đọc đề", "duyet_cau": "Duyệt câu", "tu_giai": "Tự giải", "tim_kiem": "Tìm kiếm tài liệu",
+NHAN_HIEN_THI = {"doc_de": "Đọc đề", "duyet_cau": "Duyệt câu", "cuu_loai": "Cứu câu Loại", "tu_giai": "Tự giải", "tim_kiem": "Tìm kiếm tài liệu",
                  "tao_de": "Tạo đề", "quet_anh_cron": "Quét bù hình ảnh", "gan_mo_ta_anh": "Gán mô tả ảnh",
                  "tai_tai_lieu": "Tải tài liệu", "chuyen_de": "Chuyên đề", "soan_giao_an": "Soạn giáo án", "kiem_thu": "Kiểm thử",
                  "xuat_de": "Xuất đề & dữ liệu", "chi_muc_trung": "Chỉ mục trùng", "canh_gac": "Canh gác", "de_cuong": "Đề cương",
