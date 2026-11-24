@@ -239,7 +239,7 @@ ma, out, _ = chay_tt("viec_gia.py", [["2026-11-%02d" % d, "x", 100, 1] for d in 
 kiem("trung_tam: việc theo yêu cầu vẫn chạy khi đã hết ngân sách NGÀY", ma == 0 and os.path.exists(os.environ["DAU_VET"]))
 os.remove(os.environ["DAU_VET"])
 ma, out, _ = chay_tt("viec_gia.py", [["2026-11-%02d" % d, "x", 100, 1] for d in range(1, 21)], {"GH_VIEC": "tao_de", "GITHUB_EVENT_NAME": "workflow_dispatch"}, hn="2026-11-21")
-kiem("trung_tam: theo yêu cầu khi hết hạn mức tháng → từ chối, thoát mã ≠ 0, không chạy", ma != 0 and not os.path.exists(os.environ["DAU_VET"]))
+kiem("trung_tam: theo yêu cầu khi hết hạn mức tháng → từ chối có chủ ý (cảnh báo vàng), thoát mã 0, không chạy", ma == 0 and not os.path.exists(os.environ["DAU_VET"]) and "::warning title=Bỏ qua do hết phút" in out)   # [24/11] khớp trung_tam.py: không báo đỏ nhầm
 ma, out, da_ghi = chay_tt("viec_ket.py", dem, {"GH_VIEC": "duyet_cau"})
 kiem("trung_tam: việc tự thoát lỗi → mã thoát được giữ nguyên và vẫn cập nhật số phút", ma != 0 and da_ghi)
 ma, out, _ = chay_tt("viec_gia.py", dem, {"GH_VIEC": "duyet_cau", "THOI_GIAN_TOI_DA_PHUT": "7"})
