@@ -18,8 +18,8 @@ Hai loại lỗi được cứu (câu "Loại" do MÁY đặt: cột Kiểm tra 
 Mỗi câu chỉ cứu MỘT lần: dấu "[cứu Loại dd/mm: …]" ở cột Kiểm tra.
 
 TĂNG SỐ CÂU CỨU MỖI LƯỢT (đều chỉnh bằng biến môi trường, có mặc định):
-  CUU_LOAI_TOI_DA      số câu tối đa mỗi lượt                         (mặc định 300, trước là 150)
-  CUU_LOAI_SONG_SONG   số file gốc xử lí song song                   (mặc định 3)
+  CUU_LOAI_TOI_DA      số câu tối đa mỗi lượt                         (mặc định 100)
+  CUU_LOAI_SONG_SONG   số file gốc xử lí song song                   (mặc định 1)
   CUU_LOAI_LO          số câu tách đề gửi 1 lần                      (mặc định 12)
   CUU_HINH_LO          số câu hình gửi 1 lần                         (mặc định 6)
   CUU_LOAI_CHE_DO      tat_ca | tach | hinh                          (mặc định tat_ca)
@@ -58,10 +58,12 @@ LI_DO_KHONG_CUU = re.compile(r"Trùng hẳn|Ngoài chương trình")
 
 LO = _so("CUU_LOAI_LO", 12)
 LO_HINH = _so("CUU_HINH_LO", 6)
-TOI_DA = _so("CUU_LOAI_TOI_DA", 300)
-SONG_SONG = max(1, _so("CUU_LOAI_SONG_SONG", 3))
+TOI_DA = _so("CUU_LOAI_TOI_DA", 100)          # [24/11] hạ tạm vì hạn mức Actions/Gemini đang cạn; nâng lại 300 khi hết căng
+SONG_SONG = max(1, _so("CUU_LOAI_SONG_SONG", 1))    # [24/11] 1 = lần lượt (tiết kiệm quota); nâng 3 khi hạn mức dư
 CHE_DO = (os.environ.get("CUU_LOAI_CHE_DO") or "tat_ca").lower()
-THU_MUC = (os.environ.get("CUU_HINH_THU_MUC_ID") or "").strip()
+# >>> DÁN ID THƯ MỤC DRIVE CHỨA ẢNH CỨU VÀO GIỮA HAI DẤU NGOẶC KÉP (không cần sửa workflow). Biến môi trường CUU_HINH_THU_MUC_ID, nếu có, được ưu tiên.
+THU_MUC_MAC_DINH = ""
+THU_MUC = (os.environ.get("CUU_HINH_THU_MUC_ID") or THU_MUC_MAC_DINH).strip()
 COT_HINH = (os.environ.get("CUU_HINH_COT") or "Link ảnh").strip()      # cùng cột duyet_cau.py đọc cho tầng 6
 DINH_DANG = (os.environ.get("CUU_HINH_DINH_DANG") or "").strip().lower()
 VE_MOI = (os.environ.get("CUU_HINH_VE_MOI") or "1") != "0"
