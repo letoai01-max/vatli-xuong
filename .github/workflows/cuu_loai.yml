@@ -1,17 +1,16 @@
 name: cuu_loai
 on:
   schedule:
-    - cron: "17 15 * * *"      # trước lượt duyet_cau 16:47 UTC để câu đã tách lại được duyệt ngay
+    - cron: "17 15 * * *"      # 15:17 UTC = 22:17 giờ VN, TRƯỚC lượt duyet_cau 23:47 → câu vừa cứu được duyệt lại ngay
   workflow_dispatch:
     inputs:
       phut:
         description: "Số phút tối đa cho lượt này"
         required: false
-        default: "40"
+        default: "60"
 concurrency:
-  group: ngan_hang
+  group: ngan_hang              # cùng nhóm với duyet_cau: hai việc xếp hàng, không ghi Sheet cùng lúc
   cancel-in-progress: false
-# [BẢO MẬT 31/10/2026] Mặc định chỉ đọc kho; workflow này không ghi lại vào kho.
 permissions:
   actions: read
   contents: read
@@ -19,7 +18,7 @@ permissions:
 jobs:
   cuu:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
       - name: Cổng ngân sách phút (rẻ – chưa cài thư viện; hoãn thì bỏ qua các bước sau)
@@ -35,7 +34,7 @@ jobs:
           cache: pip
       - run: pip install -q -r requirements.txt
         if: steps.cong.outputs.chay != 'false'
-      - name: Cứu câu Loại do lỗi tách đề
+      - name: Cứu câu Loại (lỗi tách đề + lỗi hình/đồ thị)
         if: steps.cong.outputs.chay != 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +50,8 @@ jobs:
           GEMINI_API_KEY_4: ${{ secrets.GEMINI_API_KEY_4 }}
           GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
           GEMINI_API_KEY_TRA_PHI: ${{ secrets.GEMINI_API_KEY_TRA_PHI }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          CUU_LOAI_TOI_DA: "150"
-          THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '40' }}
+          # Số câu / song song / thư mục Drive đã đặt mặc định trong cuu_loai.py; muốn đổi nhanh thì bỏ dấu # ở dòng dưới:
+          # CUU_LOAI_TOI_DA: "100"
+          # CUU_LOAI_SONG_SONG: "1"
+          THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '60' }}
         run: python trung_tam.py cuu_loai.py
