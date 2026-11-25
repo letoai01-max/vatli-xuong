@@ -53,6 +53,17 @@ jobs:
           SHEET_ID: ${{ secrets.SHEET_ID }}
         run: python trung_tam.py xuat_de.py
 
+      # [25/11/2026] Xuất hạn mức khoá API (đọc tab Quota_SuDung) ra quota_gemini.json cho mục "Hạn mức khoá API" của index.html.
+      # Chạy sau xuat_de.py (đã có credentials.json); lỗi chỉ cảnh báo, không làm hỏng lượt xuất. Tệp cùng thư mục với questions.json.
+      - name: Xuất quota_gemini.json
+        if: steps.cong.outputs.chay != 'false'
+        continue-on-error: true
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+        run: python quota_xuong.py
+
       # [29/10/2026] Lấy bản mới nhất trước khi commit, tránh bị từ chối khi quet-anh vừa đẩy ảnh lên
       - name: Lấy bản mới nhất trước khi commit
         if: steps.cong.outputs.chay != 'false'
@@ -69,4 +80,4 @@ jobs:
         with:
           commit_message: "🤖 Tự động cập nhật questions.json tức thì"
           branch: main
-          file_pattern: "questions.json"
+          file_pattern: "questions.json quota_gemini.json"
