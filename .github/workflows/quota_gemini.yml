@@ -1,0 +1,52 @@
+# quota_gemini.yml – xuất quota_gemini.json (hạn mức khoá API của xưởng) từ tab Quota_SuDung rồi đưa lên repo.
+# Workflow RIÊNG, không đụng tới Xuat_de.yml. Chạy tay (Actions → quota_gemini → Run workflow), ~1 phút.
+name: quota_gemini
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: quota_gemini
+  cancel-in-progress: false
+
+jobs:
+  quota_gemini:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install --no-cache-dir -r requirements.txt
+
+      - name: Xuất quota_gemini.json
+        env:
+          PYTHONUNBUFFERED: "1"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+        run: python quota_xuong.py
+
+      - name: Lấy bản mới nhất trước khi commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git stash --include-untracked
+          git pull --rebase origin main
+          git stash pop || true
+
+      - name: Commit and push quota_gemini.json
+        uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5.x.x
+        with:
+          commit_message: "🔑 Cập nhật hạn mức khoá API"
+          branch: main
+          file_pattern: "quota_gemini.json"
