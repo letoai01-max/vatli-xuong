@@ -456,7 +456,7 @@ def _goi_gemini_theo_khoa(payload, ds_model):
             except RuntimeError as e:                     # [25/11] lỗi tạm (vd 503 quá tải): thử khoá kế tiếp thay vì dừng cả lượt, KHÔNG đánh dấu hết lượt/hỏng
                 loi_tam.append(e)
                 print("⚠️ %s gặp lỗi tạm, thử khoá tiếp theo: %s" % (ten, str(e)[:160]), flush=True)
-        if loi_tam:                                              # [25/11] mọi khoá còn lại đều lỗi tạm → báo lỗi tạm, không chuyển sang khoá trả phí
+        if loi_tam and not khoa_tp:                              # [25/11] mọi khoá miễn phí đều lỗi tạm: nếu KHÔNG có khoá trả phí thì báo lỗi tạm; có thì chuyển sang khoá trả phí (vẫn bị chặn bởi TOI_DA_LUOT_TRA_PHI)
             raise loi_tam[-1]
         with _KHOA:
             if not khoa_tp:
