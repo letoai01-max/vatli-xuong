@@ -434,6 +434,7 @@ def _goi_gemini_theo_khoa(payload, ds_model):
     """Dùng khoá miễn phí; khoá miễn phí hết lượt (mọi model báo 429) thì chuyển sang khoá trả phí (nếu có)
     cho phần còn lại của lượt chạy, tối đa TOI_DA_LUOT_TRA_PHI lượt gọi."""
     khoa_tp = os.environ.get("GEMINI_API_KEY_TRA_PHI", "").strip()
+    loi_tam = []                                                 # [25/11]
     if not TRANG_THAI_KHOA["tra_phi"]:
         for ten, k in ds_khoa_mien_phi():
             with _KHOA:
@@ -452,6 +453,11 @@ def _goi_gemini_theo_khoa(payload, ds_model):
                 with _KHOA:
                     TRANG_THAI_KHOA["hong"].add(ten)
                 print("🔑 %s bị Google từ chối (khoá hỏng), bỏ khoá này trong lượt chạy và thử khoá tiếp theo: %s" % (ten, str(e)[:160]), flush=True)
+            except RuntimeError as e:                     # [25/11] lỗi tạm (vd 503 quá tải): thử khoá kế tiếp thay vì dừng cả lượt, KHÔNG đánh dấu hết lượt/hỏng
+                loi_tam.append(e)
+                print("⚠️ %s gặp lỗi tạm, thử khoá tiếp theo: %s" % (ten, str(e)[:160]), flush=True)
+        if loi_tam:                                              # [25/11] mọi khoá còn lại đều lỗi tạm → báo lỗi tạm, không chuyển sang khoá trả phí
+            raise loi_tam[-1]
         with _KHOA:
             if not khoa_tp:
                 if TRANG_THAI_KHOA["hong"] and not TRANG_THAI_KHOA["het"]:
