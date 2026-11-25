@@ -158,6 +158,11 @@ def tach_cau(phan, cau_truc, ds_model, nhat_ky=print):
             else:
                 tiep = False
         nhat_ky("Tách câu", "nhóm %d: đã có %d câu" % (k, len(cau)))
+    nhat_ky("Tách câu", "model đã dùng: %s" % model)                       # [25/11]
+    du_kien = sum(int(v["so_cau"]) for v in cau_truc.values())               # [25/11] tách quá ít so với cấu trúc đề → dừng, không phân tích tiếp trên dữ liệu thiếu
+    if du_kien and len(cau) < du_kien * 0.5:
+        raise RuntimeError("Tách câu chưa đủ: chỉ %d/%d câu (model %s) – nhiều khả năng model dự phòng đọc đề kém, hãy chạy lại sau hoặc dùng model mạnh hơn."
+                           % (len(cau), du_kien, model))
     if not la_vat_li:
         canh_bao.append("Mô hình cho rằng tệp không phải đề Vật lí – kiểm tra lại tệp đã tải lên.")
     ds = chuan_hoa_cau(list(cau.values()), cau_truc, canh_bao)
