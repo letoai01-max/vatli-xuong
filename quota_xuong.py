@@ -10,7 +10,7 @@ Dùng:  import quota_xuong as Q
        Q.ghi_sheet(kho)                                              # một lần ở cuối lượt chạy
 Mọi lỗi ở đây đều bị bỏ qua: ghi hạn mức hỏng không bao giờ làm hỏng việc chính.
 """
-import datetime as dt, threading
+import datetime as dt, json, os, re, threading
 
 try:
     from zoneinfo import ZoneInfo
@@ -22,6 +22,7 @@ TAB = "Quota_SuDung"
 COT = ["Ngày quota (giờ Mỹ)", "Model", "Lượt gọi", "Thành công", "Hết hạn mức (429)", "Lỗi khác", "Treo",
        "Token vào", "Token ra", "Lần gọi cuối (giờ VN)", "Giới hạn/ngày", "% đã dùng"]
 SO_DONG_DOC = 80
+TEP_JSON = os.environ.get("QUOTA_GEMINI_JSON", "quota_gemini.json")   # đặt CẠNH index.html (mặc định: gốc repo)
 _DEM = {}
 _KHOA = threading.Lock()   # [21/11/2026] duyet_cau.py gọi Gemini/Groq từ nhiều luồng: cộng số đếm dưới khoá để không mất lượt
 
@@ -72,10 +73,38 @@ def _ngay(x):
     return str(x or "").lstrip("'").strip()[:10]
 
 
+def xuat_json(ws, duong_dan=None):
+    """[25/11/2026] Xuất quota_gemini.json cho mục "Hạn mức khoá API" của index.html.
+    Đọc lại các dòng HÔM NAY (giờ Mỹ) của xưởng trong tab Quota_SuDung; chỉ ghi nhãn ẩn danh, KHÔNG ghi tên/giá trị khoá."""
+    duong_dan = duong_dan or TEP_JSON
+    ngay = dt.datetime.now(_TZ_QUOTA).strftime("%Y-%m-%d")
+    dong = ws.get("A2:L%d" % (SO_DONG_DOC + 1), value_render_option="UNFORMATTED_VALUE") or []
+    ds = []
+    for r in dong:
+        r = (r + [""] * 12)[:12]
+        model = str(r[1])
+        if _ngay(r[0]) != ngay or not model.startswith("xưởng "):
+            continue
+        m = re.search(r"\[(.+?)\]", model)
+        goc = re.sub(r"\s*\[.+?\]", "", model)[len("xưởng "):]
+        so_khoa = re.search(r"(\d+)\s*$", m.group(1)).group(1) if m and re.search(r"(\d+)\s*$", m.group(1)) else "1"
+        goi, ok, q429, loi = _so(r[2]), _so(r[3]), _so(r[4]), _so(r[5])
+        gh = _so(r[10]) or None
+        het = bool(gh and goi >= gh) or (q429 > 0 and ok == 0)
+        ds.append({"nhan": "%s · Khoá %s" % (goc, so_khoa), "da_dung": int(goi),
+                   "gioi_han": int(gh) if gh else None, "trang_thai": "het" if het else "con"})
+    ds.sort(key=lambda k: k["nhan"])
+    noi_dung = {"cap_nhat": dt.datetime.now(_TZ_VN).isoformat(timespec="seconds"), "khoa": ds}
+    with open(duong_dan, "w", encoding="utf-8") as f:
+        json.dump(noi_dung, f, ensure_ascii=False, indent=2)
+    print("🔑 Đã xuất %s (%d dòng)." % (duong_dan, len(ds)), flush=True)
+
+
 def ghi_sheet(kho=None):
     """Cộng dồn số đếm của lượt chạy vào tab Quota_SuDung. Gọi một lần ở cuối lượt."""
     if not _DEM:
         return
+    ws = None
     try:
         if kho is None:
             import doc_de as X
@@ -112,3 +141,23 @@ def ghi_sheet(kho=None):
         print("📈 Đã ghi lượt dùng của xưởng vào tab %s." % TAB, flush=True)
     except Exception as e:
         print("⚠️ Không ghi được hạn mức vào %s (bỏ qua): %s" % (TAB, str(e)[:150]), flush=True)
+    if ws is not None:
+        try:
+            xuat_json(ws)
+        except Exception as e:
+            print("⚠️ Không xuất được %s (bỏ qua): %s" % (TEP_JSON, str(e)[:150]), flush=True)
+
+
+def main():
+    """Chạy độc lập (workflow Xuat_de.yml): đọc tab Quota_SuDung → ghi quota_gemini.json. Mọi lỗi chỉ cảnh báo, thoát mã 0."""
+    try:
+        import doc_de as X
+        gc, _, _ = X.ket_noi()
+        kho = gc.open_by_key(X.ID_KHO_CHUNG)
+        xuat_json(kho.worksheet(TAB))
+    except Exception as e:
+        print("⚠️ Không xuất được %s (bỏ qua): %s" % (TEP_JSON, str(e)[:200]), flush=True)
+
+
+if __name__ == "__main__":
+    main()
