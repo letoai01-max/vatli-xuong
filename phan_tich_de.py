@@ -60,6 +60,19 @@ def kiem_goi(goi):
     return loi
 
 
+# [26/11/2026] LỖI TẠM CỦA GEMINI (503 "high demand", 502/504, hết thời gian chờ…) KHÔNG phải lỗi của việc: đợi rồi làm tiếp từ tienDo.
+# Chỉ khi thử lại LAN_THU_LAI_TOI_DA lần mà vẫn quá tải: khối Physics Solver (phần phụ) bị bỏ qua, các khối khác ghi LOI như cũ.
+LAN_THU_LAI_TOI_DA = 3
+PHUT_CHO_LOI_TAM = 10
+_DAU_LOI_TAM = ("503", "502", "504", "high demand", "unavailable", "overloaded", "timed out", "timeout", "connection reset", "temporarily")
+
+
+def la_loi_tam(e):
+    """True nếu lỗi nhiều khả năng chỉ là quá tải / mạng tạm thời của Gemini (không phải lỗi dữ liệu hay hết hạn mức ngày)."""
+    t = (type(e).__name__ + " " + str(e)).lower()
+    return any(k in t for k in _DAU_LOI_TAM)
+
+
 def main():
     gc, drive, sa = ket_noi_ghi()
     print("Tài khoản dịch vụ:", sa, flush=True)
@@ -150,7 +163,18 @@ def main():
         giai = tien_do.get("giai") or {}
         if tuy["giai"] and not giai:
             p.tien_do("Physics Solver", 65, "giải độc lập bằng code")
-            giai, mg = E.giai_may(cau, ds_model, model["phan_tich"], tuy["groq"], nhat_ky)
+            try:
+                giai, mg = E.giai_may(cau, ds_model, model["phan_tich"], tuy["groq"], nhat_ky)
+            except X.HetHanMuc:
+                raise
+            except Exception as e:
+                # [26/11/2026] quá tải tạm thời: lần đầu để khối ngoài xếp lịch thử lại; hết số lần thử thì bỏ qua Physics Solver, không để mất cả việc
+                if not (la_loi_tam(e) and tien_do.get("loi_tam", 0) >= LAN_THU_LAI_TOI_DA):
+                    raise
+                giai, mg = {}, {}
+                p.them_canh_bao("Physics Solver bị bỏ qua vì Gemini quá tải liên tục (%s) – kết quả không có đáp án máy giải; "
+                                "đáp án trong đề (nếu có) vẫn được đối chiếu." % str(e)[:100])
+                nhat_ky("Physics Solver", "bỏ qua sau %d lần thử lại" % LAN_THU_LAI_TOI_DA)
             model.update(mg)
             tien_do["giai"], tien_do["model_giai"] = giai, mg; luu("giai")
         elif giai:
@@ -162,6 +186,12 @@ def main():
     except SystemExit:
         raise
     except Exception as e:
+        if la_loi_tam(e) and tien_do.get("loi_tam", 0) < LAN_THU_LAI_TOI_DA:             # [26/11/2026] quá tải tạm thời → HOAN ngắn, làm tiếp từ tienDo
+            tien_do["loi_tam"] = tien_do.get("loi_tam", 0) + 1
+            p.hoan("Gemini quá tải tạm thời (%s) – thử lại lần %d/%d sau %d phút" % (str(e)[:120], tien_do["loi_tam"], LAN_THU_LAI_TOI_DA, PHUT_CHO_LOI_TAM),
+                   PHUT_CHO_LOI_TAM, tien_do_luu=tien_do)
+            print("⏸️ Gemini quá tải tạm thời – hoãn %d phút, Apps Script sẽ gửi lại." % PHUT_CHO_LOI_TAM, flush=True)
+            return
         p.loi("%s: %s" % (type(e).__name__, str(e)[:400])); raise
     finally:
         if Q:
