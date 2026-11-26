@@ -7,6 +7,7 @@ pt_engine.py – LÕI PHÂN TÍCH ĐỀ TN THPT (xưởng Python). Bốn khối 
      Cognitive Classifier phan_loai_nhan_thuc() NB/TH/VD/VDC lượt 2 độc lập (model khác) để phát hiện chỗ phân loại không ổn định
   4. Physics Solver       giai_may()           giải độc lập bằng code (Gemini code_execution) + Groq phân xử → đối chiếu đáp án trong đề
 
+[25/11/2026] Khối trọng tài phan_xu_nhan_thuc(): chỉ chạy với câu các phiếu mức độ không đồng thuận (xem pt_nhan_thuc.can_phan_xu).
 Khối thứ sáu (Exam Evaluator – ma trận, thống kê) nằm ở pt_danh_gia.py và KHÔNG gọi AI.
 Mọi lời gọi AI đi qua doc_de.goi_gemini (xoay khoá, hạn mức, ghi Quota_SuDung). Hết hạn mức → doc_de.HetHanMuc nổi lên cho phan_tich_de.py xử lí.
 """
@@ -20,6 +21,7 @@ import pt_danh_muc as DM
 NHOM_TOI_DA_BYTE = 15 * 1024 * 1024          # tổng dung lượng gửi inline mỗi lượt gọi (Gemini giới hạn ≈ 20 MB cả yêu cầu)
 LO_PHAN_TICH = 14                            # số câu mỗi lượt phân tích
 LO_PHAN_LOAI = 28
+LO_PHAN_XU = 8
 
 
 class QuaDai(Exception):
@@ -203,27 +205,42 @@ def chuan_hoa_cau(cac, cau_truc, canh_bao):
 
 
 # ====================================================================================== 3. PHYSICS ANALYZER + COGNITIVE CLASSIFIER
+# [25/11/2026] Sáu tiêu chí nhận thức + mã quy tắc + dạng câu hỏi (bảng tiêu chí nhận biết mức độ nhận thức)
+_TIEU_CHI = {"type": "OBJECT", "properties": {k: {"type": "STRING", "enum": list(DM.MUC)} for k in DM.TIEU_CHI_KHOA}}
+_MA_QUY_TAC = {"type": "ARRAY", "items": {"type": "STRING", "enum": list(DM.QUY_TAC)}}
+
 SCHEMA_PHAN_TICH = {
     "type": "OBJECT", "properties": {"cau": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
         "ma": {"type": "STRING"}, "ma_chuong": {"type": "STRING"}, "chuyen_de": {"type": "STRING"},
         "kien_thuc": {"type": "ARRAY", "items": {"type": "STRING"}},
-        "nang_luc": {"type": "STRING"}, "dang_bai": {"type": "STRING"},
+        "nang_luc": {"type": "STRING", "enum": DM.NANG_LUC}, "dang_bai": {"type": "STRING"},
         "muc_do": {"type": "STRING", "enum": list(DM.MUC)}, "ly_do_muc_do": {"type": "STRING"},
+        "dang_cau_hoi": {"type": "STRING", "enum": DM.DANG_CAU_HOI}, "tieu_chi": _TIEU_CHI, "ma_quy_tac": _MA_QUY_TAC,
         "y_ds": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
-            "y": {"type": "STRING"}, "muc_do": {"type": "STRING", "enum": list(DM.MUC)}, "kien_thuc": {"type": "STRING"}}}},
+            "y": {"type": "STRING"}, "muc_do": {"type": "STRING", "enum": list(DM.MUC)}, "kien_thuc": {"type": "STRING"}, "ly_do": {"type": "STRING"},
+            "nang_luc": {"type": "STRING", "enum": DM.NANG_LUC}}}},
         "so_buoc": {"type": "INTEGER"}, "thoi_gian_giay": {"type": "INTEGER"},
         "ti_le_dung_du_kien": {"type": "NUMBER"},
         "bay_thuong_gap": {"type": "STRING"}, "ma_yccd": {"type": "ARRAY", "items": {"type": "STRING"}},
         "ngoai_chuong_trinh": {"type": "BOOLEAN"}, "tu_tin": {"type": "STRING", "enum": ["cao", "vừa", "thấp"]}},
-        "required": ["ma", "ma_chuong", "muc_do", "so_buoc", "thoi_gian_giay", "ti_le_dung_du_kien", "tu_tin"]}}},
+        "required": ["ma", "ma_chuong", "muc_do", "tieu_chi", "so_buoc", "thoi_gian_giay", "ti_le_dung_du_kien", "tu_tin"]}}},
     "required": ["cau"]}
 
 SCHEMA_PHAN_LOAI = {
     "type": "OBJECT", "properties": {"cau": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
-        "ma": {"type": "STRING"}, "muc_do": {"type": "STRING", "enum": list(DM.MUC)},
+        "ma": {"type": "STRING"}, "muc_do": {"type": "STRING", "enum": list(DM.MUC)}, "tieu_chi": _TIEU_CHI, "ma_quy_tac": _MA_QUY_TAC,
         "y_ds": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
             "y": {"type": "STRING"}, "muc_do": {"type": "STRING", "enum": list(DM.MUC)}}}}},
         "required": ["ma", "muc_do"]}}},
+    "required": ["cau"]}
+
+SCHEMA_PHAN_XU = {      # [25/11/2026] trọng tài
+    "type": "OBJECT", "properties": {"cau": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
+        "ma": {"type": "STRING"}, "muc_do": {"type": "STRING", "enum": list(DM.MUC)}, "ly_do": {"type": "STRING"},
+        "tieu_chi": _TIEU_CHI, "ma_quy_tac": _MA_QUY_TAC,
+        "y_ds": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
+            "y": {"type": "STRING"}, "muc_do": {"type": "STRING", "enum": list(DM.MUC)}, "ly_do": {"type": "STRING"}}}}},
+        "required": ["ma", "muc_do", "ly_do"]}}},
     "required": ["cau"]}
 
 
@@ -234,22 +251,24 @@ def _goi_cau(c):
     return d
 
 
-def phan_tich_kien_thuc(ds_cau, danh_muc, yccd_van_ban, ds_model, nhat_ky=print, da_xong=None):
+def phan_tich_kien_thuc(ds_cau, danh_muc, yccd_van_ban, ds_model, nhat_ky=print, da_xong=None, tieu_chi=None):
     """Phân tích từng câu (không cần tệp gốc). da_xong: {ma: kết quả} đã có từ lượt trước (HOAN) – bỏ qua. Trả {ma: kết quả}, model."""
     kq, model = dict(da_xong or {}), ""
+    tieu_chi = tieu_chi or DM.TIEU_CHI_MUC
     cho = [c for c in ds_cau if c["ma"] not in kq]
     ds_chuong = "\n".join("%s | lớp %s | %s" % (d["ma"], d["lop"] or "-", d["ten"]) for d in danh_muc)
     for k in range(0, len(cho), LO_PHAN_TICH):
         lo = cho[k:k + LO_PHAN_TICH]
         he = ("Bạn là tổ trưởng chuyên môn Vật lí THPT, phân tích câu hỏi của một đề thi tốt nghiệp THPT theo chương trình GDPT 2018 (sách Kết nối tri thức). "
-              "Phân tích dựa trên NỘI DUNG và yêu cầu tư duy thật của câu, không dựa vào vị trí câu trong đề.\n\n" + DM.TIEU_CHI_MUC + "\n\n"
+              "Phân tích dựa trên NỘI DUNG và yêu cầu tư duy thật của câu, không dựa vào vị trí câu trong đề.\n\n" + tieu_chi + "\n\n"
               "Với mỗi câu trả về:\n"
               " - ma (đúng như đầu vào), ma_chuong (CHỈ lấy trong danh mục chương bên dưới), chuyen_de (tên ngắn của chuyên đề / bài), kien_thuc (1–4 ý ngắn).\n"
-              " - nang_luc: một trong " + " | ".join(DM.NANG_LUC) + ".\n"
+              " - nang_luc: một trong " + " | ".join(DM.NANG_LUC) + " (theo mục THÀNH PHẦN NĂNG LỰC ở trên, độc lập với mức; câu Đúng/Sai điền thêm nang_luc cho từng ý).\n"
               " - dang_bai: một trong " + " | ".join(DM.DANG_BAI) + ".\n"
-              " - muc_do + ly_do_muc_do (≤ 200 kí tự, nêu số bước và kiến thức kết hợp). Câu Đúng/Sai: muc_do của cả câu = mức cao nhất trong 4 ý, "
+              " - Xác định mức theo QUY TRÌNH 6 BƯỚC ở trên: điền dang_cau_hoi, tieu_chi (đủ 6 tiêu chí), ma_quy_tac, rồi muc_do + ly_do_muc_do (≤ 200 kí tự, "
+              "nêu yêu cầu tư duy bắt buộc, kiến thức kết hợp, có tự chọn phương pháp không). Câu Đúng/Sai: muc_do của cả câu = mức cao nhất trong 4 ý, "
               "đồng thời điền y_ds cho từng ý a–d.\n"
-              " - so_buoc: số bước giải / lập luận tối thiểu. thoi_gian_giay: thời gian một học sinh khá cần để làm (đã gồm đọc đề).\n"
+              " - so_buoc: số bước SUY LUẬN / chọn chiến lược tối thiểu (KHÔNG phải số phép tính; chỉ tham khảo, không quyết định mức). thoi_gian_giay: thời gian một học sinh khá cần để làm (đã gồm đọc đề).\n"
               " - ti_le_dung_du_kien: ước lượng 0–1 tỉ lệ học sinh cả nước làm đúng (chỉ là ước lượng của bạn, không phải số liệu thật).\n"
               " - bay_thuong_gap: lỗi / bẫy học sinh hay mắc (≤ 150 kí tự, có thể rỗng). ma_yccd: 0–3 mã từ danh sách YCCĐ, chỉ khi kiến thức thật sự nằm trong yêu cầu đó.\n"
               " - ngoai_chuong_trinh: true nếu kiến thức không thuộc nội dung cốt lõi GDPT 2018. tu_tin: mức chắc chắn về phân loại.\n\n"
@@ -263,7 +282,7 @@ def phan_tich_kien_thuc(ds_cau, danh_muc, yccd_van_ban, ds_model, nhat_ky=print,
                 raise RuntimeError("Phân tích câu %s quá dài" % lo[0]["ma"])
             nhat_ky("Phân tích", "lô quá dài – chia đôi")
             for nua in (lo[:len(lo) // 2], lo[len(lo) // 2:]):
-                sub, model = phan_tich_kien_thuc(nua, danh_muc, yccd_van_ban, ds_model, nhat_ky, kq)
+                sub, model = phan_tich_kien_thuc(nua, danh_muc, yccd_van_ban, ds_model, nhat_ky, kq, tieu_chi)
                 kq.update(sub)
             continue
         for g in ra.get("cau") or []:
@@ -273,20 +292,55 @@ def phan_tich_kien_thuc(ds_cau, danh_muc, yccd_van_ban, ds_model, nhat_ky=print,
     return kq, model
 
 
-def phan_loai_nhan_thuc(ds_cau, ds_model_khac, nhat_ky=print):
+def phan_loai_nhan_thuc(ds_cau, ds_model_khac, nhat_ky=print, tieu_chi=None):
     """Lượt 2 ĐỘC LẬP (model khác, chỉ thấy đề, không thấy kết quả lượt 1): chỉ phân loại mức nhận thức. Trả {ma: {muc_do, y_ds}}."""
     kq = {}
+    tieu_chi = tieu_chi or DM.TIEU_CHI_MUC
     for k in range(0, len(ds_cau), LO_PHAN_LOAI):
         lo = ds_cau[k:k + LO_PHAN_LOAI]
-        he = ("Bạn là giáo viên Vật lí giàu kinh nghiệm ra đề thi tốt nghiệp THPT. Phân loại mức nhận thức của từng câu.\n\n" + DM.TIEU_CHI_MUC +
-              "\n\nTrả về ma (đúng như đầu vào) và muc_do; câu Đúng/Sai: muc_do = mức cao nhất trong 4 ý và điền y_ds cho từng ý a–d.\n\nCÁC CÂU:\n" +
+        he = ("Bạn là giáo viên Vật lí giàu kinh nghiệm ra đề thi tốt nghiệp THPT. Phân loại mức nhận thức của từng câu theo QUY TRÌNH 6 BƯỚC.\n\n" + tieu_chi +
+              "\n\nTrả về ma (đúng như đầu vào), tieu_chi (đủ 6 tiêu chí), ma_quy_tac và muc_do; câu Đúng/Sai: muc_do = mức cao nhất trong 4 ý và điền y_ds cho từng ý a–d.\n\nCÁC CÂU:\n" +
               json.dumps([_goi_cau(c) for c in lo], ensure_ascii=False))
-        ra, _ = goi_json([{"text": he}], SCHEMA_PHAN_LOAI, ds_model_khac, max_tokens=12000, nhiet=0.3)
+        ra, _ = goi_json([{"text": he}], SCHEMA_PHAN_LOAI, ds_model_khac, max_tokens=16000, nhiet=0.3)
         for g in ra.get("cau") or []:
             if g.get("ma"):
                 kq[str(g["ma"]).strip()] = g
     nhat_ky("Phân loại lượt 2", "%d câu" % len(kq))
     return kq
+
+
+def phan_xu_nhan_thuc(ds_cau, pt, pl2, ds_model, tieu_chi=None, nhat_ky=print, da_xong=None):
+    """
+    [25/11/2026] TRỌNG TÀI mức nhận thức cho các câu đã được chọn (pt_nhan_thuc.can_phan_xu). Dùng model mạnh nhất (đầu danh sách), nhiệt độ thấp.
+    Trọng tài thấy cả hai ý kiến và lí do nhưng được dặn KHÔNG chọn theo số đông: phải tự lập luận lại theo 6 bước. Trả ({ma: kết quả}, model).
+    """
+    kq, model = dict(da_xong or {}), ""
+    tieu_chi = tieu_chi or DM.TIEU_CHI_MUC
+    cho = [c for c in ds_cau if c["ma"] not in kq][:DM.MAX_PHAN_XU]
+    for k in range(0, len(cho), LO_PHAN_XU):
+        lo = cho[k:k + LO_PHAN_XU]
+        muc = []
+        for c in lo:
+            g1, g2 = pt.get(c["ma"]) or {}, pl2.get(c["ma"]) or {}
+            d = _goi_cau(c)
+            d["y_kien_1"] = {"muc_do": g1.get("muc_do"), "ly_do": g1.get("ly_do_muc_do"), "tieu_chi": g1.get("tieu_chi"), "y_ds": g1.get("y_ds")}
+            if g2:
+                d["y_kien_2"] = {"muc_do": g2.get("muc_do"), "tieu_chi": g2.get("tieu_chi"), "y_ds": g2.get("y_ds")}
+            muc.append(d)
+        he = ("Bạn là tổ trưởng chuyên môn Vật lí THPT làm TRỌNG TÀI. Với mỗi câu có hai ý kiến phân loại mức nhận thức khác nhau hoặc chưa nhất quán. "
+              "Hãy TỰ lập luận lại từ đầu theo QUY TRÌNH 6 BƯỚC; ý kiến 1 và 2 chỉ để tham khảo, TUYỆT ĐỐI không chọn theo số đông, không chọn mức giữa để dung hoà. "
+              "Nhớ các nguyên tắc 'không mặc định'. Trả về ma, muc_do, ly_do (≤ 200 kí tự, nêu yêu cầu tư duy bắt buộc quyết định mức), tieu_chi, ma_quy_tac; "
+              "câu Đúng/Sai: điền y_ds cho đủ 4 ý, muc_do = mức cao nhất trong 4 ý.\n\n" + tieu_chi + "\n\nCÁC CÂU CẦN PHÂN XỬ:\n" + json.dumps(muc, ensure_ascii=False))
+        try:
+            ra, model = goi_json([{"text": he}], SCHEMA_PHAN_XU, ds_model, max_tokens=20000, nhiet=0.1)
+        except QuaDai:
+            nhat_ky("Trọng tài", "lô quá dài – bỏ qua lô này, các câu đó giữ mức theo đa số / trung vị")
+            continue
+        for g in ra.get("cau") or []:
+            if g.get("ma"):
+                kq[str(g["ma"]).strip()] = g
+        nhat_ky("Trọng tài mức nhận thức", "%d/%d câu" % (len(kq), len(cho)))
+    return kq, model
 
 
 # ====================================================================================== 4. PHYSICS SOLVER

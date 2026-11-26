@@ -10,10 +10,17 @@ GÓI (goi_pt_<mã>.json)
   phienBan 2 · loai "phan_tich_de" · ma "PT-251126-101500"
   tep        [{id, ten}]                                   tệp đề (và đáp án nếu riêng); PDF / Word / ảnh / .zip
   thongTin   {tenDe, kyThi, nam, loaiDe}                    giáo viên nhập (ưu tiên hơn thông tin mô hình đọc được)
-  tuyChon    {giai:true, groq:true, phanLoaiHaiLuot:true}
+  tuyChon    {giai:true, groq:true, phanLoaiHaiLuot:true,
+              nhanThucV2:true,      [25/11] chốt mức nhận thức theo bảng tiêu chí 6 tiêu chí + bỏ phiếu (tắt = như bản cũ)
+              phanXuMuc:true,       [25/11] trọng tài cho câu các phiếu mức độ lệch nhau
+              soKhopDapAn:true,     [25/11] KHỚP / KHÔNG KHỚP máy · AI · người soạn với đáp án chính thức trong tệp
+              theoChuong:true,      [25/11] mục phân chia số câu (kèm nội dung) theo chương
+              nguonDapAnChot:"tu_dong"}   "bo" = ép coi là đề Bộ (chốt đáp án Bộ) · "khong" = không · "tu_dong" = tự nhận diện
+  tieuChiMuc "…toàn văn tiêu chí mức độ…" (tuỳ chọn, ghi đè pt_danh_muc.TIEU_CHI_MUC)
+  dapAnSoan  {"I.3":"B","II.1":"a) Đ, b) S, c) Đ, d) S","III.2":"2,5"}   (tuỳ chọn) đáp án do người / AI soạn đề, để so với đáp án chính thức
   cauTruc    {"1":{dang,so_cau,diem_cau},"2":{…,diem_y:[…]},"3":{…}}   (không có → mặc định pt_danh_muc)
   mucTieu    {NB,TH,VD,VDC}   thoiGianPhut   danhMuc [{lop,ma,ten}]   (không có → mặc định)
-KẾT QUẢ: ket_qua.ketQua = {thongTin, cau[], maTran, thongKe, nhanXet[], canDuyet[], canhBao[], model{}}; tomTat cho Apps Script ghi Sheet.
+KẾT QUẢ: ket_qua.ketQua = {thongTin, cau[], maTran, thongKe, nhanXet[], canDuyet[], canhBao[], model{}, theoChuong[], baoCaoChuong, nguonDapAnChot}; tomTat cho Apps Script ghi Sheet.
 Biến môi trường: GOOGLE_CREDENTIALS, GEMINI_API_KEY(_n), GROQ_API_KEY (tuỳ chọn), GOI_ID, KQ_ID.
 """
 import json, os, sys
@@ -23,6 +30,8 @@ import giao_thuc as GT
 import pt_danh_muc as DM
 import pt_engine as E
 import pt_danh_gia as DG
+import pt_nhan_thuc as NT
+import pt_so_khop as SK
 from duyet_cau import json_cuoi  # noqa: F401  (đảm bảo module nạp được sớm, lỗi thiếu thư viện hiện ngay đầu lượt)
 
 try:
@@ -83,8 +92,10 @@ def main():
     cau_truc = goi.get("cauTruc") or DM.CAU_TRUC_MAC_DINH
     muc_tieu = goi.get("mucTieu") or DM.MUC_TIEU_MAC_DINH
     thoi_gian = int(goi.get("thoiGianPhut") or DM.THOI_GIAN_PHUT_MAC_DINH)
-    tuy = {"giai": True, "groq": True, "phanLoaiHaiLuot": True}
+    tuy = {"giai": True, "groq": True, "phanLoaiHaiLuot": True,
+           "nhanThucV2": True, "phanXuMuc": True, "soKhopDapAn": True, "theoChuong": True, "nguonDapAnChot": "tu_dong"}   # [25/11/2026]
     tuy.update(goi.get("tuyChon") or {})
+    tieu_chi = goi.get("tieuChiMuc") or (DM.TIEU_CHI_MUC if tuy["nhanThucV2"] else DM.TIEU_CHI_MUC_CU)
     nhat_ky = p.ghi_nhat_ky
     canh_bao_tach, model = [], {}
 
@@ -112,14 +123,28 @@ def main():
 
         # 3. Physics Analyzer + Cognitive Classifier
         p.tien_do("Physics Analyzer", 40, "%d câu" % len(cau))
-        pt, model["phan_tich"] = E.phan_tich_kien_thuc(cau, danh_muc, yccd, ds_model, nhat_ky, tien_do.get("pt"))
+        pt, model["phan_tich"] = E.phan_tich_kien_thuc(cau, danh_muc, yccd, ds_model, nhat_ky, tien_do.get("pt"), tieu_chi)
         tien_do["pt"] = pt; luu("phan_tich")
         pl2 = tien_do.get("pl2") or {}
         if tuy["phanLoaiHaiLuot"] and not pl2:
             p.tien_do("Cognitive Classifier", 58, "lượt 2 độc lập")
             ds_khac = list(reversed(ds_model)) if len(ds_model) > 1 else ds_model
-            pl2 = E.phan_loai_nhan_thuc(cau, ds_khac, nhat_ky)
+            pl2 = E.phan_loai_nhan_thuc(cau, ds_khac, nhat_ky, tieu_chi)
             tien_do["pl2"] = pl2; luu("phan_loai")
+
+        # 3b. Trọng tài mức nhận thức (chỉ câu các phiếu không đồng thuận hoặc vi phạm luật văn bản)   [25/11/2026]
+        if tuy["nhanThucV2"] and tuy["phanXuMuc"] and "px" not in tien_do:
+            cho_px = [c for c in cau if NT.can_phan_xu(c, pt.get(c["ma"]), pl2.get(c["ma"]))]
+            if cho_px:
+                p.tien_do("Cognitive Arbiter", 62, "%d/%d câu cần trọng tài" % (min(len(cho_px), DM.MAX_PHAN_XU), len(cau)))
+                px, model["phan_xu"] = E.phan_xu_nhan_thuc(cho_px, pt, pl2, ds_model, tieu_chi, nhat_ky)
+                if len(cho_px) > DM.MAX_PHAN_XU:
+                    p.them_canh_bao("Có %d câu lệch mức nhận thức, trọng tài chỉ xử lí %d câu đầu (giữ hạn mức); các câu còn lại chốt theo đa số / trung vị." % (len(cho_px), DM.MAX_PHAN_XU))
+            else:
+                px = {}
+            tien_do["px"], tien_do["model_px"] = px, model.get("phan_xu", ""); luu("phan_xu")
+        elif tien_do.get("model_px"):
+            model["phan_xu"] = tien_do["model_px"]
 
         # 4. Physics Solver
         giai = tien_do.get("giai") or {}
@@ -145,15 +170,37 @@ def main():
 
     # 5–6. Exam Evaluator (thuần code) + đóng gói
     p.tien_do("Exam Evaluator", 92, "ma trận, thống kê, câu cần duyệt")
-    ds = DG.hop_nhat(cau, pt, pl2, giai)
-    dg = DG.danh_gia(ds, cau_truc, muc_tieu, thoi_gian, danh_muc, canh_bao_tach)
     tt = dict(thong_tin)
     for k_goi, k_kq in (("tenDe", "ten_de"), ("kyThi", "ky_thi"), ("nam", "nam"), ("loaiDe", "loai_de")):
         if (goi.get("thongTin") or {}).get(k_goi): tt[k_kq] = goi["thongTin"][k_goi]
+    px_chot = tien_do.get("px") or {}
+    chot = {c["ma"]: NT.chot_cau(c, pt.get(c["ma"]), pl2.get(c["ma"]), px_chot.get(c["ma"])) for c in cau} if tuy["nhanThucV2"] else None   # [25/11/2026]
+    la_bo, ly_do_bo = False, ""
+    if tuy["soKhopDapAn"]:                                                                                                        # [25/11/2026]
+        try:
+            la_bo, ly_do_bo = SK.la_de_bo(thong_tin, goi.get("thongTin"), tuy["nguonDapAnChot"])
+            giai = SK.doi_chieu(cau, giai, goi.get("dapAnSoan") or {}, la_bo)
+            if la_bo:
+                p.them_canh_bao("Đề được coi là đề của Bộ (%s): đáp án chốt = đáp án Bộ phát hành trong tệp; máy / AI chỉ để so sánh. "
+                                "Nếu nhận diện sai, đặt tuyChon.nguonDapAnChot = \"khong\"." % ly_do_bo)
+                if not any(c.get("dap_an_de") for c in cau):
+                    p.them_canh_bao("Đề của Bộ nhưng tệp không có đáp án chính thức – hãy đính kèm file đáp án để đối chiếu; tạm dùng đáp án máy.")
+        except Exception as e:                                                      # phần phụ không được làm hỏng việc chính
+            p.them_canh_bao("Không đối chiếu được đáp án chính thức (%s: %s) – bỏ qua." % (type(e).__name__, str(e)[:120]))
+    ds = DG.hop_nhat(cau, pt, pl2, giai, danh_muc, chot)
+    dg = DG.danh_gia(ds, cau_truc, muc_tieu, thoi_gian, danh_muc, canh_bao_tach, la_bo, ly_do_bo, tuy["theoChuong"])
     ket_qua = {"phienBan": 1, "thongTin": tt, "cau": ds, "maTran": dg["maTran"], "thongKe": dg["thongKe"], "nhanXet": dg["nhanXet"],
-               "canDuyet": dg["canDuyet"], "canhBao": p.canh_bao, "model": model, "mucTieu": muc_tieu}
+               "canDuyet": dg["canDuyet"], "canhBao": p.canh_bao, "model": model, "mucTieu": muc_tieu,
+               "nguonDapAnChot": SK.NGUON_BO if la_bo else "THEO ĐÁP ÁN TRONG ĐỀ / MÁY"}
+    if tuy["theoChuong"]:
+        ket_qua["theoChuong"], ket_qua["baoCaoChuong"] = dg["theoChuong"], dg["baoCaoChuong"]
+        print(dg["baoCaoChuong"], flush=True)
+    dc = dg["thongKe"]["doi_chieu_dap_an"]
     tom_tat = {"tong_cau": dg["thongKe"]["so_cau"], "can_duyet": dg["thongKe"]["so_cau_can_duyet"], "phan_hoa": dg["thongKe"]["phan_hoa"],
-               "diem_du_kien": dg["thongKe"]["diem_du_kien"], "khop": dg["thongKe"]["dap_an"]["KHỚP"]}
+               "diem_du_kien": dg["thongKe"]["diem_du_kien"], "khop": dg["thongKe"]["dap_an"]["KHỚP"],
+               "khop_dap_an_chinh_thuc": dc["so_cau"]["KHỚP"], "khong_khop_dap_an_chinh_thuc": dc["so_cau"]["KHÔNG KHỚP"], "de_bo": la_bo,
+               "muc_tin_cay_thap": dg["thongKe"]["nhat_quan_nhan_thuc"]["tin_cay"]["thấp"],
+               "lenh_hoi": dg["thongKe"]["muc3"]["so_lenh_hoi"], "biet_hieu_vandung": [dg["thongKe"]["muc3"]["muc"][m]["so_lenh_hoi"] for m in DM.MUC3]}
     p.extra.pop("tienDo", None)                                      # xong rồi: bỏ điểm nhớ cho nhẹ
     p.phan_tram, p.buoc = 100, "xong"
     p.ghi("XONG", ep=True, ketQua=ket_qua, tomTat=tom_tat, model=model.get("phan_tich", ""))
