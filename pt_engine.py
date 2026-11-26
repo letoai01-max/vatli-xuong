@@ -171,6 +171,84 @@ def tach_cau(phan, cau_truc, ds_model, nhat_ky=print):
     return thong_tin, ds, model, canh_bao
 
 
+# ====================================================================================== 2b. ANSWER READER  [26/11/2026]
+# Lượt tách câu vừa chép đề vừa tìm đáp án nên hay bỏ sót BẢNG ĐÁP ÁN ở trang cuối (nhất là khi phải dùng model nhẹ). Lượt riêng này
+# chỉ làm một việc: đọc bảng đáp án, trả về (phần, số câu, đáp án), rồi ghép vào các câu đã tách.
+SCHEMA_DAP_AN = {
+    "type": "OBJECT",
+    "properties": {
+        "co_bang_dap_an": {"type": "BOOLEAN"},
+        "dap_an": {"type": "ARRAY", "items": {"type": "OBJECT", "properties": {
+            "phan": {"type": "INTEGER"}, "so_cau": {"type": "INTEGER"}, "dap_an": {"type": "STRING"}},
+            "required": ["phan", "so_cau", "dap_an"]}}},
+    "required": ["co_bang_dap_an", "dap_an"]}
+
+
+def _dap_an_hop_le(dang, v):
+    """Chuẩn hoá đáp án đọc từ bảng theo dạng câu; sai khuôn → '' (không ghép bừa)."""
+    v = str(v or "").strip()
+    if not v:
+        return ""
+    if dang == "TN":
+        m = re.fullmatch(r"\s*([ABCD])\s*[\.\)]?\s*", v.upper())
+        return m.group(1) if m else ""
+    if dang == "DS":
+        kq = {}
+        for y, x in re.findall(r"([a-d])\s*[\)\.:\-]?\s*(Đúng|Sai|Đ|S)(?![a-zà-ỹ])", v, flags=re.I):
+            kq[y.lower()] = "Đ" if x.upper() in ("Đ", "ĐÚNG") else "S"
+        return ", ".join("%s) %s" % (y, kq[y]) for y in "abcd") if len(kq) == 4 else ""
+    if dang == "TLN":
+        return v if re.search(r"\d", v) else ""
+    return ""
+
+
+def bo_sung_dap_an(phan, ds_cau, ds_model, nhat_ky=print):
+    """Đọc bảng đáp án trong tệp (trang cuối hoặc tệp riêng) rồi điền c['dap_an_de'] cho các câu còn thiếu / khác. Trả (ds_cau, cảnh báo, model)."""
+    canh_bao, model = [], ""
+    can = [c for c in ds_cau if c.get("dang") in ("TN", "DS", "TLN")]
+    if not can or not phan or all(c.get("dap_an_de") for c in can):
+        return ds_cau, canh_bao, model
+    theo_phan = {}
+    for c in can:
+        theo_phan.setdefault(c["phan"], []).append(c)
+    cac_phan = "; ".join("Phần %s (%s): câu %s" % (DM.LA_MA.get(p, p), v[0]["dang"], ", ".join(str(c["so_cau"]) for c in v)) for p, v in sorted(theo_phan.items()))
+    loi_nhac = (
+        "Các tệp đính kèm là đề thi Vật lí kèm ĐÁP ÁN (ở trang cuối hoặc tệp riêng, thường là BẢNG). Nhiệm vụ DUY NHẤT: chép đáp án của từng câu từ bảng đáp án.\n"
+        "KHÔNG đọc đề để tự giải, KHÔNG suy đoán. Câu nào không có trong bảng đáp án thì bỏ qua (đừng đưa vào danh sách).\n"
+        "Cách đọc bảng đáp án:\n"
+        " - PHẦN I (nhiều lựa chọn): bảng có hàng 'Câu' (1, 2, 3…) và hàng 'Đáp án' (A/B/C/D) ngay dưới hoặc bên cạnh; bảng có thể xếp ngang hoặc ngắt thành nhiều dải. "
+        "Ghép ĐÚNG cột: số câu ở ô tiêu đề với đáp án ở ô tương ứng. dap_an chỉ một chữ A, B, C hoặc D.\n"
+        " - PHẦN II (đúng/sai): mỗi câu có 4 ý a, b, c, d, mỗi ý Đ hoặc S (Đúng/Sai); ghi đúng 'a) Đ, b) S, c) Đ, d) S'. Bảng có thể có cột 'Lệnh hỏi' hoặc 'Ý' và cột 'Đáp án'.\n"
+        " - PHẦN III (trả lời ngắn): chép đáp số đúng như bảng (giữ dấu phẩy/dấu chấm thập phân, ví dụ '2,5').\n"
+        " - Nếu bảng đáp án có nhiều mã đề, chỉ lấy mã đề trùng với đề đang phân tích; không rõ thì lấy mã đề đầu tiên.\n"
+        "phan: 1 = nhiều lựa chọn, 2 = đúng/sai, 3 = trả lời ngắn. so_cau: số câu TRONG PHẦN ấy như bảng ghi. co_bang_dap_an = true nếu có bảng/đáp án trong tệp.\n"
+        "Các câu cần tìm đáp án: " + cac_phan + ".")
+    tim = {(c["phan"], c["so_cau"]): c for c in can}
+    tong_doc = 0
+    for nhom in _nhom(phan):
+        parts = [{"inline_data": {"mime_type": p["mime"], "data": base64.b64encode(p["data"]).decode()}} for p in nhom]
+        kq, model = goi_json(parts + [{"text": loi_nhac}], SCHEMA_DAP_AN, ds_model, max_tokens=12000, nhiet=0.0)
+        for it in kq.get("dap_an") or []:
+            c = tim.get((int(it.get("phan") or 0), int(it.get("so_cau") or 0)))
+            if not c:
+                continue
+            da = _dap_an_hop_le(c["dang"], it.get("dap_an"))
+            if not da:
+                canh_bao.append("Bảng đáp án câu %s đọc được \"%s\" nhưng sai khuôn (%s) – bỏ qua." % (c["ma"], str(it.get("dap_an"))[:30], c["dang"]))
+                continue
+            cu = c.get("dap_an_de")
+            if cu and cu != da:
+                canh_bao.append("Câu %s: lượt tách câu ghi đáp án %s, bảng đáp án ghi %s – lấy theo bảng đáp án." % (c["ma"], cu, da))
+            c["dap_an_de"] = da
+            tong_doc += 1
+    con_thieu = [c["ma"] for c in can if not c.get("dap_an_de")]
+    nhat_ky("Answer Reader", "đọc bảng đáp án: %d/%d câu có đáp án%s (model %s)" % (len(can) - len(con_thieu), len(can),
+            (", thiếu " + ", ".join(con_thieu[:8]) + ("…" if len(con_thieu) > 8 else "")) if con_thieu else "", model))
+    if con_thieu and len(con_thieu) < len(can):
+        canh_bao.append("Còn %d câu chưa tìm thấy đáp án trong tệp: %s." % (len(con_thieu), ", ".join(con_thieu[:12])))
+    return ds_cau, canh_bao, model
+
+
 def chuan_hoa_cau(cac, cau_truc, canh_bao):
     """Gán mã câu 'I.3', suy phần từ dạng khi thiếu, sắp xếp, kiểm tra số câu theo cấu trúc."""
     ra = []
