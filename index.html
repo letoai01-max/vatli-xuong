@@ -99,9 +99,6 @@
                 <span class="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Trực tuyến: 10/10 Agent
                 </span>
-                <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
-                    <i class="fa-solid fa-rotate"></i> Đồng bộ dữ liệu
-                </button>
             </div>
         </header>
                 <!-- ===== CÁC AGENT CON: mỗi nút mở web app của một agent ===== -->
@@ -261,52 +258,6 @@
                 </div>
                 <div id="hk-thong-bao" class="hidden"></div>
                 <div id="hk-noi-dung"></div>
-            </div>
-
-            <!-- MỤC CÁC CÂU CẦN DUYỆT -->
-            <div id="can-duyet-section" class="glass-panel rounded-xl p-5 space-y-4 border-amber-500/30">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                    <div>
-                        <h2 class="text-base font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-clipboard-check text-amber-400"></i> Quản Lý & Duyệt Câu Hỏi ("Cần người xem" / Tab NganHangCauHoi)
-                        </h2>
-                        <p class="text-xs text-slate-400">Hiển thị danh sách câu hỏi kèm hình vẽ/đồ thị minh họa chuẩn xác tuyệt đối từ Cột W</p>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <button onclick="taiCauHoiCanDuyet(true)" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-amber-600/20 cursor-pointer">
-                            <i class="fa-solid fa-eye"></i> Hiện ~20 câu cần duyệt
-                        </button>
-                        <button onclick="chuanHoaTatCaLoiGiai()" title="Chuẩn hoá chữ và công thức trong lời giải của mọi câu đang hiện" class="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-violet-600/20 cursor-pointer">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Chuẩn hoá tất cả lời giải
-                        </button>
-                        <button onclick="giaiTatCaGemini(false)" title="Gemini giải ngầm mọi câu đang hiện: một lời giải thống nhất, tích sẵn đáp án (chưa lưu, thầy xem rồi bấm Duyệt)" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-indigo-600/20 cursor-pointer">
-                            <i class="fa-solid fa-robot"></i> Giải tất cả bằng Gemini
-                        </button>
-                        <!-- [21/11/2026] GOM 5–8 CÂU: một lần hỏi Gemini chat (không tốn API) hoặc một lần gọi API -->
-                        <label class="text-[11px] text-slate-400 flex items-center gap-1.5 pl-1">Gom
-                            <select id="so-cau-gom" class="bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-2 py-1.5 cursor-pointer">
-                                <option>5</option><option selected>6</option><option>7</option><option>8</option>
-                            </select> câu
-                        </label>
-                        <span class="text-[11px] text-slate-400 flex items-center gap-1.5">· Đã tích: <b id="dem-chon-gom" class="text-sky-300">0</b>
-                            <button type="button" onclick="tichNhomCauKeTiep()" title="Tự tích nhóm câu chưa giải kế tiếp (theo số câu bên cạnh) để thầy chỉnh lại bằng tay" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 text-[11px] font-semibold border border-slate-700 cursor-pointer">Tích nhóm kế tiếp</button>
-                            <button type="button" onclick="boTichGom()" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold border border-slate-700 cursor-pointer">Bỏ tích</button>
-                        </span>
-                        <button id="nut-gom-chat" onclick="gomCauHoiGeminiChat()" title="Gom các câu thầy đã tích (không tích câu nào thì tự lấy nhóm câu chưa giải kế tiếp) thành MỘT lời nhắc, sao chép để dán vào Gemini chat (không tốn lượt gọi API), rồi dán câu trả lời về để trang tự chia vào từng câu" class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-sky-600/20 cursor-pointer">
-                            <i class="fa-solid fa-comments"></i> Gom câu → Gemini chat
-                        </button>
-                        <button id="nut-gom-api" onclick="gomCauGoiGeminiApi()" title="Gom các câu thầy đã tích (không tích câu nào thì tự lấy nhóm câu chưa giải kế tiếp) và gọi Gemini API MỘT lần cho cả nhóm, kết quả tự điền vào từng câu" class="px-4 py-2 rounded-lg bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-fuchsia-600/20 cursor-pointer">
-                            <i class="fa-solid fa-layer-group"></i> Gom câu → Gọi Gemini API
-                        </button>
-                    </div>
-                </div>
-
-                <!-- DANH SÁCH CÂU HỎI -->
-                <div id="danh-sach-cau-hoi" class="space-y-4 pt-2">
-                    <div class="text-center py-8 text-slate-500 text-xs">
-                        Bấm nút <span class="text-amber-400 font-bold">"Hiện ~20 câu cần duyệt"</span> ở góc trên để tải danh sách câu hỏi.
-                    </div>
-                </div>
             </div>
 
             <!-- [23/11/2026] CỨU CÂU BỊ LOẠI TỰ ĐỘNG -->
@@ -1057,6 +1008,7 @@
 
         async function taiCauHoiCanDuyet(chiCanDuyet = true) {
             const container = document.getElementById('danh-sach-cau-hoi');
+            if (!container) return;   // [28/11] mục Quản Lý & Duyệt Câu Hỏi đã bỏ khỏi giao diện
             container.innerHTML = `<div class="text-center py-6 text-sky-400 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Đang tải dữ liệu câu hỏi từ questions.json...</div>`;
 
             let data = [];
@@ -1078,21 +1030,30 @@
             // Hỏi Sheet trạng thái THẬT của các câu ứng viên; câu đã duyệt / loại rồi thì không hiện lại.
             // Hỏi không được (mạng, mã bí mật…) → giữ cách cũ, không chặn việc duyệt.
             let dsLoc = dsCanDuyet;
-            let ghiChuTT = '';   // dòng thông báo hiện đầu danh sách: đã đối chiếu Sheet hay không
+            let ghiChuTT = '';   // chỉ hiện khi KHÔNG đối chiếu được với Sheet (đối chiếu được thì không hiện gì)
             if (dsCanDuyet.length > 0) {
-                const ungVien = dsCanDuyet.slice(0, 120);
-                const hoi = await guiVeKhoChung({ action: 'lay_trang_thai', ds: ungVien.map(x => x.ma_cau).filter(Boolean) });
-                if (hoi.ok && hoi.kq && hoi.kq.tt) {
-                    const ttThat = hoi.kq.tt;
-                    const conCan = ungVien.filter(x => {
-                        const st = String(ttThat[x.ma_cau] === undefined ? (x.trang_thai || '') : ttThat[x.ma_cau]).trim().toLowerCase();
-                        return st === '' || st.includes('cần người xem') || st.includes('chưa duyệt');
-                    });
-                    dsLoc = conCan.concat(dsCanDuyet.slice(120));
-                    ghiChuTT = `<div class="text-[11px] text-emerald-400">✔ Đã đối chiếu với Google Sheet: ẩn ${ungVien.length - conCan.length} câu đã duyệt/loại trong ${ungVien.length} câu đầu của questions.json.</div>`;
-                } else {
-                    console.warn('Chưa hỏi được trạng thái thật từ Sheet (dùng danh sách trong questions.json):', hoi.tin);
-                    ghiChuTT = `<div class="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">⚠️ Chưa đối chiếu được với Google Sheet nên danh sách dưới đây có thể còn câu đã duyệt. Lí do: ${escSua(hoi.tin || 'không rõ')}</div>`;
+                // Hỏi Sheet theo từng đợt 300 câu cho tới khi đủ 20 câu thật sự còn cần duyệt
+                // (questions.json có thể cũ nhiều: nhiều câu đầu danh sách đã được duyệt / loại sau lần xuất gần nhất).
+                dsLoc = [];
+                let loiHoi = '';
+                for (let k = 0; k < dsCanDuyet.length && dsLoc.length < 20 && k < 300 * 15; k += 300) {
+                    const dot = dsCanDuyet.slice(k, k + 300);
+                    const hoi = await guiVeKhoChung({ action: 'lay_trang_thai', ds: dot.map(x => x.ma_cau).filter(Boolean) });
+                    if (hoi.ok && hoi.kq && hoi.kq.tt) {
+                        const ttThat = hoi.kq.tt;
+                        dsLoc = dsLoc.concat(dot.filter(x => {
+                            const st = String(ttThat[x.ma_cau] === undefined ? (x.trang_thai || '') : ttThat[x.ma_cau]).trim().toLowerCase();
+                            return st === '' || st.includes('cần người xem') || st.includes('chưa duyệt');
+                        }));
+                    } else {
+                        loiHoi = hoi.tin || 'không rõ';
+                        dsLoc = dsLoc.concat(dot);   // không hỏi được: dùng tạm danh sách trong questions.json
+                        break;
+                    }
+                }
+                if (loiHoi) {
+                    console.warn('Chưa hỏi được trạng thái thật từ Sheet (dùng danh sách trong questions.json):', loiHoi);
+                    ghiChuTT = `<div class="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">⚠️ Chưa đối chiếu được với Google Sheet nên danh sách dưới đây có thể còn câu đã duyệt. Lí do: ${escSua(loiHoi)}</div>`;
                 }
             }
             const dsHienThi = dsCanDuyet.length > 0 ? dsLoc.slice(0, 20) : data.slice(0, 20);
