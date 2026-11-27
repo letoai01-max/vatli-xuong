@@ -470,7 +470,7 @@ SCHEMA_T2 = {"type": "OBJECT", "properties": {
     "required": ["bang_dap_an", "ket_qua"]}
 
 
-def tang2(tep, ds, yccd, cac_model):
+def _tang2_lo(tep, ds, yccd, cac_model):
     du_lieu = [{"ma_cau": x["ma"], "vi_tri": x["vi_tri"], "dang": x["dang"], "muc_do": x["muc_do"], "noi_dung": x["noi_dung"][:1500],
                 "phuong_an": x["phuong_an"][:800], "dap_an_da_ghi": x["dap_an"],
                 "ma_yccd": [m + ": " + yccd.get(m, "(không có)") for m in x["ma_yccd"]]} for x in ds]
@@ -497,6 +497,20 @@ def tang2(tep, ds, yccd, cac_model):
                                                      "temperature": 0.1, "maxOutputTokens": 30000}}, cac_model)
     j = json.loads("".join(p.get("text", "") for p in data["candidates"][0]["content"]["parts"]))
     return {str(g["ma_cau"]): g for g in j.get("ket_qua", [])}, j.get("bang_dap_an", []), model
+
+
+TANG2_CHUNK = _so_nguyen("TANG2_CHUNK", 80)   # [27/11] số câu mỗi lần gọi tầng 2 (0 = cả file như cũ). File 393 câu → JSON ra dài hơn maxOutputTokens → bị cắt → "Unterminated string"
+def tang2(tep, ds, yccd, cac_model):
+    """[27/11] File nhiều câu: chia lô TANG2_CHUNK câu, gộp kết quả; bảng đáp án lấy từ lô đầu có dữ liệu."""
+    if not TANG2_CHUNK or len(ds) <= TANG2_CHUNK:
+        return _tang2_lo(tep, ds, yccd, cac_model)
+    g2, bang, model = {}, [], ""
+    for k in range(0, len(ds), TANG2_CHUNK):
+        g, b_, m = _tang2_lo(tep, ds[k:k + TANG2_CHUNK], yccd, cac_model)
+        g2.update(g)
+        model = model or m
+        if not bang: bang = b_
+    return g2, bang, model
 
 
 def kiem_lech_dong(ds, bang):
@@ -526,7 +540,7 @@ SCHEMA_T3 = {"type": "OBJECT", "properties": {"ket_qua": {"type": "ARRAY", "item
     "required": ["ket_qua"]}
 
 
-def tang3(tep, ds, cac_model):
+def _tang3_lo(tep, ds, cac_model):
     if not tep: return {}
     nhe = [m for m in cac_model if "lite" in m] + [m for m in cac_model if "lite" not in m]
     import base64
@@ -540,6 +554,16 @@ def tang3(tep, ds, cac_model):
         "generationConfig": {"responseMimeType": "application/json", "responseSchema": SCHEMA_T3, "temperature": 0, "maxOutputTokens": 12000}}, nhe)
     j = json.loads("".join(p.get("text", "") for p in data["candidates"][0]["content"]["parts"]))
     return {str(g["ma_cau"]): g.get("so_lieu", []) for g in j.get("ket_qua", [])}
+
+
+TANG3_CHUNK = _so_nguyen("TANG3_CHUNK", 120)  # [27/11] số câu mỗi lần gọi tầng 3 (0 = cả file như cũ)
+def tang3(tep, ds, cac_model):
+    if not TANG3_CHUNK or len(ds) <= TANG3_CHUNK:
+        return _tang3_lo(tep, ds, cac_model)
+    kq = {}
+    for k in range(0, len(ds), TANG3_CHUNK):
+        kq.update(_tang3_lo(tep, ds[k:k + TANG3_CHUNK], cac_model))
+    return kq
 
 
 def so_lieu_lech(x, so_lieu_goc):
