@@ -39,7 +39,7 @@ jobs:
 
       - name: Install dependencies quickly
         if: steps.cong.outputs.chay != 'false'
-        run: pip install --no-cache-dir gspread google-auth
+        run: pip install --no-cache-dir gspread google-auth google-api-python-client
 
       - name: Run xuat_de.py
         if: steps.cong.outputs.chay != 'false'
