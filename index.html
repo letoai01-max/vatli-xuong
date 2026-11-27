@@ -1074,10 +1074,28 @@
                 return tt.includes('cần người xem') || tt.includes('chưa duyệt') || !item.trang_thai;
             });
 
-            const dsHienThi = dsCanDuyet.length > 0 ? dsCanDuyet.slice(0, 20) : data.slice(0, 20);
+            // [28/11/2026] questions.json chỉ được xuất lại theo lịch / sau lệnh kích hoạt nên có thể CŨ (câu thầy vừa duyệt vẫn ghi "Cần người xem").
+            // Hỏi Sheet trạng thái THẬT của các câu ứng viên; câu đã duyệt / loại rồi thì không hiện lại.
+            // Hỏi không được (mạng, mã bí mật…) → giữ cách cũ, không chặn việc duyệt.
+            let dsLoc = dsCanDuyet;
+            if (dsCanDuyet.length > 0) {
+                const ungVien = dsCanDuyet.slice(0, 120);
+                const hoi = await guiVeKhoChung({ action: 'lay_trang_thai', ds: ungVien.map(x => x.ma_cau).filter(Boolean) });
+                if (hoi.ok && hoi.kq && hoi.kq.tt) {
+                    const ttThat = hoi.kq.tt;
+                    const conCan = ungVien.filter(x => {
+                        const st = String(ttThat[x.ma_cau] === undefined ? (x.trang_thai || '') : ttThat[x.ma_cau]).trim().toLowerCase();
+                        return st === '' || st.includes('cần người xem') || st.includes('chưa duyệt');
+                    });
+                    dsLoc = conCan.concat(dsCanDuyet.slice(120));
+                } else {
+                    console.warn('Chưa hỏi được trạng thái thật từ Sheet (dùng danh sách trong questions.json):', hoi.tin);
+                }
+            }
+            const dsHienThi = dsCanDuyet.length > 0 ? dsLoc.slice(0, 20) : data.slice(0, 20);
 
             if (!dsHienThi || dsHienThi.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">Chưa có dữ liệu trong questions.json. Thầy hãy chạy tác vụ xuất dữ liệu ở trên!</div>`;
+                container.innerHTML = `<div class="text-center py-6 text-amber-400 text-xs">${dsCanDuyet.length > 0 ? 'Các câu trong questions.json đã được duyệt hết trên Google Sheet. Chạy tác vụ xuất dữ liệu để làm mới danh sách.' : 'Chưa có dữ liệu trong questions.json. Thầy hãy chạy tác vụ xuất dữ liệu ở trên!'}</div>`;
                 return;
             }
 
@@ -2174,7 +2192,7 @@
 
             // Gửi dữ liệu ngầm về Google Apps Script để cập nhật Google Sheet
             const kq = await guiVeKhoChung({ action: 'update_status', ma_cau: maCau, trang_thai: trangThaiMoi, loi_giai: loiGiaiMoi, noi_dung: noiDungMoi, phuong_an: phuongAnMoi, dap_an: dapAnMoi, dang: dangMoi, link_anh: linkAnhMoi, anh_moi: anhMoi });
-            const khongThayMa = kq.ok && kq.kq && kq.kq.updated === 0;
+            const khongThayMa = kq.ok && kq.kq && (kq.kq.updated === 0 || kq.kq.updated === false);   // [28/11] máy chủ trả false, trước đây so với 0 nên không bao giờ bắt được
             if (kq.ok && !khongThayMa) {
                 if (log) {
                     log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Google Sheet đã cập nhật thành công câu [${escSua(maCau)}].</div>`;
