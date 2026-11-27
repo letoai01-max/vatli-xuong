@@ -80,6 +80,10 @@ jobs:
           VE_LAI_CHI_BAO: "true"
           VE_LAI_TOI_DA_CAU: "15"
           VE_LAI_SO_LAN: "2"
+          # [28/11/2026] DUYỆT TỪNG LÔ, XONG LÔ NÀO GHI SHEET LÔ ĐÓ (xem đầu duyet_cau.py). Hết lượt Gemini giữa chừng chỉ mất đúng lô đang dở.
+          # Về như cũ: DUYET_LO_CAU → "0". Tiết kiệm lượt gọi hơn: tăng lên 40-50 (nên là bội số của 10). DUYET_TOI_DA_CAU > 0 = trần số câu mỗi lượt.
+          DUYET_LO_CAU: "30"
+          DUYET_TOI_DA_CAU: "0"
           THOI_GIAN_TOI_DA_PHUT: ${{ inputs.phut || '150' }}
         run: python trung_tam.py duyet_cau.py
       - name: Lưu hình vẽ thử để thầy xem (chỉ có khi chạy thử)
