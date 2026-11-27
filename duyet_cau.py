@@ -177,7 +177,7 @@ except ValueError:
     TANG_HAN_PHUT = 10.0
 DUNG_SAU_FILE_RONG = _so_nguyen("DUNG_SAU_FILE_RONG", 3)                          # [24/11] số file liên tiếp không ra câu nào thì dừng lượt (0 = tắt)
 UU_TIEN_FILE_LON = os.environ.get("UU_TIEN_FILE_LON", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")
-DUYET_LO_CAU = _so_nguyen("DUYET_LO_CAU", 0)                                      # [28/11] số câu mỗi lô duyệt + ghi Sheet (0 = cả file một lần như cũ)
+DUYET_LO_CAU = _so_nguyen("DUYET_LO_CAU", 20)                                     # [28/11] số câu mỗi lô duyệt + ghi Sheet (mặc định 20 = 2 lượt giải độc lập; 0 = cả file một lần như cũ)
 DUYET_TOI_DA_CAU = _so_nguyen("DUYET_TOI_DA_CAU", 0)                              # [28/11] số câu tối đa mỗi lượt chạy (0 = không giới hạn)
 _bo_roi = {"co": False}      # có việc bị bỏ lại trong luồng nền → cuối lượt phải thoát cứng
 _groq_canh_bao = {"max_token": False}
@@ -192,6 +192,7 @@ DUYET_LAI_CAN_XEM = os.environ.get("DUYET_LAI_CAN_XEM", "false").strip().lower()
 DUYET_LAI_PHAM_VI = os.environ.get("DUYET_LAI_PHAM_VI", "may").strip().lower()                                                 # [21/11] may (chỉ câu máy đặt) | tat_ca
 DAU_MAY = "[5 tầng"                                                                                                              # [21/11] dấu máy ghi ở cột Kiểm tra
 DAU_DUYET_LAI = "duyệt lại]"                                                                                                     # [21/11] dấu đã duyệt lại một lần
+TON_TRONG_NGUOI_DOI = os.environ.get("TON_TRONG_NGUOI_DOI", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")   # [28/11] giáo viên đổi trạng thái giữa lượt thì xưởng KHÔNG ghi đè
 SONG_SONG = os.environ.get("DUYET_SONG_SONG", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")   # [21/11] "false" = lần lượt như trước
 try:
     SO_LO_SONG_SONG = max(1, int(float(os.environ.get("DUYET_SO_LO_SONG_SONG", "3") or 3)))                              # [21/11] số lô tầng 4 giải cùng lúc
@@ -1148,7 +1149,8 @@ def main():
     file_cua = {r[c["Mã câu"]].strip(): (r[c["File ID"]] if len(r) > c["File ID"] else "") for r in d[1:] if len(r) > c["Mã câu"]}
     for i, r in enumerate(d[1:], start=2):
         r = r + [""] * (len(td) - len(r))
-        tt = r[c["Trạng thái duyệt"]].strip() or TT["CHUA"]
+        tt_goc = r[c["Trạng thái duyệt"]].strip()                      # [28/11] trạng thái thật trong Sheet lúc đọc
+        tt = tt_goc or TT["CHUA"]
         vt = van_tay(r[c["Nội dung"]], r[c["Phương án"]])
         duyet_lai, cuu_loai = False, False
         if DUYET_LAI_LOAI and tt == TT["LOAI"]:                          # [22/11] bước 2: câu Loại vì bất đồng đáp án chạy lại một lần với phiếu thêm
@@ -1172,7 +1174,7 @@ def main():
              "ma_yccd": [m for m in re.split(r"[,;\s]+", r[c["Mã YCCĐ"]]) if m],
              "vi_tri": (re.search(r"\(câu\s*([^)]*)\)", r[c["Tên file"]]) or [None, ""])[1],
              "loi_nang": [], "nghi_van": [], "ghi_chu": [], "sua": {}, "bat_dong": [], "co_hinh": False, "hoan": False,
-             "duyet_lai": duyet_lai, "cuu_loai": cuu_loai,
+             "duyet_lai": duyet_lai, "cuu_loai": cuu_loai, "tt_goc": tt_goc,
              "link_anh": (r[c_anh] if c_anh is not None else "").strip(),
              "hinh_ve_lai": "vẽ lại bằng matplotlib" in r[c["Kiểm tra"]],      # [24/11] hình do cuu_loai.py vẽ từ chữ của đề → không độc lập với đề, không dùng cho tầng 6
              "ma_bai": r[c["Mã bài"]].strip() if "Mã bài" in c else "", "lop": r[c["Lớp"]].strip() if "Lớp" in c else ""}
@@ -1332,11 +1334,19 @@ def ghi_ket_qua(tab, c, c_anh, ds_ghi, ngay, thong_ke):
     if not can: return
     ma_cot = tab.col_values(c["Mã câu"] + 1)
     vt_hien_tai = {v.strip(): i + 1 for i, v in enumerate(ma_cot) if i > 0 and v.strip()}
+    tt_hien = tab.col_values(c["Trạng thái duyệt"] + 1) if TON_TRONG_NGUOI_DOI else []   # [28/11] trạng thái ngay lúc ghi
     cho_ghi = []
     for x in can:
         dong = vt_hien_tai.get(x["ma"])
         if not dong:
             continue
+        if TON_TRONG_NGUOI_DOI and x.get("tt_goc") is not None:        # [28/11] giáo viên vừa duyệt/sửa trong lúc xưởng chạy → giữ quyết định của giáo viên
+            hien = tt_hien[dong - 1].strip() if len(tt_hien) >= dong else ""
+            if hien != x["tt_goc"]:
+                x["da_ghi"] = True
+                thong_ke["nguoi_doi"] = thong_ke.get("nguoi_doi", 0) + 1
+                print("  🛑 Câu %s: trạng thái đã đổi trong lúc chạy (%r → %r) – giữ quyết định của giáo viên, không ghi đè." % (x["ma"], x["tt_goc"], hien), flush=True)
+                continue
         if x["hoan"]:                                    # [21/11] Gemini chưa đánh giá được: giữ "Chưa duyệt", lượt sau làm lại
             thong_ke["hoan"] += 1
             x["da_ghi"] = True
