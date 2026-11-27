@@ -18,6 +18,15 @@ LƯU Ý: tắt lịch duyệt cũ của Apps Script (tatDuyetTuDong trong Kho ch
 để giáo viên kiểm tra và đo độ chính xác thật.
 Dùng lại các hàm của doc_de.py (kết nối Google, tải file gốc, gọi Gemini xoay vòng khoá miễn phí).
 
+[28/11/2026] DUYỆT THEO TỪNG LÔ CÂU, XONG LÔ NÀO GHI SHEET LÔ ĐÓ (DUYET_LO_CAU = 0 mặc định → chạy y như cũ):
+  • DUYET_LO_CAU = N (khuyên 30; nên là bội số của LO_GIAI = 10 để tầng 4 không tốn thêm lượt): trong mỗi file, các câu cần AI được cắt thành lô N câu.
+    Mỗi lô chạy trọn gán YCCĐ → tầng 2-3-4 + Groq → xếp loại → các bậc cứu → GHI SHEET NGAY. Hết hạn mức Gemini giữa chừng chỉ mất đúng lô đang dở,
+    các lô trước đã nằm trong Sheet (trước đây mất cả file, trừ câu Loại ở tầng 1). File gốc vẫn chỉ tải một lần cho cả file.
+  • DUYET_TOI_DA_CAU = M (0 = không giới hạn): mỗi lượt chạy chỉ duyệt tối đa M câu (cắt đúng ở lô cuối), để dàn đều lượt gọi Gemini qua các lượt/ngày.
+    Chỉ cắt tới từng câu khi có DUYET_LO_CAU; không có thì chỉ kiểm ở ranh giới giữa các file.
+  • Đánh đổi: tầng 2 và 3 gửi lại file gốc cho mỗi lô nên số lượt gọi tăng nhẹ (file 393 câu, lô 30: tầng 2 từ 5 → 14 lượt, tầng 3 từ 4 → 14 lượt).
+    Quota sát thì tăng DUYET_LO_CAU lên 40-50.
+
 [24/11/2026] KHẮC PHỤC NHANH ĐỂ LƯỢT SAU CÓ SẢN LƯỢNG NGAY (mặc định BẬT; đặt giá trị 0 / false ở từng biến để về y như cũ):
   • GROQ_CHUNK = 2: Groq nhận tối đa 2 câu mỗi lần gọi (0 = gửi cả file như cũ); GROQ_MAX_TOKEN = 450 → max_completion_tokens (0 = không truyền).
     Mục tiêu: prompt + đầu ra < 3.500 token, hết lỗi 413 và tràn 1.000 OTPM. Cần groq_xuong.giai_lo nhận max_completion_tokens (xem _tham_so_groq).
@@ -168,6 +177,8 @@ except ValueError:
     TANG_HAN_PHUT = 10.0
 DUNG_SAU_FILE_RONG = _so_nguyen("DUNG_SAU_FILE_RONG", 3)                          # [24/11] số file liên tiếp không ra câu nào thì dừng lượt (0 = tắt)
 UU_TIEN_FILE_LON = os.environ.get("UU_TIEN_FILE_LON", "true").strip().lower() not in ("false", "0", "no", "off", "tat", "tắt")
+DUYET_LO_CAU = _so_nguyen("DUYET_LO_CAU", 0)                                      # [28/11] số câu mỗi lô duyệt + ghi Sheet (0 = cả file một lần như cũ)
+DUYET_TOI_DA_CAU = _so_nguyen("DUYET_TOI_DA_CAU", 0)                              # [28/11] số câu tối đa mỗi lượt chạy (0 = không giới hạn)
 _bo_roi = {"co": False}      # có việc bị bỏ lại trong luồng nền → cuối lượt phải thoát cứng
 _groq_canh_bao = {"max_token": False}
 _groq_rong = {"lien_tiep": 0, "da_bao": False}
@@ -1192,33 +1203,55 @@ def main():
             tep_cho[cac_file[i][0]] = tai_truoc.submit(mo_tep_goc, drive_tai, cac_file[i][0])
 
     file_rong = 0                                                   # [24/11] số file liên tiếp không ghi được câu nào
+    so_lo = DUYET_LO_CAU if DUYET_LO_CAU > 0 else 0                 # [28/11] 0 = cả file một lô, chạy y như cũ
+    so_da_duyet = 0                                                 # [28/11] số câu đã đưa qua AI trong lượt này (để áp DUYET_TOI_DA_CAU)
     for idx, (fid, ds) in enumerate(cac_file):
         if not con_gio():
             print("⏸️ Hết thời gian lượt này.", flush=True); break
+        if DUYET_TOI_DA_CAU and so_da_duyet >= DUYET_TOI_DA_CAU:
+            print("⏸️ Đã duyệt đủ %d câu cho lượt này (DUYET_TOI_DA_CAU) – lượt sau làm tiếp." % so_da_duyet, flush=True); break
         t0 = time.time()
         hen_tai(idx + 1)
         for x in ds:
             tang1(x, yccd)
             if chi_muc: tang1_trung(x, chi_muc, vi_tri)
         can_ai = [x for x in ds if not x["loi_nang"]]
+        cac_lo = [can_ai[k:k + so_lo] for k in range(0, len(can_ai), so_lo)] if so_lo else ([can_ai] if can_ai else [])   # [28/11]
         try:
-            if TU_SUA: gan_yccd_file(ds, yccd, cac_model)                  # [22/11] chọn lại mã YCCĐ trước khi duyệt
-            if VH and VH.bat(): ve_lai_hinh_file(ds, drive, cac_model)       # [24/11] kiểm hình gắn, gỡ hình sai, tự vẽ lại (mặc định tắt)
+            if not so_lo:                                                   # chế độ cũ: việc cấp file làm trước, y như trước ngày 28/11
+                if TU_SUA: gan_yccd_file(ds, yccd, cac_model)                  # [22/11] chọn lại mã YCCĐ trước khi duyệt
+                if VH and VH.bat(): ve_lai_hinh_file(ds, drive, cac_model)       # [24/11] kiểm hình gắn, gỡ hình sai, tự vẽ lại (mặc định tắt)
             if GHI_CUON_CHIEU:                                              # [24/11] câu Loại ngay ở tầng 1 đã có kết luận: ghi trước khi gọi Gemini / Groq
                 ghi_ket_qua(tab, c, c_anh, [x for x in ds if x["loi_nang"]], ngay, thong_ke)
-            if can_ai:
-                tep = lay_tep_goc(fid, tep_cho, drive)
-                g2, bang, model2, so_lieu, g4, model4, g5, model5 = chay_cac_tang(tep, can_ai, yccd, cac_model)
-                lech = kiem_lech_dong(can_ai, bang)
+            tep = lay_tep_goc(fid, tep_cho, drive) if can_ai else None      # file gốc chỉ tải MỘT lần cho mọi lô
+            for stt, lo in enumerate(cac_lo, 1):
+                if so_lo:
+                    if not con_gio():
+                        print("⏸️ Hết thời gian lượt này – các lô còn lại để lượt sau.", flush=True); break
+                    if DUYET_TOI_DA_CAU:
+                        con_lai = DUYET_TOI_DA_CAU - so_da_duyet
+                        if con_lai <= 0: break
+                        lo = lo[:con_lai]                                   # cắt đúng số câu còn được phép; câu không vào lô không bị ghi
+                    print("  ▶ Lô %d/%d của file %s: %d câu" % (stt, len(cac_lo), fid[:12], len(lo)), flush=True)
+                    if TU_SUA: gan_yccd_file(lo, yccd, cac_model)           # [28/11] việc cấp file chuyển xuống từng lô để lô nào ghi lô đó
+                    if VH and VH.bat(): ve_lai_hinh_file(lo, drive, cac_model)
+                g2, bang, model2, so_lieu, g4, model4, g5, model5 = chay_cac_tang(tep, lo, yccd, cac_model)
+                lech = kiem_lech_dong(lo, bang)
                 if lech:
-                    for x in can_ai:
+                    for x in lo:
                         if loai_dang(x["dang"]) == "TN": (x["ghi_chu"] if MOI else x["nghi_van"]).append(lech)   # [21/11] chỉ ghi chú
-                for x in can_ai:
+                for x in lo:
                     quyet_dinh(x, g2.get(x["ma"]), so_lieu.get(x["ma"], []), g4.get(x["ma"]), model2, model4, yccd,
                                g5.get(x["ma"], ""), model5)
-                if PHIEU_BA: phieu_ba_file(can_ai, (model5 or "").strip())   # [22/11] bước 2: thêm phiếu Groq khác họ cho câu không hình
-                if CUU_HINH: cuu_hinh_file(can_ai, drive, cac_model)       # [22/11] tầng 6: câu có hình mà máy chưa thống nhất
-                cuu_them_file(can_ai, tep, yccd, cac_model)                # [24/11] các bậc cứu thêm (mặc định tắt)
+                if PHIEU_BA: phieu_ba_file(lo, (model5 or "").strip())   # [22/11] bước 2: thêm phiếu Groq khác họ cho câu không hình
+                if CUU_HINH: cuu_hinh_file(lo, drive, cac_model)       # [22/11] tầng 6: câu có hình mà máy chưa thống nhất
+                cuu_them_file(lo, tep, yccd, cac_model)                # [24/11] các bậc cứu thêm (mặc định tắt)
+                so_da_duyet += len(lo)
+                for x in lo: x["da_xu_li"] = True
+                if so_lo:                                                   # [28/11] xong lô nào ghi Sheet lô đó
+                    ghi_ket_qua(tab, c, c_anh, lo, ngay, thong_ke)
+                    print("  ✔ Đã ghi lô %d/%d (tổng: %d AI duyệt, %d cần xem, %d loại, %d hoãn)" % (
+                        stt, len(cac_lo), thong_ke["ai"], thong_ke["xem"], thong_ke["loai"], thong_ke["hoan"]), flush=True)
         except X.HetHanMuc as e:
             print("⏸️ Hết hạn mức Gemini – dừng, lượt sau duyệt tiếp:", str(e)[:150], flush=True)
             het_han_muc = True
@@ -1231,10 +1264,11 @@ def main():
             if DUNG_SAU_FILE_RONG and file_rong >= DUNG_SAU_FILE_RONG:
                 print("⏸️ %d file liên tiếp không ra câu nào – dừng lượt, lượt sau làm tiếp." % file_rong, flush=True); break
             continue
-        ghi_ket_qua(tab, c, c_anh, ds, ngay, thong_ke)          # [24/11] ghi cuốn chiếu (câu Loại tầng 1 đã ghi trước đó)
+        # [24/11] ghi cuốn chiếu (câu Loại tầng 1 đã ghi trước đó). [28/11] Chế độ lô: chỉ ghi câu đã xử lí; câu của lô chưa chạy giữ "Chưa duyệt"
+        ghi_ket_qua(tab, c, c_anh, ds if not so_lo else [x for x in ds if x["loi_nang"] or x.get("da_xu_li")], ngay, thong_ke)
         file_rong = 0 if any(x.get("da_ghi") and not x["hoan"] for x in ds) else file_rong + 1
         print("📄 File %s: %d câu (%d AI duyệt) trong %d giây" % (fid[:12], len(ds),
-              sum(1 for x in ds if not x["loi_nang"] and not x["nghi_van"]), time.time() - t0), flush=True)
+              sum(1 for x in ds if not x["loi_nang"] and not x["nghi_van"] and (not so_lo or x.get("da_xu_li"))), time.time() - t0), flush=True)
         if DUNG_SAU_FILE_RONG and file_rong >= DUNG_SAU_FILE_RONG:
             print("⏸️ %d file liên tiếp không ra câu nào – dừng lượt, lượt sau làm tiếp." % file_rong, flush=True); break
 
