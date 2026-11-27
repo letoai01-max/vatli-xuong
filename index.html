@@ -1078,6 +1078,7 @@
             // Hỏi Sheet trạng thái THẬT của các câu ứng viên; câu đã duyệt / loại rồi thì không hiện lại.
             // Hỏi không được (mạng, mã bí mật…) → giữ cách cũ, không chặn việc duyệt.
             let dsLoc = dsCanDuyet;
+            let ghiChuTT = '';   // dòng thông báo hiện đầu danh sách: đã đối chiếu Sheet hay không
             if (dsCanDuyet.length > 0) {
                 const ungVien = dsCanDuyet.slice(0, 120);
                 const hoi = await guiVeKhoChung({ action: 'lay_trang_thai', ds: ungVien.map(x => x.ma_cau).filter(Boolean) });
@@ -1088,8 +1089,10 @@
                         return st === '' || st.includes('cần người xem') || st.includes('chưa duyệt');
                     });
                     dsLoc = conCan.concat(dsCanDuyet.slice(120));
+                    ghiChuTT = `<div class="text-[11px] text-emerald-400">✔ Đã đối chiếu với Google Sheet: ẩn ${ungVien.length - conCan.length} câu đã duyệt/loại trong ${ungVien.length} câu đầu của questions.json.</div>`;
                 } else {
                     console.warn('Chưa hỏi được trạng thái thật từ Sheet (dùng danh sách trong questions.json):', hoi.tin);
+                    ghiChuTT = `<div class="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">⚠️ Chưa đối chiếu được với Google Sheet nên danh sách dưới đây có thể còn câu đã duyệt. Lí do: ${escSua(hoi.tin || 'không rõ')}</div>`;
                 }
             }
             const dsHienThi = dsCanDuyet.length > 0 ? dsLoc.slice(0, 20) : data.slice(0, 20);
@@ -1100,6 +1103,7 @@
             }
 
             container.innerHTML = '';
+            if (ghiChuTT) container.insertAdjacentHTML('afterbegin', ghiChuTT);
             dsHienThi.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = "question-card bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-4 shadow-lg";
