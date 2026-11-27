@@ -1,27 +1,27 @@
 {
-  "cap_nhat": "2026-11-28T03:46:19+07:00",
+  "cap_nhat": "2026-11-28T04:46:39+07:00",
   "khoa": [
     {
       "nhan": "gemini-3.5-flash-lite · Khoá 1",
-      "da_dung": 46,
+      "da_dung": 201,
       "gioi_han": null,
       "trang_thai": "con"
     },
     {
       "nhan": "gemini-3.7-flash · Khoá 1",
-      "da_dung": 51,
+      "da_dung": 138,
       "gioi_han": null,
       "trang_thai": "con"
     },
     {
       "nhan": "groq-gpt-oss-120b · Khoá 1",
-      "da_dung": 4,
+      "da_dung": 595,
       "gioi_han": null,
       "trang_thai": "con"
     },
     {
       "nhan": "groq-qwen3.8-27b · Khoá 1",
-      "da_dung": 3,
+      "da_dung": 392,
       "gioi_han": null,
       "trang_thai": "con"
     }
