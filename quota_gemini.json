@@ -1,15 +1,27 @@
 {
-  "cap_nhat": "2026-11-28T07:41:46+07:00",
+  "cap_nhat": "2026-11-28T08:11:52+07:00",
   "khoa": [
     {
       "nhan": "gemini-3.5-flash-lite · Khoá 1",
-      "da_dung": 220,
+      "da_dung": 280,
+      "gioi_han": null,
+      "trang_thai": "con"
+    },
+    {
+      "nhan": "gemini-3.5-flash-lite · Khoá 1",
+      "da_dung": 411,
       "gioi_han": null,
       "trang_thai": "con"
     },
     {
       "nhan": "gemini-3.7-flash · Khoá 1",
-      "da_dung": 155,
+      "da_dung": 288,
+      "gioi_han": null,
+      "trang_thai": "con"
+    },
+    {
+      "nhan": "gemini-3.7-flash · Khoá 1",
+      "da_dung": 347,
       "gioi_han": null,
       "trang_thai": "con"
     },
