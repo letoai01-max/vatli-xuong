@@ -1,39 +1,45 @@
 {
-  "cap_nhat": "2026-11-28T10:27:01+07:00",
+  "cap_nhat": "2026-11-28T11:52:24+07:00",
   "khoa": [
     {
       "nhan": "gemini-3.5-flash-lite · Khoá 1",
-      "da_dung": 280,
+      "da_dung": 373,
       "gioi_han": null,
       "trang_thai": "con"
     },
     {
       "nhan": "gemini-3.5-flash-lite · Khoá 1",
-      "da_dung": 411,
+      "da_dung": 438,
+      "gioi_han": null,
+      "trang_thai": "con"
+    },
+    {
+      "nhan": "gemini-3.5-flash-lite · Khoá 2",
+      "da_dung": 1,
       "gioi_han": null,
       "trang_thai": "con"
     },
     {
       "nhan": "gemini-3.7-flash · Khoá 1",
-      "da_dung": 288,
+      "da_dung": 313,
       "gioi_han": null,
       "trang_thai": "con"
     },
     {
       "nhan": "gemini-3.7-flash · Khoá 1",
-      "da_dung": 347,
+      "da_dung": 355,
       "gioi_han": null,
       "trang_thai": "con"
     },
     {
       "nhan": "groq-gpt-oss-120b · Khoá 1",
-      "da_dung": 595,
+      "da_dung": 1157,
       "gioi_han": null,
       "trang_thai": "con"
     },
     {
       "nhan": "groq-qwen3.8-27b · Khoá 1",
-      "da_dung": 392,
+      "da_dung": 941,
       "gioi_han": null,
       "trang_thai": "con"
     }
