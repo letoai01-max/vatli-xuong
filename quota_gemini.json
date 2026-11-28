@@ -1,4 +1,23 @@
 {
-  "cap_nhat": "2026-11-28T16:58:29+07:00",
-  "khoa": []
+  "cap_nhat": "2026-11-28T19:57:13+07:00",
+  "khoa": [
+    {
+      "nhan": "gemini-3.5-flash-lite · Khoá 1",
+      "da_dung": 39,
+      "gioi_han": null,
+      "trang_thai": "con"
+    },
+    {
+      "nhan": "gemini-3.7-flash · Khoá 1",
+      "da_dung": 54,
+      "gioi_han": null,
+      "trang_thai": "con"
+    },
+    {
+      "nhan": "groq-gpt-oss-120b · Khoá 1",
+      "da_dung": 4,
+      "gioi_han": null,
+      "trang_thai": "con"
+    }
+  ]
 }
